@@ -1,0 +1,57 @@
+{
+  "Roles": "Roles",
+  "Header subtitle": "Manage application roles and their feature limits.",
+  "Search Roles": "Search Roles",
+
+  "Name": "Name",
+  "Role Name": "Role Name",
+  "Is Active": "Is Active",
+  "Role Status": "Status",
+  "Feature Count": "Feature Count",
+  "Features Assigned": "Features Assigned",
+  "Actions": "Actions",
+  "Active": "Active",
+  "Inactive": "Inactive",
+  "View Features": "View Features",
+  "No roles found": "No roles found",
+
+  "Role Features": "Role Features",
+  "Feature Name": "Feature Name",
+  "Feature Code": "Feature Code",
+  "Value": "Value",
+  "Unlimited": "Unlimited",
+  "Custom": "Custom",
+  "No features found": "No features found for this role.",
+  "Back to Roles": "Back to Roles",
+
+  "Edit Feature": "Edit",
+  "EditModal": {
+    "Title": "Edit Role Feature",
+    "Feature Code": "Feature Code",
+    "Value": "Value",
+    "ValuePlaceholder": "Enter value",
+    "Unlimited Hint": "Leave the field empty to set this feature as unlimited.",
+    "Cancel": "Cancel",
+    "Save Changes": "Save Changes",
+    "Saving": "Saving...",
+    "Save Success": "Role feature updated successfully",
+    "Save Error": "Failed to update role feature"
+  },
+  "Add Feature": "Add Feature",
+  "AddModal": {
+    "Title": "Add Feature to Role",
+    "Select Feature": "Select Feature",
+    "Select Feature Placeholder": "Search features...",
+    "ValuePlaceholder": "Enter value",
+    "Unlimited Hint": "Leave the field empty or select Unlimited to make this feature unlimited.",
+    "Cancel": "Cancel",
+    "Save Changes": "Add Feature",
+    "Saving": "Adding...",
+    "Save Success": "Feature added to role successfully",
+    "Save Error": "Failed to add feature to role"
+  },
+  "Delete Feature": "Delete Feature",
+  "Delete Feature confirmation": "Are you sure you want to remove this feature from this role?",
+  "Delete Success": "Feature removed from role successfully",
+  "Delete Error": "Failed to remove feature from role"
+}

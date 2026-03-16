@@ -1,0 +1,57 @@
+{
+  "Roles": "Roles",
+  "Header subtitle": "Administra los roles de la aplicación y sus límites de características.",
+  "Search Roles": "Buscar roles",
+
+  "Name": "Nombre",
+  "Role Name": "Nombre del rol",
+  "Is Active": "Está activo",
+  "Role Status": "Estado",
+  "Feature Count": "Total de características",
+  "Features Assigned": "Características asignadas",
+  "Actions": "Acciones",
+  "Active": "Activo",
+  "Inactive": "Inactivo",
+  "View Features": "Ver características",
+  "No roles found": "No se encontraron roles",
+
+  "Role Features": "Características del rol",
+  "Feature Name": "Nombre de la característica",
+  "Feature Code": "Código de la característica",
+  "Value": "Valor",
+  "Unlimited": "Ilimitado",
+  "Custom": "Personalizado",
+  "No features found": "No se encontraron características para este rol.",
+  "Back to Roles": "Volver a Roles",
+
+  "Edit Feature": "Editar",
+  "EditModal": {
+    "Title": "Editar característica del rol",
+    "Feature Code": "Código de la característica",
+    "Value": "Valor",
+    "ValuePlaceholder": "Ingrese un valor",
+    "Unlimited Hint": "Deje el campo vacío para establecer esta característica como ilimitada.",
+    "Cancel": "Cancelar",
+    "Save Changes": "Guardar cambios",
+    "Saving": "Guardando...",
+    "Save Success": "Característica del rol actualizada correctamente",
+    "Save Error": "Error al actualizar la característica del rol"
+  },
+  "Add Feature": "Agregar característica",
+  "AddModal": {
+    "Title": "Agregar característica al rol",
+    "Select Feature": "Seleccionar característica",
+    "Select Feature Placeholder": "Buscar características...",
+    "ValuePlaceholder": "Ingrese un valor",
+    "Unlimited Hint": "Deje el campo vacío o seleccione Ilimitado para hacer esta característica ilimitada.",
+    "Cancel": "Cancelar",
+    "Save Changes": "Agregar característica",
+    "Saving": "Agregando...",
+    "Save Success": "Característica agregada al rol correctamente",
+    "Save Error": "Error al agregar la característica al rol"
+  },
+  "Delete Feature": "Eliminar característica",
+  "Delete Feature confirmation": "¿Estás seguro de que quieres eliminar esta característica de este rol?",
+  "Delete Success": "Característica eliminada del rol correctamente",
+  "Delete Error": "Error al eliminar la característica del rol"
+}

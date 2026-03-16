@@ -1,0 +1,1048 @@
+export const APP_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export enum COLORS {
+  PRIMARY_LIGHT = "#8b5cf6",
+  PRIMARY_DARK = "#8b5cf67",
+}
+
+export const HTTPS_METHODS = {
+  POST: "POST",
+  PUT: "PUT",
+  GET: "GET",
+  DELETE: "DELETE",
+  PATCH: "PATCH",
+};
+
+export enum STATUS_TYPE {
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
+
+export enum STATUS_CODE {
+  SUCCESS = 200,
+  NOT_MODIFIED = 304,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
+  BAD_GATEWAY = 502,
+}
+
+export enum COUNTRIES {
+  INDIA = 1,
+  USA = 2,
+  UK = 3,
+  AUSTRALIA = 4,
+  NEW_ZEALAND = 5,
+}
+
+export enum USER_STATUS {
+  PENDING = 1,
+  ACTIVE = 2,
+  INACTIVE = 3,
+}
+export const USER_STATUS_NAMES = {
+  [USER_STATUS.PENDING]: "Pending",
+  [USER_STATUS.ACTIVE]: "Active",
+  [USER_STATUS.INACTIVE]: "Inactive",
+};
+
+export const USER_BLOCK_STATUS = {
+  ACTIVE: 1, // unblock
+  INACTIVE: 2, // block
+};
+
+export enum ADDRESS_TYPES {
+  HOME = 1,
+  WORK = 2,
+}
+
+export enum USER_ROLES {
+  ENTERPRISE = 1,
+  TEAM = 2,
+  MAINTAINER = 3,
+  EDITOR = 4,
+  SUPER_ADMIN = 5,
+}
+
+export const USER_ROLE_NAMES = {
+  [USER_ROLES.ENTERPRISE]: "Enterprise",
+  [USER_ROLES.TEAM]: "Team",
+  [USER_ROLES.MAINTAINER]: "Maintainer",
+  [USER_ROLES.EDITOR]: "Editor",
+  [USER_ROLES.SUPER_ADMIN]: "Super Admin",
+};
+export const FORM_FIELDS_TYPES = {
+  TEXT: "text",
+  EMAIL: "email",
+  PASSWORD: "password",
+  SELECT: "select",
+  PHONE: "phone",
+  TEXTAREA: "textarea",
+  ARRAY: "array",
+  ASYNC_SELECT: "async_select",
+  SWITCH: "switch",
+  NUMBER: "number",
+  COLOR: "color",
+  DATE: "date",
+} as const;
+
+export const COUNTRY_NAMES = {
+  [COUNTRIES.USA]: "United States",
+  [COUNTRIES.INDIA]: "India",
+  [COUNTRIES.AUSTRALIA]: "Australia",
+  [COUNTRIES.NEW_ZEALAND]: "New Zealand",
+  [COUNTRIES.UK]: "United Kingdom",
+};
+
+export const COUNTRIES_OPTIONS = [
+  { label: COUNTRY_NAMES[COUNTRIES.USA], value: COUNTRIES.USA },
+  { label: COUNTRY_NAMES[COUNTRIES.INDIA], value: COUNTRIES.INDIA },
+  { label: COUNTRY_NAMES[COUNTRIES.AUSTRALIA], value: COUNTRIES.AUSTRALIA },
+  { label: COUNTRY_NAMES[COUNTRIES.NEW_ZEALAND], value: COUNTRIES.NEW_ZEALAND },
+  { label: COUNTRY_NAMES[COUNTRIES.UK], value: COUNTRIES.UK },
+];
+
+export enum CONNECTED_ACCOUNTS {
+  GOOGLE = 1,
+  SLACK,
+  ASANA,
+  MAILCHIMP,
+  GITHUB,
+}
+
+export enum SOCIAL_ACCOUNTS {
+  FACEBOOK = 1,
+  TWITTER,
+  LINKEDIN,
+  DRIBBLE,
+  BEHANCE,
+}
+
+export enum NOTIFICATION_PREFERENCES {
+  NEW_FOR_YOU = 1,
+  ACCOUNT_ACTIVITY,
+  NEW_BROWSER_SIGN_IN,
+  NEW_DEVICE_LINKED,
+}
+
+export enum NOTIFICATION_AVAILABILITY {
+  EMAIL = 1,
+  BROWSER,
+  APP,
+}
+export enum INVOICE_STATUS {
+  PENDING = 1,
+  PAID = 2,
+  DECLINED = 3,
+}
+export const INVOICE_STATUS_NAMES = {
+  [INVOICE_STATUS.PENDING]: "Pending",
+  [INVOICE_STATUS.PAID]: "Paid",
+  [INVOICE_STATUS.DECLINED]: "Declined",
+};
+
+export enum INVOICE_ITEM_TYPE {
+  APP_DESIGN = 1,
+  APP_CUSTOMIZATION,
+  ABC_TEMPLATE,
+  APP_DEVELOPMENT,
+}
+
+export const INVOICE_ITEM_TYPE_OPTION = [
+  { label: "App Design", value: INVOICE_ITEM_TYPE.APP_DESIGN },
+  { label: "App Customization", value: INVOICE_ITEM_TYPE.APP_CUSTOMIZATION },
+  { label: "Abc Template", value: INVOICE_ITEM_TYPE.ABC_TEMPLATE },
+  { label: "App Develpment", value: INVOICE_ITEM_TYPE.APP_DEVELOPMENT },
+];
+
+export const INVOICE_STATUS_TYPE: Record<number | string, string> = {
+  1: "PENDING",
+  2: "PAID",
+  3: "DECLINED",
+};
+
+export enum USER_ACTIVITY_TYPE {
+  CLIENT_MEETING = 1,
+  PROJECT_CREATED,
+  INVOICE_PAID,
+}
+
+export const UserActivityTypeText = {
+  [USER_ACTIVITY_TYPE.CLIENT_MEETING]: {
+    title: "Client Meeting",
+    subtitle: (x: string) => `Project meeting with john @${x}`,
+  },
+  [USER_ACTIVITY_TYPE.PROJECT_CREATED]: {
+    title: "Create a new project for client",
+    subtitle: (x: string) => `${x} team members in a project`,
+  },
+  [USER_ACTIVITY_TYPE.INVOICE_PAID]: {
+    title: "Invoices have been paid",
+    subtitle: () => `Invoices have been paid to the company`,
+  },
+};
+
+export enum PLAN_TYPE {
+  BASIC = 1,
+  STANDARD,
+  PRO,
+  ENTERPRISE,
+}
+export const PLAN_NAMES = {
+  [PLAN_TYPE.BASIC]: "Basic",
+  [PLAN_TYPE.STANDARD]: "Standard",
+  [PLAN_TYPE.PRO]: "Pro",
+  [PLAN_TYPE.ENTERPRISE]: "Enterprise",
+};
+// export enum INVOICE_STATUS {
+//   PENDING = 1,
+//   DOWNLOADED,
+//   PARTIALLY_PAID,
+//   FULLY_PAID,
+//   OVERDUE,
+// }
+
+// export enum INVOICE_ITEM_TYPE {
+//   APP_DESIGN = 1,
+//   APP_CUSTOMIZATION,
+//   ABC_TEMPLATE,
+//   APP_DEVELOPMENT,
+// }
+
+export enum THEME_TYPE {
+  DARK = "dark",
+  LIGHT = "light",
+  SYSTEM = "system",
+}
+
+export enum BROWSER_TYPE {
+  CHROME_ON_WINDOWS = 1,
+  CHROME_ON_ANDROID,
+  CHROME_ON_IOS,
+  CHROME_ON_MAC,
+  FIREFOX_ON_WINDOWS,
+  EDGE_ON_WINDOWS,
+}
+
+export const BROWSER_TYPE_NAME = {
+  [BROWSER_TYPE.CHROME_ON_WINDOWS]: "Chrome on Windows",
+  [BROWSER_TYPE.CHROME_ON_ANDROID]: "Chrome on Android",
+  [BROWSER_TYPE.CHROME_ON_IOS]: "Chrome on Ios",
+  [BROWSER_TYPE.CHROME_ON_MAC]: "Chrome on Mac",
+  [BROWSER_TYPE.FIREFOX_ON_WINDOWS]: "Firefox on Windows",
+  [BROWSER_TYPE.EDGE_ON_WINDOWS]: "Edge on Windows",
+};
+
+export enum TRANSACTION_TYPES {
+  CREDIT = 1,
+  DEBIT = 2,
+}
+
+export enum TRANSACTION_SOURCE_TYPES {
+  WALLET = 1,
+  BANK_TRANSFER = 2,
+  PAYPAL = 3,
+  BANK_TRANSACTION = 4,
+  CARD = 5,
+}
+
+// User transaction types from API
+export enum USER_TRANSACTION_TYPE {
+  BET = 3,
+  WIN = 4,
+  WITHDRAWAL = 11,
+  DEPOSIT = 12,
+}
+
+export const USER_TRANSACTION_TYPE_NAMES: Record<number, string> = {
+  [USER_TRANSACTION_TYPE.BET]: "Bet",
+  [USER_TRANSACTION_TYPE.WIN]: "Win",
+  [USER_TRANSACTION_TYPE.WITHDRAWAL]: "Withdrawal",
+  [USER_TRANSACTION_TYPE.DEPOSIT]: "Deposit",
+};
+
+// Transaction Statics
+export enum USER_TRANSACTION_STATICS_TYPE {
+  REGISTER_GIFT = 1,
+  DEPOSIT = 2,
+  WITHDRAWAL = 3,
+  BET = 4,
+  CASHOUT = 5,
+  AUTO_BET = 6,
+  BET_REFUND = 7,
+  BONUS = 8,
+  REFERRAL_REWARD = 9,
+  REFERRAL_COMMISSION = 10,
+}
+export const USER_TRANSACTION_STATICS_TYPE_NAMES: Record<number, string> = {
+  [USER_TRANSACTION_STATICS_TYPE.REGISTER_GIFT]: "Register Gift",
+  [USER_TRANSACTION_STATICS_TYPE.DEPOSIT]: "Deposit",
+  [USER_TRANSACTION_STATICS_TYPE.WITHDRAWAL]: "Withdrawal",
+  [USER_TRANSACTION_STATICS_TYPE.BET]: "Bet",
+  [USER_TRANSACTION_STATICS_TYPE.CASHOUT]: "Cashout",
+  [USER_TRANSACTION_STATICS_TYPE.AUTO_BET]: "Auto Bet",
+  [USER_TRANSACTION_STATICS_TYPE.BET_REFUND]: "Bet Refund",
+  [USER_TRANSACTION_STATICS_TYPE.BONUS]: "Bonus",
+  [USER_TRANSACTION_STATICS_TYPE.REFERRAL_REWARD]: "Referral Reward",
+  [USER_TRANSACTION_STATICS_TYPE.REFERRAL_COMMISSION]: "Referral Commission",
+};
+
+// Currency types from API
+export enum CURRENCY_TYPE {
+  ETH = 1,
+  BTC = 2,
+  SOL = 3,
+  DOGE = 4,
+  TRX = 5,
+  BNB = 6,
+}
+
+export const CURRENCY_PRECISION: Record<number, number> = {
+  [CURRENCY_TYPE.BTC]: 8,
+  [CURRENCY_TYPE.ETH]: 18,
+  [CURRENCY_TYPE.SOL]: 9,
+  [CURRENCY_TYPE.DOGE]: 8,
+  [CURRENCY_TYPE.TRX]: 6,
+  [CURRENCY_TYPE.BNB]: 18,
+};
+export const CURRENCY_TYPE_NAMES: Record<number, string> = {
+  [CURRENCY_TYPE.ETH]: "ETH",
+  [CURRENCY_TYPE.BTC]: "BTC",
+  [CURRENCY_TYPE.SOL]: "SOL",
+  [CURRENCY_TYPE.DOGE]: "DOGE",
+  [CURRENCY_TYPE.TRX]: "TRX",
+  [CURRENCY_TYPE.BNB]: "BNB",
+};
+
+// Transaction status
+export enum USER_TRANSACTION_STATUS {
+  PENDING = 1,
+  COMPLETED = 2,
+  FAILED = 3,
+}
+
+export const USER_TRANSACTION_STATUS_NAMES: Record<number, string> = {
+  [USER_TRANSACTION_STATUS.PENDING]: "Pending",
+  [USER_TRANSACTION_STATUS.COMPLETED]: "Completed",
+  [USER_TRANSACTION_STATUS.FAILED]: "Failed",
+};
+export const USER_TRANSACTION_TYPES: Record<number, string> = {
+  [USER_TRANSACTION_TYPE.BET]: "Bet",
+  [USER_TRANSACTION_TYPE.WIN]: "Win",
+  [USER_TRANSACTION_TYPE.WITHDRAWAL]: "Withdrawal",
+  [USER_TRANSACTION_TYPE.DEPOSIT]: "Deposit",
+};
+// Game Types
+export enum GAME_TYPE {
+  MINES = 1,
+  KENO = 2,
+  DICE = 3,
+  LIMBO = 4,
+  DRAGON_TOWER = 5,
+  CASES = 6,
+  WHEEL = 7,
+  FLIP = 8,
+  ROCK_PAPER_SCISSORS = 9,
+  SLIDE = 10,
+}
+
+export const GAME_TYPE_NAMES: Record<number, string> = {
+  [GAME_TYPE.MINES]: "Mines",
+  [GAME_TYPE.KENO]: "Keno",
+  [GAME_TYPE.DICE]: "Dice",
+  [GAME_TYPE.LIMBO]: "Limbo",
+  [GAME_TYPE.DRAGON_TOWER]: "Dragon Tower",
+  [GAME_TYPE.CASES]: "Cases",
+  [GAME_TYPE.WHEEL]: "Wheel",
+  [GAME_TYPE.FLIP]: "Flip",
+  [GAME_TYPE.ROCK_PAPER_SCISSORS]: "Rock Paper Scissors",
+  [GAME_TYPE.SLIDE]: "Slide",
+};
+
+// Game Results
+export enum GAME_RESULT {
+  LOSS = 1,
+  WIN = 2,
+}
+
+export const GAME_RESULT_NAMES: Record<number, string> = {
+  [GAME_RESULT.LOSS]: "Loss",
+  [GAME_RESULT.WIN]: "Win",
+};
+
+// Config Types
+export enum CONFIG_TYPE {
+  REWARDS = 1,
+  CHAT_TRANSLATION = 2,
+  REFERRAL = 3,
+}
+
+export const CONFIG_TYPE_NAMES: Record<number, string> = {
+  [CONFIG_TYPE.REWARDS]: "Rewards",
+  [CONFIG_TYPE.CHAT_TRANSLATION]: "Chat Translation",
+  [CONFIG_TYPE.REFERRAL]: "Referral",
+};
+
+export enum SUBSCRIPTION_STATUS {
+  ACTIVE = 0,
+  PAST_DUE = 1,
+  CANCELLED = 2,
+  TRIALING = 3,
+  INCOMPLETE = 4,
+  PAUSED = 5,
+}
+
+export enum SUBSCRIPTION_PURCHASE_TYPE {
+  MONTHLY = 1,
+  YEARLY = 2,
+}
+
+export const SUBSCRIPTION_PURCHASE_TYPE_NAMES = {
+  [SUBSCRIPTION_PURCHASE_TYPE.MONTHLY]: "Monthly",
+  [SUBSCRIPTION_PURCHASE_TYPE.YEARLY]: "Yearly",
+};
+export enum USER_FEATURE_CODE {
+  CREATE_PROFILE = "CREATE_PROFILE",
+  CREATE_COMPANY = "CREATE_COMPANY",
+  JOIN_GROUP = "JOIN_GROUP",
+  CREATE_GROUP = "CREATE_GROUP",
+  EVENT_SPONSOR_CARD = "EVENT_SPONSOR_CARD",
+  EVENT_MESSAGING = "EVENT_MESSAGING",
+  COMPANY_HUB = "COMPANY_HUB",
+  TEAM_SEATS = "TEAM_SEATS",
+  CREATE_EVENTS = "CREATE_EVENTS",
+}
+
+export enum INDUSTRY_SECTORS {
+  TECHNOLOGY = 1,
+  FINANCE_INVESTMENT,
+  HEALTHCARE_LIFE_SCIENCES,
+  MANUFACTURING_ENGINEERING,
+  RETAIL_CONSUMER_GOODS,
+  PROFESSIONAL_SERVICES,
+  ENERGY_ENVIRONMENT,
+  EDUCATION_RESEARCH,
+  PUBLIC_SOCIAL_SERVICES,
+  MEDIA_ENTERTAINMENT,
+  LOGISTICS_SUPPLY_CHAIN,
+  REAL_ESTATE_CONSTRUCTION,
+  AGRICULTURE_FOOD,
+  TRAVEL_HOSPITALITY,
+  GOVERNMENT_DEFENSE,
+  ARTS_CULTURE,
+  MEDIA_ADVERTISING,
+  TELECOMMUNICATIONS_NETWORKING,
+  RETAIL_ECOMMERCE,
+  INSURANCE_RISK_MANAGEMENT,
+  TRANSPORTATION_LOGISTICS,
+  CYBERSECURITY,
+  NON_PROFIT_CHARITABLE,
+  LEGAL,
+  HUMANITARIAN_SOCIAL_IMPACT,
+  FOOD_BEVERAGE,
+  CREATIVE_ARTS_DESIGN,
+  MANUFACTURING_HEAVY_INDUSTRIES,
+  PROFESSIONAL_TRAINING_DEVELOPMENT,
+  SCIENCE_INNOVATION,
+}
+
+export const INDUSTRY_SECTOR_NAMES = {
+  [INDUSTRY_SECTORS.TECHNOLOGY]: "Technology Sector",
+  [INDUSTRY_SECTORS.FINANCE_INVESTMENT]: "Finance & Investment Sector",
+  [INDUSTRY_SECTORS.HEALTHCARE_LIFE_SCIENCES]:
+    "Healthcare & Life Sciences Sector",
+  [INDUSTRY_SECTORS.MANUFACTURING_ENGINEERING]:
+    "Manufacturing & Engineering Sector",
+  [INDUSTRY_SECTORS.RETAIL_CONSUMER_GOODS]: "Retail & Consumer Goods Sector",
+  [INDUSTRY_SECTORS.PROFESSIONAL_SERVICES]: "Professional Services Sector",
+  [INDUSTRY_SECTORS.ENERGY_ENVIRONMENT]: "Energy & Environment Sector",
+  [INDUSTRY_SECTORS.EDUCATION_RESEARCH]: "Education & Research Sector",
+  [INDUSTRY_SECTORS.PUBLIC_SOCIAL_SERVICES]: "Public & Social Services Sector",
+  [INDUSTRY_SECTORS.MEDIA_ENTERTAINMENT]: "Media & Entertainment Sector",
+  [INDUSTRY_SECTORS.LOGISTICS_SUPPLY_CHAIN]: "Logistics & Supply Chain Sector",
+  [INDUSTRY_SECTORS.REAL_ESTATE_CONSTRUCTION]:
+    "Real Estate & Construction Sector",
+  [INDUSTRY_SECTORS.AGRICULTURE_FOOD]: "Agriculture & Food Sector",
+  [INDUSTRY_SECTORS.TRAVEL_HOSPITALITY]: "Travel & Hospitality Sector",
+  [INDUSTRY_SECTORS.GOVERNMENT_DEFENSE]: "Government & Defense Sector",
+  [INDUSTRY_SECTORS.ARTS_CULTURE]: "Arts & Culture Sector",
+  [INDUSTRY_SECTORS.MEDIA_ADVERTISING]: "Media & Advertising Sector",
+  [INDUSTRY_SECTORS.TELECOMMUNICATIONS_NETWORKING]:
+    "Telecommunications & Networking Sector",
+  [INDUSTRY_SECTORS.RETAIL_ECOMMERCE]: "Retail & E-commerce Sector",
+  [INDUSTRY_SECTORS.INSURANCE_RISK_MANAGEMENT]:
+    "Insurance & Risk Management Sector",
+  [INDUSTRY_SECTORS.TRANSPORTATION_LOGISTICS]:
+    "Transportation & Logistics Sector",
+  [INDUSTRY_SECTORS.CYBERSECURITY]: "Cybersecurity Sector",
+  [INDUSTRY_SECTORS.NON_PROFIT_CHARITABLE]: "Non-profit & Charitable Sector",
+  [INDUSTRY_SECTORS.LEGAL]: "Legal Sector",
+  [INDUSTRY_SECTORS.HUMANITARIAN_SOCIAL_IMPACT]:
+    "Humanitarian & Social Impact Sector",
+  [INDUSTRY_SECTORS.FOOD_BEVERAGE]: "Food & Beverage Sector",
+  [INDUSTRY_SECTORS.CREATIVE_ARTS_DESIGN]: "Creative Arts & Design Sector",
+  [INDUSTRY_SECTORS.MANUFACTURING_HEAVY_INDUSTRIES]:
+    "Manufacturing & Heavy Industries Sector",
+  [INDUSTRY_SECTORS.PROFESSIONAL_TRAINING_DEVELOPMENT]:
+    "Professional Training & Development Sector",
+  [INDUSTRY_SECTORS.SCIENCE_INNOVATION]: "Science & Innovation Sector",
+};
+
+export enum Gender {
+  Man = 0,
+  Woman = 1,
+  NonBinary = 2,
+  PreferNotToSay = 3,
+}
+
+export const GENDER_LABELS: Record<Gender, string> = {
+  [Gender.Man]: "Man",
+  [Gender.Woman]: "Woman",
+  [Gender.NonBinary]: "Non-binary",
+  [Gender.PreferNotToSay]: "Prefer not to say",
+};
+export const INDUSTRY_SECTORS_OPTIONS = [
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.TECHNOLOGY],
+    value: INDUSTRY_SECTORS.TECHNOLOGY,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.FINANCE_INVESTMENT],
+    value: INDUSTRY_SECTORS.FINANCE_INVESTMENT,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.HEALTHCARE_LIFE_SCIENCES],
+    value: INDUSTRY_SECTORS.HEALTHCARE_LIFE_SCIENCES,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.MANUFACTURING_ENGINEERING],
+    value: INDUSTRY_SECTORS.MANUFACTURING_ENGINEERING,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.RETAIL_CONSUMER_GOODS],
+    value: INDUSTRY_SECTORS.RETAIL_CONSUMER_GOODS,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.PROFESSIONAL_SERVICES],
+    value: INDUSTRY_SECTORS.PROFESSIONAL_SERVICES,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.ENERGY_ENVIRONMENT],
+    value: INDUSTRY_SECTORS.ENERGY_ENVIRONMENT,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.EDUCATION_RESEARCH],
+    value: INDUSTRY_SECTORS.EDUCATION_RESEARCH,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.PUBLIC_SOCIAL_SERVICES],
+    value: INDUSTRY_SECTORS.PUBLIC_SOCIAL_SERVICES,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.MEDIA_ENTERTAINMENT],
+    value: INDUSTRY_SECTORS.MEDIA_ENTERTAINMENT,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.LOGISTICS_SUPPLY_CHAIN],
+    value: INDUSTRY_SECTORS.LOGISTICS_SUPPLY_CHAIN,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.REAL_ESTATE_CONSTRUCTION],
+    value: INDUSTRY_SECTORS.REAL_ESTATE_CONSTRUCTION,
+  },
+  {
+    label: INDUSTRY_SECTOR_NAMES[INDUSTRY_SECTORS.AGRICULTURE_FOOD],
+    value: INDUSTRY_SECTORS.AGRICULTURE_FOOD,
+  },
+];
+//Job
+export enum JOB_TYPE {
+  FULL_TIME = 1,
+  PART_TIME = 2,
+  CONTRACT = 3,
+  INTERNSHIP = 4,
+  FREELANCE = 5,
+  TEMPARARY = 6,
+}
+export const JOB_TYPE_LABELS = {
+  [JOB_TYPE.FULL_TIME]: "Full Time",
+  [JOB_TYPE.PART_TIME]: "Part Time",
+  [JOB_TYPE.CONTRACT]: "Contract",
+  [JOB_TYPE.INTERNSHIP]: "Internship",
+  [JOB_TYPE.FREELANCE]: "Freelance",
+  [JOB_TYPE.TEMPARARY]: "Temporary",
+};
+export const JOB_TYPE_OPTIONS = [
+  { label: JOB_TYPE_LABELS[JOB_TYPE.FULL_TIME], value: JOB_TYPE.FULL_TIME },
+  { label: JOB_TYPE_LABELS[JOB_TYPE.PART_TIME], value: JOB_TYPE.PART_TIME },
+  { label: JOB_TYPE_LABELS[JOB_TYPE.CONTRACT], value: JOB_TYPE.CONTRACT },
+  { label: JOB_TYPE_LABELS[JOB_TYPE.INTERNSHIP], value: JOB_TYPE.INTERNSHIP },
+  { label: JOB_TYPE_LABELS[JOB_TYPE.FREELANCE], value: JOB_TYPE.FREELANCE },
+  { label: JOB_TYPE_LABELS[JOB_TYPE.TEMPARARY], value: JOB_TYPE.TEMPARARY },
+];
+
+export enum JOB_LOCATION {
+  IN_PERSON = 1,
+  REMOTE = 2,
+  HYBRID = 3,
+}
+export const JOBS_LOCATION_LABELS = {
+  [JOB_LOCATION.IN_PERSON]: "In-Person",
+  [JOB_LOCATION.REMOTE]: "Remote",
+  [JOB_LOCATION.HYBRID]: "Hybrid",
+};
+export const JOB_LOCATION_OPTIONS = [
+  {
+    label: JOBS_LOCATION_LABELS[JOB_LOCATION.IN_PERSON],
+    value: JOB_LOCATION.IN_PERSON,
+  },
+  {
+    label: JOBS_LOCATION_LABELS[JOB_LOCATION.REMOTE],
+    value: JOB_LOCATION.REMOTE,
+  },
+  {
+    label: JOBS_LOCATION_LABELS[JOB_LOCATION.HYBRID],
+    value: JOB_LOCATION.HYBRID,
+  },
+];
+export enum JOB_VISIBILITY {
+  PUBLIC = 1,
+  PRIVATE = 2,
+}
+export const JOB_VISIBILITY_LABELS = {
+  [JOB_VISIBILITY.PUBLIC]: "Public",
+  [JOB_VISIBILITY.PRIVATE]: "Private",
+};
+export const JOB_VISIBILITY_OPTIONS = [
+  {
+    label: JOB_VISIBILITY_LABELS[JOB_VISIBILITY.PUBLIC],
+    value: JOB_VISIBILITY.PUBLIC,
+  },
+  {
+    label: JOB_VISIBILITY_LABELS[JOB_VISIBILITY.PRIVATE],
+    value: JOB_VISIBILITY.PRIVATE,
+  },
+];
+export enum JOB_STATUS {
+  ACTIVE = 1,
+  INACTIVE = 2,
+  ARCHIVE = 3,
+}
+export const JOB_STATUS_LABELS = {
+  [JOB_STATUS.ACTIVE]: "Active",
+  [JOB_STATUS.INACTIVE]: "Inactive",
+  [JOB_STATUS.ARCHIVE]: "Archive",
+};
+export const JOB_STATUS_OPTIONS = [
+  {
+    label: JOB_STATUS_LABELS[JOB_STATUS.ACTIVE],
+    value: JOB_STATUS.ACTIVE,
+  },
+  {
+    label: JOB_STATUS_LABELS[JOB_STATUS.INACTIVE],
+    value: JOB_STATUS.INACTIVE,
+  },
+  {
+    label: JOB_STATUS_LABELS[JOB_STATUS.ARCHIVE],
+    value: JOB_STATUS.ARCHIVE,
+  },
+];
+export enum JOB_SALARY_CATEGORY {
+  LESS_THAN_30K = 1,
+  THIRTY_THOUSAND_TO_FIFTY_THOUSAND = 2,
+  FIFTY_THOUSAND_TO_SEVENTY_THOUSAND = 3,
+  MORE_THAN_SEVENTY_THOUSAND = 4,
+  OPEN_TO_DISCUSSION = 5,
+}
+export const JOB_SALARY_CATEGORY_LABELS = {
+  [JOB_SALARY_CATEGORY.LESS_THAN_30K]: "Less than $30,000",
+  [JOB_SALARY_CATEGORY.THIRTY_THOUSAND_TO_FIFTY_THOUSAND]: "$30,000 – $50,000",
+  [JOB_SALARY_CATEGORY.FIFTY_THOUSAND_TO_SEVENTY_THOUSAND]: "$50,000 – $70,000",
+  [JOB_SALARY_CATEGORY.MORE_THAN_SEVENTY_THOUSAND]: "More than $70,000",
+  [JOB_SALARY_CATEGORY.OPEN_TO_DISCUSSION]: "Open to discussion",
+};
+
+export const JOB_SALARY_CATEGORY_OPTIONS = [
+  {
+    label: JOB_SALARY_CATEGORY_LABELS[JOB_SALARY_CATEGORY.LESS_THAN_30K],
+    value: JOB_SALARY_CATEGORY.LESS_THAN_30K,
+  },
+  {
+    label:
+      JOB_SALARY_CATEGORY_LABELS[
+        JOB_SALARY_CATEGORY.THIRTY_THOUSAND_TO_FIFTY_THOUSAND
+      ],
+    value: JOB_SALARY_CATEGORY.THIRTY_THOUSAND_TO_FIFTY_THOUSAND,
+  },
+  {
+    label:
+      JOB_SALARY_CATEGORY_LABELS[
+        JOB_SALARY_CATEGORY.FIFTY_THOUSAND_TO_SEVENTY_THOUSAND
+      ],
+    value: JOB_SALARY_CATEGORY.FIFTY_THOUSAND_TO_SEVENTY_THOUSAND,
+  },
+  {
+    label:
+      JOB_SALARY_CATEGORY_LABELS[
+        JOB_SALARY_CATEGORY.MORE_THAN_SEVENTY_THOUSAND
+      ],
+    value: JOB_SALARY_CATEGORY.MORE_THAN_SEVENTY_THOUSAND,
+  },
+  {
+    label: JOB_SALARY_CATEGORY_LABELS[JOB_SALARY_CATEGORY.OPEN_TO_DISCUSSION],
+    value: JOB_SALARY_CATEGORY.OPEN_TO_DISCUSSION,
+  },
+];
+
+// GROUPS SECTION CONSTANTS
+export enum GROUP_STATUS {
+  ACTIVE = 1,
+  FLAGGED = 2,
+  INACTIVE = 3,
+}
+export const GROUP_STATUS_LABELS = {
+  [GROUP_STATUS.ACTIVE]: "Active",
+  [GROUP_STATUS.FLAGGED]: "Flagged",
+  [GROUP_STATUS.INACTIVE]: "Inactive",
+};
+export const GROUP_STATUS_OPTIONS = [
+  {
+    label: GROUP_STATUS_LABELS[GROUP_STATUS.ACTIVE],
+    value: GROUP_STATUS.ACTIVE,
+  },
+  {
+    label: GROUP_STATUS_LABELS[GROUP_STATUS.FLAGGED],
+    value: GROUP_STATUS.FLAGGED,
+  },
+  {
+    label: GROUP_STATUS_LABELS[GROUP_STATUS.INACTIVE],
+    value: GROUP_STATUS.INACTIVE,
+  },
+];
+
+export enum GROUP_TYPE {
+  PUBLIC = 1,
+  PRIVATE = 2,
+  SECRET = 3,
+}
+export const GROUP_TYPE_LABELS = {
+  [GROUP_TYPE.PUBLIC]: "Public",
+  [GROUP_TYPE.PRIVATE]: "Private",
+  [GROUP_TYPE.SECRET]: "Secret",
+};
+export const GROUP_TYPE_OPTIONS = [
+  { label: GROUP_TYPE_LABELS[GROUP_TYPE.PUBLIC], value: GROUP_TYPE.PUBLIC },
+  { label: GROUP_TYPE_LABELS[GROUP_TYPE.PRIVATE], value: GROUP_TYPE.PRIVATE },
+  { label: GROUP_TYPE_LABELS[GROUP_TYPE.SECRET], value: GROUP_TYPE.SECRET },
+];
+
+export enum GROUP_TRUST_LEVEL {
+  LEVEL_1 = 1,
+  LEVEL_2 = 2,
+  LEVEL_3 = 3,
+  LEVEL_4 = 4,
+}
+export const GROUP_TRUST_LEVEL_LABELS = {
+  [GROUP_TRUST_LEVEL.LEVEL_1]: "Level 1",
+  [GROUP_TRUST_LEVEL.LEVEL_2]: "Level 2",
+  [GROUP_TRUST_LEVEL.LEVEL_3]: "Level 3",
+  [GROUP_TRUST_LEVEL.LEVEL_4]: "Level 4",
+};
+export const GROUP_TRUST_LEVEL_OPTIONS = [
+  {
+    label: GROUP_TRUST_LEVEL_LABELS[GROUP_TRUST_LEVEL.LEVEL_1],
+    value: GROUP_TRUST_LEVEL.LEVEL_1,
+  },
+  {
+    label: GROUP_TRUST_LEVEL_LABELS[GROUP_TRUST_LEVEL.LEVEL_2],
+    value: GROUP_TRUST_LEVEL.LEVEL_2,
+  },
+  {
+    label: GROUP_TRUST_LEVEL_LABELS[GROUP_TRUST_LEVEL.LEVEL_3],
+    value: GROUP_TRUST_LEVEL.LEVEL_3,
+  },
+  {
+    label: GROUP_TRUST_LEVEL_LABELS[GROUP_TRUST_LEVEL.LEVEL_4],
+    value: GROUP_TRUST_LEVEL.LEVEL_4,
+  },
+];
+
+export enum GROUP_ACTIVITY {
+  HIGH = 1,
+  LOW = 2,
+  DORMANT = 3,
+  NO_ACTIVITY = 4,
+}
+export const GROUP_ACTIVITY_LABELS = {
+  [GROUP_ACTIVITY.HIGH]: "Active Recently",
+  [GROUP_ACTIVITY.LOW]: "Low Activity",
+  [GROUP_ACTIVITY.DORMANT]: "Dormant",
+  [GROUP_ACTIVITY.NO_ACTIVITY]: "No Activity",
+};
+export const GROUP_ACTIVITY_OPTIONS = [
+  {
+    label: GROUP_ACTIVITY_LABELS[GROUP_ACTIVITY.HIGH],
+    value: GROUP_ACTIVITY.HIGH,
+  },
+  {
+    label: GROUP_ACTIVITY_LABELS[GROUP_ACTIVITY.LOW],
+    value: GROUP_ACTIVITY.LOW,
+  },
+  {
+    label: GROUP_ACTIVITY_LABELS[GROUP_ACTIVITY.DORMANT],
+    value: GROUP_ACTIVITY.DORMANT,
+  },
+  {
+    label: GROUP_ACTIVITY_LABELS[GROUP_ACTIVITY.NO_ACTIVITY],
+    value: GROUP_ACTIVITY.NO_ACTIVITY,
+  },
+];
+
+// Example topics, can be replaced with dynamic fetch if needed
+export const CHAT_TRANSLATION_LANGUAGE = {
+  ENGLISH: 1,
+  INDONESIAN: 2,
+};
+
+export const CHAT_TRANSLATION_LANGUAGE_OPTIONS = [
+  { label: "English", value: CHAT_TRANSLATION_LANGUAGE.ENGLISH },
+  { label: "Indonesian", value: CHAT_TRANSLATION_LANGUAGE.INDONESIAN },
+];
+
+export enum POINT_RULE_KEY {
+  OriginalContent = 0,
+  InviteUser = 1,
+  ListEvent = 2,
+  CreateGroup = 3,
+  PostJobBusinessListing = 4,
+  ValuableComment = 5,
+  RepostContent = 6,
+  CompleteProfile = 7,
+  ContributorStreak = 8,
+  SharePublicTestimonial = 9,
+}
+
+export enum PROMO_DISCOUNT_TYPE {
+  PERCENTAGE = 1,
+  FIXED_AMOUNT = 2,
+}
+
+export enum PROMO_DURATION {
+  ONCE = 1,
+  REPEATING = 2,
+  FOREVER = 3,
+}
+
+export const PROMO_DISCOUNT_TYPE_LABELS: Record<PROMO_DISCOUNT_TYPE, string> = {
+  [PROMO_DISCOUNT_TYPE.PERCENTAGE]: "Percentage",
+  [PROMO_DISCOUNT_TYPE.FIXED_AMOUNT]: "Fixed Amount",
+};
+
+export const PROMO_DURATION_LABELS: Record<PROMO_DURATION, string> = {
+  [PROMO_DURATION.ONCE]: "Once",
+  [PROMO_DURATION.REPEATING]: "Repeating",
+  [PROMO_DURATION.FOREVER]: "Forever",
+};
+
+export enum TABLE_ACTIONS {
+  APPROVE = "Approve",
+  FLAG = "Flag",
+  REMOVE = "Remove",
+  ARCHIVE = "Archive",
+  REJECT = "Reject",
+  FEATURE = "Feature",
+  DELETE = "Delete",
+  MARK_AS_SPAM = "Mark as Spam",
+  BAN_CREATOR = "Ban Creator",
+  RESTORE = "Restore",
+}
+
+export enum ENTITY_STATUS {
+  ACTIVE = 1,
+  FLAGGED = 2,
+  INACTIVE = 3,
+  APPROVED = 4,
+  PENDING = 5,
+  REJECTED = 6,
+  ARCHIVED = 7,
+  DELETED = 8,
+}
+export const ENTITY_STATUS_LABELS: Record<ENTITY_STATUS, string> = {
+  [ENTITY_STATUS.ACTIVE]: "Active",
+  [ENTITY_STATUS.FLAGGED]: "Flagged",
+  [ENTITY_STATUS.INACTIVE]: "Inactive",
+  [ENTITY_STATUS.APPROVED]: "Approved",
+  [ENTITY_STATUS.PENDING]: "Pending",
+  [ENTITY_STATUS.REJECTED]: "Rejected",
+  [ENTITY_STATUS.ARCHIVED]: "Archived",
+  [ENTITY_STATUS.DELETED]: "Deleted",
+};
+export const STATUS_COLOR_MAP: Record<ENTITY_STATUS, string> = {
+  [ENTITY_STATUS.ACTIVE]: "bg-green-100 text-green-800",
+  [ENTITY_STATUS.FLAGGED]: "bg-orange-100 text-orange-800",
+  [ENTITY_STATUS.INACTIVE]: "bg-yellow-100 text-yellow-800",
+  [ENTITY_STATUS.APPROVED]: "bg-green-100 text-green-800",
+  [ENTITY_STATUS.PENDING]: "bg-yellow-100 text-yellow-800",
+  [ENTITY_STATUS.REJECTED]: "bg-red-100 text-red-800",
+  [ENTITY_STATUS.ARCHIVED]: "bg-gray-100 text-gray-800",
+  [ENTITY_STATUS.DELETED]: "bg-darklabelprimary text-gray-800",
+};
+
+export enum CHART_COLORS {
+  PRIMARY = "#623022",
+  SECONDARY = "#c97254",
+  SPENT = "#cf0707",
+}
+
+// Payment Transactions
+export enum PAYMENT_STATUS {
+  INITIATED = 1,
+  SUCCESS = 2,
+  FAILED = 3,
+  REFUNDED = 4,
+}
+
+export const PAYMENT_STATUS_LABELS: Record<PAYMENT_STATUS, string> = {
+  [PAYMENT_STATUS.INITIATED]: "Initiated",
+  [PAYMENT_STATUS.SUCCESS]: "Success",
+  [PAYMENT_STATUS.FAILED]: "Failed",
+  [PAYMENT_STATUS.REFUNDED]: "Refunded",
+};
+
+export enum SUBSCRIPTION_OWNER_TYPE {
+  USER = 1,
+  ORGANISATION = 2,
+}
+
+export const SUBSCRIPTION_OWNER_TYPE_LABELS: Record<
+  SUBSCRIPTION_OWNER_TYPE,
+  string
+> = {
+  [SUBSCRIPTION_OWNER_TYPE.USER]: "User",
+  [SUBSCRIPTION_OWNER_TYPE.ORGANISATION]: "Organisation",
+};
+
+export const SUBSCRIPTION_STATUS_LABELS: Record<SUBSCRIPTION_STATUS, string> = {
+  [SUBSCRIPTION_STATUS.ACTIVE]: "Active",
+  [SUBSCRIPTION_STATUS.PAST_DUE]: "Past Due",
+  [SUBSCRIPTION_STATUS.CANCELLED]: "Cancelled",
+  [SUBSCRIPTION_STATUS.TRIALING]: "Trialing",
+  [SUBSCRIPTION_STATUS.INCOMPLETE]: "Incomplete",
+  [SUBSCRIPTION_STATUS.PAUSED]: "Paused",
+};
+
+export enum BILLING_CYCLE {
+  MONTHLY = 1,
+  YEARLY = 2,
+}
+
+export const BILLING_CYCLE_LABELS: Record<BILLING_CYCLE, string> = {
+  [BILLING_CYCLE.MONTHLY]: "Monthly",
+  [BILLING_CYCLE.YEARLY]: "Yearly",
+};
+
+export const SUBSCRIPTION_STATUS_OPTIONS = [
+  {
+    label: SUBSCRIPTION_STATUS_LABELS[SUBSCRIPTION_STATUS.ACTIVE],
+    value: SUBSCRIPTION_STATUS.ACTIVE,
+  },
+  {
+    label: SUBSCRIPTION_STATUS_LABELS[SUBSCRIPTION_STATUS.PAST_DUE],
+    value: SUBSCRIPTION_STATUS.PAST_DUE,
+  },
+  {
+    label: SUBSCRIPTION_STATUS_LABELS[SUBSCRIPTION_STATUS.CANCELLED],
+    value: SUBSCRIPTION_STATUS.CANCELLED,
+  },
+  {
+    label: SUBSCRIPTION_STATUS_LABELS[SUBSCRIPTION_STATUS.TRIALING],
+    value: SUBSCRIPTION_STATUS.TRIALING,
+  },
+  {
+    label: SUBSCRIPTION_STATUS_LABELS[SUBSCRIPTION_STATUS.INCOMPLETE],
+    value: SUBSCRIPTION_STATUS.INCOMPLETE,
+  },
+  {
+    label: SUBSCRIPTION_STATUS_LABELS[SUBSCRIPTION_STATUS.PAUSED],
+    value: SUBSCRIPTION_STATUS.PAUSED,
+  },
+];
+
+export const BILLING_CYCLE_OPTIONS = [
+  {
+    label: BILLING_CYCLE_LABELS[BILLING_CYCLE.MONTHLY],
+    value: BILLING_CYCLE.MONTHLY,
+  },
+  {
+    label: BILLING_CYCLE_LABELS[BILLING_CYCLE.YEARLY],
+    value: BILLING_CYCLE.YEARLY,
+  },
+];
+
+export const MIN_ORGANISATION_SEATS = 3;
+export const DEFAULT_USER_SEATS = 1;
+
+export enum PlanType {
+  INDIVIDUAL = 1,
+  ORGANISATION = 2,
+  ENTERPRISE = 3,
+}
+
+export enum REPORT_FILTER_TYPE {
+  DAY = 1,
+  MONTH = 2,
+  YEAR = 3,
+  DATE_RANGE = 4,
+}
+
+export const REPORT_FILTER_TYPE_OPTIONS = [
+  {
+    value: REPORT_FILTER_TYPE.DAY,
+    labelKey: "filterDayLast30",
+  },
+  {
+    value: REPORT_FILTER_TYPE.MONTH,
+    labelKey: "filterMonthLast12",
+  },
+  {
+    value: REPORT_FILTER_TYPE.YEAR,
+    labelKey: "filterYearAllTime",
+  },
+  {
+    value: REPORT_FILTER_TYPE.DATE_RANGE,
+    labelKey: "filterDateRangeCustom",
+  },
+];
+
+export enum REPORT_GROUP_BY {
+  DAY = 1,
+  MONTH = 2,
+  YEAR = 3,
+}
+
+export const REPORT_GROUP_BY_OPTIONS = [
+  {
+    value: REPORT_GROUP_BY.DAY,
+    labelKey: "groupByDay",
+  },
+  {
+    value: REPORT_GROUP_BY.MONTH,
+    labelKey: "groupByMonth",
+  },
+  {
+    value: REPORT_GROUP_BY.YEAR,
+    labelKey: "groupByYear",
+  },
+];
+export const CURRENCY_CODES = {
+  GBP: "GBP",
+  USD: "USD",
+} as const;
+
+export const CURRENCY_SYMBOLS: Record<string, string> = {
+  [CURRENCY_CODES.GBP]: "£",
+  [CURRENCY_CODES.USD]: "$",
+};

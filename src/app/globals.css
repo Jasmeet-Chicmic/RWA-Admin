@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --para-color: #6d6b77;
+  --bs-heading-color: #444050;
+  --bs-border-width: 1px;
+  --bs-base-color: #2f2b3d;
+  --bs-paper-bg: #fff;
+  --color-black-opacity: rgba(0, 0, 0, 0.2);
+  --bs-gray-200: #e6e6e8;
+  --bg-white-800: rgba(255, 255, 255, 0.8);
+  --rounded-lg: 20px;
+  --lightpurple: #2f522b;
+  --lightgreen: #20241f;
+  --text-blue-600: #0082fc;
+  --from-purple-500: #3b9b00;
+  --to-blue-600: #9ef837;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #0a0a0a;
+    --radius-20: 20px;
+  }
+}
+
+@layer utilities {
+  .rounded-20 {
+    border-radius: var(--radius-20);
+  }
+
+  .lightbgbase {}
+
+  .darkbgbase {}
+
+  .bgwhite {}
+
+  .bgblack {}
+
+  .bgpriamry {}
+
+  .darkbgpriamry {}
+
+  .primarycolor {}
+
+  .sidebartext {}
+}
+
+body {
+  background: var(--background) !important;
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+h4 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+p,
+input,
+span,
+a {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+input::placeholder {
+  color: var(--para-color);
+}
+
+label {
+  font-size: 13px;
+  color: var(--bs-heading-color);
+}
+
+input {
+  border: var(--bs-border-width) solid var(--color-black-opacity);
+  outline: none;
+}
+
+button {
+  outline: none !important
+}
+
+.divider {
+  --bs-divider-color: var(--bs-gray-200);
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.swiper-pagination-bullets>span {
+  background-color: var(--bg-white-800);
+  margin: 0px !important;
+}
+
+.swiper-pagination-bullets>span.active {
+  background-color: var(--background);
+}
+
+.PhoneInput {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  min-height: 43px;
+}
+
+.PhoneInput .PhoneInputCountryIcon {
+  width: 16px;
+  height: 11px;
+  box-shadow: unset;
+}
+
+.PhoneInput .PhoneInputCountrySelectArrow {
+  display: none;
+}
+
+.PhoneInput .PhoneInputInput {
+  font-size: 12px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 600;
+  padding-inline: 15px;
+}
+
+.PhoneInput select {
+  padding-right: 35px;
+}
+
+.PhoneInputInput {
+  border: none;
+}
+
+.PhoneInput .PhoneInputCountry {
+  min-width: 48px;
+  justify-content: center;
+  border-right: 1px solid #ddd;
+  padding: 0;
+  margin-left: 4px;
+  margin-right: 0;
+}
+
+.PhoneInput--disabled {
+  background-color: #b4b7b9;
+  opacity: 0.88 !important;
+}
+
+.PhoneInput--disabled.PhoneInput .PhoneInputInput {
+  background: transparent;
+}
+
+.myshadow1 {
+  /* box-shadow: 0px 5px 10px rgba(163, 174, 208, 10%); */
+}
+
+/* .sidebar-menu-item:hover span {
+  color: #99a1af !important;
+}
+
+.sidebar-menu-item:hover span svg,
+.sidebar-menu-item:hover div svg {
+  stroke: #99a1af !important;
+}
+
+.sub-menu-item span {
+  color: #99a1af;
+}
+
+.sub-menu-item .list-item {
+  color: #99a1af;
+}
+
+.sub-menu-item .list-item-icon {
+  border-color: #99a1af;
+}
+
+.sub-menu-item-active span {
+  color: #99a1af;
+}
+
+.sub-menu-item-active .list-item-icon {
+  border-color: #99a1af;
+} */
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c97254;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #161515;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c97254 transparent;
+}
+
+.preview-main-content {
+  max-height: 380px;
+  max-width: 1110px;
+  margin: 0 auto;
+}
+
+.grid-view-cards {
+  max-height: inherit !important;
+}
+
+@media only screen and (max-width:780px) {
+  .custom-container {
+    padding: 0px 15px;
+  }
+}

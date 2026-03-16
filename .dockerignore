@@ -1,0 +1,9 @@
+node_modules
+build
+.dockerignore
+Dockerfile
+README.md
+.git
+.next
+netlify.toml
+.netlify

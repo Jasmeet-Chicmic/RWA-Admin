@@ -1,0 +1,57 @@
+{
+  "Roles": "Rôles",
+  "Header subtitle": "Gérez les rôles de l’application et leurs limites de fonctionnalités.",
+  "Search Roles": "Rechercher des rôles",
+
+  "Name": "Nom",
+  "Role Name": "Nom du rôle",
+  "Is Active": "Est actif",
+  "Role Status": "Statut",
+  "Feature Count": "Total des fonctionnalités",
+  "Features Assigned": "Fonctionnalités assignées",
+  "Actions": "Actions",
+  "Active": "Actif",
+  "Inactive": "Inactif",
+  "View Features": "Voir les fonctionnalités",
+  "No roles found": "Aucun rôle trouvé",
+
+  "Role Features": "Fonctionnalités du rôle",
+  "Feature Name": "Nom de la fonctionnalité",
+  "Feature Code": "Code de la fonctionnalité",
+  "Value": "Valeur",
+  "Unlimited": "Illimité",
+  "Custom": "Personnalisé",
+  "No features found": "Aucune fonctionnalité trouvée pour ce rôle.",
+  "Back to Roles": "Retour aux rôles",
+
+  "Edit Feature": "Modifier",
+  "EditModal": {
+    "Title": "Modifier la fonctionnalité du rôle",
+    "Feature Code": "Code de la fonctionnalité",
+    "Value": "Valeur",
+    "ValuePlaceholder": "Saisissez une valeur",
+    "Unlimited Hint": "Laissez le champ vide pour rendre cette fonctionnalité illimitée.",
+    "Cancel": "Annuler",
+    "Save Changes": "Enregistrer les modifications",
+    "Saving": "Enregistrement...",
+    "Save Success": "Fonctionnalité du rôle mise à jour avec succès",
+    "Save Error": "Échec de la mise à jour de la fonctionnalité du rôle"
+  },
+  "Add Feature": "Ajouter une fonctionnalité",
+  "AddModal": {
+    "Title": "Ajouter une fonctionnalité au rôle",
+    "Select Feature": "Sélectionner une fonctionnalité",
+    "Select Feature Placeholder": "Rechercher des fonctionnalités...",
+    "ValuePlaceholder": "Saisissez une valeur",
+    "Unlimited Hint": "Laissez le champ vide ou sélectionnez Illimité pour rendre cette fonctionnalité illimitée.",
+    "Cancel": "Annuler",
+    "Save Changes": "Ajouter la fonctionnalité",
+    "Saving": "Ajout...",
+    "Save Success": "Fonctionnalité ajoutée au rôle avec succès",
+    "Save Error": "Échec de l’ajout de la fonctionnalité au rôle"
+  },
+  "Delete Feature": "Supprimer la fonctionnalité",
+  "Delete Feature confirmation": "Êtes-vous sûr de vouloir supprimer cette fonctionnalité de ce rôle ?",
+  "Delete Success": "Fonctionnalité supprimée du rôle avec succès",
+  "Delete Error": "Échec de la suppression de la fonctionnalité du rôle"
+}

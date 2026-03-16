@@ -1,0 +1,53 @@
+{
+  "Podcasts": "Podcasts",
+  "Header subtitle": "Navegue e gerencie podcasts da rede sixthhive.",
+  "Search Podcasts": "Pesquisar podcasts",
+  "Create": "Criar",
+  "Filters": "Filtros",
+  "Podcast Filters": "Filtros de podcasts",
+  "Filter sidebar description": "Nenhum filtro configurado ainda. Esta barra lateral está pronta para futuros filtros de podcasts (por exemplo, status de rascunho, criador, data).",
+  "No podcasts found": "Nenhum podcast encontrado.",
+
+  "Media URL is required": "A URL de mídia é obrigatória",
+  "Media URL invalid message": "A URL de mídia não é válida. Atualize o podcast e forneça uma URL válida.",
+
+  "Media URL": "URL de mídia",
+  "Title": "Título",
+  "Description": "Descrição",
+  "Enter podcast title (optional)": "Insira o título do podcast (opcional)",
+  "Enter podcast description (optional)": "Insira a descrição do podcast (opcional)",
+  "Paste podcast embed URL": "Cole a URL de incorporação do podcast",
+  "URL pattern error": "Insira uma URL válida começando com http ou https",
+
+  "Edit": "Editar",
+  "Disable": "Desativar",
+  "Enable": "Ativar",
+  "Updating": "Atualizando",
+  "Delete": "Excluir",
+  "Deleting": "Excluindo",
+
+  "Create Podcast": "Criar podcast",
+  "Creating": "Criando",
+  "Edit Podcast": "Editar podcast",
+  "Saving": "Salvando",
+  "Save Changes": "Salvar alterações",
+  "Cancel": "Cancelar",
+
+  "Delete Podcast": "Excluir podcast",
+  "Delete Podcast confirmation": "Tem certeza de que deseja excluir este podcast?",
+  "Disable Podcast": "Desativar podcast",
+  "Enable Podcast": "Ativar podcast",
+  "Disable Podcast confirmation": "Tem certeza de que deseja desativar este podcast?",
+  "Enable Podcast confirmation": "Tem certeza de que deseja ativar este podcast?",
+
+  "Failed to create podcast": "Falha ao criar o podcast",
+  "Podcast created successfully": "Podcast criado com sucesso",
+  "Failed to delete podcast": "Falha ao excluir o podcast",
+  "Podcast deleted successfully": "Podcast excluído com sucesso",
+  "Failed to update podcast status": "Falha ao atualizar o status do podcast",
+  "Podcast disabled successfully": "Podcast desativado com sucesso",
+  "Podcast enabled successfully": "Podcast ativado com sucesso",
+  "Failed to update podcast": "Falha ao atualizar o podcast",
+  "Podcast updated successfully": "Podcast atualizado com sucesso"
+}
+

@@ -1,0 +1,53 @@
+{
+  "Podcasts": "Podcasts",
+  "Header subtitle": "Browse and manage podcasts from the sixthhive network.",
+  "Search Podcasts": "Search Podcasts",
+  "Create": "Create",
+  "Filters": "Filters",
+  "Podcast Filters": "Podcast Filters",
+  "Filter sidebar description": "No filters configured yet. This sidebar is ready for future podcast filters (e.g. draft status, creator, date).",
+  "No podcasts found": "No podcasts found",
+
+  "Media URL is required": "Media URL is required",
+  "Media URL invalid message": "Media URL is not valid. Please update the podcast and provide a valid URL.",
+
+  "Media URL": "Media URL",
+  "Title": "Title",
+  "Description": "Description",
+  "Enter podcast title (optional)": "Enter podcast title (optional)",
+  "Enter podcast description (optional)": "Enter podcast description (optional)",
+  "Paste podcast embed URL": "Paste podcast embed URL",
+  "URL pattern error": "Please enter a valid URL starting with http or https",
+
+  "Edit": "Edit",
+  "Disable": "Disable",
+  "Enable": "Enable",
+  "Updating": "Updating",
+  "Delete": "Delete",
+  "Deleting": "Deleting",
+
+  "Create Podcast": "Create Podcast",
+  "Creating": "Creating",
+  "Edit Podcast": "Edit Podcast",
+  "Saving": "Saving",
+  "Save Changes": "Save Changes",
+  "Cancel": "Cancel",
+
+  "Delete Podcast": "Delete Podcast",
+  "Delete Podcast confirmation": "Are you sure you want to delete this podcast?",
+  "Disable Podcast": "Disable Podcast",
+  "Enable Podcast": "Enable Podcast",
+  "Disable Podcast confirmation": "Are you sure you want to disable this podcast?",
+  "Enable Podcast confirmation": "Are you sure you want to enable this podcast?",
+
+  "Failed to create podcast": "Failed to create podcast",
+  "Podcast created successfully": "Podcast created successfully",
+  "Failed to delete podcast": "Failed to delete podcast",
+  "Podcast deleted successfully": "Podcast deleted successfully",
+  "Failed to update podcast status": "Failed to update podcast status",
+  "Podcast disabled successfully": "Podcast disabled successfully",
+  "Podcast enabled successfully": "Podcast enabled successfully",
+  "Failed to update podcast": "Failed to update podcast",
+  "Podcast updated successfully": "Podcast updated successfully"
+}
+

@@ -1,0 +1,57 @@
+{
+  "Roles": "Funções",
+  "Header subtitle": "Gerencie as funções do aplicativo e seus limites de recursos.",
+  "Search Roles": "Pesquisar funções",
+
+  "Name": "Nome",
+  "Role Name": "Nome da função",
+  "Is Active": "Está ativo",
+  "Role Status": "Status",
+  "Feature Count": "Total de funcionalidades",
+  "Features Assigned": "Recursos atribuídos",
+  "Actions": "Ações",
+  "Active": "Ativo",
+  "Inactive": "Inativo",
+  "View Features": "Ver recursos",
+  "No roles found": "Nenhuma função encontrada",
+
+  "Role Features": "Recursos da função",
+  "Feature Name": "Nome do recurso",
+  "Feature Code": "Código do recurso",
+  "Value": "Valor",
+  "Unlimited": "Ilimitado",
+  "Custom": "Personalizado",
+  "No features found": "Nenhum recurso encontrado para esta função.",
+  "Back to Roles": "Voltar para Funções",
+
+  "Edit Feature": "Editar",
+  "EditModal": {
+    "Title": "Editar recurso da função",
+    "Feature Code": "Código do recurso",
+    "Value": "Valor",
+    "ValuePlaceholder": "Insira um valor",
+    "Unlimited Hint": "Deixe o campo em branco para definir este recurso como ilimitado.",
+    "Cancel": "Cancelar",
+    "Save Changes": "Salvar alterações",
+    "Saving": "Salvando...",
+    "Save Success": "Recurso da função atualizado com sucesso",
+    "Save Error": "Falha ao atualizar o recurso da função"
+  },
+  "Add Feature": "Adicionar recurso",
+  "AddModal": {
+    "Title": "Adicionar recurso à função",
+    "Select Feature": "Selecionar recurso",
+    "Select Feature Placeholder": "Pesquisar recursos...",
+    "ValuePlaceholder": "Insira um valor",
+    "Unlimited Hint": "Deixe o campo em branco ou selecione Ilimitado para tornar este recurso ilimitado.",
+    "Cancel": "Cancelar",
+    "Save Changes": "Adicionar recurso",
+    "Saving": "Adicionando...",
+    "Save Success": "Recurso adicionado à função com sucesso",
+    "Save Error": "Falha ao adicionar o recurso à função"
+  },
+  "Delete Feature": "Excluir recurso",
+  "Delete Feature confirmation": "Tem certeza de que deseja remover este recurso desta função?",
+  "Delete Success": "Recurso removido da função com sucesso",
+  "Delete Error": "Falha ao remover o recurso da função"
+}

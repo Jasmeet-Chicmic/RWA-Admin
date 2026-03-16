@@ -1,0 +1,42 @@
+---
+alwaysApply: true
+globs: *.ts,*.tsx
+---
+
+## ✅ i18n USAGE RULES (`react-i18next`)
+
+- **No hardcoded UI text**
+  - Do not render literal user-facing strings directly in React components.
+  - All user-visible text must come from a translation key.
+  - Do not add . in any key name
+
+- **Standard hook usage**
+  - Always initialize translations as:
+
+```ts
+const { t } = useTranslation();
+```
+
+  - Use translation keys as:
+
+```ts
+t("namespace.key");
+```
+
+- **String storage location**
+  - **All** user-facing strings must live in JSON files under:
+    - `/src/messages/{lang}/xxxx.json`
+  - Follow existing naming conventions such as:
+    - `api.json`
+    - `auth.json`
+    - Other domain/feature-specific files that already exist in the project.
+
+- **Adding new features**
+  - For a new feature or domain, create translation files following:
+    - `/src/messages/*/<feature>.json`
+  - Use **nested keys** (hierarchical objects) instead of long, flat key names.
+
+- **Namespace usage**
+  - Prefer using a **single relevant namespace** per component/feature when possible.
+  - Do **not** split related strings for the same UI into multiple namespaces unless there is a strong reason.
+
