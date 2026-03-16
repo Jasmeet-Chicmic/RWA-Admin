@@ -12,17 +12,16 @@ export async function loginAction(payload: {
   return await postRequest<
     Omit<ResponseType, "data"> & {
       data: {
-        accessToken: string;
-        expiresAt: string;
-        userId?: string;
-        email?: string;
-        appleId?: string | null;
-        firstName?: string | null;
-        lastName?: string | null;
-        isProfileCreated?: boolean;
-        isProfileCompleted?: boolean;
-        redirectUrl?: string | null;
-        role?: string;
+        token: string;
+        userId: string;
+        email: string;
+        appleId: string | null;
+        firstName: string | null;
+        lastName: string | null;
+        isProfileCreated: boolean;
+        isProfileCompleted: boolean;
+        redirectUrl: string | null;
+        role: string;
       };
     },
     { email: string; password: string; redirectUrl?: string | null }

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import { RayptoLogo, RayptoLogoDark, logoSrt } from "@/assets";
@@ -13,8 +13,8 @@ import { getRequiredFieldMessage } from "@/components/molecules/FormBuilder/help
 import { FormConfig } from "@/components/molecules/FormBuilder/types";
 import { ROUTES } from "@/shared/routes";
 import { FIELD_NAMES, REGEX, STRING } from "@/shared/strings";
-import { createSessionClient } from "@/shared/utils";
 import { THEME_TYPE } from "@/shared/constants";
+import { createSessionClient } from "@/shared/utils";
 
 export interface LoginFormValues {
   email: string;
@@ -26,7 +26,7 @@ const config: FormConfig<LoginFormValues> = [
     name: FIELD_NAMES.EMAIL,
     label: STRING.EMAIL,
     type: FIELD_NAMES.EMAIL,
-    placeholder: "admin@townly.com",
+    placeholder: "john.doe@example.com",
     validation: {
       required: getRequiredFieldMessage(STRING.EMAIL),
       pattern: {
@@ -81,7 +81,7 @@ const blobBottomLeft: React.CSSProperties = {
 };
 
 const Login = () => {
-  const [isLoading, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
 
   const router = useRouter();
@@ -108,51 +108,38 @@ const Login = () => {
       password: data.password,
       redirectUrl: null,
     };
-    startTransition(async () => {
-      try {
-        const res: any = await loginAction(payload);
-        console.log("🔥 Login API response:", res);
 
-        // Check for success status, status code 200, and ensure data exists
-        if (res.status && res.statusCode === 200 && res.data) {
-          const { accessToken, expiresAt, userId, email, role } = res.data;
-          const token = accessToken;
+    try {
+      setIsLoading(true);
 
-          if (token) {
-            const success = await createSessionClient(token);
+      const res = await loginAction(payload);
+      console.log("🔥 Login API response:", res);
 
-            if (success) {
-              localStorage.setItem("token", token);
-              if (userId) {
-                localStorage.setItem("userId", userId);
-              }
-              if (email) {
-                localStorage.setItem("email", email);
-              }
-              if (role) {
-                localStorage.setItem("role", role);
-              }
-              if (expiresAt) {
-                localStorage.setItem("tokenExpiresAt", expiresAt);
-              }
-              toast.success("Login successful");
-              router.push(ROUTES.DASHBOARD_ANALYTICS);
-            } else {
-              toast.error("Session creation failed.");
-            }
-          } else {
-            toast.error("Authentication token missing in response.");
+      // Check for success status, status code 200, and ensure data exists
+      if (res.status && res.statusCode === 200 && res.data) {
+        const { token } = res.data;
+
+        if (token) {
+          const success = await createSessionClient(token);
+          if (success) {
+          localStorage.setItem("token", token);
+          toast.success("Login successful");
+          router.push(ROUTES.DASHBOARD_ANALYTICS);
           }
         } else {
-          toast.error(
-            res.message || "Login failed. Please check your credentials.",
-          );
+          toast.error("Authentication token missing in response.");
         }
-      } catch (error) {
-        console.error("🔥 Login API error:", error);
-        toast.error("An unexpected error occurred. Please try again later.");
+      } else {
+        toast.error(
+          res.message || "Login failed. Please check your credentials.",
+        );
       }
-    });
+    } catch (error) {
+      console.error("🔥 Login API error:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

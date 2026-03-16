@@ -13,8 +13,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
-  title: "sixthhive Admin",
-  description: "sixthhive Admin Template",
+  title: "RWA Admin",
+  description: "RWA Admin Template",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
