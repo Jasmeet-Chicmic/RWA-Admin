@@ -49,6 +49,27 @@
   "Last Login Session": "Last Login Session",
   "Actions": "Actions",
   "No Role": "No Role",
+  "View": "View",
+  "Wallet Address": "Wallet Address",
+  "Properties Count": "Properties",
+  "Total Investment": "Total Investment",
+  "Portfolio Value": "Portfolio Value",
+  "KYC Status": "KYC Status",
+  "Approval Status": "Approval Status",
+  "Controls": "Controls",
+  "Block": "Block",
+  "KYC": {
+    "Verified": "Verified",
+    "Pending": "Pending",
+    "Failed": "Failed"
+  },
+  "Approval": {
+    "Approved": "Approved",
+    "Pending": "Pending",
+    "Rejected": "Rejected"
+  },
+  "User Portfolio subtitle": "Overview of user investments and KYC status.",
+  "No users found": "No users found",
 
   "Active": "Active",
   "Inactive": "Inactive",
