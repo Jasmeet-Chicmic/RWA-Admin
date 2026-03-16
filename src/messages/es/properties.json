@@ -19,6 +19,8 @@
   "Price Per Unit": "Precio por unidad",
   "Annual Yield": "Rendimiento anual",
   "Risk Score": "Puntuación de riesgo",
-  "No properties found": "No se encontraron propiedades"
+  "No properties found": "No se encontraron propiedades",
+  "Top Properties": "Top 10 propiedades",
+  "Top Properties subtitle": "Propiedades de mayor valor y mayor demanda en la plataforma"
 }
 
