@@ -144,6 +144,9 @@ export const API_END_POINTS = {
   ADMIN_POSTS_BULK_ACTION: `/post/api/admin/posts/bulk-action`,
   ADMIN_POSTS_DELETE: `/post/api/admin/posts`,
 
+  // Properties
+  ADMIN_PROPERTIES: `/api/admin/properties`,
+
   // Reports
   REPORTS_COMPANY_CREATED: `/network/api/admin/reports/company/created`,
   REPORTS_USER_RETENTION: `/security/api/admin/reports/user-retention`,

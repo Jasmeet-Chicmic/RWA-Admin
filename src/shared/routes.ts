@@ -6,6 +6,8 @@ export const PUBLIC_ROUTES = {
 
 export const PRIVATE_ROUTES = {
   DASHBOARD: "/dashboard",
+  PROPERTIES: "/properties",
+  PROPERTIES_LIST: "/properties/list",
   PODCASTS: "/podcasts",
   PODCASTS_LIST: "/podcasts/list",
   USERS: "/users",

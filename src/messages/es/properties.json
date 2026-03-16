@@ -1,0 +1,24 @@
+{
+  "Properties": "Propiedades",
+  "Manage and view all properties": "Gestiona y visualiza todas las propiedades",
+  "Search Properties": "Buscar propiedades",
+  "Property Name": "Nombre de la propiedad",
+  "Location": "Ubicación",
+  "Property Type": "Tipo de propiedad",
+  "Status": {
+    "label": "Estado",
+    "PendingApproval": "Pendiente de aprobación",
+    "Active": "Activa",
+    "SoldOut": "Agotada",
+    "Rejected": "Rechazada",
+    "ModificationRequired": "Modificación requerida"
+  },
+  "Total Value": "Valor total",
+  "Total Units": "Unidades totales",
+  "Available Units": "Unidades disponibles",
+  "Price Per Unit": "Precio por unidad",
+  "Annual Yield": "Rendimiento anual",
+  "Risk Score": "Puntuación de riesgo",
+  "No properties found": "No se encontraron propiedades"
+}
+

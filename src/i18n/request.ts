@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 const NAMESPACES = [
   "common",
+  "properties",
   "pointRules",
   "promoCodes",
   "podcasts",

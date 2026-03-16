@@ -1,0 +1,24 @@
+{
+  "Properties": "Properties",
+  "Manage and view all properties": "Manage and view all properties",
+  "Search Properties": "Search Properties",
+  "Property Name": "Property Name",
+  "Location": "Location",
+  "Property Type": "Property Type",
+  "Status": {
+    "label": "Status",
+    "PendingApproval": "Pending approval",
+    "Active": "Active",
+    "SoldOut": "Sold out",
+    "Rejected": "Rejected",
+    "ModificationRequired": "Modification required"
+  },
+  "Total Value": "Total Value",
+  "Total Units": "Total Units",
+  "Available Units": "Available Units",
+  "Price Per Unit": "Price Per Unit",
+  "Annual Yield": "Annual Yield",
+  "Risk Score": "Risk Score",
+  "No properties found": "No properties found"
+}
+
