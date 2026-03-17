@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Check, X } from "lucide-react";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
@@ -14,14 +15,22 @@ import {
 import { createSortableColumn } from "@/shared/utils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
+import { approveAdminPropertyAction } from "@/api/adminPropertiesActions";
 
 interface PropertiesTableProps {
   data: AdminProperty[];
   totalCount: number;
+  mode?: "pending" | "assets";
 }
 
-const PropertiesTable = ({ data, totalCount }: PropertiesTableProps) => {
+const PropertiesTable = ({
+  data,
+  totalCount,
+  mode = "pending",
+}: PropertiesTableProps) => {
   const t = useTranslations("properties");
+  const router = useRouter();
+  const [approvingId, setApprovingId] = useState<string | null>(null);
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
@@ -55,50 +64,55 @@ const PropertiesTable = ({ data, totalCount }: PropertiesTableProps) => {
           </span>
         ),
       },
-      {
-        title: t("Status.label"),
-        field: "status",
-        render: (item) => {
-          const baseClass =
-            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border";
+      // Status column is intentionally hidden for Pending Properties view
+      ...(mode === "assets"
+        ? ([
+            {
+              title: t("Status.label"),
+              field: "status",
+              render: (item: AdminProperty) => {
+                const baseClass =
+                  "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border";
 
-          let labelKey: string = "Status.PendingApproval";
-          let className =
-            "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800";
+                let labelKey: string = "Status.PendingApproval";
+                let className =
+                  "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800";
 
-          switch (item.status) {
-            case PropertyStatus.Active:
-              labelKey = "Status.Active";
-              className =
-                "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
-              break;
-            case PropertyStatus.SoldOut:
-              labelKey = "Status.SoldOut";
-              className =
-                "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700";
-              break;
-            case PropertyStatus.Rejected:
-              labelKey = "Status.Rejected";
-              className =
-                "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
-              break;
-            case PropertyStatus.ModificationRequired:
-              labelKey = "Status.ModificationRequired";
-              className =
-                "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800";
-              break;
-            default:
-              break;
-          }
+                switch (item.status) {
+                  case PropertyStatus.Active:
+                    labelKey = "Status.Active";
+                    className =
+                      "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
+                    break;
+                  case PropertyStatus.SoldOut:
+                    labelKey = "Status.SoldOut";
+                    className =
+                      "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700";
+                    break;
+                  case PropertyStatus.Rejected:
+                    labelKey = "Status.Rejected";
+                    className =
+                      "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
+                    break;
+                  case PropertyStatus.ModificationRequired:
+                    labelKey = "Status.ModificationRequired";
+                    className =
+                      "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800";
+                    break;
+                  default:
+                    break;
+                }
 
-          return (
-            <span className={`${baseClass} ${className}`}>
-              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
-              {t(labelKey)}
-            </span>
-          );
-        },
-      },
+                return (
+                  <span className={`${baseClass} ${className}`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
+                    {t(labelKey)}
+                  </span>
+                );
+              },
+            },
+          ] as TableColumn<AdminProperty>[])
+        : []),
       {
         title: t("Total Value"),
         field: "totalValue",
@@ -161,6 +175,21 @@ const PropertiesTable = ({ data, totalCount }: PropertiesTableProps) => {
         render: (item) => (
           <div className="flex items-center justify-end">
             {(() => {
+              if (mode === "assets") {
+                return (
+                  <button
+                    type="button"
+                    className="px-3 py-1 text-xs font-semibold rounded bg-red-500 text-white hover:bg-red-600"
+                    onClick={() => {
+                      // TODO: Wire sold API when available
+                      console.log("Mark property as sold", item.id);
+                    }}
+                  >
+                    {t("Sold")}
+                  </button>
+                );
+              }
+
               const options =
                 item.status === PropertyStatus.Active
                   ? [
@@ -187,9 +216,19 @@ const PropertiesTable = ({ data, totalCount }: PropertiesTableProps) => {
                 <DropdownMenu
                   options={options}
                   onSelect={(value) => {
-                    // TODO: Wire approve/disapprove API when available
                     if (value === 1) {
-                      console.log("Approve property", item.id);
+                      // Approve
+                      if (!item.id || approvingId === item.id) return;
+                      void (async () => {
+                        try {
+                          setApprovingId(item.id);
+                          const res = await approveAdminPropertyAction(item.id);
+                          console.log("response of approve property", res);
+                          router.refresh();
+                        } finally {
+                          setApprovingId(null);
+                        }
+                      })();
                     } else if (value === 2) {
                       console.log("Disapprove property", item.id);
                     }

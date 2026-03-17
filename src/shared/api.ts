@@ -146,6 +146,7 @@ export const API_END_POINTS = {
 
   // Properties
   ADMIN_PROPERTIES: `/api/admin/properties`,
+  ADMIN_PROPERTIES_PENDING: `/api/admin/properties/pending`,
 
   // Tokens
   ADMIN_TOKEN_REQUESTS: `/api/admin/tokens/requests`,

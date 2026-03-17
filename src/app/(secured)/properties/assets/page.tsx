@@ -2,7 +2,7 @@ import { getAdminPropertiesAction } from "@/api/adminProperties";
 import ErrorState from "@/components/atoms/ErrorState";
 
 import { AdminProperty, PropertyStatus } from "../helpers/types";
-import PropertiesTable from "./PropertiesTable";
+import PropertiesTable from "../list/PropertiesTable";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -24,7 +24,7 @@ const Page = async ({
     const res = await getAdminPropertiesAction({
       page,
       pageSize,
-      status: PropertyStatus.PendingApproval,
+      status: PropertyStatus.Active,
     });
 
     const items: AdminProperty[] = res?.items ?? [];
@@ -32,11 +32,11 @@ const Page = async ({
 
     return (
       <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
-        <PropertiesTable data={items} totalCount={totalCount} />
+        <PropertiesTable data={items} totalCount={totalCount} mode="assets" />
       </div>
     );
   } catch (error) {
-    console.error("Error fetching properties:", error);
+    console.error("Error fetching properties (assets):", error);
     return <ErrorState title="properties" />;
   }
 };

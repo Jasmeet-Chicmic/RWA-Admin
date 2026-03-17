@@ -49,5 +49,8 @@ export interface PropertiesListResponse {
 export interface GetPropertiesParams {
   page: number;
   pageSize: number;
+  status?: number;
+  search?: string;
+  location?: string;
 }
 

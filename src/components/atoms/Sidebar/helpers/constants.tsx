@@ -55,8 +55,28 @@ export const navItems: NavItem[] = [
   {
     icon: Building2,
     label: "Properties",
-    path: ROUTES.PROPERTIES_LIST,
-    activePaths: [ROUTES.PROPERTIES_LIST],
+    activePaths: [
+      ROUTES.PROPERTIES_LIST,
+      ROUTES.PROPERTIES_ASSETS,
+      ROUTES.PROPERTIES_ORGANISATIONS,
+    ],
+    children: [
+      {
+        label: "Pending Properties",
+        path: ROUTES.PROPERTIES_LIST,
+        activePaths: [ROUTES.PROPERTIES_LIST],
+      },
+      {
+        label: "Assets",
+        path: ROUTES.PROPERTIES_ASSETS,
+        activePaths: [ROUTES.PROPERTIES_ASSETS],
+      },
+      {
+        label: "Organisation Properties",
+        path: ROUTES.PROPERTIES_ORGANISATIONS,
+        activePaths: [ROUTES.PROPERTIES_ORGANISATIONS],
+      },
+    ],
   },
   {
     icon: UserCog,
