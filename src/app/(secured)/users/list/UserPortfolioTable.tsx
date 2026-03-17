@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { Ban, Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
@@ -221,8 +221,16 @@ const UserPortfolioTable = () => {
           <div className="flex items-center justify-end">
             <DropdownMenu
               options={[
-                { label: t("View User"), value: 1 },
-                { label: t("Block"), value: 2 },
+                {
+                  label: t("View User"),
+                  value: 1,
+                  icon: <Eye className="w-4 h-4" />,
+                },
+                {
+                  label: t("Block"),
+                  value: 2,
+                  icon: <Ban className="w-4 h-4" />,
+                },
               ]}
             />
           </div>
