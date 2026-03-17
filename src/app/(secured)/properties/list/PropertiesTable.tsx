@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { Check, X } from "lucide-react";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
@@ -12,6 +13,7 @@ import {
 } from "@/shared/styles";
 import { createSortableColumn } from "@/shared/utils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
+import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 
 interface PropertiesTableProps {
   data: AdminProperty[];
@@ -151,6 +153,51 @@ const PropertiesTable = ({ data, totalCount }: PropertiesTableProps) => {
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.riskScore}
           </span>
+        ),
+      },
+      {
+        title: t("Actions"),
+        field: "",
+        render: (item) => (
+          <div className="flex items-center justify-end">
+            {(() => {
+              const options =
+                item.status === PropertyStatus.Active
+                  ? [
+                      {
+                        label: t("Disapprove"),
+                        value: 2,
+                        icon: <X className="w-4 h-4 text-red-600" />,
+                      },
+                    ]
+                  : [
+                      {
+                        label: t("Approve"),
+                        value: 1,
+                        icon: <Check className="w-4 h-4 text-emerald-600" />,
+                      },
+                      {
+                        label: t("Disapprove"),
+                        value: 2,
+                        icon: <X className="w-4 h-4 text-red-600" />,
+                      },
+                    ];
+
+              return (
+                <DropdownMenu
+                  options={options}
+                  onSelect={(value) => {
+                    // TODO: Wire approve/disapprove API when available
+                    if (value === 1) {
+                      console.log("Approve property", item.id);
+                    } else if (value === 2) {
+                      console.log("Disapprove property", item.id);
+                    }
+                  }}
+                />
+              );
+            })()}
+          </div>
         ),
       },
     ];

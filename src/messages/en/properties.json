@@ -21,6 +21,9 @@
   "Risk Score": "Risk Score",
   "No properties found": "No properties found",
   "Top Properties": "Top 10 Properties",
-  "Top Properties subtitle": "Highest value and most in-demand properties on the platform"
+  "Top Properties subtitle": "Highest value and most in-demand properties on the platform",
+  "Actions": "Actions",
+  "Approve": "Approve",
+  "Disapprove": "Disapprove"
 }
 
