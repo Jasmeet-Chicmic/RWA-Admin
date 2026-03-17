@@ -86,6 +86,12 @@ export const navItems: NavItem[] = [
       // },
     ],
   },
+  {
+    icon: CreditCard,
+    label: "Token Requests",
+    path: ROUTES.TOKEN_REQUESTS_LIST,
+    activePaths: [ROUTES.TOKEN_REQUESTS_LIST],
+  },
   // {
   //   icon: Video,
   //   label: "Videos",

@@ -75,6 +75,9 @@ export const PRIVATE_ROUTES = {
   BROADCAST_MESSAGES_LIST: "/broadcast-messages/list",
   BROADCAST_MESSAGES_VIEW: "/broadcast-messages/view",
 
+  // Token Requests
+  TOKEN_REQUESTS_LIST: "/tokens/requests",
+
   // Roles
   ROLES: "/roles",
   ROLES_LIST: "/roles/list",

@@ -147,6 +147,9 @@ export const API_END_POINTS = {
   // Properties
   ADMIN_PROPERTIES: `/api/admin/properties`,
 
+  // Tokens
+  ADMIN_TOKEN_REQUESTS: `/api/admin/tokens/requests`,
+
   // Reports
   REPORTS_COMPANY_CREATED: `/network/api/admin/reports/company/created`,
   REPORTS_USER_RETENTION: `/security/api/admin/reports/user-retention`,
