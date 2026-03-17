@@ -23,19 +23,18 @@ const PropertiesTable = ({ data, totalCount }: PropertiesTableProps) => {
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
-      createSortableColumn(
-        "name",
-        t("Property Name"),
-        (item) => (
+      {
+        title: t("Property Name"),
+        field: "name",
+        render: (item) => (
           <span
-            className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}
-            title={item.name}
-          >
-            <TruncatedText text={item.name} maxLength={40} />
-          </span>
+          className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}
+          title={item.name}
+        >
+          <TruncatedText text={item.name} maxLength={40} />
+        </span>
         ),
-        "name",
-      ),
+      },
       {
         title: t("Location"),
         field: "location",

@@ -114,6 +114,7 @@ const Sidebar: React.FC = () => {
                 ? "sub-menu-item-active"
                 : "hover:bg-primarycolor dark:hover:bg-none",
             )}
+            prefetch
             style={{ paddingLeft }}
             onClick={() => setIsOpen(false)}
           >

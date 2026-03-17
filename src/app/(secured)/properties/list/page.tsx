@@ -1,5 +1,4 @@
 import { getAdminPropertiesAction } from "@/api/adminProperties";
-import { SORT_DIRECTION } from "@/shared/types";
 import ErrorState from "@/components/atoms/ErrorState";
 
 import { AdminProperty } from "../helpers/types";
