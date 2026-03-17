@@ -7,7 +7,7 @@ export const API_END_POINTS = {
   FORGOT_PASSWORD: `${API_VERSION}/admin/forgotPassword`,
   RESET_PASSWORD: `${API_VERSION}/admin/resetPassword`,
   LOGOUT: `/security/api/admin/logout`,
-  USER: `/user-profile/api/admin/users`,
+  USER: `/api/admin/users`,
   USER_BY_ID: `/user-profile/api/admin/users`,
   USER_TOGGLE_STATUS: `/user-profile/api/admin/users`,
   USER_TOGGLE_SPOTLIGHT: `/user-profile/api/admin/users`,
