@@ -15,10 +15,10 @@ interface DashboardStatsChartsProps {
 }
 
 const DashboardStatsCharts = ({
-  retentionData,
-  subscriptionAnalytics,
-  initialFromDate = "",
-  initialToDate = "",
+  retentionData: _retentionData,
+  subscriptionAnalytics: _subscriptionAnalytics,
+  initialFromDate: _initialFromDate = "",
+  initialToDate: _initialToDate = "",
 }: DashboardStatsChartsProps) => {
   const t = useTranslations("dashboard");
   return (
@@ -26,50 +26,46 @@ const DashboardStatsCharts = ({
       {/* Stat Cards Row */}
       <div className="grid grid-cols-2 lg:grid-cols-3 3xl:grid-cols-6 gap-4">
         <StatCard
-          title={t("totalUsers")}
-          value={retentionData.totalUsers.toLocaleString()}
+          title={t("totalAssetValue")}
+          value={"$1,250"}
           icon={<Users className="w-6 h-6 text-white dark:text-white/80" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
-          title={t("activeUsers")}
-          value={retentionData.activeUsers.toLocaleString()}
+          title={t("totalInvestors")}
+          value={"1,245"}
           icon={
             <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
           }
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
-          title={t("powerUsers")}
-          value={retentionData.usersLoggedInMoreThan3TimesThisWeek.toLocaleString()}
-          subtitle={t("powerUsersSubtitle")}
+          title={t("tokensIssued")}
+          value={"34,500"}
           icon={
             <TrendingUp className="w-6 h-6 text-bgwhite dark:text-white/80" />
           }
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
-          title={t("avgSessions")}
-          value={retentionData.avgSessionsPerUser.toFixed(2)}
-          subtitle={t("avgSessionsSubtitle")}
+          title={t("pendingKyc")}
+          value={"32"}
           icon={
             <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
           }
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
-          title={t("avgDuration")}
-          value={`${retentionData.avgSessionDurationMinutes.toFixed(2)}m`}
-          subtitle={t("avgDurationSubtitle")}
+          title={t("platformRevenue")}
+          value={"$2,458"}
           icon={
             <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
           }
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
-          title={t("avgTime")}
-          value={`${retentionData.avgTimeBetweenVisitsHours.toFixed(2)}h`}
-          subtitle={t("avgTimeSubtitle")}
+          title={t("pendingPropertyApprovals")}
+          value={"14"}
           icon={
             <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
           }
