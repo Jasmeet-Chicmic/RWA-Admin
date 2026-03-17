@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { Eye, Slash } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
+import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
@@ -214,22 +215,16 @@ const UserPortfolioTable = () => {
       {
         field: "",
         title: t("Controls"),
+        // fixed: "right",
+        width: "w-[72px]",
         render: () => (
-          <div className="flex items-center space-x-2">
-            <button
-              type="button"
-              className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
-            >
-              <Eye size={14} className="mr-1" />
-              {t("View")}
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
-            >
-              <Slash size={14} className="mr-1" />
-              {t("Block")}
-            </button>
+          <div className="flex items-center justify-end">
+            <DropdownMenu
+              options={[
+                { label: t("View User"), value: 1 },
+                { label: t("Block"), value: 2 },
+              ]}
+            />
           </div>
         ),
       },

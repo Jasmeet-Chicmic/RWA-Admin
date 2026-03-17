@@ -13,6 +13,8 @@ interface DropdownMenuProps {
 const DropdownMenu = ({ options, onSelect }: DropdownMenuProps) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
 
   // Close on click outside
   useEffect(() => {
@@ -26,18 +28,33 @@ const DropdownMenu = ({ options, onSelect }: DropdownMenuProps) => {
   }, []);
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div ref={menuRef}>
       {/* Trigger button */}
       <button
-        onClick={() => setOpen(!open)}
+        ref={buttonRef}
+        onClick={() => {
+          if (!buttonRef.current) {
+            setOpen((prev) => !prev);
+            return;
+          }
+          const rect = buttonRef.current.getBoundingClientRect();
+          setMenuPosition({
+            top: rect.bottom + 8,
+            right: window.innerWidth - rect.right,
+          });
+          setOpen((prev) => !prev);
+        }}
         className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition dark:hover:bg-gray-800"
       >
         <EllipsisVertical className="w-5 h-5 text-gray-500 dark:bordercolor1" />
       </button>
 
       {/* Dropdown content */}
-      {open && (
-        <div className="absolute right-0 mt-2 w-36 bg-bgwhite rounded shadow-lg border border-bordergray100 z-10 dark:bg-darkbgprimary dark:border-darkbordercolor1">
+      {open && menuPosition && (
+        <div
+          className="fixed w-36 bg-bgwhite rounded shadow-lg border border-bordergray100 z-50 dark:bg-darkbgprimary dark:border-darkbordercolor1"
+          style={{ top: menuPosition.top, right: menuPosition.right }}
+        >
           <ul className="py-1 text-sm text-labelprimary dark:bordercolor1">
             {options.map((option) => (
               <li key={option.value}>
