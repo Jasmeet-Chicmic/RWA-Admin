@@ -45,10 +45,7 @@ export function TextareaField<T extends FieldValues>({
 
   return (
     <div className={`mb-4 ${width} ${className}`}>
-      <label
-        htmlFor={name}
-        className="block mb-1 font-medium text-sidebartext"
-      >
+      <label htmlFor={name} className="block mb-1 font-medium text-sidebartext">
         {label}
       </label>
       <textarea
