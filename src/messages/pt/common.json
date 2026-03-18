@@ -69,6 +69,8 @@
   "Rooms": "Salas",
   "Live Chat": "Chat ao vivo",
   "Bonus Slides": "Slides de bônus",
+  "KYC": "KYC",
+  "Pending KYC": "KYC pendente",
   "{entity} {action} successfully": "{entity} {action} com sucesso",
   "Failed to {action} {entity}": "Falha ao {action} {entity}",
   "An error occurred while {action} {entity}": "Ocorreu um erro ao {action} {entity}",

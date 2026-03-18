@@ -80,6 +80,10 @@ export const PRIVATE_ROUTES = {
   // Token Requests
   TOKEN_REQUESTS_LIST: "/tokens/requests",
 
+  // KYC
+  KYC: "/kyc",
+  KYC_PENDING: "/kyc/pending",
+
   // Roles
   ROLES: "/roles",
   ROLES_LIST: "/roles/list",

@@ -1,0 +1,18 @@
+{
+  "pendingKycTitle": "KYC en attente",
+  "pendingKycSubtitle": "Examiner et gérer les demandes KYC en attente",
+  "noPendingKyc": "Aucun KYC en attente",
+  "fullName": "Nom complet",
+  "userId": "ID utilisateur",
+  "kycId": "ID KYC",
+  "createdAt": "Créé le",
+  "pending": "En attente",
+  "disapprove": "Désapprouver",
+  "disapproveModalTitle": "Désapprouver le KYC",
+  "disapproveModalDescription": "Vous pouvez ajouter un motif (facultatif) puis désapprouver cette demande KYC",
+  "reasonOptionalLabel": "Motif (facultatif)",
+  "reasonPlaceholder": "Saisir un motif (facultatif)",
+  "cancel": "Annuler",
+  "confirmDisapprove": "Désapprouver"
+}
+

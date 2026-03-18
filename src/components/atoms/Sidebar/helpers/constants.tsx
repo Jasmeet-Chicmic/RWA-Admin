@@ -11,6 +11,7 @@ import {
   Repeat,
   Settings,
   TicketPercent,
+  UserCheck,
   UserCog,
   Users,
   Video,
@@ -111,6 +112,18 @@ export const navItems: NavItem[] = [
     label: "Token Requests",
     path: ROUTES.TOKEN_REQUESTS_LIST,
     activePaths: [ROUTES.TOKEN_REQUESTS_LIST],
+  },
+  {
+    icon: UserCheck,
+    label: "KYC",
+    activePaths: [ROUTES.KYC_PENDING],
+    children: [
+      {
+        label: "Pending KYC",
+        path: ROUTES.KYC_PENDING,
+        activePaths: [ROUTES.KYC_PENDING],
+      },
+    ],
   },
   // {
   //   icon: Video,

@@ -1,0 +1,18 @@
+{
+  "pendingKycTitle": "Pending KYC",
+  "pendingKycSubtitle": "Review and manage pending KYC submissions",
+  "noPendingKyc": "No pending KYC found",
+  "fullName": "Full Name",
+  "userId": "User ID",
+  "kycId": "KYC ID",
+  "createdAt": "Created At",
+  "pending": "Pending",
+  "disapprove": "Disapprove",
+  "disapproveModalTitle": "Disapprove KYC",
+  "disapproveModalDescription": "Optionally provide a reason and disapprove this KYC submission",
+  "reasonOptionalLabel": "Reason (optional)",
+  "reasonPlaceholder": "Enter a reason (optional)",
+  "cancel": "Cancel",
+  "confirmDisapprove": "Disapprove"
+}
+

@@ -1,0 +1,18 @@
+{
+  "pendingKycTitle": "KYC pendente",
+  "pendingKycSubtitle": "Revisar e gerenciar envios de KYC pendentes",
+  "noPendingKyc": "Nenhum KYC pendente encontrado",
+  "fullName": "Nome completo",
+  "userId": "ID do usuário",
+  "kycId": "ID de KYC",
+  "createdAt": "Criado em",
+  "pending": "Pendente",
+  "disapprove": "Desaprovar",
+  "disapproveModalTitle": "Desaprovar KYC",
+  "disapproveModalDescription": "Opcionalmente informe um motivo e desaprove este envio de KYC",
+  "reasonOptionalLabel": "Motivo (opcional)",
+  "reasonPlaceholder": "Informe um motivo (opcional)",
+  "cancel": "Cancelar",
+  "confirmDisapprove": "Desaprovar"
+}
+

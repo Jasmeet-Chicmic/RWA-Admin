@@ -19,6 +19,7 @@ const NAMESPACES = [
   "dashboard",
   "roles",
   "broadcastMessages",
+  "kyc",
 ] as const;
 
 export default getRequestConfig(async () => {

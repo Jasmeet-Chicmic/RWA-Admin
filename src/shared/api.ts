@@ -149,6 +149,9 @@ export const API_END_POINTS = {
   ADMIN_PROPERTIES_PENDING: `/api/admin/properties/pending`,
   ADMIN_PROPERTIES_DETAILS: `/api/admin/properties/Details`,
 
+  // KYC
+  ADMIN_KYC_PENDING: `/api/admin/kyc`,
+
   // Tokens
   ADMIN_TOKEN_REQUESTS: `/api/admin/tokens/requests`,
 
