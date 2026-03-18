@@ -65,13 +65,11 @@ export type ActivateOrganisationPropertyPayload = {
   riskScore: number;
 };
 
-export async function activateOrganisationPropertyAction(
-  params: {
-    organisationId: string;
-    propertyId: string;
-    payload: ActivateOrganisationPropertyPayload;
-  },
-) {
+export async function activateOrganisationPropertyAction(params: {
+  organisationId: string;
+  propertyId: string;
+  payload: ActivateOrganisationPropertyPayload;
+}) {
   const { organisationId, propertyId, payload } = params;
   return await postRequest<
     ResponseType,
