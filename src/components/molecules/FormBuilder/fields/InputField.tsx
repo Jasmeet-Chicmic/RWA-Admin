@@ -61,7 +61,7 @@ export function InputField<T extends FieldValues>({
     <div className={`mb-4 ${width} ${className}`}>
       <label
         htmlFor={name}
-        className={`block mb-1 font-medium dark:text-white ${labelClassName}`}
+        className={`block mb-1 font-medium text-white ${labelClassName}`}
       >
         {label}
       </label>

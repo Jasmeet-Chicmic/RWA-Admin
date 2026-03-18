@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
-import { RayptoLogo, RayptoLogoDark, logoSrt } from "@/assets";
+import { RayptoLogoDark } from "@/assets";
 import { loginAction } from "@/api/auth";
 import FormLayout from "@/components/layouts/FormLayout";
 import { FormLayoutType } from "@/components/layouts/FormLayout/helpers/constants";
@@ -57,7 +57,7 @@ const blobTopLeft: React.CSSProperties = {
   top: -160,
   left: -160,
   background:
-    "radial-gradient(circle, rgba(217,112,64,0.20) 0%, rgba(181,84,28,0.08) 50%, transparent 70%)",
+    "radial-gradient(circle, #c7fe1e47 0%, #c7fe1e0f 50%, transparent 70%)",
 };
 
 const blobBottomRight: React.CSSProperties = {
@@ -67,7 +67,7 @@ const blobBottomRight: React.CSSProperties = {
   bottom: -100,
   right: -120,
   background:
-    "radial-gradient(circle, rgba(181,84,28,0.15) 0%, rgba(217,112,64,0.06) 50%, transparent 70%)",
+    "radial-gradient(circle, #c7fe1e47 0%, #c7fe1e0f 50%, transparent 70%)",
 };
 
 const blobBottomLeft: React.CSSProperties = {
@@ -77,7 +77,7 @@ const blobBottomLeft: React.CSSProperties = {
   bottom: "8%",
   left: "4%",
   background:
-    "radial-gradient(circle, rgba(217,112,64,0.10) 0%, transparent 70%)",
+    "radial-gradient(circle, #c7fe1e47 0%, #c7fe1e0f 50%, transparent 70%)",
 };
 
 const Login = () => {
@@ -98,9 +98,7 @@ const Login = () => {
   }, [searchParams]);
 
   const logoSrc =
-    mounted && resolvedTheme === THEME_TYPE.LIGHT
-      ? RayptoLogo.src
-      : RayptoLogoDark.src;
+    mounted && resolvedTheme === THEME_TYPE.LIGHT && RayptoLogoDark.src;
 
   const handleSubmit = async (data: LoginFormValues) => {
     const payload = {
@@ -143,7 +141,7 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FAF7F4]">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
       <div style={blobTopLeft} />
       <div style={blobBottomRight} />
       <div style={blobBottomLeft} />
@@ -171,9 +169,6 @@ const Login = () => {
             isLoginVariant={true}
           />
         </FormLayout>
-      </div>
-      <div className="w-1/2 fixed right-0 top-1/2 -translate-y-1/2 opacity-[0.036] z-0">
-        <Image className="ml-auto w-full" src={logoSrt} alt="logo" />
       </div>
     </div>
   );

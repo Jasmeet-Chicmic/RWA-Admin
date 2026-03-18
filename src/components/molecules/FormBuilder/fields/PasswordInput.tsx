@@ -34,10 +34,7 @@ export function PasswordField<T extends FieldValues>({
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className={`mb-4 ${width} ${className}`}>
-      <label
-        htmlFor={name}
-        className="block mb-1 font-medium dark:text-sidebartext"
-      >
+      <label htmlFor={name} className="block mb-1 font-medium text-sidebartext">
         {label}
       </label>
       <div className="mt-1 relative">

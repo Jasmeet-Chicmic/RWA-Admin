@@ -139,7 +139,7 @@ const ChatTranslationConfigForm = ({
               />
             ) : (
               <div className="space-y-2">
-                <div className="block mb-1 font-medium dark:text-sidebartext">
+                <div className="block mb-1 font-medium text-sidebartext">
                   Enable Chat Translation
                 </div>
                 <div className="px-4 py-3 bg-gray-50 rounded-lg dark:bg-darkbgprimary">
