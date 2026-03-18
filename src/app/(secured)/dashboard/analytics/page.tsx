@@ -41,10 +41,10 @@ const Analytics = async ({ searchParams }: AnalyticsPageProps) => {
   // Fetch dashboard data in parallel
   const [userRetention, subscriptionAnalyticsRes, propertiesDetails] =
     await Promise.all([
-    fetchUserRetentionAction(),
-    fetchSubscriptionAnalyticsAction({ from: fromDate, to: toDate }),
-    getAdminPropertiesDetailsAction(),
-  ]);
+      fetchUserRetentionAction(),
+      fetchSubscriptionAnalyticsAction({ from: fromDate, to: toDate }),
+      getAdminPropertiesDetailsAction(),
+    ]);
 
   const defaultSubscriptionAnalytics: SubscriptionAnalytics = {
     totalActiveSubscriptions: 0,

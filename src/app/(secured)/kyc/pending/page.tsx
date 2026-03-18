@@ -43,4 +43,3 @@ const PendingKycPage = async ({
 };
 
 export default PendingKycPage;
-

@@ -12,7 +12,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import { createSortableColumn } from "@/shared/utils";
+// import { createSortableColumn } from "@/shared/utils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
@@ -60,11 +60,11 @@ const PropertiesTable = ({
         field: "name",
         render: (item) => (
           <span
-          className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}
-          title={item.name}
-        >
-          <TruncatedText text={item.name} maxLength={40} />
-        </span>
+            className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}
+            title={item.name}
+          >
+            <TruncatedText text={item.name} maxLength={40} />
+          </span>
         ),
       },
       {
@@ -303,9 +303,7 @@ const PropertiesTable = ({
       {rejectModalOpen && rejectPropertyId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-2xl bg-bgwhite p-6 shadow-lg dark:bg-darkbgprimary">
-            <h2
-              className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}
-            >
+            <h2 className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}>
               {t("Disapprove Modal Title")}
             </h2>
             <p className="mb-4 text-sm text-textparagraph dark:text-textparagraphlight">
@@ -428,4 +426,3 @@ const PropertiesTable = ({
 };
 
 export default PropertiesTable;
-

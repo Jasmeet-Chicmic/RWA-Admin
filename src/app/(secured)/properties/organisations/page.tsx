@@ -68,4 +68,3 @@ const OrganisationsPage = async () => {
 };
 
 export default OrganisationsPage;
-

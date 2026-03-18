@@ -7,7 +7,10 @@ import { useTranslations } from "next-intl";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
-import { TEXT_PRIMARY_DARK as TEXT_PRIMARY, TEXT_SIZE_SM } from "@/shared/styles";
+import {
+  TEXT_PRIMARY_DARK as TEXT_PRIMARY,
+  TEXT_SIZE_SM,
+} from "@/shared/styles";
 import { ROUTES } from "@/shared/routes";
 
 export type OrganisationEntityType = "LLC" | "SPV" | "Trust";
@@ -132,4 +135,3 @@ const OrganisationsTable = ({
 };
 
 export default OrganisationsTable;
-

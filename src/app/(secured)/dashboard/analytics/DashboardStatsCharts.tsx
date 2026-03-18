@@ -17,11 +17,11 @@ interface DashboardStatsChartsProps {
 }
 
 const DashboardStatsCharts = ({
-  retentionData: _retentionData,
-  subscriptionAnalytics: _subscriptionAnalytics,
+  retentionData,
+  subscriptionAnalytics,
   propertiesDetails,
-  initialFromDate: _initialFromDate = "",
-  initialToDate: _initialToDate = "",
+  initialFromDate = "",
+  initialToDate = "",
 }: DashboardStatsChartsProps) => {
   const t = useTranslations("dashboard");
 
@@ -29,7 +29,11 @@ const DashboardStatsCharts = ({
     const n = typeof value === "number" ? value : Number(value);
     return Number.isFinite(n) ? n : 0;
   };
-
+  console.log("🔥 propertiesDetails", propertiesDetails);
+  console.log("🔥 retentionData", retentionData);
+  console.log("🔥 subscriptionAnalytics", subscriptionAnalytics);
+  console.log("🔥 initialFromDate", initialFromDate);
+  console.log("🔥 initialToDate", initialToDate);
   const formatNumber = (value: unknown) =>
     new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
       toFiniteNumber(value),

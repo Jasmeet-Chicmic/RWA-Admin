@@ -20,4 +20,3 @@ export type GetPendingKycParams = {
   pageSize: number;
   Status?: number;
 };
-

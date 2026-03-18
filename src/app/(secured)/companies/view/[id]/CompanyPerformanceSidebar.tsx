@@ -5,7 +5,7 @@ interface CompanyPerformanceSidebarProps {
     title: string;
     value: number | null | undefined;
     subtitle: string;
-    icon: JSX.Element;
+    icon: React.ReactNode;
     color: string;
   }[];
   t: (key: string) => string;

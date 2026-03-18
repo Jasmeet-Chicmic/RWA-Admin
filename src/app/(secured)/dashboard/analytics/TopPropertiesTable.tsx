@@ -285,17 +285,11 @@ const TopPropertiesTable = () => {
         field: "name",
         render: (item) => (
           <div className="flex flex-col">
-            <span
-              className={`font-medium ${TEXT_PRIMARY}`}
-              title={item.name}
-            >
+            <span className={`font-medium ${TEXT_PRIMARY}`} title={item.name}>
               <TruncatedText text={item.name} maxLength={40} />
             </span>
             <span className={`${TEXT_SIZE_SM} text-textparagraph`}>
-              <TruncatedText
-                text={item.location}
-                maxLength={40}
-              />
+              <TruncatedText text={item.location} maxLength={40} />
             </span>
           </div>
         ),
@@ -374,4 +368,3 @@ const TopPropertiesTable = () => {
 };
 
 export default TopPropertiesTable;
-

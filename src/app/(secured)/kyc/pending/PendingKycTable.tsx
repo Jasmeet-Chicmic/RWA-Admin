@@ -135,7 +135,7 @@ const PendingKycTable = ({
         </div>
       ),
     };
-  }, [TEXT_PRIMARY, actionLoadingId, common, router, t]);
+  }, [actionLoadingId, common, router, t]);
 
   return (
     <>

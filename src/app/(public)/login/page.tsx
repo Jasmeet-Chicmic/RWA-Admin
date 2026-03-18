@@ -122,9 +122,9 @@ const Login = () => {
         if (token) {
           const success = await createSessionClient(token);
           if (success) {
-          localStorage.setItem("token", token);
-          toast.success("Login successful");
-          router.push(ROUTES.DASHBOARD_ANALYTICS);
+            localStorage.setItem("token", token);
+            toast.success("Login successful");
+            router.push(ROUTES.DASHBOARD_ANALYTICS);
           }
         } else {
           toast.error("Authentication token missing in response.");

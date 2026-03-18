@@ -6,4 +6,3 @@ export type AdminPropertiesDetails = {
   platformRevenue: number;
   pendingPropertyApprovals: number;
 };
-

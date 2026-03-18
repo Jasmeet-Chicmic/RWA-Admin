@@ -40,4 +40,3 @@ const PropertiesLoading = () => {
 };
 
 export default PropertiesLoading;
-

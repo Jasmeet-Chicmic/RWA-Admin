@@ -53,4 +53,3 @@ export interface GetPropertiesParams {
   search?: string;
   location?: string;
 }
-

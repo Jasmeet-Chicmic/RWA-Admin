@@ -13,9 +13,7 @@ export interface TokenRequest {
 export async function getAdminTokenRequestsAction() {
   const { getRequest } = await import("@/shared/fetcher");
 
-  return await getRequest<TokenRequest[]>(
-    API_END_POINTS.ADMIN_TOKEN_REQUESTS,
-  );
+  return await getRequest<TokenRequest[]>(API_END_POINTS.ADMIN_TOKEN_REQUESTS);
 }
 
 export interface ReviewTokenRequestPayload {
@@ -34,4 +32,3 @@ export async function reviewAdminTokenRequestAction(
     payload,
   );
 }
-

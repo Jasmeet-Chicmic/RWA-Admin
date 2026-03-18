@@ -25,4 +25,3 @@ export async function rejectAdminKycAction(kycId: string, reason = "") {
     { reason },
   );
 }
-

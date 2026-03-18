@@ -1,17 +1,17 @@
 "use client";
 
 import { useMemo } from "react";
-import { Ban, Eye } from "lucide-react";
+// import { Ban,   Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
-import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
+// import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import { getUsersAction } from "@/api/user";
+// import { getUsersAction } from "@/api/user";
 
 // 0 - Not Started, 1 - Pending, 2 - Approved, 3 - Rejected
 type KycStatus = 0 | 1 | 2 | 3;

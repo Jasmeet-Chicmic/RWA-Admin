@@ -49,4 +49,3 @@ const PropertiesAssetsLoading = () => {
 };
 
 export default PropertiesAssetsLoading;
-

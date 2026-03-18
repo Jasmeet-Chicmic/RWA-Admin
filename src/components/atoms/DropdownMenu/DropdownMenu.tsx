@@ -38,9 +38,7 @@ const DropdownMenu = ({ options, onSelect }: DropdownMenuProps) => {
 
       {/* Dropdown content */}
       {open && (
-        <div
-          className="absolute right-0 top-full mt-2 w-36 bg-bgwhite rounded shadow-lg border border-bordergray100 z-50 dark:bg-darkbgprimary dark:border-darkbordercolor1"
-        >
+        <div className="absolute right-0 top-full mt-2 w-36 bg-bgwhite rounded shadow-lg border border-bordergray100 z-50 dark:bg-darkbgprimary dark:border-darkbordercolor1">
           <ul className="py-1 text-sm text-labelprimary dark:bordercolor1">
             {options.map((option) => (
               <li key={option.value}>
@@ -52,7 +50,9 @@ const DropdownMenu = ({ options, onSelect }: DropdownMenuProps) => {
                   }}
                   className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-800"
                 >
-                  {option.icon && <span className="flex items-center">{option.icon}</span>}
+                  {option.icon && (
+                    <span className="flex items-center">{option.icon}</span>
+                  )}
                   <span>{option.label}</span>
                 </button>
               </li>

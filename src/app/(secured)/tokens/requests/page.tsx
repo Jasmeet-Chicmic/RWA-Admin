@@ -63,7 +63,9 @@ const TokenRequestsPage = () => {
         field: "userId",
         title: t("User ID"),
         render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>{item.userId}</span>
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+            {item.userId}
+          </span>
         ),
       },
       {
@@ -90,7 +92,6 @@ const TokenRequestsPage = () => {
         render: (item) => {
           const isPending = item.status === 0;
           const isApproved = item.status === 1;
-          const isRejected = item.status === 2;
 
           const colorClasses = isApproved
             ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
@@ -171,14 +172,25 @@ const TokenRequestsPage = () => {
   };
 
   return (
-    <DataTable
-      data={data}
-      totalCount={data.length}
-      config={config}
-      loading={loading}
-    />
+    <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
+      {loading ? (
+        <div className="bg-bgwhite dark:bg-darkbgprimary rounded-[12px] p-6">
+          <div className="animate-pulse space-y-3">
+            <div className="h-6 w-56 rounded bg-gray-200 dark:bg-darkbgbase" />
+            <div className="h-4 w-96 max-w-full rounded bg-gray-200 dark:bg-darkbgbase" />
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="h-10 w-full rounded bg-gray-200 dark:bg-darkbgbase"
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <DataTable data={data} totalCount={data.length} config={config} />
+      )}
+    </div>
   );
 };
 
 export default TokenRequestsPage;
-
