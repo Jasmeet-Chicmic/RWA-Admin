@@ -1,6 +1,6 @@
 "use client";
 
-import { Languages, LogOut, Moon, Search, Sun } from "lucide-react";
+import { Languages, LogOut, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ const LANGUAGE_OPTIONS: { code: string; label: string }[] = [
 const Header = () => {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  // const [mounted, setMounted] = useState(false);
   // const [notificationCount] = useState(3);
   // const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -38,16 +38,18 @@ const Header = () => {
   const tCommon = useTranslations("common");
 
   useEffect(() => {
-    setMounted(true);
+    // setMounted(true);
     setUserEmail(localStorage.getItem("email") || "Admin01@yopmail.com");
     setUserRole(localStorage.getItem("role") || "Admin");
   }, []);
 
   const toggleTheme = () => {
     setTheme(
-      resolvedTheme === THEME_TYPE.DARK ? THEME_TYPE.LIGHT : THEME_TYPE.DARK,
+      resolvedTheme === THEME_TYPE.DARK ? THEME_TYPE.DARK : THEME_TYPE.DARK,
     );
   };
+  console.log(toggleTheme);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -155,7 +157,7 @@ const Header = () => {
             </div>
           </CheckClickOutside>
           {/* Theme Toggle */}
-          <button
+          {/* <button
             onClick={toggleTheme}
             className="p-2 text-gray-600 focus:ring-0 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200 dark:text-white dark:bordercolor1 dark:hover:text-gray-100 dark:hover:bg-labelprimary"
             aria-label="Toggle theme"
@@ -168,7 +170,7 @@ const Header = () => {
             ) : (
               <Moon size={18} />
             )}
-          </button>
+          </button> */}
 
           {/* App Grid */}
           {/* <button className="p-2 text-gray-600 focus:ring-0 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200 dark:bordercolor1 dark:hover:text-gray-100 dark:hover:bg-labelprimary">
@@ -249,7 +251,7 @@ const Header = () => {
                 className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg focus:ring-0 transition-colors duration-200 dark:bordercolor1 dark:hover:text-gray-100 dark:hover:bg-labelprimary focus-visible:border-none focus-visible:ring-0 focus-visible:ring-offset-0"
               >
                 <div className="w-8 h-8 bg-primarycolor dark:bg-secondarycolor rounded-full flex items-center justify-center">
-                  <span className="text-white dark:text-white text-sm font-semibold">
+                  <span className="text-white dark:text-black text-sm font-semibold">
                     {userRole ? userRole.substring(0, 2).toUpperCase() : "AD"}
                   </span>
                 </div>

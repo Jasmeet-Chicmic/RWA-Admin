@@ -17,7 +17,7 @@ const PropertiesAssetsLoading = () => {
         </div>
       </div>
 
-      <div className="px-[15px] lg:px-5 3xl:px-6 pb-6">
+      <div className="pb-6">
         <div className="overflow-hidden rounded-[0_0_20px_20px] border border-bordergray100 dark:border-darkbordercolor1">
           <div className="grid grid-cols-7 gap-4 px-4 py-3 border-b border-bordergray100 dark:border-darkbordercolor1 bg-bgprimary dark:bg-darkbgbase">
             {Array.from({ length: 7 }).map((_, idx) => (

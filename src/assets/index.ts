@@ -15,7 +15,7 @@ import dummyProfile from "./img/dummyProfile.png";
 import companyLogo from "./img/companyLogo.jpg";
 import companyCover from "./img/companyCover.jpg";
 import RayptoLogo from "./img/sixthhive_logo.png";
-import RayptoLogoDark from "./img/sixthhive_logo_dark.png";
+import RayptoLogoDark from "./img/RayptoLogoDark.svg";
 import flagPlaceholder from "./img/flag-placeholder.svg";
 import videoPlaceholder from "./img/video-placeholder.png";
 export {

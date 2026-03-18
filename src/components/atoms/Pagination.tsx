@@ -26,8 +26,8 @@ export const PageLabel = ({
     size="sm"
     className={`w-8 h-8 p-0 min-w-0 flex items-center justify-center transition-all ${
       page === currentPage
-        ? "shadow-sm shadow-bgpurple1/20 dark:text-white"
-        : "text-black bg-primarycolor/5 dark:text-white dark:bg-secondarycolor/5 dark:text-bgwhite/50 hover:bg-primarycolor/10 dark:hover:bg-secondarycolor/10"
+        ? "shadow-sm shadow-bgpurple1/20 dark:text-black"
+        : "text-black bg-primarycolor/5 dark:text-black dark:bg-secondarycolor/5 dark:text-bgwhite/50 hover:bg-primarycolor/10 dark:hover:bg-secondarycolor/10"
     }`}
   >
     {page}
@@ -163,7 +163,7 @@ const Pagination: React.FC<PaginationProps> = ({
               size="sm"
               onClick={handleJump}
               disabled={!inputPage}
-              className="h-[28px] rounded-[8px] px-3 text-[0.875] font-bold bg-primarycolor hover:bg-bgprimary dark:!text-white"
+              className="h-[28px] rounded-[8px] px-3 text-[0.875] font-bold bg-primarycolor hover:bg-bgprimary dark:!text-black"
             >
               {t("paginationGo")}
             </Button>

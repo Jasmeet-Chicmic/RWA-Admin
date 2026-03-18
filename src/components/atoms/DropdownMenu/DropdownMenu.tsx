@@ -48,7 +48,7 @@ const DropdownMenu = ({ options, onSelect }: DropdownMenuProps) => {
                     onSelect?.(option.value);
                     setOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-800"
+                  className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-primaryhover dark:text-white"
                 >
                   {option.icon && (
                     <span className="flex items-center">{option.icon}</span>
