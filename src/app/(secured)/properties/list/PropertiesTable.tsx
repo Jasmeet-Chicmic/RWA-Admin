@@ -200,7 +200,7 @@ const PropertiesTable = ({
                 return (
                   <button
                     type="button"
-                    className="px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-white hover:opacity-90"
+                    className="px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-black hover:opacity-90"
                     onClick={() => {
                       if (!item.id) return;
                       setAssignPropertyId(item.id);

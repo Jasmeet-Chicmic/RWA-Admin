@@ -204,7 +204,7 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c97254;
+  background: #C7FE1E;
   border-radius: 10px;
 }
 
@@ -215,7 +215,7 @@ button {
 /* For Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #c97254 transparent;
+  scrollbar-color: #C7FE1E transparent;
 }
 
 .preview-main-content {

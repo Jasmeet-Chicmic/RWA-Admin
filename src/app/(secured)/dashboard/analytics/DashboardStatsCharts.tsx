@@ -54,47 +54,37 @@ const DashboardStatsCharts = ({
         <StatCard
           title={t("totalAssetValue")}
           value={formatCurrency(propertiesDetails.totalAssetValue)}
-          icon={<Users className="w-6 h-6 text-white dark:text-white/80" />}
+          icon={<Users className="w-6 h-6 text-white dark:text-black" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
           title={t("totalInvestors")}
           value={formatNumber(propertiesDetails.totalInvestors)}
-          icon={
-            <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
-          }
+          icon={<Activity className="w-6 h-6 text-bgwhite dark:text-black" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
           title={t("tokensIssued")}
           value={formatNumber(propertiesDetails.tokensIssued)}
-          icon={
-            <TrendingUp className="w-6 h-6 text-bgwhite dark:text-white/80" />
-          }
+          icon={<TrendingUp className="w-6 h-6 text-bgwhite dark:text-black" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
           title={t("pendingKyc")}
           value={formatNumber(propertiesDetails.pendingKyc)}
-          icon={
-            <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
-          }
+          icon={<Activity className="w-6 h-6 text-bgwhite dark:text-black" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
           title={t("platformRevenue")}
           value={formatCurrency(propertiesDetails.platformRevenue)}
-          icon={
-            <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
-          }
+          icon={<Activity className="w-6 h-6 text-bgwhite dark:text-black" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
         <StatCard
           title={t("pendingPropertyApprovals")}
           value={formatNumber(propertiesDetails.pendingPropertyApprovals)}
-          icon={
-            <Activity className="w-6 h-6 text-bgwhite dark:text-white/80" />
-          }
+          icon={<Activity className="w-6 h-6 text-bgwhite dark:text-black" />}
           color="bg-primarycolor dark:bg-secondarycolor"
         />
       </div>

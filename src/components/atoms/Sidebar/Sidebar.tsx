@@ -96,7 +96,8 @@ const Sidebar: React.FC = () => {
   const renderNavItem = (item: NavItem, depth = 0): React.ReactNode => {
     const isActive = isItemActive(pathname, item);
     const isExpandable = Boolean(item.children?.length);
-    const paddingLeft = depth * 16 + 16;
+    // const paddingLeft = depth * 16 + 16;
+    const paddingLeft = 16;
     const iconClass = cn(
       "transition-colors duration-200",
       isActive ? iconActiveClass : iconInactiveClass,
@@ -112,7 +113,7 @@ const Sidebar: React.FC = () => {
               "flex items-center px-3 py-3 rounded-[5px] sub-menu-item transition-all duration-200 group",
               isActive
                 ? "sub-menu-item-active"
-                : "hover:bg-primarycolor dark:hover:bg-none",
+                : "hover:bg-primaryhover dark:hover:bg-none",
             )}
             prefetch
             style={{ paddingLeft }}
@@ -142,9 +143,9 @@ const Sidebar: React.FC = () => {
             <button
               type="button"
               className={cn(
-                "group flex items-center px-3 py-3 rounded-[5px] cursor-pointer sidebar-menu-item w-full text-left transition-all duration-200 hover:bg-primarycolor hover:text-white dark:hover:bg-primarycolor",
+                "group flex items-center px-3 py-3 rounded-[5px] cursor-pointer sidebar-menu-item w-full text-left transition-all duration-200 hover:bg-primaryhover hover:text-white dark:hover:bg-primaryhover",
                 isActive &&
-                  "bg-transparent hover:bg-primarycolor dark:hover:bg-none",
+                  "bg-transparent hover:bg-primaryhover dark:hover:bg-none",
               )}
               style={{ paddingLeft }}
               onClick={() => toggleExpand(item.label)}
@@ -224,7 +225,7 @@ const Sidebar: React.FC = () => {
               width={164}
               height={52}
               alt="logo"
-              className="max-h-20 max-w-[84%] w-full"
+              className="max-h-20 max-w-[70%] w-full"
             />
           </div>
         </div>
