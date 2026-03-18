@@ -181,15 +181,15 @@ const PropertiesTable = ({
       //     </span>
       //   ),
       // },
-      {
-        title: t("Risk Score"),
-        field: "riskScore",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.riskScore}
-          </span>
-        ),
-      },
+      // {
+      //   title: t("Risk Score"),
+      //   field: "riskScore",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.riskScore}
+      //     </span>
+      //   ),
+      // },
       {
         title: t("Actions"),
         field: "",

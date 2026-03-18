@@ -3,7 +3,7 @@ import OrganisationsTable, { OrganisationRow } from "./OrganisationsTable";
 
 const mockOrganisations: OrganisationRow[] = [
   {
-    id: "llc-1",
+    id: "11111111-1111-1111-1111-111111111111",
     name: "Maple Grove Property LLC",
     entityType: "LLC",
     registrationNumber: "DE-908173",
@@ -12,7 +12,7 @@ const mockOrganisations: OrganisationRow[] = [
     propertyholds: 6,
   },
   {
-    id: "llc-2",
+    id: "22222222-2222-2222-2222-222222222222",
     name: "Sunset Villas Holdings LLC",
     entityType: "LLC",
     registrationNumber: "TX-441902",
@@ -21,7 +21,7 @@ const mockOrganisations: OrganisationRow[] = [
     propertyholds: 4,
   },
   {
-    id: "llc-3",
+    id: "33333333-3333-3333-3333-333333333333",
     name: "Downtown Heights SPV LLC",
     entityType: "SPV",
     registrationNumber: "NY-120773",
@@ -30,7 +30,7 @@ const mockOrganisations: OrganisationRow[] = [
     propertyholds: 2,
   },
   {
-    id: "llc-4",
+    id: "44444444-4444-4444-4444-444444444444",
     name: "Greenfield Residential LLC",
     entityType: "LLC",
     registrationNumber: "CA-770154",
@@ -39,7 +39,7 @@ const mockOrganisations: OrganisationRow[] = [
     propertyholds: 8,
   },
   {
-    id: "llc-5",
+    id: "55555555-5555-5555-5555-555555555555",
     name: "Riverside Apartments Owner LLC",
     entityType: "Trust",
     registrationNumber: "FL-330812",

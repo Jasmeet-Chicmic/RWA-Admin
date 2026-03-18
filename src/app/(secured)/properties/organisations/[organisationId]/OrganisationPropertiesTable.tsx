@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
@@ -13,6 +12,7 @@ import {
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 
 import { AdminProperty, PropertyStatus } from "../../helpers/types";
+import { TokenizationModal } from "./TokenizationModal";
 
 const OrganisationPropertiesTable = ({
   data,
@@ -22,7 +22,20 @@ const OrganisationPropertiesTable = ({
   totalCount: number;
 }) => {
   const t = useTranslations("properties");
-  const router = useRouter();
+
+  const [tokenizationModalOpen, setTokenizationModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] =
+    useState<AdminProperty | null>(null);
+
+  const openTokenization = (property: AdminProperty) => {
+    setSelectedProperty(property);
+    setTokenizationModalOpen(true);
+  };
+
+  const closeTokenization = () => {
+    setTokenizationModalOpen(false);
+    setSelectedProperty(null);
+  };
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
@@ -144,15 +157,15 @@ const OrganisationPropertiesTable = ({
       //     </span>
       //   ),
       // },
-      {
-        title: t("Risk Score"),
-        field: "riskScore",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.riskScore}
-          </span>
-        ),
-      },
+      // {
+      //   title: t("Risk Score"),
+      //   field: "riskScore",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.riskScore}
+      //     </span>
+      //   ),
+      // },
       {
         title: t("Actions"),
         field: "",
@@ -162,10 +175,7 @@ const OrganisationPropertiesTable = ({
               type="button"
               className="px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-white hover:opacity-90"
               onClick={() => {
-                // Future: navigate to tokenization flow
-                // For now, keep action wired for later integration
-                console.log("Tokenization clicked", item.id);
-                router.refresh();
+                openTokenization(item);
               }}
             >
               {t("Tokenization")}
@@ -182,9 +192,18 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("No properties found"),
     };
-  }, [router, t]);
+  }, [t]);
 
-  return <DataTable data={data} totalCount={totalCount} config={config} />;
+  return (
+    <>
+      <DataTable data={data} totalCount={totalCount} config={config} />
+      <TokenizationModal
+        open={tokenizationModalOpen}
+        onClose={closeTokenization}
+        property={selectedProperty}
+      />
+    </>
+  );
 };
 
 export default OrganisationPropertiesTable;

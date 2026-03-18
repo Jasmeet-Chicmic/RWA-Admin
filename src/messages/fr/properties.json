@@ -38,6 +38,43 @@
   "Properties Held": "Propriétés détenues",
   "No organisations found": "Aucune organisation trouvée",
   "Organisation Properties Title": "Propriétés de l’organisation",
-  "Tokenization": "Tokenisation"
+  "Tokenization": "Tokenisation",
+  "TokenizationForm": {
+    "title": "Informations financières",
+    "subtitle": "Configurer les paramètres de tokenisation et d’investissement",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "submit": "Tokenisation",
+    "totalPropertyValue": "Valeur totale du bien (USD)",
+    "totalShares": "Nombre total de parts",
+    "totalSharesPlaceholder": "0",
+    "totalSharesHint": "Maximum 10 000 parts",
+    "autoCalculated": "Calculé automatiquement",
+    "pricePerShare": "Prix par part",
+    "calculatedAs": "Calculé comme : {totalValue} ÷ {shares} parts",
+    "rentalIncomeHistory": "Historique des revenus locatifs (par mois)",
+    "rentalIncomePlaceholder": "$ 0.0",
+    "rentalIncomeHint": "Facultatif : revenu locatif mensuel",
+    "expectedAnnualYield": "Rendement annuel attendu (%)",
+    "expectedAnnualYieldPlaceholder": "0.0",
+    "expectedAnnualYieldHint": "La valeur doit être comprise entre 0 et 100",
+    "riskScore": "Score de risque (0-1)",
+    "riskScorePlaceholder": "0.0",
+    "Errors": {
+      "sharesRequired": "Le nombre de parts est requis",
+      "sharesMin": "Le nombre de parts doit être supérieur à 0",
+      "sharesMax": "Le maximum est de 10 000 parts",
+      "sharesInteger": "Le nombre de parts doit être un entier",
+      "yieldRequired": "Le rendement annuel attendu est requis",
+      "yieldMin": "Le rendement ne peut pas être négatif",
+      "yieldMax": "Le rendement ne peut pas dépasser 100 %",
+      "riskRequired": "Le score de risque est requis",
+      "riskMin": "Le score de risque ne peut pas être négatif",
+      "riskMax": "Le score de risque ne peut pas dépasser 1",
+      "rentalInvalid": "Saisissez un montant valide",
+      "rentalMin": "Le revenu locatif ne peut pas être négatif",
+      "rentalMax": "Le revenu locatif ne peut pas dépasser {max}"
+    }
+  }
 }
 

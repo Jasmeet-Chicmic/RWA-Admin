@@ -38,6 +38,43 @@
   "Properties Held": "Propiedades en posesión",
   "No organisations found": "No se encontraron organizaciones",
   "Organisation Properties Title": "Propiedades de la organización",
-  "Tokenization": "Tokenización"
+  "Tokenization": "Tokenización",
+  "TokenizationForm": {
+    "title": "Información financiera",
+    "subtitle": "Configura los parámetros de tokenización e inversión",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "submit": "Tokenización",
+    "totalPropertyValue": "Valor total de la propiedad (USD)",
+    "totalShares": "Número total de participaciones",
+    "totalSharesPlaceholder": "0",
+    "totalSharesHint": "Máximo 10,000 participaciones",
+    "autoCalculated": "Auto-calculado",
+    "pricePerShare": "Precio por participación",
+    "calculatedAs": "Calculado como: {totalValue} ÷ {shares} participaciones",
+    "rentalIncomeHistory": "Historial de ingresos por alquiler (por mes)",
+    "rentalIncomePlaceholder": "$ 0.0",
+    "rentalIncomeHint": "Opcional: ingreso mensual por alquiler",
+    "expectedAnnualYield": "Rendimiento anual esperado (%)",
+    "expectedAnnualYieldPlaceholder": "0.0",
+    "expectedAnnualYieldHint": "El valor debe estar entre 0 y 100",
+    "riskScore": "Puntuación de riesgo (0-1)",
+    "riskScorePlaceholder": "0.0",
+    "Errors": {
+      "sharesRequired": "Las participaciones son obligatorias",
+      "sharesMin": "Las participaciones deben ser mayores que 0",
+      "sharesMax": "El máximo es 10,000 participaciones",
+      "sharesInteger": "Las participaciones deben ser un número entero",
+      "yieldRequired": "El rendimiento anual esperado es obligatorio",
+      "yieldMin": "El rendimiento no puede ser negativo",
+      "yieldMax": "El rendimiento no puede superar el 100%",
+      "riskRequired": "La puntuación de riesgo es obligatoria",
+      "riskMin": "La puntuación de riesgo no puede ser negativa",
+      "riskMax": "La puntuación de riesgo no puede superar 1",
+      "rentalInvalid": "Ingresa un monto válido",
+      "rentalMin": "El ingreso por alquiler no puede ser negativo",
+      "rentalMax": "El ingreso por alquiler no puede superar {max}"
+    }
+  }
 }
 
