@@ -188,4 +188,3 @@ const OrganisationPropertiesTable = ({
 };
 
 export default OrganisationPropertiesTable;
-

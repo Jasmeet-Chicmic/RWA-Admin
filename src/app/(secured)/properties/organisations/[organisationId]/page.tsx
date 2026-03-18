@@ -90,4 +90,3 @@ const OrganisationPropertiesPage = async ({
 };
 
 export default OrganisationPropertiesPage;
-
