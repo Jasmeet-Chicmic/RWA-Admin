@@ -312,15 +312,15 @@ const TopPropertiesTable = () => {
           </span>
         ),
       },
-      {
-        title: t("Annual Yield"),
-        field: "annualYieldPercent",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.annualYieldPercent.toFixed(2)}%
-          </span>
-        ),
-      },
+      // {
+      //   title: t("Annual Yield"),
+      //   field: "annualYieldPercent",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.annualYieldPercent.toFixed(2)}%
+      //     </span>
+      //   ),
+      // },
       {
         title: t("Risk Score"),
         field: "riskScore",

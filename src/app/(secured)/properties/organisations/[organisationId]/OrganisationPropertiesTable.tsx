@@ -108,42 +108,42 @@ const OrganisationPropertiesTable = ({
           </span>
         ),
       },
-      {
-        title: t("Total Units"),
-        field: "totalUnits",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.totalUnits.toLocaleString()}
-          </span>
-        ),
-      },
-      {
-        title: t("Available Units"),
-        field: "availableUnits",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.availableUnits.toLocaleString()}
-          </span>
-        ),
-      },
-      {
-        title: t("Price Per Unit"),
-        field: "pricePerUnit",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.pricePerUnit.toFixed(2)}
-          </span>
-        ),
-      },
-      {
-        title: t("Annual Yield"),
-        field: "annualYieldPercent",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.annualYieldPercent.toFixed(2)}%
-          </span>
-        ),
-      },
+      // {
+      //   title: t("Total Units"),
+      //   field: "totalUnits",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.totalUnits.toLocaleString()}
+      //     </span>
+      //   ),
+      // },
+      // {
+      //   title: t("Available Units"),
+      //   field: "availableUnits",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.availableUnits.toLocaleString()}
+      //     </span>
+      //   ),
+      // },
+      // {
+      //   title: t("Price Per Unit"),
+      //   field: "pricePerUnit",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.pricePerUnit.toFixed(2)}
+      //     </span>
+      //   ),
+      // },
+      // {
+      //   title: t("Annual Yield"),
+      //   field: "annualYieldPercent",
+      //   render: (item) => (
+      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //       {item.annualYieldPercent.toFixed(2)}%
+      //     </span>
+      //   ),
+      // },
       {
         title: t("Risk Score"),
         field: "riskScore",
