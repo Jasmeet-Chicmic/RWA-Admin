@@ -159,7 +159,7 @@ const Login = () => {
         </div>
         <FormLayout layout={FormLayoutType.Default}>
           <h4 className="mb-1 text-[20px] leading-tight sm:text-[24px] sm:leading-[32px]">
-            Welcome back to Sixth Hive
+            Welcome back to Townly
           </h4>
           <p className="mb-6">Please sign in to your Admin account</p>
           <FormBuilder<LoginFormValues>
