@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { RayptoLogo, RayptoLogoDark } from "@/assets";
+import { RayptoLogoDark } from "@/assets";
 import { cn } from "@/shared/utils";
 import { NavItem, navItems, getNavItemLabelKey } from "./helpers/constants";
 import { useTheme } from "next-themes";
@@ -218,9 +218,9 @@ const Sidebar: React.FC = () => {
           >
             <Image
               src={
-                mounted && resolvedTheme === THEME_TYPE.DARK
-                  ? RayptoLogoDark.src
-                  : RayptoLogo.src
+                mounted &&
+                resolvedTheme === THEME_TYPE.DARK &&
+                RayptoLogoDark.src
               }
               width={164}
               height={52}

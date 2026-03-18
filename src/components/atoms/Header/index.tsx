@@ -39,6 +39,7 @@ const Header = () => {
 
   useEffect(() => {
     // setMounted(true);
+    setTheme(THEME_TYPE.DARK);
     setUserEmail(localStorage.getItem("email") || "Admin01@yopmail.com");
     setUserRole(localStorage.getItem("role") || "Admin");
   }, []);
