@@ -40,7 +40,7 @@ export function ColorField<T extends FieldValues>({
     <div className={`mb-4 ${width} ${className}`}>
       <label
         htmlFor={name}
-        className="block mb-1 font-medium dark:text-sidebartext"
+        className="block mb-1 font-medium text-sidebartext"
       >
         {label}
       </label>

@@ -32,8 +32,9 @@ interface FormBuilderProps<T extends FieldValues> {
 }
 
 const loginButtonStyle: React.CSSProperties = {
-  background: "linear-gradient(to right, #D97040, #B5541C, #8C3E12)",
-  boxShadow: "0 3px 18px rgba(181,84,28,0.32)",
+  background: "#c7fe1e",
+  boxShadow: "0 3px 18px rgba(199, 254, 30, .4)",
+  color: "black",
 };
 
 function FormBuilder<T extends FieldValues>({
