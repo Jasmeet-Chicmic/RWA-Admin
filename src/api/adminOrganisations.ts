@@ -2,6 +2,7 @@
 
 import { API_END_POINTS } from "@/shared/api";
 import { getRequest } from "@/shared/fetcher";
+import { PropertiesListResponse } from "@/app/(secured)/properties/helpers/types";
 
 export type AdminOrganisation = {
   id: string;
@@ -32,6 +33,24 @@ export async function getAdminOrganisationsAction(
   return await getRequest<AdminOrganisationsResponse, GetAdminOrganisationsParams>(
     API_END_POINTS.ADMIN_ORGANISATIONS,
     params,
+  );
+}
+
+export type OrganisationPropertiesResponse = PropertiesListResponse;
+
+export type GetOrganisationPropertiesParams = {
+  organisationId: string;
+  page: number;
+  pageSize: number;
+};
+
+export async function getOrganisationPropertiesAction(
+  params: GetOrganisationPropertiesParams,
+) {
+  const { organisationId, page, pageSize } = params;
+  return await getRequest<OrganisationPropertiesResponse, { page: number; pageSize: number }>(
+    `${API_END_POINTS.ADMIN_ORGANISATIONS}/${organisationId}/properties`,
+    { page, pageSize },
   );
 }
 

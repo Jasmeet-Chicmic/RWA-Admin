@@ -70,6 +70,14 @@ const PropertiesTable = ({
     },
   ];
 
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      currencyDisplay: "narrowSymbol",
+      maximumFractionDigits: 2,
+    }).format(Number.isFinite(value) ? value : 0);
+
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
       {
@@ -156,9 +164,7 @@ const PropertiesTable = ({
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.totalValue.toLocaleString(undefined, {
-              maximumFractionDigits: 2,
-            })}
+            {formatCurrency(item.totalValue)}
           </span>
         ),
       },
