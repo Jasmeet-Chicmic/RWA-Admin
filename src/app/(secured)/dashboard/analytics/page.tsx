@@ -6,6 +6,7 @@ import {
   fetchSubscriptionAnalyticsAction,
   SubscriptionAnalytics,
 } from "@/api/adminPlans";
+import { getAdminPropertiesDetailsAction } from "@/api/adminProperties";
 
 interface AnalyticsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -38,9 +39,11 @@ const Analytics = async ({ searchParams }: AnalyticsPageProps) => {
   const toDate = getFirstParam(params.toDate, defaultDates.toDate);
 
   // Fetch dashboard data in parallel
-  const [userRetention, subscriptionAnalyticsRes] = await Promise.all([
+  const [userRetention, subscriptionAnalyticsRes, propertiesDetails] =
+    await Promise.all([
     fetchUserRetentionAction(),
     fetchSubscriptionAnalyticsAction({ from: fromDate, to: toDate }),
+    getAdminPropertiesDetailsAction(),
   ]);
 
   const defaultSubscriptionAnalytics: SubscriptionAnalytics = {
@@ -66,6 +69,7 @@ const Analytics = async ({ searchParams }: AnalyticsPageProps) => {
               avgTimeBetweenVisitsHours: 0,
             }
           }
+          propertiesDetails={propertiesDetails}
           subscriptionAnalytics={
             subscriptionAnalyticsRes?.data || defaultSubscriptionAnalytics
           }
