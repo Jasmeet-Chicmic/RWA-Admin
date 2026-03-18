@@ -2,11 +2,31 @@ import ErrorState from "@/components/atoms/ErrorState";
 import OrganisationsTable, { OrganisationRow } from "./OrganisationsTable";
 import { getAdminOrganisationsAction } from "@/api/adminOrganisations";
 
-const OrganisationsPage = async () => {
-  try {
-    const res = (await getAdminOrganisationsAction()) ?? [];
+const DEFAULT_PAGE_SIZE = 10;
 
-    const organisations: OrganisationRow[] = res.map((org) => ({
+const OrganisationsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    skip?: number;
+    limit?: number;
+  }>;
+}) => {
+  try {
+    const { skip, limit } = await searchParams;
+    const pageSize = limit ? Number(limit) : DEFAULT_PAGE_SIZE;
+    const skipNum = skip ? Number(skip) : 0;
+    const pageNumber = Math.floor(skipNum / pageSize) + 1;
+
+    const res = await getAdminOrganisationsAction({
+      page: pageNumber,
+      pageSize,
+    });
+
+    const items = res?.items ?? [];
+    const totalCount = res?.totalCount ?? items.length;
+
+    const organisations: OrganisationRow[] = items.map((org) => ({
       id: org.id,
       name: org.name,
       entityType: org.entityType,
@@ -21,7 +41,7 @@ const OrganisationsPage = async () => {
         <div className="overflow-x-auto">
           <OrganisationsTable
             data={organisations}
-            totalCount={organisations.length}
+            totalCount={totalCount}
           />
         </div>
       </div>

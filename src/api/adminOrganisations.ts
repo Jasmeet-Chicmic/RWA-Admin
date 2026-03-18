@@ -13,9 +13,25 @@ export type AdminOrganisation = {
   propertyHolds: number;
 };
 
-export async function getAdminOrganisationsAction() {
-  return await getRequest<AdminOrganisation[], undefined>(
+export type AdminOrganisationsResponse = {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  hasMore: boolean;
+  items: AdminOrganisation[];
+};
+
+export type GetAdminOrganisationsParams = {
+  page: number;
+  pageSize: number;
+};
+
+export async function getAdminOrganisationsAction(
+  params: GetAdminOrganisationsParams,
+) {
+  return await getRequest<AdminOrganisationsResponse, GetAdminOrganisationsParams>(
     API_END_POINTS.ADMIN_ORGANISATIONS,
+    params,
   );
 }
 
