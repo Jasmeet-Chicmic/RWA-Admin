@@ -1,12 +1,14 @@
 import ErrorState from "@/components/atoms/ErrorState";
-import OrganisationsTable, { OrganisationRow } from "./OrganisationsTable";
-import { getAdminOrganisationsAction } from "@/api/adminOrganisations";
+import OrganisationPropertiesTable from "./OrganisationPropertiesTable";
+import { getOrganisationPropertiesAction } from "@/api/adminOrganisations";
 
 const DEFAULT_PAGE_SIZE = 10;
 
-const OrganisationsPage = async ({
+const OrganisationPropertiesPage = async ({
+  params,
   searchParams,
 }: {
+  params: { organisationId: string };
   searchParams: Promise<{
     skip?: number;
     limit?: number;
@@ -18,7 +20,8 @@ const OrganisationsPage = async ({
     const skipNum = skip ? Number(skip) : 0;
     const pageNumber = Math.floor(skipNum / pageSize) + 1;
 
-    const res = await getAdminOrganisationsAction({
+    const res = await getOrganisationPropertiesAction({
+      organisationId: params.organisationId,
       page: pageNumber,
       pageSize,
     });
@@ -26,30 +29,17 @@ const OrganisationsPage = async ({
     const items = res?.items ?? [];
     const totalCount = res?.totalCount ?? items.length;
 
-    const organisations: OrganisationRow[] = items.map((org) => ({
-      id: org.id,
-      name: org.name,
-      entityType: org.entityType,
-      registrationNumber: org.registrationNumber,
-      jurisdiction: org.jurisdiction,
-      incorporationDate: org.incorporationDate,
-      propertyHolds: org.propertyHolds,
-    }));
-
     return (
       <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
         <div className="overflow-x-auto">
-          <OrganisationsTable
-            data={organisations}
-            totalCount={totalCount}
-          />
+          <OrganisationPropertiesTable data={items} totalCount={totalCount} />
         </div>
       </div>
     );
   } catch (error) {
-    console.error("Error loading organisations:", error);
+    console.error("Error fetching organisation properties:", error);
     return <ErrorState title="properties" />;
   }
 };
 
-export default OrganisationsPage;
+export default OrganisationPropertiesPage;

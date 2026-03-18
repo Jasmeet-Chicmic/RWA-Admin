@@ -24,6 +24,8 @@ interface InputFieldProps<T extends FieldValues> {
   min?: string | number;
   max?: string | number;
   disabled?: boolean;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
 export function InputField<T extends FieldValues>({
@@ -40,6 +42,8 @@ export function InputField<T extends FieldValues>({
   min,
   max,
   disabled = false,
+  inputMode,
+  onKeyDown,
 }: Readonly<InputFieldProps<T>>) {
   const {
     setValue,
@@ -69,8 +73,10 @@ export function InputField<T extends FieldValues>({
         min={min}
         max={max}
         disabled={disabled}
+        inputMode={inputMode}
         {...register(name, validation)}
         onChange={handleChange}
+        onKeyDown={onKeyDown}
         className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor textbgblack dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext disabled:opacity-50 disabled:cursor-not-allowed"
       />
       {fieldError && (

@@ -44,6 +44,45 @@
   "Jurisdiction": "Jurisdiction",
   "Incorporation Date": "Incorporation Date",
   "Properties Held": "Properties Held",
-  "No organisations found": "No organisations found"
+  "No organisations found": "No organisations found",
+  "Organisation Properties Title": "Organisation Properties",
+  "Tokenization": "Tokenization",
+  "TokenizationForm": {
+    "title": "Financial Information",
+    "subtitle": "Configure the tokenization and investment parameters",
+    "close": "Close",
+    "cancel": "Cancel",
+    "submit": "Tokenization",
+    "totalPropertyValue": "Total Property Value (USD)",
+    "totalShares": "Total Number of Shares",
+    "totalSharesPlaceholder": "0",
+    "totalSharesHint": "Maximum 10,000 shares",
+    "autoCalculated": "Auto-Calculated",
+    "pricePerShare": "Price Per Share",
+    "calculatedAs": "Calculated as: {totalValue} ÷ {shares} shares",
+    "rentalIncomeHistory": "Rental Income History (per month)",
+    "rentalIncomePlaceholder": "$ 0.0",
+    "rentalIncomeHint": "Optional: monthly rental income",
+    "expectedAnnualYield": "Expected Annual Yield (%)",
+    "expectedAnnualYieldPlaceholder": "0.0",
+    "expectedAnnualYieldHint": "Value must be between 0 and 100",
+    "riskScore": "Risk Score (0-1)",
+    "riskScorePlaceholder": "0.0",
+    "Errors": {
+      "sharesRequired": "Shares are required",
+      "sharesMin": "Shares must be greater than 0",
+      "sharesMax": "Maximum shares is 10,000",
+      "sharesInteger": "Shares must be a whole number",
+      "yieldRequired": "Expected annual yield is required",
+      "yieldMin": "Yield cannot be negative",
+      "yieldMax": "Yield cannot exceed 100%",
+      "riskRequired": "Risk score is required",
+      "riskMin": "Risk score cannot be negative",
+      "riskMax": "Risk score cannot exceed 1",
+      "rentalInvalid": "Enter a valid currency amount",
+      "rentalMin": "Rental income cannot be negative",
+      "rentalMax": "Rental income cannot exceed {max}"
+    }
+  }
 }
 

@@ -152,6 +152,9 @@ export const API_END_POINTS = {
   // KYC
   ADMIN_KYC_PENDING: `/api/admin/kyc`,
 
+  // Organisations
+  ADMIN_ORGANISATIONS: `/api/admin/organizations`,
+
   // Tokens
   ADMIN_TOKEN_REQUESTS: `/api/admin/tokens/requests`,
 
