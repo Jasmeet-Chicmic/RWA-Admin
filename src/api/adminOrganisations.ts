@@ -30,10 +30,10 @@ export type GetAdminOrganisationsParams = {
 export async function getAdminOrganisationsAction(
   params: GetAdminOrganisationsParams,
 ) {
-  return await getRequest<AdminOrganisationsResponse, GetAdminOrganisationsParams>(
-    API_END_POINTS.ADMIN_ORGANISATIONS,
-    params,
-  );
+  return await getRequest<
+    AdminOrganisationsResponse,
+    GetAdminOrganisationsParams
+  >(API_END_POINTS.ADMIN_ORGANISATIONS, params);
 }
 
 export type OrganisationPropertiesResponse = PropertiesListResponse;
@@ -48,9 +48,11 @@ export async function getOrganisationPropertiesAction(
   params: GetOrganisationPropertiesParams,
 ) {
   const { organisationId, page, pageSize } = params;
-  return await getRequest<OrganisationPropertiesResponse, { page: number; pageSize: number }>(
-    `${API_END_POINTS.ADMIN_ORGANISATIONS}/${organisationId}/properties`,
-    { page, pageSize },
-  );
+  return await getRequest<
+    OrganisationPropertiesResponse,
+    { page: number; pageSize: number }
+  >(`${API_END_POINTS.ADMIN_ORGANISATIONS}/${organisationId}/properties`, {
+    page,
+    pageSize,
+  });
 }
-

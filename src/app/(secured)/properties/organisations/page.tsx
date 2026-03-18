@@ -39,10 +39,7 @@ const OrganisationsPage = async ({
     return (
       <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
         <div className="overflow-x-auto">
-          <OrganisationsTable
-            data={organisations}
-            totalCount={totalCount}
-          />
+          <OrganisationsTable data={organisations} totalCount={totalCount} />
         </div>
       </div>
     );

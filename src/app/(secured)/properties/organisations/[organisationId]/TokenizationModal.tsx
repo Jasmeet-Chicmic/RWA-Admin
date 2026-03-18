@@ -67,9 +67,9 @@ const clampRiskScore = (val: string) => {
   return String(Math.min(Math.max(n, 0), 1));
 };
 
-const preventNegativeAndExponent: React.KeyboardEventHandler<HTMLInputElement> = (
-  e,
-) => {
+const preventNegativeAndExponent: React.KeyboardEventHandler<
+  HTMLInputElement
+> = (e) => {
   if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
     e.preventDefault();
   }
@@ -113,7 +113,8 @@ export const TokenizationModal = ({
   const sharesRaw = methods.watch("totalShares");
   const totalValue = property?.totalValue ?? 0;
   const sharesNum = Number(sharesRaw);
-  const safeShares = Number.isFinite(sharesNum) && sharesNum > 0 ? sharesNum : 0;
+  const safeShares =
+    Number.isFinite(sharesNum) && sharesNum > 0 ? sharesNum : 0;
   const pricePerShare = safeShares > 0 ? totalValue / safeShares : 0;
 
   const onSubmit: SubmitHandler<TokenizationFormValues> = async (values) => {
@@ -174,7 +175,8 @@ export const TokenizationModal = ({
                   }
                   if (n <= 0) return t("TokenizationForm.Errors.sharesMin");
                   if (n > 10000) return t("TokenizationForm.Errors.sharesMax");
-                  if (!Number.isInteger(n)) return t("TokenizationForm.Errors.sharesInteger");
+                  if (!Number.isInteger(n))
+                    return t("TokenizationForm.Errors.sharesInteger");
                   return true;
                 },
               }}
@@ -306,4 +308,3 @@ export const TokenizationModal = ({
     </CustomModal>
   );
 };
-
