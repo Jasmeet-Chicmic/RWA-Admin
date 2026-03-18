@@ -20,3 +20,13 @@ export async function rejectAdminPropertyAction(
     { reason },
   );
 }
+
+export async function assignAdminPropertyToOrganisationAction(
+  propertyId: string,
+  organizationId: string,
+) {
+  return await postRequest<ResponseType, { organizationId: string }>(
+    `${API_END_POINTS.ADMIN_PROPERTIES}/${propertyId}/assign`,
+    { organizationId },
+  );
+}

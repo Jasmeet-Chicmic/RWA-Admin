@@ -22,7 +22,7 @@ export type OrganisationRow = {
   registrationNumber: string;
   jurisdiction: string;
   incorporationDate: string;
-  propertyholds: number;
+  propertyHolds: number;
 };
 
 const OrganisationsTable = ({
@@ -81,11 +81,11 @@ const OrganisationsTable = ({
         ),
       },
       {
-        field: "propertyholds",
+        field: "propertyHolds",
         title: t("Properties Held"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.propertyholds}
+            {item.propertyHolds}
           </span>
         ),
       },

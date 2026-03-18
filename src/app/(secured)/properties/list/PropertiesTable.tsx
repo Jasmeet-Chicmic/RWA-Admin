@@ -18,6 +18,7 @@ import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   approveAdminPropertyAction,
   rejectAdminPropertyAction,
+  assignAdminPropertyToOrganisationAction,
 } from "@/api/adminPropertiesActions";
 
 interface PropertiesTableProps {
@@ -44,13 +45,29 @@ const PropertiesTable = ({
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     null,
   );
+  const [assigning, setAssigning] = useState(false);
 
   const assignCompanies = [
-    { id: "llc-1", name: "Maple Grove Property LLC" },
-    { id: "llc-2", name: "Sunset Villas Holdings LLC" },
-    { id: "llc-3", name: "Downtown Heights SPV LLC" },
-    { id: "llc-4", name: "Greenfield Residential LLC" },
-    { id: "llc-5", name: "Riverside Apartments Owner LLC" },
+    {
+      id: "11111111-1111-1111-1111-111111111111",
+      name: "Maple Grove Property LLC",
+    },
+    {
+      id: "22222222-2222-2222-2222-222222222222",
+      name: "Sunset Villas Holdings LLC",
+    },
+    {
+      id: "33333333-3333-3333-3333-333333333333",
+      name: "Downtown Heights SPV LLC",
+    },
+    {
+      id: "44444444-4444-4444-4444-444444444444",
+      name: "Greenfield Residential LLC",
+    },
+    {
+      id: "55555555-5555-5555-5555-555555555555",
+      name: "Riverside Apartments Owner LLC",
+    },
   ];
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
@@ -392,6 +409,7 @@ const PropertiesTable = ({
                 type="button"
                 className="rounded-lg border border-bordergray200 px-4 py-2 text-sm font-medium text-textprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgbase"
                 onClick={() => {
+                  if (assigning) return;
                   setAssignModalOpen(false);
                   setAssignPropertyId(null);
                   setSelectedCompanyId(null);
@@ -402,17 +420,25 @@ const PropertiesTable = ({
               <button
                 type="button"
                 className="rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
-                disabled={!selectedCompanyId}
+                disabled={!selectedCompanyId || assigning}
                 onClick={() => {
-                  if (!selectedCompanyId) return;
-                  // TODO: Wire assign API when available
-                  console.log("Assign property to company", {
-                    propertyId: assignPropertyId,
-                    companyId: selectedCompanyId,
-                  });
-                  setAssignModalOpen(false);
-                  setAssignPropertyId(null);
-                  setSelectedCompanyId(null);
+                  if (!selectedCompanyId || !assignPropertyId || assigning)
+                    return;
+                  void (async () => {
+                    try {
+                      setAssigning(true);
+                      await assignAdminPropertyToOrganisationAction(
+                        assignPropertyId,
+                        selectedCompanyId,
+                      );
+                      setAssignModalOpen(false);
+                      setAssignPropertyId(null);
+                      setSelectedCompanyId(null);
+                      router.refresh();
+                    } finally {
+                      setAssigning(false);
+                    }
+                  })();
                 }}
               >
                 {t("Assign")}
