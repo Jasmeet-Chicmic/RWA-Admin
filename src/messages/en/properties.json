@@ -35,6 +35,15 @@
   "Disapprove Modal Description": "Optionally add a reason for disapproval. This helps the property owner understand what needs to change.",
   "Reason Optional Label": "Reason (optional)",
   "Cancel": "Cancel",
-  "Confirm Disapprove": "Disapprove"
+  "Confirm Disapprove": "Disapprove",
+  "Organisations": "Organisations",
+  "Organisations subtitle": "Registered organisations holding properties",
+  "Organisation Name": "Organisation Name",
+  "Entity Type": "Entity Type",
+  "Registration Number": "Registration Number",
+  "Jurisdiction": "Jurisdiction",
+  "Incorporation Date": "Incorporation Date",
+  "Properties Held": "Properties Held",
+  "No organisations found": "No organisations found"
 }
 

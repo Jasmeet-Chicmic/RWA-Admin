@@ -27,6 +27,15 @@
   "Assign Modal Description": "Selecciona una empresa para asignar esta propiedad",
   "Assign Company Label": "Empresa",
   "Assign": "Asignar",
-  "Cancel": "Cancelar"
+  "Cancel": "Cancelar",
+  "Organisations": "Organizaciones",
+  "Organisations subtitle": "Organizaciones registradas que poseen propiedades",
+  "Organisation Name": "Nombre de la organización",
+  "Entity Type": "Tipo de entidad",
+  "Registration Number": "Número de registro",
+  "Jurisdiction": "Jurisdicción",
+  "Incorporation Date": "Fecha de constitución",
+  "Properties Held": "Propiedades en posesión",
+  "No organisations found": "No se encontraron organizaciones"
 }
 
