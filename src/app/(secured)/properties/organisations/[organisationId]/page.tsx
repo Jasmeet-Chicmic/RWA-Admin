@@ -32,7 +32,11 @@ const OrganisationPropertiesPage = async ({
     return (
       <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
         <div className="overflow-x-auto">
-          <OrganisationPropertiesTable data={items} totalCount={totalCount} />
+          <OrganisationPropertiesTable
+            data={items}
+            totalCount={totalCount}
+            organisationId={params.organisationId}
+          />
         </div>
       </div>
     );

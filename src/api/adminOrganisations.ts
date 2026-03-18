@@ -1,7 +1,8 @@
 "use server";
 
 import { API_END_POINTS } from "@/shared/api";
-import { getRequest } from "@/shared/fetcher";
+import { getRequest, postRequest } from "@/shared/fetcher";
+import { ResponseType } from "@/shared/types";
 import { PropertiesListResponse } from "@/app/(secured)/properties/helpers/types";
 
 export type AdminOrganisation = {
@@ -55,4 +56,29 @@ export async function getOrganisationPropertiesAction(
     page,
     pageSize,
   });
+}
+
+export type ActivateOrganisationPropertyPayload = {
+  totalUnits: number;
+  rentalIncome: number;
+  annualYieldPercent: number;
+  riskScore: number;
+};
+
+export async function activateOrganisationPropertyAction(
+  params: {
+    organisationId: string;
+    propertyId: string;
+    payload: ActivateOrganisationPropertyPayload;
+  },
+) {
+  const { organisationId, propertyId, payload } = params;
+  return await postRequest<
+    ResponseType,
+    ActivateOrganisationPropertyPayload,
+    ResponseType
+  >(
+    `${API_END_POINTS.ADMIN_ORGANISATIONS}/${organisationId}/properties/${propertyId}/activate`,
+    payload,
+  );
 }

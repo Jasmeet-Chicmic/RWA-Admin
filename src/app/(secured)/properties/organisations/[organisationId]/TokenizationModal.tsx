@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import CustomModal from "@/components/molecules/CustomModal/CustomModal";
 import { InputField } from "@/components/molecules/FormBuilder/fields/InputField";
 import Button from "@/components/atoms/Button";
 
 import { AdminProperty } from "../../helpers/types";
+import { activateOrganisationPropertyAction } from "@/api/adminOrganisations";
 
 type TokenizationFormValues = {
   totalPropertyValue: string;
@@ -79,12 +81,16 @@ export const TokenizationModal = ({
   open,
   onClose,
   property,
+  organisationId,
 }: {
   open: boolean;
   onClose: () => void;
   property: AdminProperty | null;
+  organisationId: string;
 }) => {
   const t = useTranslations("properties");
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const defaultValues = useMemo<TokenizationFormValues>(() => {
     return {
@@ -118,16 +124,31 @@ export const TokenizationModal = ({
   const pricePerShare = safeShares > 0 ? totalValue / safeShares : 0;
 
   const onSubmit: SubmitHandler<TokenizationFormValues> = async (values) => {
-    // Future: integrate tokenization API
-    console.log("Tokenization submit", {
-      propertyId: property?.id,
-      totalValue,
-      shares: Number(values.totalShares),
-      expectedAnnualYield: Number(values.expectedAnnualYield),
-      riskScore: Number(values.riskScore),
-      rentalIncomeHistory: parseMoney(values.rentalIncomeHistory),
-    });
-    onClose();
+    if (!property) return;
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        totalUnits: Number(values.totalShares),
+        rentalIncome: parseMoney(values.rentalIncomeHistory) ?? 0,
+        annualYieldPercent: Number(values.expectedAnnualYield),
+        riskScore: Number(values.riskScore),
+      };
+
+      const res = await activateOrganisationPropertyAction({
+        organisationId,
+        propertyId: property.id,
+        payload,
+      });
+
+      console.log("🔥 activateOrganisationPropertyAction res", res);
+
+      // If backend follows ResponseType structure, `status` indicates success
+
+      onClose();
+      router.refresh();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!property) return null;
@@ -299,7 +320,12 @@ export const TokenizationModal = ({
             >
               {t("TokenizationForm.cancel")}
             </Button>
-            <Button type="submit" className="min-w-[140px]">
+            <Button
+              type="submit"
+              className="min-w-[140px]"
+              isLoading={isSubmitting}
+              disabled={isSubmitting}
+            >
               {t("TokenizationForm.submit")}
             </Button>
           </div>

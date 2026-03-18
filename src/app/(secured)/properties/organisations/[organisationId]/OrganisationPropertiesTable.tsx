@@ -17,9 +17,11 @@ import { TokenizationModal } from "./TokenizationModal";
 const OrganisationPropertiesTable = ({
   data,
   totalCount,
+  organisationId,
 }: {
   data: AdminProperty[];
   totalCount: number;
+  organisationId: string;
 }) => {
   const t = useTranslations("properties");
 
@@ -207,6 +209,7 @@ const OrganisationPropertiesTable = ({
         open={tokenizationModalOpen}
         onClose={closeTokenization}
         property={selectedProperty}
+        organisationId={organisationId}
       />
     </>
   );
