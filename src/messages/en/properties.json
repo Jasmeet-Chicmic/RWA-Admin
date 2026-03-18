@@ -25,6 +25,11 @@
   "Actions": "Actions",
   "Approve": "Approve",
   "Disapprove": "Disapprove",
-  "Sold": "Sold"
+  "Sold": "Sold",
+  "Disapprove Modal Title": "Disapprove Property",
+  "Disapprove Modal Description": "Optionally add a reason for disapproval. This helps the property owner understand what needs to change.",
+  "Reason Optional Label": "Reason (optional)",
+  "Cancel": "Cancel",
+  "Confirm Disapprove": "Disapprove"
 }
 

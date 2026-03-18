@@ -15,7 +15,10 @@ import {
 import { createSortableColumn } from "@/shared/utils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
-import { approveAdminPropertyAction } from "@/api/adminPropertiesActions";
+import {
+  approveAdminPropertyAction,
+  rejectAdminPropertyAction,
+} from "@/api/adminPropertiesActions";
 
 interface PropertiesTableProps {
   data: AdminProperty[];
@@ -31,6 +34,10 @@ const PropertiesTable = ({
   const t = useTranslations("properties");
   const router = useRouter();
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState<string>("");
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectPropertyId, setRejectPropertyId] = useState<string | null>(null);
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
@@ -222,15 +229,18 @@ const PropertiesTable = ({
                       void (async () => {
                         try {
                           setApprovingId(item.id);
-                          const res = await approveAdminPropertyAction(item.id);
-                          console.log("response of approve property", res);
+                          await approveAdminPropertyAction(item.id);
                           router.refresh();
                         } finally {
                           setApprovingId(null);
                         }
                       })();
                     } else if (value === 2) {
-                      console.log("Disapprove property", item.id);
+                      // Open disapprove modal
+                      if (!item.id) return;
+                      setRejectPropertyId(item.id);
+                      setRejectReason("");
+                      setRejectModalOpen(true);
                     }
                   }}
                 />
@@ -270,7 +280,74 @@ const PropertiesTable = ({
     };
   }, [t]);
 
-  return <DataTable data={data} totalCount={totalCount} config={config} />;
+  return (
+    <>
+      <DataTable data={data} totalCount={totalCount} config={config} />
+
+      {rejectModalOpen && rejectPropertyId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-2xl bg-bgwhite p-6 shadow-lg dark:bg-darkbgprimary">
+            <h2
+              className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}
+            >
+              {t("Disapprove Modal Title")}
+            </h2>
+            <p className="mb-4 text-sm text-textparagraph dark:text-textparagraphlight">
+              {t("Disapprove Modal Description")}
+            </p>
+            <label className="mb-1 block text-xs font-medium text-labelprimary dark:text-darklabelprimary">
+              {t("Reason Optional Label")}
+            </label>
+            <textarea
+              className="mb-4 h-24 w-full resize-none rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary focus:outline-none focus:ring-1 focus:ring-primarycolor dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white"
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder=""
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-bordergray200 px-4 py-2 text-sm font-medium text-textprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgbase"
+                onClick={() => {
+                  if (rejectingId) return;
+                  setRejectModalOpen(false);
+                  setRejectPropertyId(null);
+                  setRejectReason("");
+                }}
+              >
+                {t("Cancel")}
+              </button>
+              <button
+                type="button"
+                className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60"
+                disabled={!!rejectingId}
+                onClick={() => {
+                  if (!rejectPropertyId || rejectingId) return;
+                  void (async () => {
+                    try {
+                      setRejectingId(rejectPropertyId);
+                      await rejectAdminPropertyAction(
+                        rejectPropertyId,
+                        rejectReason,
+                      );
+                      setRejectModalOpen(false);
+                      setRejectPropertyId(null);
+                      setRejectReason("");
+                      router.refresh();
+                    } finally {
+                      setRejectingId(null);
+                    }
+                  })();
+                }}
+              >
+                {t("Confirm Disapprove")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default PropertiesTable;

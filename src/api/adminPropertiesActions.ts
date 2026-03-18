@@ -11,3 +11,13 @@ export async function approveAdminPropertyAction(propertyId: string) {
   );
 }
 
+export async function rejectAdminPropertyAction(
+  propertyId: string,
+  reason: string,
+) {
+  return await postRequest<ResponseType, { reason: string }>(
+    `${API_END_POINTS.ADMIN_PROPERTIES}/${propertyId}/reject`,
+    { reason },
+  );
+}
+
