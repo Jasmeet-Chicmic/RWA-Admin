@@ -21,6 +21,12 @@
   "Risk Score": "Score de risque",
   "No properties found": "Aucune propriété trouvée",
   "Top Properties": "Top 10 des propriétés",
-  "Top Properties subtitle": "Les propriétés les plus valorisées et les plus demandées sur la plateforme"
+  "Top Properties subtitle": "Les propriétés les plus valorisées et les plus demandées sur la plateforme",
+  "Assign to LLC": "Affecter à une LLC",
+  "Assign Modal Title": "Affecter à une LLC",
+  "Assign Modal Description": "Sélectionnez une entreprise à laquelle affecter cette propriété",
+  "Assign Company Label": "Entreprise",
+  "Assign": "Affecter",
+  "Cancel": "Annuler"
 }
 

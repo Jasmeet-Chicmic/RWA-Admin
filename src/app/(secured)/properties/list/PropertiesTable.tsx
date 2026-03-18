@@ -39,6 +39,20 @@ const PropertiesTable = ({
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectPropertyId, setRejectPropertyId] = useState<string | null>(null);
 
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [assignPropertyId, setAssignPropertyId] = useState<string | null>(null);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null,
+  );
+
+  const assignCompanies = [
+    { id: "llc-1", name: "Maple Grove Property LLC" },
+    { id: "llc-2", name: "Sunset Villas Holdings LLC" },
+    { id: "llc-3", name: "Downtown Heights SPV LLC" },
+    { id: "llc-4", name: "Greenfield Residential LLC" },
+    { id: "llc-5", name: "Riverside Apartments Owner LLC" },
+  ];
+
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
       {
@@ -186,13 +200,15 @@ const PropertiesTable = ({
                 return (
                   <button
                     type="button"
-                    className="px-3 py-1 text-xs font-semibold rounded bg-red-500 text-white hover:bg-red-600"
+                    className="px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-white hover:opacity-90"
                     onClick={() => {
-                      // TODO: Wire sold API when available
-                      console.log("Mark property as sold", item.id);
+                      if (!item.id) return;
+                      setAssignPropertyId(item.id);
+                      setSelectedCompanyId(assignCompanies[0]?.id ?? null);
+                      setAssignModalOpen(true);
                     }}
                   >
-                    {t("Sold")}
+                    {t("Assign to LLC")}
                   </button>
                 );
               }
@@ -341,6 +357,67 @@ const PropertiesTable = ({
                 }}
               >
                 {t("Confirm Disapprove")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {assignModalOpen && assignPropertyId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-2xl bg-bgwhite p-6 shadow-lg dark:bg-darkbgprimary">
+            <h2 className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}>
+              {t("Assign Modal Title")}
+            </h2>
+            <p className="mb-4 text-sm text-textparagraph dark:text-textparagraphlight">
+              {t("Assign Modal Description")}
+            </p>
+
+            <label className="mb-1 block text-xs font-medium text-labelprimary dark:text-darklabelprimary">
+              {t("Assign Company Label")}
+            </label>
+
+            <select
+              className="mb-4 w-full rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary focus:outline-none focus:ring-1 focus:ring-primarycolor dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white"
+              value={selectedCompanyId ?? ""}
+              onChange={(e) => setSelectedCompanyId(e.target.value || null)}
+            >
+              {assignCompanies.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-bordergray200 px-4 py-2 text-sm font-medium text-textprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgbase"
+                onClick={() => {
+                  setAssignModalOpen(false);
+                  setAssignPropertyId(null);
+                  setSelectedCompanyId(null);
+                }}
+              >
+                {t("Cancel")}
+              </button>
+              <button
+                type="button"
+                className="rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+                disabled={!selectedCompanyId}
+                onClick={() => {
+                  if (!selectedCompanyId) return;
+                  // TODO: Wire assign API when available
+                  console.log("Assign property to company", {
+                    propertyId: assignPropertyId,
+                    companyId: selectedCompanyId,
+                  });
+                  setAssignModalOpen(false);
+                  setAssignPropertyId(null);
+                  setSelectedCompanyId(null);
+                }}
+              >
+                {t("Assign")}
               </button>
             </div>
           </div>
