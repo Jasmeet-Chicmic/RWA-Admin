@@ -211,5 +211,11 @@
     "Save Changes": "Enregistrer les modifications",
     "Save Success": "Caractéristique mise à jour avec succès",
     "Save Error": "Échec de la mise à jour de la caractéristique"
+  },
+  "KYC": {
+    "Approved": "Approuvé",
+    "Pending": "En attente",
+    "Rejected": "Rejeté",
+    "NotStarted": "Non commencé"
   }
 }

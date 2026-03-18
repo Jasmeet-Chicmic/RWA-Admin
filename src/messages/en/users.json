@@ -59,9 +59,10 @@
   "Controls": "Controls",
   "Block": "Block",
   "KYC": {
-    "Verified": "Verified",
+    "Approved": "Approved",
     "Pending": "Pending",
-    "Failed": "Failed"
+    "Rejected": "Rejected",
+    "NotStarted": "Not Started"
   },
   "Approval": {
     "Approved": "Approved",

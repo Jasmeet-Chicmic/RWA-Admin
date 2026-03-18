@@ -211,5 +211,11 @@
     "Save Changes": "Salvar alterações",
     "Save Success": "Recurso atualizado com sucesso",
     "Save Error": "Falha ao atualizar o recurso"
+  },
+  "KYC": {
+    "Approved": "Aprovado",
+    "Pending": "Pendente",
+    "Rejected": "Rejeitado",
+    "NotStarted": "Não iniciado"
   }
 }

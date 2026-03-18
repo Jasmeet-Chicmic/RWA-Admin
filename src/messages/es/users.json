@@ -211,5 +211,11 @@
     "Save Changes": "Guardar cambios",
     "Save Success": "Característica actualizada correctamente",
     "Save Error": "Error al actualizar la característica"
+  },
+  "KYC": {
+    "Approved": "Aprobado",
+    "Pending": "Pendiente",
+    "Rejected": "Rechazado",
+    "NotStarted": "No iniciado"
   }
 }

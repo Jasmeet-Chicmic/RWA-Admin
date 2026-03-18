@@ -296,6 +296,9 @@ export interface GetParamsType {
   sortDirection?: string;
   skip?: number;
   limit?: number;
+  pageNumber?: number;
+  pageSize?: number;
+  KycStatus?: number;
   // Legacy parameters for backward compatibility
   page?: number;
   sortKey?: string;

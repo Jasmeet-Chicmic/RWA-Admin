@@ -22,6 +22,7 @@ const UserManagment = async ({
     const res = await getUsersAction({
       pageNumber,
       pageSize,
+      KycStatus: 2,
     });
 
     const payload = (res?.data as
@@ -37,7 +38,7 @@ const UserManagment = async ({
             properties: number;
             totalInvestment: number;
             portfolioValue: number;
-            kycStatus: "verified" | "pending" | "rejected" | "not_started";
+            kycStatus: 0 | 1 | 2 | 3;
           }[];
         }
       | undefined) ?? {

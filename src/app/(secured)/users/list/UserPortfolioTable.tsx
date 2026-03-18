@@ -13,7 +13,8 @@ import {
 } from "@/shared/styles";
 import { getUsersAction } from "@/api/user";
 
-type KycStatus = "verified" | "pending" | "rejected" | "not_started";
+// 0 - Not Started, 1 - Pending, 2 - Approved, 3 - Rejected
+type KycStatus = 0 | 1 | 2 | 3;
 
 interface UserPortfolioRow {
   id: string;
@@ -26,7 +27,7 @@ interface UserPortfolioRow {
 }
 
 const formatCurrency = (value: number) =>
-  value.toLocaleString(undefined, {
+  value.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
@@ -99,22 +100,24 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
         field: "kycStatus",
         title: t("KYC Status"),
         render: (item) => {
-          const isVerified = item.kycStatus === "verified";
-          const isPending = item.kycStatus === "pending";
-          const isRejected = item.kycStatus === "rejected";
-          const colorClasses = isVerified
+          const isApproved = item.kycStatus === 2;
+          const isPending = item.kycStatus === 1;
+          const isRejected = item.kycStatus === 3;
+          const colorClasses = isApproved
             ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
             : isPending
               ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
-              : "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
+              : isRejected
+                ? "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+                : "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800";
 
-          const labelKey = isVerified
-            ? "KYC.Verified"
+          const labelKey = isApproved
+            ? "KYC.Approved"
             : isPending
               ? "KYC.Pending"
               : isRejected
-                ? "KYC.Failed"
-                : "KYC.Pending";
+                ? "KYC.Rejected"
+                : "KYC.NotStarted";
 
           return (
             <span
@@ -126,30 +129,30 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
           );
         },
       },
-      {
-        field: "",
-        title: t("Controls"),
-        // fixed: "right",
-        width: "w-[72px]",
-        render: () => (
-          <div className="flex items-center justify-end">
-            <DropdownMenu
-              options={[
-                {
-                  label: t("View User"),
-                  value: 1,
-                  icon: <Eye className="w-4 h-4" />,
-                },
-                {
-                  label: t("Block"),
-                  value: 2,
-                  icon: <Ban className="w-4 h-4" />,
-                },
-              ]}
-            />
-          </div>
-        ),
-      },
+      // {
+      //   field: "",
+      //   title: t("Controls"),
+      //   // fixed: "right",
+      //   width: "w-[72px]",
+      //   render: () => (
+      //     <div className="flex items-center justify-end">
+      //       <DropdownMenu
+      //         options={[
+      //           {
+      //             label: t("View User"),
+      //             value: 1,
+      //             icon: <Eye className="w-4 h-4" />,
+      //           },
+      //           {
+      //             label: t("Block"),
+      //             value: 2,
+      //             icon: <Ban className="w-4 h-4" />,
+      //           },
+      //         ]}
+      //       />
+      //     </div>
+      //   ),
+      // },
     ];
 
     return {
@@ -184,4 +187,3 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
 };
 
 export default UserPortfolioTable;
-
