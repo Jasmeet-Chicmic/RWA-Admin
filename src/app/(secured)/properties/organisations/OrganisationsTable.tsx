@@ -95,7 +95,7 @@ const OrganisationsTable = ({
         render: (item) => (
           <div className="flex items-center justify-end">
             <Link
-              href={`${ROUTES.PROPERTIES_ASSETS}?organisationId=${encodeURIComponent(item.id)}`}
+              href={`${ROUTES.PROPERTIES_ORGANISATIONS}/${encodeURIComponent(item.id)}`}
               className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-semibold text-primarycolor hover:underline"
             >
               <Eye className="w-4 h-4" />
