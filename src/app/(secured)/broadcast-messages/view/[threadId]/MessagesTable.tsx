@@ -123,7 +123,7 @@ const MessagesTable = ({
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primaryhover dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
+              className="inline-flex items-center rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-primaryhover dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
             >
               {t("Broadcast message")}
             </button>
@@ -220,7 +220,7 @@ const MessagesTable = ({
             <button
               type="submit"
               disabled={isSubmitting || !messageText.trim()}
-              className="inline-flex items-center rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primaryhover disabled:opacity-50 disabled:cursor-not-allowed dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
+              className="inline-flex items-center rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-primaryhover disabled:opacity-50 disabled:cursor-not-allowed dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
             >
               {isSubmitting ? t("Sending") : t("Broadcast message")}
             </button>
