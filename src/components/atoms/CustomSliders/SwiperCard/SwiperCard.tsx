@@ -31,7 +31,7 @@ const SwiperCard = ({
   console.log("<><><><><><>", data);
   const t = useTranslations("common");
   return (
-    <div className="rounded-[5px] overflow-hidden shadow-md relative bg-gradient-to-br from-indigo-500 to-purple-500 textbgblack p-[24px] pb-[10px]">
+    <div className="rounded-[5px] overflow-hidden shadow-md relative bg-gradient-to-br from-indigo-500 to-purple-500 text-bgblack p-[24px] pb-[10px]">
       {/* Dots Pagination */}
       <div className="absolute !top-[22px] !right-[20px] !left-[unset] !w-fit h-fit z-10 swiper-pagination swiper-pagination-bullets !flex gap-2" />
 

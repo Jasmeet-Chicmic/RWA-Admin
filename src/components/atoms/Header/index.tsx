@@ -122,7 +122,7 @@ const Header = () => {
               type="text"
               placeholder={tCommon("Search Placeholder")}
               onClick={() => setShowCommandPalette(true)}
-              className="pl-10 border-none px-4 py-3 w-full border-[1px] placeholder:text-[#8F9BBA] bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 textbgblack"
+              className="pl-10 border-none px-4 py-3 w-full border-[1px] placeholder:text-[#8F9BBA] bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack"
             />
           </div>
         </div>

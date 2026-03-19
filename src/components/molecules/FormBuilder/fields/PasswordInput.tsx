@@ -43,7 +43,7 @@ export function PasswordField<T extends FieldValues>({
           id={name}
           placeholder={placeholder}
           {...register(name, validation)}
-          className="w-full px-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor textbgblack dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext"
+          className="w-full px-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor text-bgblack dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext"
         />
         <button
           type="button"

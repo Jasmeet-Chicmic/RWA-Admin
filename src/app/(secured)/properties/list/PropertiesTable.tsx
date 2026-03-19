@@ -493,7 +493,7 @@ const PropertiesTable = ({
               </button>
               <button
                 type="button"
-                className="rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+                className="rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-black hover:opacity-90 disabled:opacity-60"
                 disabled={!selectedCompanyId || assigning}
                 onClick={() => {
                   if (!selectedCompanyId || !assignPropertyId || assigning)
