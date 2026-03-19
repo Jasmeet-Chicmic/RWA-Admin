@@ -40,6 +40,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "2",
@@ -65,6 +67,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "3",
@@ -90,6 +94,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "4",
@@ -115,6 +121,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "5",
@@ -140,6 +148,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "6",
@@ -165,6 +175,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: true,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "7",
@@ -190,6 +202,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "8",
@@ -215,6 +229,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "9",
@@ -240,6 +256,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
   {
     id: "10",
@@ -265,6 +283,8 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
     canResubmit: false,
     canRequestUpdate: false,
     canDelete: false,
+    image: "",
+    ownerWalletAddress: "",
   },
 ];
 

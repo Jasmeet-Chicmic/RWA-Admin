@@ -59,21 +59,21 @@ const DropdownMenu = ({
                     isLoading || disabledOptionValues.includes(option.value);
 
                   return (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (isDisabled) return;
-                    onSelect?.(option.value);
-                    setOpen(false);
-                  }}
-                  disabled={isDisabled}
-                  className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed dark:hover:bg-primaryhover dark:text-white"
-                >
-                  {option.icon && (
-                    <span className="flex items-center">{option.icon}</span>
-                  )}
-                  <span>{option.label}</span>
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isDisabled) return;
+                        onSelect?.(option.value);
+                        setOpen(false);
+                      }}
+                      disabled={isDisabled}
+                      className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed dark:hover:bg-primaryhover dark:text-white"
+                    >
+                      {option.icon && (
+                        <span className="flex items-center">{option.icon}</span>
+                      )}
+                      <span>{option.label}</span>
+                    </button>
                   );
                 })()}
               </li>
