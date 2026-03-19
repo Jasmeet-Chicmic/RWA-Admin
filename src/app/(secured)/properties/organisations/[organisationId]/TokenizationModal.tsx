@@ -14,11 +14,13 @@ import { AdminProperty } from "../../helpers/types";
 import { activateOrganisationPropertyAction } from "@/api/adminOrganisations";
 
 type TokenizationFormValues = {
+  ownerAddress: string;
   totalPropertyValue: string;
   totalShares: string;
   rentalIncomeHistory: string;
   expectedAnnualYield: string;
   riskScore: string;
+  image: string;
 };
 
 const formatCurrency = (value: number, maximumFractionDigits = 2) =>
@@ -101,6 +103,8 @@ export const TokenizationModal = ({
       riskScore: String(
         Math.min(Math.max(Number(property?.riskScore ?? 0), 0), 1),
       ),
+      ownerAddress: property?.ownerWalletAddress ?? "",
+      image: property?.image ?? "",
     };
   }, [property]);
 
@@ -132,6 +136,8 @@ export const TokenizationModal = ({
         rentalIncome: parseMoney(values.rentalIncomeHistory) ?? 0,
         annualYieldPercent: Number(values.expectedAnnualYield),
         riskScore: Number(values.riskScore),
+        ownerAddress: values.ownerAddress,
+        image: values.image,
       };
 
       const res = await activateOrganisationPropertyAction({

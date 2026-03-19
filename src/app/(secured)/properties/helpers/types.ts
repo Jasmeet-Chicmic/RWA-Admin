@@ -39,6 +39,8 @@ export interface AdminProperty {
   canResubmit: boolean;
   canRequestUpdate: boolean;
   canDelete: boolean;
+  image: string;
+  ownerWalletAddress: string;
 }
 
 export interface PropertiesListResponse {
