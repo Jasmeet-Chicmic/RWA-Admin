@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export interface ListingOptionType {
-  label: string;
+  label: ReactNode;
   value: number;
   icon?: ReactNode;
 }

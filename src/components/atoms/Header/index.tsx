@@ -49,7 +49,7 @@ const Header = () => {
       resolvedTheme === THEME_TYPE.DARK ? THEME_TYPE.DARK : THEME_TYPE.DARK,
     );
   };
-  console.log(toggleTheme);
+  toggleTheme;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);

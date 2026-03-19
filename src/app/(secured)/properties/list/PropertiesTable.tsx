@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Check, X } from "lucide-react";
+import { Check, Loader2, X } from "lucide-react";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
@@ -27,6 +27,29 @@ interface PropertiesTableProps {
   mode?: "pending" | "assets";
 }
 
+const ASSIGN_COMPANIES = [
+  {
+    id: "11111111-1111-1111-1111-111111111111",
+    name: "Maple Grove Property LLC",
+  },
+  {
+    id: "22222222-2222-2222-2222-222222222222",
+    name: "Sunset Villas Holdings LLC",
+  },
+  {
+    id: "33333333-3333-3333-3333-333333333333",
+    name: "Downtown Heights SPV LLC",
+  },
+  {
+    id: "44444444-4444-4444-4444-444444444444",
+    name: "Greenfield Residential LLC",
+  },
+  {
+    id: "55555555-5555-5555-5555-555555555555",
+    name: "Riverside Apartments Owner LLC",
+  },
+];
+
 const PropertiesTable = ({
   data,
   totalCount,
@@ -46,29 +69,23 @@ const PropertiesTable = ({
     null,
   );
   const [assigning, setAssigning] = useState(false);
+  const [assigningId, setAssigningId] = useState<string | null>(null);
+  const [refreshingActionId, setRefreshingActionId] = useState<string | null>(
+    null,
+  );
+  const [isRefreshing, startRefreshTransition] = useTransition();
 
-  const assignCompanies = [
-    {
-      id: "11111111-1111-1111-1111-111111111111",
-      name: "Maple Grove Property LLC",
-    },
-    {
-      id: "22222222-2222-2222-2222-222222222222",
-      name: "Sunset Villas Holdings LLC",
-    },
-    {
-      id: "33333333-3333-3333-3333-333333333333",
-      name: "Downtown Heights SPV LLC",
-    },
-    {
-      id: "44444444-4444-4444-4444-444444444444",
-      name: "Greenfield Residential LLC",
-    },
-    {
-      id: "55555555-5555-5555-5555-555555555555",
-      name: "Riverside Apartments Owner LLC",
-    },
-  ];
+  useEffect(() => {
+    if (!isRefreshing) {
+      setRefreshingActionId(null);
+    }
+  }, [isRefreshing]);
+
+  useEffect(() => {
+    if (!assigning) {
+      setAssigningId(null);
+    }
+  }, [assigning]);
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("en-US", {
@@ -220,17 +237,26 @@ const PropertiesTable = ({
           <div className="flex items-center justify-end">
             {(() => {
               if (mode === "assets") {
+                const isAssetActionLoading =
+                  assigningId === item.id ||
+                  (isRefreshing && refreshingActionId === item.id);
+
                 return (
                   <button
                     type="button"
-                    className="px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-black hover:opacity-90"
+                    className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-black hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={isAssetActionLoading}
                     onClick={() => {
+                      if (isAssetActionLoading) return;
                       if (!item.id) return;
                       setAssignPropertyId(item.id);
-                      setSelectedCompanyId(assignCompanies[0]?.id ?? null);
+                      setSelectedCompanyId(ASSIGN_COMPANIES[0]?.id ?? null);
                       setAssignModalOpen(true);
                     }}
                   >
+                    {isAssetActionLoading && (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    )}
                     {t("Assign to LLC")}
                   </button>
                 );
@@ -242,25 +268,45 @@ const PropertiesTable = ({
                       {
                         label: t("Disapprove"),
                         value: 2,
-                        icon: <X className="w-4 h-4 text-red-600" />,
+                        icon:
+                          rejectingId === item.id ? (
+                            <Loader2 className="w-4 h-4 text-red-600 animate-spin" />
+                          ) : (
+                            <X className="w-4 h-4 text-red-600" />
+                          ),
                       },
                     ]
                   : [
                       {
                         label: t("Approve"),
                         value: 1,
-                        icon: <Check className="w-4 h-4 text-emerald-600" />,
+                        icon:
+                          approvingId === item.id ? (
+                            <Loader2 className="w-4 h-4 text-emerald-600 animate-spin" />
+                          ) : (
+                            <Check className="w-4 h-4 text-emerald-600" />
+                          ),
                       },
                       {
                         label: t("Disapprove"),
                         value: 2,
-                        icon: <X className="w-4 h-4 text-red-600" />,
+                        icon:
+                          rejectingId === item.id ? (
+                            <Loader2 className="w-4 h-4 text-red-600 animate-spin" />
+                          ) : (
+                            <X className="w-4 h-4 text-red-600" />
+                          ),
                       },
                     ];
 
               return (
                 <DropdownMenu
                   options={options}
+                  isLoading={
+                    approvingId === item.id ||
+                    rejectingId === item.id ||
+                    (isRefreshing && refreshingActionId === item.id)
+                  }
                   onSelect={(value) => {
                     if (value === 1) {
                       // Approve
@@ -269,7 +315,10 @@ const PropertiesTable = ({
                         try {
                           setApprovingId(item.id);
                           await approveAdminPropertyAction(item.id);
-                          router.refresh();
+                          setRefreshingActionId(item.id);
+                          startRefreshTransition(() => {
+                            router.refresh();
+                          });
                         } finally {
                           setApprovingId(null);
                         }
@@ -317,7 +366,17 @@ const PropertiesTable = ({
         </div>
       ),
     };
-  }, [t]);
+  }, [
+    t,
+    mode,
+    approvingId,
+    rejectingId,
+    assigningId,
+    isRefreshing,
+    refreshingActionId,
+    startRefreshTransition,
+    router,
+  ]);
 
   return (
     <>
@@ -361,6 +420,7 @@ const PropertiesTable = ({
                 onClick={() => {
                   if (!rejectPropertyId || rejectingId) return;
                   void (async () => {
+                    const currentRejectPropertyId = rejectPropertyId;
                     try {
                       setRejectingId(rejectPropertyId);
                       await rejectAdminPropertyAction(
@@ -370,14 +430,22 @@ const PropertiesTable = ({
                       setRejectModalOpen(false);
                       setRejectPropertyId(null);
                       setRejectReason("");
-                      router.refresh();
+                      setRefreshingActionId(currentRejectPropertyId);
+                      startRefreshTransition(() => {
+                        router.refresh();
+                      });
                     } finally {
                       setRejectingId(null);
                     }
                   })();
                 }}
               >
-                {t("Confirm Disapprove")}
+                <span className="inline-flex items-center gap-2">
+                  {rejectingId === rejectPropertyId && (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
+                  {t("Confirm Disapprove")}
+                </span>
               </button>
             </div>
           </div>
@@ -403,7 +471,7 @@ const PropertiesTable = ({
               value={selectedCompanyId ?? ""}
               onChange={(e) => setSelectedCompanyId(e.target.value || null)}
             >
-              {assignCompanies.map((c) => (
+              {ASSIGN_COMPANIES.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
@@ -431,8 +499,12 @@ const PropertiesTable = ({
                   if (!selectedCompanyId || !assignPropertyId || assigning)
                     return;
                   void (async () => {
+                    const currentAssignPropertyId = assignPropertyId;
                     try {
                       setAssigning(true);
+                      setAssigningId(assignPropertyId);
+                      console.log("Assigning Property ID::", assignPropertyId);
+                      console.log("Selected Company ID::", selectedCompanyId);
                       await assignAdminPropertyToOrganisationAction(
                         assignPropertyId,
                         selectedCompanyId,
@@ -440,14 +512,20 @@ const PropertiesTable = ({
                       setAssignModalOpen(false);
                       setAssignPropertyId(null);
                       setSelectedCompanyId(null);
-                      router.refresh();
+                      setRefreshingActionId(currentAssignPropertyId);
+                      startRefreshTransition(() => {
+                        router.refresh();
+                      });
                     } finally {
                       setAssigning(false);
                     }
                   })();
                 }}
               >
-                {t("Assign")}
+                <span className="inline-flex items-center gap-2">
+                  {assigning && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {t("Assign")}
+                </span>
               </button>
             </div>
           </div>

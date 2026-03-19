@@ -25,8 +25,15 @@ export async function assignAdminPropertyToOrganisationAction(
   propertyId: string,
   organizationId: string,
 ) {
-  return await postRequest<ResponseType, { organizationId: string }>(
+  console.log(
+    "Assign Admin Property to Organisation Request::",
+    propertyId,
+    organizationId,
+  );
+  const response = await postRequest<ResponseType, { organizationId: string }>(
     `${API_END_POINTS.ADMIN_PROPERTIES}/${propertyId}/assign`,
     { organizationId },
   );
+  console.log("Assign Admin Property to Organisation Response::", response);
+  return response;
 }

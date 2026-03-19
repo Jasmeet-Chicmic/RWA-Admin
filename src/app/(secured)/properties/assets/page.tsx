@@ -24,7 +24,7 @@ const Page = async ({
     const res = await getAdminPropertiesAction({
       page,
       pageSize,
-      status: PropertyStatus.Active,
+      status: PropertyStatus.AdminApproved,
     });
 
     const items: AdminProperty[] = res?.items ?? [];

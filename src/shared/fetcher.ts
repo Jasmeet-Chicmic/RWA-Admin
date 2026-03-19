@@ -125,6 +125,7 @@ export const postRequest = async <R, D, T = R>(
   data: D,
   options?: FetcherOptions<R, T>,
 ): Promise<T> => {
+  console.log("POST Request::", url, data, options);
   return request<R, T>(
     {
       method: "POST",
