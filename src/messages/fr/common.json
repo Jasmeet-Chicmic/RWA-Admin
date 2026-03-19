@@ -102,6 +102,8 @@
     "description": "Une erreur inattendue s'est produite. Veuillez réessayer."
   },
   "Log out": "Se déconnecter",
+  "Connect Wallet": "Connecter le portefeuille",
+  "Disconnect Wallet": "Déconnecter le portefeuille",
   "Logging out": "Déconnexion en cours...",
   "Search Placeholder": "Rechercher (Ctrl + K)",
   "From Date": "Date de début",

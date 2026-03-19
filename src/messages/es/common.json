@@ -102,6 +102,8 @@
     "description": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
   },
   "Log out": "Cerrar sesión",
+  "Connect Wallet": "Conectar billetera",
+  "Disconnect Wallet": "Desconectar billetera",
   "Logging out": "Cerrando sesión...",
   "Search Placeholder": "Buscar (Ctrl + K)",
   "From Date": "Fecha de inicio",

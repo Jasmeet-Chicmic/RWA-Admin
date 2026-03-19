@@ -4,6 +4,7 @@ import { DM_Sans } from "next/font/google";
 import FcmProvider from "./FcmProvider";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
+import Web3Provider from "@/components/providers/Web3Provider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -33,9 +34,11 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            {children}
-            <ToastContainer position="top-right" />
-            <FcmProvider />
+            <Web3Provider>
+              {children}
+              <ToastContainer position="top-right" />
+              <FcmProvider />
+            </Web3Provider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

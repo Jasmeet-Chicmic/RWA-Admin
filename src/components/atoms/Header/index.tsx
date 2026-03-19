@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
+import { useAppKit } from "@reown/appkit/react";
+import { useDisconnect } from "wagmi";
 
 import Loader from "@/components/atoms/Loader/Loader";
 import { THEME_TYPE } from "@/shared/constants";
@@ -15,6 +17,8 @@ import { deleteSessionClient, getLocale, updateLocale } from "@/shared/utils";
 import CheckClickOutside from "../CheckClickOutside";
 import CommandPalette from "../CommandPalette";
 import { logoutAction } from "@/api/auth";
+import { isReownConfigured } from "@/lib/reown";
+import { useWalletState } from "@/components/providers/WalletStateProvider";
 
 const LANGUAGE_OPTIONS: { code: string; label: string }[] = [
   { code: "en", label: "English" },
@@ -31,10 +35,14 @@ const Header = () => {
   // const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showWalletMenu, setShowWalletMenu] = useState(false);
   const [language, setLanguage] = useState<string>();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const [userRole, setUserRole] = useState<string>("");
+  const { isConnected, address } = useWalletState();
+  const { open } = useAppKit();
+  const { disconnect } = useDisconnect();
   const tCommon = useTranslations("common");
 
   useEffect(() => {
@@ -96,6 +104,17 @@ const Header = () => {
       setLanguage(savedLanguage || "en");
     })();
   }, [setLanguage]);
+  const walletAddressLabel = address
+    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    : "";
+  const handleWalletAction = async () => {
+    if (isConnected) {
+      disconnect();
+      setShowWalletMenu(false);
+      return;
+    }
+    await open();
+  };
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -129,6 +148,39 @@ const Header = () => {
 
         {/* Right Section */}
         <div className="flex items-center space-x-3 ml-[10px] ssm:ml-4">
+          {isReownConfigured && isConnected && walletAddressLabel && (
+            <CheckClickOutside onClick={() => setShowWalletMenu(false)}>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowWalletMenu((prev) => !prev)}
+                  className="px-4 py-2.5 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1 hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
+                >
+                  {walletAddressLabel}
+                </button>
+                {showWalletMenu && (
+                  <div className="absolute right-0 mt-2 w-52 bg-bgwhite rounded-xl shadow-lg border bordergray200 py-1.5 z-50 dark:bg-darkbgprimary dark:border-labelprimary">
+                    <button
+                      type="button"
+                      onClick={() => void handleWalletAction()}
+                      className="w-full px-4 py-2.5 text-left text-sm font-medium hover:bg-gray-50 dark:hover:bg-labelprimary flex items-center text-red-600 dark:bordercolor1"
+                    >
+                      {tCommon("Disconnect Wallet")}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </CheckClickOutside>
+          )}
+          {isReownConfigured && !isConnected && (
+            <button
+              type="button"
+              onClick={() => void handleWalletAction()}
+              className="px-4 py-2.5 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1 hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
+            >
+              {tCommon("Connect Wallet")}
+            </button>
+          )}
           {/* Language Selector */}
           <CheckClickOutside onClick={() => setShowLanguageMenu(false)}>
             <div className="relative">

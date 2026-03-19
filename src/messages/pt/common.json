@@ -102,6 +102,8 @@
     "description": "Ocorreu um erro inesperado. Tente novamente."
   },
   "Log out": "Sair",
+  "Connect Wallet": "Conectar carteira",
+  "Disconnect Wallet": "Desconectar carteira",
   "Logging out": "Saindo...",
   "Search Placeholder": "Pesquisar (Ctrl + K)",
   "From Date": "Data de início",

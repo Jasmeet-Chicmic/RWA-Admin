@@ -120,6 +120,8 @@
     "description": "An unexpected error occurred. Please try again."
   },
   "Log out": "Log out",
+  "Connect Wallet": "Connect Wallet",
+  "Disconnect Wallet": "Disconnect Wallet",
   "Logging out": "Logging out...",
   "Search Placeholder": "Search (Ctrl + K)",
   "From Date": "From Date",
