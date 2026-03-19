@@ -281,7 +281,7 @@ const OrganisationPropertiesTable = ({
                 className={`px-3 py-1 text-xs font-semibold rounded text-white ${
                   shouldDisable
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-primarycolor hover:opacity-90"
+                    : "bg-primarycolor hover:opacity-90 !text-black"
                 }`}
                 disabled={shouldDisable}
                 onClick={() => {

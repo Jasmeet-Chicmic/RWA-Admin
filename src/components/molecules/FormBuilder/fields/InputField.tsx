@@ -77,7 +77,7 @@ export function InputField<T extends FieldValues>({
         {...register(name, validation)}
         onChange={handleChange}
         onKeyDown={onKeyDown}
-        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor !text-bgblack dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:!text-bgblack disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor !text-bgblack dark:bg-white dark:border-darkbordercolor1 dark:!text-bgblack disabled:opacity-50 disabled:cursor-not-allowed"
       />
       {fieldError && (
         <span className="text-red-500 text-[0.875] mt-1">
