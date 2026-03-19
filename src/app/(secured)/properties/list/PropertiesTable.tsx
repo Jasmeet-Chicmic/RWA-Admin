@@ -27,7 +27,7 @@ import {
 interface PropertiesTableProps {
   data: AdminProperty[];
   totalCount: number;
-  mode?: "pending" | "assets";
+  mode?: "pending" | "assets" | "disapproved";
 }
 
 const ASSIGN_COMPANIES = [
@@ -236,7 +236,6 @@ const PropertiesTable = ({
       onDrop,
       multiple: true,
       accept: {
-        "image/*": [],
         "application/pdf": [".pdf"],
       },
       disabled: disabled || isUploading,
@@ -310,7 +309,43 @@ const PropertiesTable = ({
     }).format(Number.isFinite(value) ? value : 0);
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
+    const rejectionReasonColumn: TableColumn<AdminProperty> = {
+      title: t("Rejection Reason"),
+      field: "rejectionReason",
+      render: (item: AdminProperty) => {
+        if (!item.rejectionReason) return null;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="min-w-0 flex-1">
+              <TruncatedText text={item.rejectionReason} maxLength={40} />
+            </span>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center text-textparagraph hover:text-primarycolor dark:text-textparagraphlight dark:hover:text-primarycolor transition-colors"
+              aria-label={t("View Reason")}
+              title={t("View Reason")}
+              onClick={() => {
+                setActiveRejectionReason(item.rejectionReason ?? "");
+                setRejectionReasonModalOpen(true);
+              }}
+            >
+              <Info size={16} />
+            </button>
+          </div>
+        );
+      },
+    };
+
     const columns: TableColumn<AdminProperty>[] = [
+      {
+        title: t("ID"),
+        field: "id",
+        render: (item) => (
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+            <TruncatedText text={item.id} maxLength={40} />
+          </span>
+        ),
+      },
       {
         title: t("Property Name"),
         field: "name",
@@ -341,32 +376,7 @@ const PropertiesTable = ({
           </span>
         ),
       },
-      {
-        title: t("Rejection Reason"),
-        field: "rejectionReason",
-        render: (item) => {
-          if (!item.rejectionReason) return null;
-          return (
-            <div className="flex items-center gap-2">
-              <span className="min-w-0 flex-1">
-                <TruncatedText text={item.rejectionReason} maxLength={40} />
-              </span>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center text-textparagraph hover:text-primarycolor dark:text-textparagraphlight dark:hover:text-primarycolor transition-colors"
-                aria-label={t("View Reason")}
-                title={t("View Reason")}
-                onClick={() => {
-                  setActiveRejectionReason(item.rejectionReason ?? "");
-                  setRejectionReasonModalOpen(true);
-                }}
-              >
-                <Info size={16} />
-              </button>
-            </div>
-          );
-        },
-      },
+      ...(mode === "disapproved" ? [rejectionReasonColumn] : []),
       // Status column is intentionally hidden for Pending Properties view
       // ...(mode === "assets"
       //   ? ([

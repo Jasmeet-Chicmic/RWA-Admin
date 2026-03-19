@@ -3,6 +3,7 @@
   "Manage and view all properties": "Manage and view all properties",
   "Search Properties": "Search Properties",
   "Property Name": "Property Name",
+  "ID": "ID",
   "Location": "Location",
   "Property Type": "Property Type",
   "Status": {
@@ -44,7 +45,7 @@
   "Supporting documents label": "Supporting documents (optional)",
   "Drop documents here label": "Drop files here",
   "Upload documents placeholder": "Click or drag files to upload",
-  "Upload documents helper": "You can upload multiple images or PDF files",
+  "Upload documents helper": "You can upload multiple  PDF files",
   "Uploading documents label": "Uploading...",
   "Remove document label": "Remove",
   "Upload documents success": "Documents uploaded successfully",
@@ -104,4 +105,3 @@
     }
   }
 }
-

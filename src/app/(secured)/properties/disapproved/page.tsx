@@ -32,7 +32,11 @@ const Page = async ({
 
     return (
       <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
-        <PropertiesTable data={items} totalCount={totalCount} />
+        <PropertiesTable
+          data={items}
+          totalCount={totalCount}
+          mode="disapproved"
+        />
       </div>
     );
   } catch (error) {
