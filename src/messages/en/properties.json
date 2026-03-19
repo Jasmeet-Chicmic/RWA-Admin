@@ -79,6 +79,10 @@
       "description": "Please connect your wallet to continue tokenization.",
       "connect": "Connect Wallet"
     },
+    "Success": {
+      "deployed": "Contracts deployed successfully.",
+      "failed": "Contract deployment failed."
+    },
     "Errors": {
       "sharesRequired": "Shares are required",
       "sharesMin": "Shares must be greater than 0",

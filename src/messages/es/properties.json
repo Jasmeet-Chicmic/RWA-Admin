@@ -71,6 +71,10 @@
       "description": "Conecta tu billetera para continuar con la tokenización.",
       "connect": "Conectar billetera"
     },
+    "Success": {
+      "deployed": "Contratos desplegados correctamente.",
+      "failed": "Error al desplegar contratos."
+    },
     "Errors": {
       "sharesRequired": "Las participaciones son obligatorias",
       "sharesMin": "Las participaciones deben ser mayores que 0",

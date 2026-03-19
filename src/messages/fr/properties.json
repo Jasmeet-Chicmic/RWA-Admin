@@ -71,6 +71,10 @@
       "description": "Veuillez connecter votre portefeuille pour continuer la tokenisation.",
       "connect": "Connecter le portefeuille"
     },
+    "Success": {
+      "deployed": "Contrats déployés avec succès.",
+      "failed": "Échec du déploiement des contrats."
+    },
     "Errors": {
       "sharesRequired": "Le nombre de parts est requis",
       "sharesMin": "Le nombre de parts doit être supérieur à 0",

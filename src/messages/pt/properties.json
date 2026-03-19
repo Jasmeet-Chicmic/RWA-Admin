@@ -71,6 +71,10 @@
       "description": "Conecte sua carteira para continuar a tokenização.",
       "connect": "Conectar carteira"
     },
+    "Success": {
+      "deployed": "Contratos implantados com sucesso.",
+      "failed": "Falha ao implantar contratos."
+    },
     "Errors": {
       "sharesRequired": "As cotas são obrigatórias",
       "sharesMin": "As cotas devem ser maiores que 0",

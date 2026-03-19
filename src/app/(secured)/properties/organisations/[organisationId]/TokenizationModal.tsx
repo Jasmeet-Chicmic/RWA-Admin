@@ -6,14 +6,16 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppKit } from "@reown/appkit/react";
+import { toast } from "react-toastify";
+import { usePublicClient, useWalletClient } from "wagmi";
 
 import CustomModal from "@/components/molecules/CustomModal/CustomModal";
 import { InputField } from "@/components/molecules/FormBuilder/fields/InputField";
 import Button from "@/components/atoms/Button";
 
 import { AdminProperty } from "../../helpers/types";
-import { activateOrganisationPropertyAction } from "@/api/adminOrganisations";
 import { useWalletState } from "@/components/providers/WalletStateProvider";
+import { runTokenizationFlow } from "@/lib/contracts/runTokenizationFlow";
 
 type TokenizationFormValues = {
   ownerAddress: string;
@@ -98,6 +100,8 @@ export const TokenizationModal = ({
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false);
   const { isConnected } = useWalletState();
   const { open: openWalletModal } = useAppKit();
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
 
   const defaultValues = useMemo<TokenizationFormValues>(() => {
     return {
@@ -141,34 +145,58 @@ export const TokenizationModal = ({
 
   const onSubmit: SubmitHandler<TokenizationFormValues> = async (values) => {
     if (!property) return;
+    console.log("[TokenizationModal] Submit requested", {
+      propertyId: property.id,
+      organisationId,
+      values,
+      isConnected,
+      hasWalletClient: Boolean(walletClient),
+      hasPublicClient: Boolean(publicClient),
+    });
     if (!isConnected) {
+      console.warn(
+        "[TokenizationModal] Wallet not connected. Showing connect modal.",
+      );
+      setShowWalletConnectModal(true);
+      return;
+    }
+    if (!publicClient || !walletClient) {
+      console.warn(
+        "[TokenizationModal] Wallet/public client missing. Showing connect modal.",
+      );
       setShowWalletConnectModal(true);
       return;
     }
     setIsSubmitting(true);
     try {
-      const payload = {
-        totalUnits: Number(values.totalShares),
-        rentalIncome: parseMoney(values.rentalIncomeHistory) ?? 0,
-        annualYieldPercent: Number(values.expectedAnnualYield),
-        riskScore: Number(values.riskScore),
-        ownerAddress: values.ownerAddress,
-        image: values.image,
-      };
-
-      const res = await activateOrganisationPropertyAction({
-        organisationId,
-        propertyId: property.id,
-        payload,
+      const totalUnits = Number(values.totalShares);
+      const ownerAddress = values.ownerAddress as `0x${string}`;
+      const result = await runTokenizationFlow({
+        walletClient,
+        publicClient,
+        input: {
+          propertyId: property.id,
+          propertyName: property.name,
+          ownerAddress,
+          ipfsUri: values.image,
+          totalUnits,
+          totalValue: property.totalValue,
+        },
       });
 
-      console.log("🔥 activateOrganisationPropertyAction res", res);
-
-      // If backend follows ResponseType structure, `status` indicates success
-
+      console.log("[TokenizationModal] Tokenization flow result", result);
+      toast.success(t("TokenizationForm.Success.deployed"));
       onClose();
       router.refresh();
+    } catch (error) {
+      console.error("[TokenizationModal] Tokenization contract flow failed", {
+        error,
+        propertyId: property.id,
+        organisationId,
+      });
+      toast.error(t("TokenizationForm.Success.failed"));
     } finally {
+      console.log("[TokenizationModal] Submit flow finished");
       setIsSubmitting(false);
     }
   };
