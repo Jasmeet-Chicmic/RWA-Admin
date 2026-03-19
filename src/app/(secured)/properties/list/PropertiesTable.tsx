@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Check, Info, Loader2, X } from "lucide-react";
+import { Check, Info, Loader2, X, Eye, FileText } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 
@@ -77,6 +77,29 @@ const PropertiesTable = ({
   const [activeRejectionReason, setActiveRejectionReason] =
     useState<string>("");
 
+  type RejectionDocument = {
+    status: string;
+    fileName: string;
+    sentBy: string;
+    date: string;
+    time: string;
+    size: string;
+    receivedDate: string;
+  };
+
+  const [rejectionDocument, setRejectionDocument] = useState<RejectionDocument>(
+    {
+      status: "rejected",
+      fileName: "",
+      sentBy: "",
+      date: "",
+      time: "",
+      size: "",
+      receivedDate: "",
+    },
+  );
+
+  console.log(setRejectionDocument, "");
   type UploadedDocument = { documentUrl: string; fileName: string };
 
   const [approveDocuments, setApproveDocuments] = useState<UploadedDocument[]>(
@@ -633,6 +656,58 @@ const PropertiesTable = ({
             </h2>
             <div className="max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white">
               {activeRejectionReason}
+            </div>
+            <div className="flex flex-col gap-4 p-3 bg-black border border-[#292929] rounded-[11.57px] mt-3">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <p className="font-roboto font-h5 font-semibold text-white mb-1">
+                    Official Document from Admin
+                  </p>
+                  <p className="text-xs text-[#99A1AF]">
+                    The reviewing admin has attached a formal rejection notice
+                    for your records.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold bg-red-500/20 text-red-400 px-2 py-1 rounded flex-shrink-0 capitalize">
+                  {rejectionDocument.status}
+                </span>
+              </div>
+
+              {/* Document Card */}
+              <div className="border border-[#292929] rounded-lg overflow-hidden">
+                {/* Preview Row */}
+                <div className="flex flex-col items-start min-[580px]:flex-row min-[580px]:items-center justify-between gap-3 p-4">
+                  <div className="flex items-center gap-3 flex-1 w-full">
+                    <div className="flex items-center justify-center w-10 h-10 bg-white/5 border border-[#292929] rounded-md">
+                      <FileText className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-white truncate-1-lines">
+                        {/* {rejectionDocument.fileName} */}
+                        Dummy Name
+                      </p>
+                    </div>
+                  </div>
+
+                  <button className="flex items-center gap-2 text-xs border border-white/30 px-3 py-2 rounded-md hover:bg-white/5 transition-colors flex-shrink-0 text-white">
+                    <Eye className="w-4 h-4" />
+                    Preview
+                  </button>
+                </div>
+
+                {/* Bottom Actions */}
+                {/* <div className="flex flex-col items-start min-[480px]:flex-row min-[480px]:items-center justify-between gap-3 p-4 border-t border-[#292929]">
+                  <span className="text-xs text-white/80">
+                    Rejected on: {rejectionDocument.receivedDate} ·{" "}
+                    {rejectionDocument.status}
+                  </span>
+                  <button className="flex items-center gap-2 text-xs border border-white/30 px-3 py-2 rounded-md hover:bg-white/5 transition-colors text-white">
+                    <Download className="w-4 h-4" />
+                    Download
+                  </button>
+                </div> */}
+              </div>
             </div>
             <div className="mt-4 flex justify-end">
               <button
