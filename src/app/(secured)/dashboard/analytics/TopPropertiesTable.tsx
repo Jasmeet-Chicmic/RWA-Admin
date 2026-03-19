@@ -269,7 +269,7 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
 ];
 
 const formatCurrencyCompact = (value: number) =>
-  value.toLocaleString(undefined, {
+  value.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
