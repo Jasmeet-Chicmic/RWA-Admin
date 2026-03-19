@@ -74,6 +74,11 @@
     "expectedAnnualYieldHint": "Value must be between 0 and 100",
     "riskScore": "Risk Score (0-1)",
     "riskScorePlaceholder": "0.0",
+    "Wallet": {
+      "title": "Connect Wallet",
+      "description": "Please connect your wallet to continue tokenization.",
+      "connect": "Connect Wallet"
+    },
     "Errors": {
       "sharesRequired": "Shares are required",
       "sharesMin": "Shares must be greater than 0",

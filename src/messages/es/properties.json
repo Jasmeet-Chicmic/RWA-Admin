@@ -66,6 +66,11 @@
     "expectedAnnualYieldHint": "El valor debe estar entre 0 y 100",
     "riskScore": "Puntuación de riesgo (0-1)",
     "riskScorePlaceholder": "0.0",
+    "Wallet": {
+      "title": "Conectar billetera",
+      "description": "Conecta tu billetera para continuar con la tokenización.",
+      "connect": "Conectar billetera"
+    },
     "Errors": {
       "sharesRequired": "Las participaciones son obligatorias",
       "sharesMin": "Las participaciones deben ser mayores que 0",

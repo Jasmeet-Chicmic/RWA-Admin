@@ -66,6 +66,11 @@
     "expectedAnnualYieldHint": "La valeur doit être comprise entre 0 et 100",
     "riskScore": "Score de risque (0-1)",
     "riskScorePlaceholder": "0.0",
+    "Wallet": {
+      "title": "Connecter le portefeuille",
+      "description": "Veuillez connecter votre portefeuille pour continuer la tokenisation.",
+      "connect": "Connecter le portefeuille"
+    },
     "Errors": {
       "sharesRequired": "Le nombre de parts est requis",
       "sharesMin": "Le nombre de parts doit être supérieur à 0",

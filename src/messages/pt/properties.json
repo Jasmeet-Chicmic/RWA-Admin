@@ -66,6 +66,11 @@
     "expectedAnnualYieldHint": "O valor deve estar entre 0 e 100",
     "riskScore": "Pontuação de risco (0-1)",
     "riskScorePlaceholder": "0.0",
+    "Wallet": {
+      "title": "Conectar carteira",
+      "description": "Conecte sua carteira para continuar a tokenização.",
+      "connect": "Conectar carteira"
+    },
     "Errors": {
       "sharesRequired": "As cotas são obrigatórias",
       "sharesMin": "As cotas devem ser maiores que 0",

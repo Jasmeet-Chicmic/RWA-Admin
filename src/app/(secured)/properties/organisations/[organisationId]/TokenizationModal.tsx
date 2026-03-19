@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAppKit } from "@reown/appkit/react";
 
 import CustomModal from "@/components/molecules/CustomModal/CustomModal";
 import { InputField } from "@/components/molecules/FormBuilder/fields/InputField";
@@ -12,6 +13,7 @@ import Button from "@/components/atoms/Button";
 
 import { AdminProperty } from "../../helpers/types";
 import { activateOrganisationPropertyAction } from "@/api/adminOrganisations";
+import { useWalletState } from "@/components/providers/WalletStateProvider";
 
 type TokenizationFormValues = {
   ownerAddress: string;
@@ -93,6 +95,9 @@ export const TokenizationModal = ({
   const t = useTranslations("properties");
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showWalletConnectModal, setShowWalletConnectModal] = useState(false);
+  const { isConnected } = useWalletState();
+  const { open: openWalletModal } = useAppKit();
 
   const defaultValues = useMemo<TokenizationFormValues>(() => {
     return {
@@ -117,8 +122,15 @@ export const TokenizationModal = ({
   useEffect(() => {
     if (open) {
       methods.reset(defaultValues);
+      setShowWalletConnectModal(false);
     }
   }, [defaultValues, methods, open]);
+
+  useEffect(() => {
+    if (isConnected) {
+      setShowWalletConnectModal(false);
+    }
+  }, [isConnected]);
 
   const sharesRaw = methods.watch("totalShares");
   const totalValue = property?.totalValue ?? 0;
@@ -129,6 +141,10 @@ export const TokenizationModal = ({
 
   const onSubmit: SubmitHandler<TokenizationFormValues> = async (values) => {
     if (!property) return;
+    if (!isConnected) {
+      setShowWalletConnectModal(true);
+      return;
+    }
     setIsSubmitting(true);
     try {
       const payload = {
@@ -337,6 +353,34 @@ export const TokenizationModal = ({
           </div>
         </form>
       </FormProvider>
+
+      <CustomModal
+        isOpen={showWalletConnectModal}
+        onClose={() => setShowWalletConnectModal(false)}
+        title={t("TokenizationForm.Wallet.title")}
+        size="md"
+      >
+        <p className="text-sm text-textparagraph dark:text-textparagraphlight mb-6">
+          {t("TokenizationForm.Wallet.description")}
+        </p>
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowWalletConnectModal(false)}
+            className="min-w-[110px]"
+          >
+            {t("TokenizationForm.cancel")}
+          </Button>
+          <Button
+            type="button"
+            onClick={() => void openWalletModal()}
+            className="min-w-[140px]"
+          >
+            {t("TokenizationForm.Wallet.connect")}
+          </Button>
+        </div>
+      </CustomModal>
     </CustomModal>
   );
 };
