@@ -8,6 +8,7 @@ export const PRIVATE_ROUTES = {
   DASHBOARD: "/dashboard",
   PROPERTIES: "/properties",
   PROPERTIES_LIST: "/properties/list",
+  PROPERTIES_DISAPPROVED: "/properties/disapproved",
   PROPERTIES_ASSETS: "/properties/assets",
   PROPERTIES_ORGANISATIONS: "/properties/organisations",
   PODCASTS: "/podcasts",

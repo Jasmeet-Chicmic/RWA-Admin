@@ -90,6 +90,7 @@ export const API_END_POINTS = {
   BONUS_SLIDE_BY_ID: `${API_VERSION}/bonus/slide/fetch-by-id`,
   BONUS_SLIDE_IS_ACTIVE: `${API_VERSION}/bonus/slide/is-active`,
   FILE_UPLOAD: `${API_VERSION}/file/upload`,
+  BATCH_UPLOAD: `/batch-upload`,
 
   // Podcasts
   PODCASTS: `/network/api/podcast/admin/get-all`,

@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Check, Loader2, X } from "lucide-react";
+import { Check, Info, Loader2, X } from "lucide-react";
+import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
@@ -19,6 +21,7 @@ import {
   approveAdminPropertyAction,
   rejectAdminPropertyAction,
   assignAdminPropertyToOrganisationAction,
+  uploadAdminPropertyDocumentsAction,
 } from "@/api/adminPropertiesActions";
 
 interface PropertiesTableProps {
@@ -63,6 +66,26 @@ const PropertiesTable = ({
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectPropertyId, setRejectPropertyId] = useState<string | null>(null);
 
+  const [approveModalOpen, setApproveModalOpen] = useState(false);
+  const [approvePropertyId, setApprovePropertyId] = useState<string | null>(
+    null,
+  );
+  const [approveReason, setApproveReason] = useState<string>("");
+
+  const [rejectionReasonModalOpen, setRejectionReasonModalOpen] =
+    useState(false);
+  const [activeRejectionReason, setActiveRejectionReason] =
+    useState<string>("");
+
+  type UploadedDocument = { documentUrl: string; fileName: string };
+
+  const [approveDocuments, setApproveDocuments] = useState<UploadedDocument[]>(
+    [],
+  );
+  const [rejectDocuments, setRejectDocuments] = useState<UploadedDocument[]>(
+    [],
+  );
+
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [assignPropertyId, setAssignPropertyId] = useState<string | null>(null);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
@@ -75,6 +98,106 @@ const PropertiesTable = ({
   );
   const [isRefreshing, startRefreshTransition] = useTransition();
 
+  const uploadDocuments = async (
+    files: File[],
+  ): Promise<UploadedDocument[]> => {
+    if (!files.length) return [];
+
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    try {
+      const result = await uploadAdminPropertyDocumentsAction(formData);
+
+      let uploadedDocuments: UploadedDocument[] = [];
+
+      const isString = (v: unknown): v is string => typeof v === "string";
+
+      const toDocument = (item: unknown): UploadedDocument | null => {
+        if (!item || typeof item !== "object") return null;
+        const record = item as Record<string, unknown>;
+
+        const documentUrlRaw =
+          record.documentUrl ?? record.url ?? record.filePath;
+        if (!isString(documentUrlRaw)) return null;
+
+        const fileNameRaw =
+          (isString(record.fileName) ? record.fileName : undefined) ??
+          documentUrlRaw.split("/").pop();
+        if (!isString(fileNameRaw) || !fileNameRaw) return null;
+
+        return { documentUrl: documentUrlRaw, fileName: fileNameRaw };
+      };
+
+      const resultUnknown: unknown = result;
+
+      if (Array.isArray(resultUnknown)) {
+        uploadedDocuments = resultUnknown
+          .map((item) => toDocument(item))
+          .filter((d): d is UploadedDocument => Boolean(d));
+      } else if (resultUnknown && typeof resultUnknown === "object") {
+        const maybeData = (resultUnknown as { data?: unknown }).data;
+
+        if (Array.isArray(maybeData)) {
+          uploadedDocuments = maybeData
+            .map((item) => toDocument(item))
+            .filter((d): d is UploadedDocument => Boolean(d));
+        } else if (maybeData && typeof maybeData === "object") {
+          const dataObj = maybeData as {
+            urls?: unknown;
+            filePaths?: unknown;
+          };
+          const urlsRaw = Array.isArray(dataObj.urls) ? dataObj.urls : [];
+          const filePathsRaw = Array.isArray(dataObj.filePaths)
+            ? dataObj.filePaths
+            : [];
+          const urls = [
+            ...urlsRaw.filter(isString),
+            ...filePathsRaw.filter(isString),
+          ];
+
+          uploadedDocuments = urls
+            .map((u) => ({
+              documentUrl: u,
+              fileName: u.split("/").pop() || "",
+            }))
+            .filter((d) => Boolean(d.fileName));
+        }
+      }
+
+      if (!uploadedDocuments.length) {
+        toast.error(t("Upload documents failed"));
+        return [];
+      }
+
+      toast.success(t("Upload documents success"));
+      return uploadedDocuments;
+    } catch (error) {
+      console.error("Batch upload failed", error);
+      toast.error(t("Upload documents failed"));
+      return [];
+    }
+  };
+
+  const getDocumentDisplayName = (documentUrl: string) => {
+    try {
+      const pathname = new URL(documentUrl).pathname;
+      const fileName = pathname.split("/").pop();
+      return decodeURIComponent(fileName || documentUrl);
+    } catch {
+      const fallbackName = documentUrl.split("/").pop();
+      return decodeURIComponent(fallbackName || documentUrl);
+    }
+  };
+
+  const getDocumentTitleFromFileName = (fileName: string) => {
+    const lower = fileName.toLowerCase();
+    if (lower.endsWith(".pdf")) return "Land Registration Papers";
+    return "Image";
+  };
+
   useEffect(() => {
     if (!isRefreshing) {
       setRefreshingActionId(null);
@@ -86,6 +209,97 @@ const PropertiesTable = ({
       setAssigningId(null);
     }
   }, [assigning]);
+
+  const PropertyDocumentsDropzone = ({
+    value,
+    onChange,
+    disabled,
+  }: {
+    value: UploadedDocument[];
+    onChange: (docs: UploadedDocument[]) => void;
+    disabled?: boolean;
+  }) => {
+    const t = useTranslations("properties");
+    const [isUploading, setIsUploading] = useState(false);
+
+    const onDrop = async (acceptedFiles: File[]) => {
+      if (!acceptedFiles.length || isUploading || disabled) return;
+      setIsUploading(true);
+      const uploadedUrls = await uploadDocuments(acceptedFiles);
+      if (uploadedUrls.length) {
+        onChange([...value, ...uploadedUrls]);
+      }
+      setIsUploading(false);
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+      multiple: true,
+      accept: {
+        "image/*": [],
+        "application/pdf": [".pdf"],
+      },
+      disabled: disabled || isUploading,
+    });
+
+    return (
+      <div className="mb-4">
+        <label className="mb-1 block text-xs font-medium text-labelprimary dark:text-darklabelprimary">
+          {t("Supporting documents label")}
+        </label>
+        <div
+          {...getRootProps()}
+          className="flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-bordergray200 bg-bgwhite px-4 py-6 text-center text-xs text-textparagraph transition hover:border-primarycolor hover:bg-gray-50 dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-textparagraphlight"
+        >
+          <input {...getInputProps()} />
+          <p className="mb-1 font-medium">
+            {isDragActive
+              ? t("Drop documents here label")
+              : t("Upload documents placeholder")}
+          </p>
+          <p className="text-[11px] text-sidebartext dark:text-gray-500">
+            {t("Upload documents helper")}
+          </p>
+          {isUploading && (
+            <div className="mt-2 inline-flex items-center gap-2 text-[11px] text-textparagraph dark:text-textparagraphlight">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              <span>{t("Uploading documents label")}</span>
+            </div>
+          )}
+        </div>
+
+        {value.length > 0 && (
+          <ul className="mt-2 max-h-28 space-y-1 overflow-y-scroll pr-1 text-[11px] text-textparagraph dark:text-textparagraphlight">
+            {value.map((doc) => (
+              <li
+                key={doc.documentUrl}
+                className="flex items-center justify-between gap-2"
+              >
+                <span className="truncate" title={doc.documentUrl}>
+                  {doc.fileName || getDocumentDisplayName(doc.documentUrl)}
+                </span>
+                <button
+                  type="button"
+                  className="text-[11px] font-medium text-red-500 hover:underline"
+                  onClick={() =>
+                    onChange(
+                      value.filter(
+                        (existingDoc) =>
+                          existingDoc.documentUrl !== doc.documentUrl,
+                      ),
+                    )
+                  }
+                  disabled={disabled || isUploading}
+                >
+                  {t("Remove document label")}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("en-US", {
@@ -126,6 +340,32 @@ const PropertiesTable = ({
             {item.propertyType || "—"}
           </span>
         ),
+      },
+      {
+        title: t("Rejection Reason"),
+        field: "rejectionReason",
+        render: (item) => {
+          if (!item.rejectionReason) return null;
+          return (
+            <div className="flex items-center gap-2">
+              <span className="min-w-0 flex-1">
+                <TruncatedText text={item.rejectionReason} maxLength={40} />
+              </span>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center text-textparagraph hover:text-primarycolor dark:text-textparagraphlight dark:hover:text-primarycolor transition-colors"
+                aria-label={t("View Reason")}
+                title={t("View Reason")}
+                onClick={() => {
+                  setActiveRejectionReason(item.rejectionReason ?? "");
+                  setRejectionReasonModalOpen(true);
+                }}
+              >
+                <Info size={16} />
+              </button>
+            </div>
+          );
+        },
       },
       // Status column is intentionally hidden for Pending Properties view
       // ...(mode === "assets"
@@ -309,25 +549,17 @@ const PropertiesTable = ({
                   }
                   onSelect={(value) => {
                     if (value === 1) {
-                      // Approve
                       if (!item.id || approvingId === item.id) return;
-                      void (async () => {
-                        try {
-                          setApprovingId(item.id);
-                          await approveAdminPropertyAction(item.id);
-                          setRefreshingActionId(item.id);
-                          startRefreshTransition(() => {
-                            router.refresh();
-                          });
-                        } finally {
-                          setApprovingId(null);
-                        }
-                      })();
+                      setApprovePropertyId(item.id);
+                      setApproveReason("");
+                      setApproveDocuments([]);
+                      setApproveModalOpen(true);
                     } else if (value === 2) {
                       // Open disapprove modal
                       if (!item.id) return;
                       setRejectPropertyId(item.id);
                       setRejectReason("");
+                      setRejectDocuments([]);
                       setRejectModalOpen(true);
                     }
                   }}
@@ -378,9 +610,118 @@ const PropertiesTable = ({
     router,
   ]);
 
+  console.log("approveDocuments::", data);
   return (
     <>
       <DataTable data={data} totalCount={totalCount} config={config} />
+
+      {rejectionReasonModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-2xl bg-bgwhite p-6 shadow-lg dark:bg-darkbgprimary">
+            <h2 className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}>
+              {t("Rejection Reason")}
+            </h2>
+            <div className="max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white">
+              {activeRejectionReason}
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                type="button"
+                className="rounded-lg border border-bordergray200 px-4 py-2 text-sm font-medium text-textprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgbase"
+                onClick={() => {
+                  setRejectionReasonModalOpen(false);
+                  setActiveRejectionReason("");
+                }}
+              >
+                {t("Cancel")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {approveModalOpen && approvePropertyId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-2xl bg-bgwhite p-6 shadow-lg dark:bg-darkbgprimary">
+            <h2 className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}>
+              {t("Approve Modal Title")}
+            </h2>
+            <p className="mb-4 text-sm text-textparagraph dark:text-textparagraphlight">
+              {t("Approve Modal Description")}
+            </p>
+            <label className="mb-1 block text-xs font-medium text-labelprimary dark:text-darklabelprimary">
+              {t("Reason Optional Label")}
+            </label>
+            <textarea
+              className="mb-4 h-24 w-full resize-none rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary focus:outline-none focus:ring-1 focus:ring-primarycolor dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white"
+              value={approveReason}
+              onChange={(e) => setApproveReason(e.target.value)}
+              placeholder=""
+            />
+
+            <PropertyDocumentsDropzone
+              value={approveDocuments}
+              onChange={setApproveDocuments}
+              disabled={!!approvingId}
+            />
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-bordergray200 px-4 py-2 text-sm font-medium text-textprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgbase"
+                onClick={() => {
+                  if (approvingId) return;
+                  setApproveModalOpen(false);
+                  setApprovePropertyId(null);
+                  setApproveReason("");
+                  setApproveDocuments([]);
+                }}
+              >
+                {t("Cancel")}
+              </button>
+              <button
+                type="button"
+                className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-60"
+                disabled={!!approvingId}
+                onClick={() => {
+                  if (!approvePropertyId || approvingId) return;
+                  void (async () => {
+                    const currentApprovePropertyId = approvePropertyId;
+                    try {
+                      setApprovingId(approvePropertyId);
+                      await approveAdminPropertyAction(approvePropertyId, {
+                        reason: approveReason,
+                        documents: approveDocuments.map((d) => ({
+                          title: getDocumentTitleFromFileName(d.fileName),
+                          fileName: d.fileName,
+                          documentUrl: d.documentUrl,
+                        })),
+                      });
+                      setApproveModalOpen(false);
+                      setApprovePropertyId(null);
+                      setApproveReason("");
+                      setApproveDocuments([]);
+                      setRefreshingActionId(currentApprovePropertyId);
+                      startRefreshTransition(() => {
+                        router.refresh();
+                      });
+                    } finally {
+                      setApprovingId(null);
+                    }
+                  })();
+                }}
+              >
+                <span className="inline-flex items-center gap-2">
+                  {approvingId === approvePropertyId && (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
+                  {t("Confirm Approve")}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {rejectModalOpen && rejectPropertyId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -400,6 +741,12 @@ const PropertiesTable = ({
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder=""
             />
+            <PropertyDocumentsDropzone
+              value={rejectDocuments}
+              onChange={setRejectDocuments}
+              disabled={!!rejectingId}
+            />
+
             <div className="flex justify-end gap-2">
               <button
                 type="button"
@@ -409,6 +756,7 @@ const PropertiesTable = ({
                   setRejectModalOpen(false);
                   setRejectPropertyId(null);
                   setRejectReason("");
+                  setRejectDocuments([]);
                 }}
               >
                 {t("Cancel")}
@@ -426,10 +774,16 @@ const PropertiesTable = ({
                       await rejectAdminPropertyAction(
                         rejectPropertyId,
                         rejectReason,
+                        rejectDocuments.map((d) => ({
+                          title: getDocumentTitleFromFileName(d.fileName),
+                          fileName: d.fileName,
+                          documentUrl: d.documentUrl,
+                        })),
                       );
                       setRejectModalOpen(false);
                       setRejectPropertyId(null);
                       setRejectReason("");
+                      setRejectDocuments([]);
                       setRefreshingActionId(currentRejectPropertyId);
                       startRefreshTransition(() => {
                         router.refresh();

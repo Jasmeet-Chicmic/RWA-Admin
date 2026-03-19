@@ -13,6 +13,13 @@ export enum PropertyStatus {
   SoldOut = 5,
   Rejected = 6,
   ModificationRequired = 7,
+  PENDING_TREX = 8, // Job created, about to submit deployTREXSuite TX
+  TREX_DEPLOYING = 9, // deployTREXSuite TX submitted, waiting for TREXSuiteDeployed event
+  VAULT_DEPLOYING = 10, // T-REX deployed, deploying vault
+  REGISTERING = 11, // Vault deployed, calling registerProperty
+  KYC_VERIFYING = 12, // Registered, setting up identities in token IR
+  MINTING = 13, // KYC done, minting tokens to vault + binding compliance
+  FAILED = 14, // Any step failed; see error_message column
 }
 
 export interface AdminProperty {

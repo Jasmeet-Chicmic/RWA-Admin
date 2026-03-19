@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
@@ -43,13 +43,16 @@ const OrganisationPropertiesTable = ({
     setSelectedProperty(null);
   };
 
-  const handleDistribute = (propertyId: string) => {
-    setDistributedPropertyIds((prev) => ({
-      ...prev,
-      [propertyId]: true,
-    }));
-    toast.success(t("Distributed success"));
-  };
+  const handleDistribute = useCallback(
+    (propertyId: string) => {
+      setDistributedPropertyIds((prev) => ({
+        ...prev,
+        [propertyId]: true,
+      }));
+      toast.success(t("Distributed success"));
+    },
+    [t],
+  );
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("en-US", {
@@ -87,6 +90,65 @@ const OrganisationPropertiesTable = ({
             {item.propertyType || "—"}
           </span>
         ),
+      },
+      {
+        title: t("Status.label"),
+        field: "status",
+        render: (item) => {
+          const baseClass =
+            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border";
+
+          let labelKey: string = "Status.PendingApproval";
+          let className =
+            "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800";
+
+          switch (item.status) {
+            case PropertyStatus.Active:
+              labelKey = "Status.Active";
+              className =
+                "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
+              break;
+            case PropertyStatus.Draft:
+              labelKey = "Status.Draft";
+              className =
+                "bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800/60 dark:text-zinc-300 dark:border-zinc-700";
+              break;
+            case PropertyStatus.AdminApproved:
+              labelKey = "Status.AdminApproved";
+              className =
+                "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800";
+              break;
+            case PropertyStatus.OrganizationAssigned:
+              labelKey = "Status.OrganizationAssigned";
+              className =
+                "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800";
+              break;
+            case PropertyStatus.SoldOut:
+              labelKey = "Status.SoldOut";
+              className =
+                "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700";
+              break;
+            case PropertyStatus.Rejected:
+              labelKey = "Status.Rejected";
+              className =
+                "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
+              break;
+            case PropertyStatus.ModificationRequired:
+              labelKey = "Status.ModificationRequired";
+              className =
+                "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800";
+              break;
+            default:
+              break;
+          }
+
+          return (
+            <span className={`${baseClass} ${className}`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
+              {t(labelKey)}
+            </span>
+          );
+        },
       },
       // {
       //   title: t("Status.label"),
@@ -206,24 +268,28 @@ const OrganisationPropertiesTable = ({
         field: "",
         render: (item) => {
           const isActiveProperty = item.status === PropertyStatus.Active;
+          const canTokenize =
+            item.status === PropertyStatus.OrganizationAssigned;
           const isDistributed = !!distributedPropertyIds[item.id];
+          const shouldDisable =
+            isDistributed || (!isActiveProperty && !canTokenize);
 
           return (
             <div className="flex items-center justify-end">
               <button
                 type="button"
                 className={`px-3 py-1 text-xs font-semibold rounded text-white ${
-                  isDistributed
+                  shouldDisable
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-primarycolor hover:opacity-90"
                 }`}
-                disabled={isDistributed}
+                disabled={shouldDisable}
                 onClick={() => {
                   if (isActiveProperty) {
                     handleDistribute(item.id);
                     return;
                   }
-                  openTokenization(item);
+                  if (canTokenize) openTokenization(item);
                 }}
               >
                 {isActiveProperty
@@ -245,7 +311,7 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("No properties found"),
     };
-  }, [distributedPropertyIds, t]);
+  }, [distributedPropertyIds, t, handleDistribute]);
 
   return (
     <>
