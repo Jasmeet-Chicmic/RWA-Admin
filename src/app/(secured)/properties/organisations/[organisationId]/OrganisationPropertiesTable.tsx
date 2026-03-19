@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
@@ -28,6 +29,9 @@ const OrganisationPropertiesTable = ({
   const [tokenizationModalOpen, setTokenizationModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] =
     useState<AdminProperty | null>(null);
+  const [distributedPropertyIds, setDistributedPropertyIds] = useState<
+    Record<string, boolean>
+  >({});
 
   const openTokenization = (property: AdminProperty) => {
     setSelectedProperty(property);
@@ -37,6 +41,14 @@ const OrganisationPropertiesTable = ({
   const closeTokenization = () => {
     setTokenizationModalOpen(false);
     setSelectedProperty(null);
+  };
+
+  const handleDistribute = (propertyId: string) => {
+    setDistributedPropertyIds((prev) => ({
+      ...prev,
+      [propertyId]: true,
+    }));
+    toast.success(t("Distributed success"));
   };
 
   const formatCurrency = (value: number) =>
@@ -92,6 +104,21 @@ const OrganisationPropertiesTable = ({
               labelKey = "Status.Active";
               className =
                 "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
+              break;
+            case PropertyStatus.Draft:
+              labelKey = "Status.Draft";
+              className =
+                "bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800/60 dark:text-zinc-300 dark:border-zinc-700";
+              break;
+            case PropertyStatus.AdminApproved:
+              labelKey = "Status.AdminApproved";
+              className =
+                "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800";
+              break;
+            case PropertyStatus.OrganizationAssigned:
+              labelKey = "Status.OrganizationAssigned";
+              className =
+                "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800";
               break;
             case PropertyStatus.SoldOut:
               labelKey = "Status.SoldOut";
@@ -177,19 +204,37 @@ const OrganisationPropertiesTable = ({
       {
         title: t("Actions"),
         field: "",
-        render: (item) => (
-          <div className="flex items-center justify-end">
-            <button
-              type="button"
-              className="px-3 py-1 text-xs font-semibold rounded bg-primarycolor text-white hover:opacity-90"
-              onClick={() => {
-                openTokenization(item);
-              }}
-            >
-              {t("Tokenization")}
-            </button>
-          </div>
-        ),
+        render: (item) => {
+          const isActiveProperty = item.status === PropertyStatus.Active;
+          const isDistributed = !!distributedPropertyIds[item.id];
+
+          return (
+            <div className="flex items-center justify-end">
+              <button
+                type="button"
+                className={`px-3 py-1 text-xs font-semibold rounded text-white ${
+                  isDistributed
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-primarycolor hover:opacity-90"
+                }`}
+                disabled={isDistributed}
+                onClick={() => {
+                  if (isActiveProperty) {
+                    handleDistribute(item.id);
+                    return;
+                  }
+                  openTokenization(item);
+                }}
+              >
+                {isActiveProperty
+                  ? isDistributed
+                    ? t("Distributed")
+                    : t("Distribute")
+                  : t("Tokenization")}
+              </button>
+            </div>
+          );
+        },
       },
     ];
 
@@ -200,7 +245,7 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("No properties found"),
     };
-  }, [t]);
+  }, [distributedPropertyIds, t]);
 
   return (
     <>

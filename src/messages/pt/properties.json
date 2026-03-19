@@ -7,7 +7,10 @@
   "Property Type": "Tipo de propriedade",
   "Status": {
     "label": "Status",
+    "Draft": "Rascunho",
     "PendingApproval": "Pendente de aprovação",
+    "AdminApproved": "Aprovada pelo admin",
+    "OrganizationAssigned": "Atribuída à organização",
     "Active": "Ativa",
     "SoldOut": "Esgotada",
     "Rejected": "Rejeitada",
@@ -39,6 +42,9 @@
   "No organisations found": "Nenhuma organização encontrada",
   "Organisation Properties Title": "Propriedades da organização",
   "Tokenization": "Tokenização",
+  "Distribute": "Distribuir",
+  "Distributed": "Distribuída",
+  "Distributed success": "Distribuída",
   "TokenizationForm": {
     "title": "Informações financeiras",
     "subtitle": "Configure os parâmetros de tokenização e investimento",
