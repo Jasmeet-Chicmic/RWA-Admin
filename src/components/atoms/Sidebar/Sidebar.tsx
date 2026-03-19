@@ -218,8 +218,9 @@ const Sidebar: React.FC = () => {
           >
             <Image
               src={
-                mounted &&
-                resolvedTheme === THEME_TYPE.DARK &&
+                (mounted &&
+                  resolvedTheme === THEME_TYPE.DARK &&
+                  RayptoLogoDark.src) ||
                 RayptoLogoDark.src
               }
               width={164}

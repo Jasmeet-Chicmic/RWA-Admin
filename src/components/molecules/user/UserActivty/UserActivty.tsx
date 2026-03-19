@@ -52,7 +52,7 @@ const UserActivty = async ({ userId }: { userId: string }) => {
                   <div className="flex items-center gap-3 mt-3">
                     <Avatar>
                       <AvatarImage
-                        src={activity?.client?.profilePicture || ""}
+                        src={activity?.client?.profilePicture || undefined}
                       />
                       <AvatarFallback>
                         {activity?.client?.name.charAt(0)}
