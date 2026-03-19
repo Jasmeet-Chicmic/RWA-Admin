@@ -31,6 +31,7 @@ export interface AdminProperty {
   imageUrl: string;
   status: PropertyStatus;
   rejectionReason: string | null;
+  adminDocuments?: PropertyDocument[];
   totalValue: number;
   totalUnits: number;
   availableUnits: number;

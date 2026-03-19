@@ -9,7 +9,11 @@ import { toast } from "react-toastify";
 
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
-import { AdminProperty, PropertyStatus } from "../helpers/types";
+import {
+  AdminProperty,
+  PropertyDocument,
+  PropertyStatus,
+} from "../helpers/types";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
@@ -59,6 +63,7 @@ const PropertiesTable = ({
   mode = "pending",
 }: PropertiesTableProps) => {
   const t = useTranslations("properties");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
@@ -76,30 +81,11 @@ const PropertiesTable = ({
     useState(false);
   const [activeRejectionReason, setActiveRejectionReason] =
     useState<string>("");
+  const [isApprovalReason, setIsApprovalReason] = useState(false);
 
-  type RejectionDocument = {
-    status: string;
-    fileName: string;
-    sentBy: string;
-    date: string;
-    time: string;
-    size: string;
-    receivedDate: string;
-  };
-
-  const [rejectionDocument, setRejectionDocument] = useState<RejectionDocument>(
-    {
-      status: "rejected",
-      fileName: "",
-      sentBy: "",
-      date: "",
-      time: "",
-      size: "",
-      receivedDate: "",
-    },
-  );
-
-  console.log(setRejectionDocument, "");
+  const [activeAdminDocuments, setActiveAdminDocuments] = useState<
+    PropertyDocument[]
+  >([]);
   type UploadedDocument = { documentUrl: string; fileName: string };
 
   const [approveDocuments, setApproveDocuments] = useState<UploadedDocument[]>(
@@ -348,7 +334,38 @@ const PropertiesTable = ({
               aria-label={t("View Reason")}
               title={t("View Reason")}
               onClick={() => {
+                setIsApprovalReason(false);
                 setActiveRejectionReason(item.rejectionReason ?? "");
+                setActiveAdminDocuments(item.adminDocuments ?? []);
+                setRejectionReasonModalOpen(true);
+              }}
+            >
+              <Info size={16} />
+            </button>
+          </div>
+        );
+      },
+    };
+
+    const approvalReasonColumn: TableColumn<AdminProperty> = {
+      title: t("Approval Reason"),
+      field: "rejectionReason",
+      render: (item: AdminProperty) => {
+        if (!item.rejectionReason) return null;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="min-w-0 flex-1">
+              <TruncatedText text={item.rejectionReason} maxLength={40} />
+            </span>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center text-textparagraph hover:text-primarycolor dark:text-textparagraphlight dark:hover:text-primarycolor transition-colors"
+              aria-label={t("View Reason")}
+              title={t("View Reason")}
+              onClick={() => {
+                setIsApprovalReason(true);
+                setActiveRejectionReason(item.rejectionReason ?? "");
+                setActiveAdminDocuments(item.adminDocuments ?? []);
                 setRejectionReasonModalOpen(true);
               }}
             >
@@ -400,6 +417,7 @@ const PropertiesTable = ({
         ),
       },
       ...(mode === "disapproved" ? [rejectionReasonColumn] : []),
+      ...(mode === "assets" ? [approvalReasonColumn] : []),
       // Status column is intentionally hidden for Pending Properties view
       // ...(mode === "assets"
       //   ? ([
@@ -639,8 +657,6 @@ const PropertiesTable = ({
     assigningId,
     isRefreshing,
     refreshingActionId,
-    startRefreshTransition,
-    router,
   ]);
 
   console.log("approveDocuments::", data);
@@ -652,62 +668,55 @@ const PropertiesTable = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-2xl bg-bgwhite p-6 shadow-lg dark:bg-darkbgprimary">
             <h2 className={`mb-2 text-lg font-semibold ${TEXT_PRIMARY}`}>
-              {t("Rejection Reason")}
+              {isApprovalReason ? t("Approval Reason") : t("Rejection Reason")}
             </h2>
             <div className="max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white">
               {activeRejectionReason}
             </div>
-            <div className="flex flex-col gap-4 p-3 bg-black border border-[#292929] rounded-[11.57px] mt-3">
-              {/* Header */}
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <p className="font-roboto font-h5 font-semibold text-white mb-1">
-                    Official Document from Admin
-                  </p>
-                  <p className="text-xs text-[#99A1AF]">
-                    The reviewing admin has attached a formal rejection notice
-                    for your records.
-                  </p>
-                </div>
-                <span className="text-xs font-semibold bg-red-500/20 text-red-400 px-2 py-1 rounded flex-shrink-0 capitalize">
-                  {rejectionDocument.status}
-                </span>
-              </div>
+            <div className="mt-3">
+              <h3 className="mb-2 text-sm font-semibold text-textprimary dark:text-textparagraphlight">
+                {t("Official Document from Admin")}
+              </h3>
 
-              {/* Document Card */}
-              <div className="border border-[#292929] rounded-lg overflow-hidden">
-                {/* Preview Row */}
-                <div className="flex flex-col items-start min-[580px]:flex-row min-[580px]:items-center justify-between gap-3 p-4">
-                  <div className="flex items-center gap-3 flex-1 w-full">
-                    <div className="flex items-center justify-center w-10 h-10 bg-white/5 border border-[#292929] rounded-md">
-                      <FileText className="w-5 h-5 text-white" />
+              {activeAdminDocuments.length ? (
+                <div className="space-y-2 h-[150px] overflow-y-auto">
+                  {activeAdminDocuments.map((doc) => (
+                    <div
+                      key={doc.documentUrl}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-bordergray200 bg-bgwhite p-3 dark:border-darkbordercolor1 dark:bg-darkbgbase"
+                    >
+                      <div
+                        className="flex items-center justify-center w-10 h-10 flex-none bg-white/5 
+                      border border-[#292929] rounded-md"
+                      >
+                        <FileText className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-medium text-white">
+                          {doc.fileName}
+                        </div>
+                        <div className="truncate text-xs text-textparagraph dark:text-textparagraphlight">
+                          {doc.title}
+                        </div>
+                      </div>
+
+                      <a
+                        href={doc.documentUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 text-xs border border-white/30 px-3 py-2 rounded-md hover:bg-white/5 transition-colors flex-shrink-0 text-white"
+                      >
+                        <Eye className="w-4 h-4" />
+                        {tCommon("View")}
+                      </a>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate-1-lines">
-                        {/* {rejectionDocument.fileName} */}
-                        Dummy Name
-                      </p>
-                    </div>
-                  </div>
-
-                  <button className="flex items-center gap-2 text-xs border border-white/30 px-3 py-2 rounded-md hover:bg-white/5 transition-colors flex-shrink-0 text-white">
-                    <Eye className="w-4 h-4" />
-                    Preview
-                  </button>
+                  ))}
                 </div>
-
-                {/* Bottom Actions */}
-                {/* <div className="flex flex-col items-start min-[480px]:flex-row min-[480px]:items-center justify-between gap-3 p-4 border-t border-[#292929]">
-                  <span className="text-xs text-white/80">
-                    Rejected on: {rejectionDocument.receivedDate} ·{" "}
-                    {rejectionDocument.status}
-                  </span>
-                  <button className="flex items-center gap-2 text-xs border border-white/30 px-3 py-2 rounded-md hover:bg-white/5 transition-colors text-white">
-                    <Download className="w-4 h-4" />
-                    Download
-                  </button>
-                </div> */}
-              </div>
+              ) : (
+                <p className="text-sm text-textparagraph dark:text-textparagraphlight">
+                  {t("No Official Documents")}
+                </p>
+              )}
             </div>
             <div className="mt-4 flex justify-end">
               <button
@@ -716,6 +725,8 @@ const PropertiesTable = ({
                 onClick={() => {
                   setRejectionReasonModalOpen(false);
                   setActiveRejectionReason("");
+                  setActiveAdminDocuments([]);
+                  setIsApprovalReason(false);
                 }}
               >
                 {t("Cancel")}

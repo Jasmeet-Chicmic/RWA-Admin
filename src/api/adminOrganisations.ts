@@ -59,6 +59,7 @@ export async function getOrganisationPropertiesAction(
 }
 
 export type ActivateOrganisationPropertyPayload = {
+  totalPropertyValue: number;
   totalUnits: number;
   rentalIncome: number;
   annualYieldPercent: number;
