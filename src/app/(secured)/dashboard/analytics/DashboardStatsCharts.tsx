@@ -69,9 +69,8 @@ const DashboardStatsCharts = ({
       maximumFractionDigits: 2,
     });
     const currencySymbol =
-      currencyFormatter
-        .formatToParts(0)
-        .find((p) => p.type === "currency")?.value ?? "$";
+      currencyFormatter.formatToParts(0).find((p) => p.type === "currency")
+        ?.value ?? "$";
 
     const numberStr = new Intl.NumberFormat(undefined, {
       maximumFractionDigits: 2,
