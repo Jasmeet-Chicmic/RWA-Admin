@@ -20,7 +20,6 @@ import {
 } from "@/shared/styles";
 // import { createSortableColumn } from "@/shared/utils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
-import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   approveAdminPropertyAction,
   rejectAdminPropertyAction,
@@ -553,69 +552,80 @@ const PropertiesTable = ({
                 );
               }
 
-              const options =
-                item.status === PropertyStatus.Active
-                  ? [
-                      {
-                        label: t("Disapprove"),
-                        value: 2,
-                        icon:
-                          rejectingId === item.id ? (
-                            <Loader2 className="w-4 h-4 text-red-600 animate-spin" />
-                          ) : (
-                            <X className="w-4 h-4 text-red-600" />
-                          ),
-                      },
-                    ]
-                  : [
-                      {
-                        label: t("Approve"),
-                        value: 1,
-                        icon:
-                          approvingId === item.id ? (
-                            <Loader2 className="w-4 h-4 text-emerald-600 animate-spin" />
-                          ) : (
-                            <Check className="w-4 h-4 text-emerald-600" />
-                          ),
-                      },
-                      {
-                        label: t("Disapprove"),
-                        value: 2,
-                        icon:
-                          rejectingId === item.id ? (
-                            <Loader2 className="w-4 h-4 text-red-600 animate-spin" />
-                          ) : (
-                            <X className="w-4 h-4 text-red-600" />
-                          ),
-                      },
-                    ];
+              const isApproveLoading =
+                approvingId === item.id ||
+                (isRefreshing && refreshingActionId === item.id);
+              const isDisapproveLoading =
+                rejectingId === item.id ||
+                (isRefreshing && refreshingActionId === item.id);
 
-              return (
-                <DropdownMenu
-                  options={options}
-                  isLoading={
-                    approvingId === item.id ||
-                    rejectingId === item.id ||
-                    (isRefreshing && refreshingActionId === item.id)
-                  }
-                  onSelect={(value) => {
-                    if (value === 1) {
-                      if (!item.id || approvingId === item.id) return;
+              return item.status === PropertyStatus.Active ? (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-red-50 text-red-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={isDisapproveLoading}
+                  onClick={() => {
+                    if (isDisapproveLoading) return;
+                    if (!item.id) return;
+                    setRejectPropertyId(item.id);
+                    setRejectReason("");
+                    setRejectDocuments([]);
+                    setRejectModalOpen(true);
+                  }}
+                >
+                  {isDisapproveLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <X className="w-4 h-4" />
+                  )}
+                  {t("Disapprove")}
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-emerald-50 text-emerald-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={isApproveLoading}
+                    onClick={() => {
+                      if (isApproveLoading) return;
+                      if (!item.id) return;
                       setApprovePropertyId(item.id);
                       setApproveReason("");
                       setApproveDocuments([]);
                       setApproveModalOpen(true);
-                    } else if (value === 2) {
-                      // Open disapprove modal
+                    }}
+                  >
+                    {isApproveLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Check className="w-4 h-4" />
+                    )}
+                    {t("Approve")}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-red-50 text-red-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={isDisapproveLoading}
+                    onClick={() => {
+                      if (isDisapproveLoading) return;
                       if (!item.id) return;
                       setRejectPropertyId(item.id);
                       setRejectReason("");
                       setRejectDocuments([]);
                       setRejectModalOpen(true);
-                    }
-                  }}
-                />
+                    }}
+                  >
+                    {isDisapproveLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <X className="w-4 h-4" />
+                    )}
+                    {t("Disapprove")}
+                  </button>
+                </div>
               );
+
             })()}
           </div>
         ),
