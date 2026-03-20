@@ -104,7 +104,9 @@ export const TokenizationModal = ({
 
   const defaultValues = useMemo<TokenizationFormValues>(() => {
     return {
-      totalPropertyValue: formatNumberAmount(property?.totalValue ?? 0),
+      totalPropertyValue: formatNumberAmount(
+        Number((property?.totalValue ?? 0) / Math.pow(10, 6)) || 0,
+      ),
       totalShares: "0",
       rentalIncomeHistory: "",
       expectedAnnualYield: "0",
@@ -141,8 +143,9 @@ export const TokenizationModal = ({
     if (!property) return;
     setIsSubmitting(true);
     try {
-      const totalPropertyValue =
+      let totalPropertyValue =
         parseMoney(values.totalPropertyValue) ?? property.totalValue;
+      totalPropertyValue = totalPropertyValue * Math.pow(10, 6);
       const payload = {
         totalPropertyValue,
         totalUnits: Number(values.totalShares) * Math.pow(10, 6),
@@ -152,6 +155,8 @@ export const TokenizationModal = ({
         ownerAddress: values.ownerAddress,
         image: values.image,
       };
+
+      console.log("property data from sent to api payload", payload);
       await activateOrganisationPropertyAction({
         organisationId,
         propertyId: property.id,
