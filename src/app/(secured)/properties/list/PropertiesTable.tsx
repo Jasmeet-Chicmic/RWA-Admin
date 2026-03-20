@@ -625,7 +625,6 @@ const PropertiesTable = ({
                   </button>
                 </div>
               );
-
             })()}
           </div>
         ),
