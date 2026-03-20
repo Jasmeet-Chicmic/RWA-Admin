@@ -38,6 +38,7 @@ const OrganisationPropertiesTable = ({
   >({});
 
   const openTokenization = (property: AdminProperty) => {
+    console.log("property data from api", property);
     setSelectedProperty(property);
     setTokenizationModalOpen(true);
   };

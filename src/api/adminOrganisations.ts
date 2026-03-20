@@ -72,6 +72,12 @@ export async function activateOrganisationPropertyAction(params: {
   payload: ActivateOrganisationPropertyPayload;
 }) {
   const { organisationId, propertyId, payload } = params;
+  console.log(
+    "Activate Organisation Property Request::",
+    organisationId,
+    propertyId,
+    payload,
+  );
   return await postRequest<
     ResponseType,
     ActivateOrganisationPropertyPayload,

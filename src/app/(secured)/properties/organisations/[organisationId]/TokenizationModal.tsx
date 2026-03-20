@@ -143,12 +143,15 @@ export const TokenizationModal = ({
     if (!property) return;
     setIsSubmitting(true);
     try {
-      let totalPropertyValue =
-        parseMoney(values.totalPropertyValue) ?? property.totalValue;
-      totalPropertyValue = totalPropertyValue * Math.pow(10, 6);
+      let totalPropertyValue: bigint = values.totalPropertyValue
+        ? BigInt(parseMoney(values.totalPropertyValue) ?? 0)
+        : BigInt(property.totalValue);
+      totalPropertyValue = BigInt(totalPropertyValue) * BigInt(Math.pow(10, 6));
       const payload = {
-        totalPropertyValue,
-        totalUnits: Number(values.totalShares) * Math.pow(10, 6),
+        totalPropertyValue: Number(totalPropertyValue),
+        totalUnits: Number(
+          BigInt(values.totalShares) * BigInt(Math.pow(10, 6)),
+        ),
         rentalIncome: parseMoney(values.rentalIncomeHistory) ?? 0,
         annualYieldPercent: Number(values.expectedAnnualYield),
         riskScore: Number(values.riskScore),
@@ -156,12 +159,21 @@ export const TokenizationModal = ({
         image: values.image,
       };
 
-      console.log("property data from sent to api payload", payload);
-      await activateOrganisationPropertyAction({
-        organisationId,
-        propertyId: property.id,
+      console.log(
+        "property data from sent to api payload",
         payload,
-      });
+        organisationId,
+        property.id,
+      );
+      try {
+        await activateOrganisationPropertyAction({
+          organisationId,
+          propertyId: property.id,
+          payload,
+        });
+      } catch (error) {
+        console.error("Error activating organisation property:", error);
+      }
 
       // If backend follows ResponseType structure, `status` indicates success
 
