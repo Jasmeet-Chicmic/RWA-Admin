@@ -472,7 +472,7 @@ const PropertiesTable = ({
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrency(item.totalValue)}
+            {formatCurrency(item.totalValue / Math.pow(10, 6))}
           </span>
         ),
       },
