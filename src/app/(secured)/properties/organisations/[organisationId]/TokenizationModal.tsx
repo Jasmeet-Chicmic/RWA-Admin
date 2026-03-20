@@ -22,7 +22,7 @@ type TokenizationFormValues = {
   riskScore: string;
   image: string;
 };
-
+//Test
 const formatUsdcAmount = (value: number, maximumFractionDigits = 2) => {
   const normalizedValue = Number.isFinite(value) ? value : 0;
   const formatted = new Intl.NumberFormat("en-US", {
