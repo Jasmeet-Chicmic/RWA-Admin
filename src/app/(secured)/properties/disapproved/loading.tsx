@@ -40,4 +40,3 @@ const DisapprovedPropertiesLoading = () => {
 };
 
 export default DisapprovedPropertiesLoading;
-
