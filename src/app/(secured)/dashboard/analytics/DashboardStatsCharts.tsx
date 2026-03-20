@@ -39,13 +39,46 @@ const DashboardStatsCharts = ({
       toFiniteNumber(value),
     );
 
-  const formatCurrency = (value: unknown) =>
-    new Intl.NumberFormat("en-US", {
+  const formatCurrency = (value: unknown) => {
+    const n = toFiniteNumber(value);
+    const abs = Math.abs(n);
+    const sign = n < 0 ? "-" : "";
+
+    // Abbreviate large currency values: K (1e3), M (1e6), T (1e12).
+    // Note: billions (1e9..1e12) will display in `M`.
+    let divisor = 1;
+    let suffix = "";
+    if (abs >= 1e12) {
+      divisor = 1e12;
+      suffix = "T";
+    } else if (abs >= 1e6) {
+      divisor = 1e6;
+      suffix = "M";
+    } else if (abs >= 1e3) {
+      divisor = 1e3;
+      suffix = "K";
+    }
+
+    const scaled = abs / divisor;
+
+    // Extract narrow currency symbol (e.g. `$`) once per call.
+    const currencyFormatter = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
       currencyDisplay: "narrowSymbol",
       maximumFractionDigits: 2,
-    }).format(toFiniteNumber(value));
+    });
+    const currencySymbol =
+      currencyFormatter
+        .formatToParts(0)
+        .find((p) => p.type === "currency")?.value ?? "$";
+
+    const numberStr = new Intl.NumberFormat(undefined, {
+      maximumFractionDigits: 2,
+    }).format(scaled);
+
+    return `${sign}${currencySymbol}${numberStr}${suffix}`;
+  };
 
   return (
     <div className="space-y-6">
