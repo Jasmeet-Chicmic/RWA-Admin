@@ -20,7 +20,12 @@ import {
   TOKENIZATION_FLOW_STEPS,
   type TokenizationFlowStep,
 } from "@/lib/contracts/runTokenizationFlow";
-import { fromBaseUnits, toBaseUnitsBigInt } from "@/shared/utils/unitUtils";
+import {
+  DISPLAY_CURRENCY,
+  formatToFixed,
+  fromBaseUnits,
+  toBaseUnitsBigInt,
+} from "@/shared/utils/unitUtils";
 
 type TokenizationFormValues = {
   ownerAddress: string;
@@ -47,19 +52,11 @@ const getLoadingMessage = (
 //Test
 const formatUsdcAmount = (value: number, maximumFractionDigits = 2) => {
   const normalizedValue = Number.isFinite(value) ? value : 0;
-  const formatted = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits,
-  }).format(normalizedValue);
-
-  return `${formatted} USDC`;
+  return `${formatToFixed(normalizedValue, maximumFractionDigits)} ${DISPLAY_CURRENCY}`;
 };
 
 const formatNumberAmount = (value: number, maximumFractionDigits = 2) =>
-  new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits,
-  }).format(Number.isFinite(value) ? value : 0);
+  formatToFixed(Number.isFinite(value) ? value : 0, maximumFractionDigits);
 
 const parseMoney = (value: string): number | null => {
   const cleaned = value.replace(/[^0-9.]/g, "");

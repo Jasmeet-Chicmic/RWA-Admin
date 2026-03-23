@@ -1,6 +1,7 @@
 import React from "react";
 
 import { formatNumberValue } from "@/shared/utils";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 
 type ComparisonItem = {
   label: string;
@@ -56,7 +57,7 @@ export default function ComparisonCard({
               <div
                 className={`text-lg font-semibold dark:bordercolor1 ${i % 2 !== 0 ? "text-right" : "text-left"}`}
               >
-                {item.percent.toFixed(1)}%
+                {formatToFixed(item.percent, 1)}%
               </div>
               <div
                 className={`text-[0.875] bordercolor1 dark:bordercolor1 ${i % 2 !== 0 ? "text-right" : "text-left"}`}

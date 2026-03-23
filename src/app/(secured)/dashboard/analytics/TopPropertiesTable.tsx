@@ -9,6 +9,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import {
   AdminProperty,
@@ -289,11 +290,7 @@ const MOCK_TOP_PROPERTIES: AdminProperty[] = [
 ];
 
 const formatCurrencyCompact = (value: number) =>
-  value.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
+  formatDisplayCurrency(value, { maximumFractionDigits: 0 });
 
 const TopPropertiesTable = () => {
   const t = useTranslations("properties");
@@ -328,7 +325,7 @@ const TopPropertiesTable = () => {
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrencyCompact(item.totalValue / Math.pow(10, 6))}
+            {formatCurrencyCompact(fromBaseUnits(item.totalValue))}
           </span>
         ),
       },

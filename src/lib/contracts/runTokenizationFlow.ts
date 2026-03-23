@@ -12,6 +12,7 @@ import {
   REAL_ESTATE_VAULT_FACTORY_ABI,
 } from "./realEstateFlowAbi";
 import { TOKENIZATION_CONTRACTS } from "./tokenizationConfig";
+import { toBaseUnitsBigInt } from "@/shared/utils/unitUtils";
 
 const TOKEN_ABI = [
   {
@@ -162,7 +163,7 @@ export const runTokenizationFlow = async ({
 
   const salt = `${input.propertyId}-${Date.now()}`;
   const claimTopic = BigInt(keccak256(stringToBytes("KYC_CLAIM")));
-  const tokenScale = BigInt(Math.pow(10, TOKEN_DECIMALS));
+  const tokenScale = toBaseUnitsBigInt(1, TOKEN_DECIMALS);
   const pricePerShare = (input.totalValue * tokenScale) / input.totalUnits;
   console.log("[TokenizationFlow] Computed deploy params", {
     salt,

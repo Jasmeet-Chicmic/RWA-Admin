@@ -11,6 +11,7 @@ import {
   REPORT_GROUP_BY,
   THEME_TYPE,
 } from "@/shared/constants";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 import { fetchConversionRateAction, ConversionRateData } from "@/api/dashboard";
 import AnalyticsChartCard from "./AnalyticsChartCard";
 import { getAreaChartOptions } from "./chartOptions";
@@ -105,12 +106,12 @@ const ConversionRateChart = ({
     },
     yaxis: {
       labels: {
-        formatter: (value: number) => `${value.toFixed(1)}%`,
+        formatter: (value: number) => `${formatToFixed(value, 1)}%`,
       },
     },
     tooltip: {
       y: {
-        formatter: (value: number) => `${value.toFixed(2)}%`,
+        formatter: (value: number) => `${formatToFixed(value, 2)}%`,
       },
       x: {
         show: true,

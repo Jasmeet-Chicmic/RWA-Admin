@@ -15,6 +15,7 @@ import {
   BILLING_CYCLE,
   CURRENCY_SYMBOLS,
 } from "./constants";
+import { DISPLAY_CURRENCY, formatToFixed } from "./utils/unitUtils";
 import { PlanPrice } from "./types";
 
 // Set session cookie by sending token to server
@@ -388,7 +389,7 @@ export const formatCurrency = (
   decimals: number = 2,
   showSign: boolean = false,
 ): string => {
-  if (value === 0) return "0";
+  if (value === 0) return `0 ${DISPLAY_CURRENCY}`;
 
   const isNegative = value < 0;
   const absValue = Math.abs(value);
@@ -405,24 +406,24 @@ export const formatCurrency = (
   for (const { threshold, suffix } of suffixes) {
     if (absValue >= threshold) {
       const scaled = absValue / threshold;
-      formattedValue = scaled.toFixed(decimals).replace(/\.?0+$/, "") + suffix;
+      formattedValue = `${formatToFixed(scaled, decimals)}${suffix}`;
       break;
     }
   }
 
   // If no suffix applied, just format normally
   if (!formattedValue) {
-    formattedValue = absValue.toFixed(decimals).replace(/\.?0+$/, "");
+    formattedValue = formatToFixed(absValue, decimals);
   }
 
   // Add sign
   if (isNegative) {
-    return `-${formattedValue}`;
+    return `-${formattedValue} ${DISPLAY_CURRENCY}`;
   } else if (showSign && value > 0) {
-    return `+${formattedValue}`;
+    return `+${formattedValue} ${DISPLAY_CURRENCY}`;
   }
 
-  return formattedValue;
+  return `${formattedValue} ${DISPLAY_CURRENCY}`;
 };
 
 /**
@@ -443,10 +444,12 @@ export const formatCurrencyAuto = (
   }
 
   // For smaller values, show full number with locale formatting
-  return value.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: decimals,
-  });
+  return (
+    value.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimals,
+    }) + ` ${DISPLAY_CURRENCY}`
+  );
 };
 
 /**
@@ -555,7 +558,7 @@ export const formatPrice = (price: PlanPrice) => {
   const cycleLabel =
     price.billingCycle === BILLING_CYCLE.YEARLY ? "/year" : "/month";
   const amount =
-    price.price % 1 === 0 ? String(price.price) : price.price.toFixed(2);
+    price.price % 1 === 0 ? String(price.price) : formatToFixed(price.price, 2);
   return { amount: symbol + amount, cycle: cycleLabel };
 };
 
@@ -564,7 +567,7 @@ export const formatPrice = (price: PlanPrice) => {
  * Falls back to '$' if the currency code is not recognized
  */
 export const getCurrencySymbol = (currencyCode: string): string => {
-  return CURRENCY_SYMBOLS[currencyCode] || "$";
+  return CURRENCY_SYMBOLS[currencyCode] || DISPLAY_CURRENCY;
 };
 
 /**

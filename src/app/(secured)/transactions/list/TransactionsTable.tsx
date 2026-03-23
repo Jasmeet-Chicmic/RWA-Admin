@@ -17,6 +17,7 @@ import {
   TEXT_SIZE_SM,
 } from "@/shared/styles";
 import { TableHeaderWithInfo } from "@/components/atoms/TableHeaderWithInfo";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 import TransactionFilters from "./TransactionFilters";
 
 const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
@@ -146,7 +147,7 @@ const TransactionsTable = ({
         field: "amount",
         render: (item: FlatTransaction) => (
           <span className={`font-medium ${TEXT_PRIMARY}`}>
-            {item.currency} {item.amount.toFixed(2)}
+            {item.currency} {formatToFixed(item.amount, 2)}
           </span>
         ),
         sortable: true,

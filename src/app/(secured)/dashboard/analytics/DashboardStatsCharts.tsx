@@ -7,6 +7,7 @@ import { UserRetentionData } from "@/api/dashboard";
 import { SubscriptionAnalytics } from "@/api/adminPlans";
 import TopPropertiesTable from "./TopPropertiesTable";
 import { AdminPropertiesDetails } from "@/api/adminProperties.types";
+import { DISPLAY_CURRENCY } from "@/shared/utils/unitUtils";
 
 interface DashboardStatsChartsProps {
   retentionData: UserRetentionData;
@@ -61,22 +62,11 @@ const DashboardStatsCharts = ({
 
     const scaled = abs / divisor;
 
-    // Extract narrow currency symbol (e.g. `$`) once per call.
-    const currencyFormatter = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      currencyDisplay: "narrowSymbol",
-      maximumFractionDigits: 2,
-    });
-    const currencySymbol =
-      currencyFormatter.formatToParts(0).find((p) => p.type === "currency")
-        ?.value ?? "$";
-
     const numberStr = new Intl.NumberFormat(undefined, {
       maximumFractionDigits: 2,
     }).format(scaled);
 
-    return `${sign}${currencySymbol}${numberStr}${suffix}`;
+    return `${sign}${numberStr}${suffix} ${DISPLAY_CURRENCY}`;
   };
 
   return (

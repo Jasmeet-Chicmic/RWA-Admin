@@ -11,6 +11,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { formatDisplayCurrency } from "@/shared/utils/unitUtils";
 // import { getUsersAction } from "@/api/user";
 
 // 0 - Not Started, 1 - Pending, 2 - Approved, 3 - Rejected
@@ -27,11 +28,7 @@ interface UserPortfolioRow {
 }
 
 const formatCurrency = (value: number) =>
-  value.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
+  formatDisplayCurrency(value, { maximumFractionDigits: 0 });
 
 const truncateWallet = (address: string) =>
   address.length > 13

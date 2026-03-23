@@ -5,6 +5,7 @@ import { AdminCompanyDetail } from "@/app/(secured)/companies/helpers/types";
 import CompanyScrollableSection from "./CompanyScrollableSection";
 import StarRating from "@/components/atoms/StarRating";
 import { buildImageUrl } from "@/shared/utils";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 import FormattedDate from "@/components/atoms/FormattedDate";
 
 interface CompanyRelationsSectionProps {
@@ -248,7 +249,7 @@ const CompanyRelationsSection = ({
                     filledColor="#FCD34D"
                   />
                   <span className="text-xs font-medium text-textparagraph dark:text-textparagraphlight">
-                    {review.rating.toFixed(1)} / 5
+                    {formatToFixed(review.rating, 1)} / 5
                   </span>
                 </div>
               </div>

@@ -29,6 +29,7 @@ import {
   getTransactionSourceDetails,
 } from "../utils";
 import { TRANSACTION_SOURCE_TYPES, TRANSACTION_TYPES } from "../constants";
+import { formatToFixed } from "../utils/unitUtils";
 
 export const transformWebSiteAnalyticsData = (data: AnalyticsApiResponse) => {
   const dataArray = [
@@ -188,8 +189,8 @@ export const transformSalesByCountryData = (
 
 // Total Earning
 export const transformTotalEarningsData = (data: TotalEarningsApiResponse) => ({
-  percentage: data.data.earningsIncreasePercentage.toFixed(2),
-  change: data.data.earningsIncreasePercentage.toFixed(2),
+  percentage: formatToFixed(data.data.earningsIncreasePercentage, 2),
+  change: formatToFixed(data.data.earningsIncreasePercentage, 2),
   series: [
     {
       name: "Current",

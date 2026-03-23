@@ -14,6 +14,7 @@ import { getEventDetailAction } from "@/api/events";
 import { AdminEventDetail } from "@/app/(secured)/events/helpers/types";
 import { PRIVATE_ROUTES } from "@/shared/routes";
 import { normalizeHtml } from "@/shared/utils";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 import FormattedDate from "@/components/atoms/FormattedDate";
 import ProfilePageLayout, {
   ProfileStat,
@@ -150,7 +151,7 @@ const EventViewPage = async ({
                   filledColor="#FCD34D"
                 />
                 <span className="text-sm font-semibold text-textprimary dark:text-sidebartext">
-                  {event.averageRating?.toFixed(2) ?? "0.00"} / 5
+                  {formatToFixed(event.averageRating ?? 0, 2)} / 5
                 </span>
                 <span className="text-xs text-textparagraph dark:text-textparagraphlight">
                   ({event.ratingCount ?? 0}{" "}

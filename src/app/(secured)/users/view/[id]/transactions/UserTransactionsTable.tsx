@@ -14,6 +14,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 
 const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
   [PAYMENT_STATUS.INITIATED]:
@@ -94,7 +95,7 @@ const UserTransactionsTable = ({
       field: "amount",
       render: (item) => (
         <span className={`font-medium ${TEXT_PRIMARY}`}>
-          {item.currency} {item.amount.toFixed(2)}
+          {item.currency} {formatToFixed(item.amount, 2)}
         </span>
       ),
       sortable: true,

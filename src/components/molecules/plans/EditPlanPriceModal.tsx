@@ -8,6 +8,7 @@ import CustomModal from "@/components/molecules/CustomModal/CustomModal";
 import { adjustPlanPricingAction } from "@/api/adminPlans";
 import { PlanPrice } from "@/shared/types";
 import { BILLING_CYCLE } from "@/shared/constants";
+import { formatToFixed } from "@/shared/utils/unitUtils";
 
 interface EditPlanPriceModalProps {
   isOpen: boolean;
@@ -164,13 +165,11 @@ const EditPlanPriceModal = ({
             <div className="flex items-baseline gap-2">
               <span className="text-gray-400 dark:text-gray-500 text-sm line-through">
                 {currencySymbol}
-                {currentPrice % 1 === 0
-                  ? currentPrice
-                  : currentPrice.toFixed(2)}
+                {formatToFixed(currentPrice, 2)}
               </span>
               <span className="text-xl font-bold text-textprimary dark:text-sidebartext">
                 {currencySymbol}
-                {newPrice < 0 ? "0" : newPrice.toFixed(2)}
+                {newPrice < 0 ? "0" : formatToFixed(newPrice, 2)}
               </span>
               <span
                 className={`text-xs font-semibold px-1.5 py-0.5 rounded ${

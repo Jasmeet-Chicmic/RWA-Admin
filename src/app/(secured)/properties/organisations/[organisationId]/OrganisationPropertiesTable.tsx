@@ -10,6 +10,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 
 import { AdminProperty, PropertyStatus } from "../../helpers/types";
@@ -60,12 +61,7 @@ const OrganisationPropertiesTable = ({
   );
 
   const formatCurrency = (value: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      currencyDisplay: "narrowSymbol",
-      maximumFractionDigits: 2,
-    }).format(Number.isFinite(value) ? value : 0);
+    formatDisplayCurrency(value, { maximumFractionDigits: 2 });
 
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
@@ -178,7 +174,7 @@ const OrganisationPropertiesTable = ({
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrency(item.totalValue / Math.pow(10, 6))}
+            {formatCurrency(fromBaseUnits(item.totalValue))}
           </span>
         ),
       },
