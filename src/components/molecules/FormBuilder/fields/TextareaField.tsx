@@ -54,7 +54,7 @@ export function TextareaField<T extends FieldValues>({
         disabled={disabled}
         {...register(name, validation)}
         onChange={handleChange}
-        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor textbgblack dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primarycolor text-bgblack dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext disabled:opacity-50 disabled:cursor-not-allowed"
       />
       {fieldError && (
         <span className="text-red-500 text-[0.875] mt-1">

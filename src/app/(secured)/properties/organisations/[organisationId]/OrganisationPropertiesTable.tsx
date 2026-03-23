@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,10 @@ import {
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 
 import { AdminProperty, PropertyStatus } from "../../helpers/types";
+import {
+  PROPERTY_STATUS_LABEL_MAP,
+  getPropertyStatusBadgeClassName,
+} from "../../helpers/propertyStatusUtils";
 import { TokenizationModal } from "./TokenizationModal";
 
 const OrganisationPropertiesTable = ({
@@ -34,6 +38,7 @@ const OrganisationPropertiesTable = ({
   >({});
 
   const openTokenization = (property: AdminProperty) => {
+    console.log("property data from api", property);
     setSelectedProperty(property);
     setTokenizationModalOpen(true);
   };
@@ -43,13 +48,16 @@ const OrganisationPropertiesTable = ({
     setSelectedProperty(null);
   };
 
-  const handleDistribute = (propertyId: string) => {
-    setDistributedPropertyIds((prev) => ({
-      ...prev,
-      [propertyId]: true,
-    }));
-    toast.success(t("Distributed success"));
-  };
+  const handleDistribute = useCallback(
+    (propertyId: string) => {
+      setDistributedPropertyIds((prev) => ({
+        ...prev,
+        [propertyId]: true,
+      }));
+      toast.success(t("Distributed success"));
+    },
+    [t],
+  );
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("en-US", {
@@ -87,6 +95,24 @@ const OrganisationPropertiesTable = ({
             {item.propertyType || "—"}
           </span>
         ),
+      },
+      {
+        title: t("Status.label"),
+        field: "status",
+        render: (item) => {
+          const baseClass =
+            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border";
+          const className = getPropertyStatusBadgeClassName(item.status);
+          const statusLabel =
+            PROPERTY_STATUS_LABEL_MAP[item.status] ?? String(item.status);
+
+          return (
+            <span className={`${baseClass} ${className}`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
+              {statusLabel}
+            </span>
+          );
+        },
       },
       // {
       //   title: t("Status.label"),
@@ -152,7 +178,7 @@ const OrganisationPropertiesTable = ({
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrency(item.totalValue)}
+            {formatCurrency(item.totalValue / Math.pow(10, 6))}
           </span>
         ),
       },
@@ -206,24 +232,28 @@ const OrganisationPropertiesTable = ({
         field: "",
         render: (item) => {
           const isActiveProperty = item.status === PropertyStatus.Active;
+          const canTokenize =
+            item.status === PropertyStatus.OrganizationAssigned;
           const isDistributed = !!distributedPropertyIds[item.id];
+          const shouldDisable =
+            isDistributed || (!isActiveProperty && !canTokenize);
 
           return (
             <div className="flex items-center justify-end">
               <button
                 type="button"
                 className={`px-3 py-1 text-xs font-semibold rounded text-white ${
-                  isDistributed
+                  shouldDisable
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-primarycolor hover:opacity-90"
+                    : "bg-primarycolor hover:opacity-90 !text-black"
                 }`}
-                disabled={isDistributed}
+                disabled={shouldDisable}
                 onClick={() => {
                   if (isActiveProperty) {
                     handleDistribute(item.id);
                     return;
                   }
-                  openTokenization(item);
+                  if (canTokenize) openTokenization(item);
                 }}
               >
                 {isActiveProperty
@@ -245,7 +275,7 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("No properties found"),
     };
-  }, [distributedPropertyIds, t]);
+  }, [distributedPropertyIds, t, handleDistribute]);
 
   return (
     <>

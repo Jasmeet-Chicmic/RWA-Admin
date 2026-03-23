@@ -328,7 +328,7 @@ const TopPropertiesTable = () => {
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrencyCompact(item.totalValue)}
+            {formatCurrencyCompact(item.totalValue / Math.pow(10, 6))}
           </span>
         ),
       },

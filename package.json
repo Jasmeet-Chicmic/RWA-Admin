@@ -33,6 +33,7 @@
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^15.0.0",
     "react-hook-form": "^7.58.1",
     "react-infinite-scroll-hook": "^6.0.1",
     "react-intersection-observer": "^10.0.3",

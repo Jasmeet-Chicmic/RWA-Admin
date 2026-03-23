@@ -53,7 +53,7 @@ const ResetPassword = () => {
   };
   return (
     <FormLayout layout={FormLayoutType.WithCover}>
-      <h2 className="text-2xl font-semibold text-center mb-6 textbgblack">
+      <h2 className="text-2xl font-semibold text-center mb-6 text-bgblack">
         Reset Password
       </h2>
       <FormBuilder<ResetPasswordFormValues>

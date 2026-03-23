@@ -19,9 +19,9 @@ const OrganisationPropertiesPage = async ({
     const pageSize = limit ? Number(limit) : DEFAULT_PAGE_SIZE;
     const skipNum = skip ? Number(skip) : 0;
     const pageNumber = Math.floor(skipNum / pageSize) + 1;
-
+    const { organisationId } = await params;
     const res = await getOrganisationPropertiesAction({
-      organisationId: params.organisationId,
+      organisationId: organisationId,
       page: pageNumber,
       pageSize,
     });

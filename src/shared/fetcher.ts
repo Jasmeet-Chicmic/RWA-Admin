@@ -9,7 +9,7 @@ import { ROUTES } from "./routes";
 import { API_END_POINTS } from "./api";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
+console.log("BASE_URL", BASE_URL);
 /**
  * Creates an Axios instance with interceptors and auth headers.
  */

@@ -4,20 +4,57 @@ import { API_END_POINTS } from "@/shared/api";
 import { postRequest } from "@/shared/fetcher";
 import { ResponseType } from "@/shared/types";
 
-export async function approveAdminPropertyAction(propertyId: string) {
-  return await postRequest<ResponseType, undefined>(
+interface PropertyActionPayload {
+  reason?: string;
+  documents?: Array<{
+    title: string;
+    fileName: string;
+    documentUrl: string;
+  }>;
+}
+
+type BatchUploadResponse = ResponseType & {
+  data?:
+    | { urls?: string[]; filePaths?: string[] }
+    | Array<{ url?: string; filePath?: string }>;
+};
+
+export async function approveAdminPropertyAction(
+  propertyId: string,
+  payload?: PropertyActionPayload,
+) {
+  return await postRequest<ResponseType, PropertyActionPayload | undefined>(
     `${API_END_POINTS.ADMIN_PROPERTIES}/${propertyId}/approve`,
-    undefined as never,
+    payload as PropertyActionPayload,
   );
 }
 
 export async function rejectAdminPropertyAction(
   propertyId: string,
   reason: string,
+  documents: NonNullable<PropertyActionPayload["documents"]> = [],
 ) {
-  return await postRequest<ResponseType, { reason: string }>(
+  const payload: PropertyActionPayload = {
+    reason,
+    documents,
+  };
+
+  return await postRequest<ResponseType, PropertyActionPayload>(
     `${API_END_POINTS.ADMIN_PROPERTIES}/${propertyId}/reject`,
-    { reason },
+    payload,
+  );
+}
+
+export async function uploadAdminPropertyDocumentsAction(formData: FormData) {
+  return await postRequest<BatchUploadResponse, FormData>(
+    `${API_END_POINTS.BATCH_UPLOAD}?type=document`,
+    formData,
+    {
+      headers: {
+        Accept: "*/*",
+        "Content-Type": undefined as unknown as string,
+      },
+    },
   );
 }
 

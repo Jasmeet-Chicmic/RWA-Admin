@@ -58,6 +58,7 @@ export const navItems: NavItem[] = [
     label: "Properties",
     activePaths: [
       ROUTES.PROPERTIES_LIST,
+      ROUTES.PROPERTIES_DISAPPROVED,
       ROUTES.PROPERTIES_ASSETS,
       ROUTES.PROPERTIES_ORGANISATIONS,
     ],
@@ -66,6 +67,11 @@ export const navItems: NavItem[] = [
         label: "Pending Properties",
         path: ROUTES.PROPERTIES_LIST,
         activePaths: [ROUTES.PROPERTIES_LIST],
+      },
+      {
+        label: "Disapproved Requests",
+        path: ROUTES.PROPERTIES_DISAPPROVED,
+        activePaths: [ROUTES.PROPERTIES_DISAPPROVED],
       },
       {
         label: "Assets",

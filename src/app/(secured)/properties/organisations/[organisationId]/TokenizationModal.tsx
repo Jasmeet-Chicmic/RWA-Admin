@@ -26,12 +26,20 @@ type TokenizationFormValues = {
   riskScore: string;
   image: string;
 };
+//Test
+const formatUsdcAmount = (value: number, maximumFractionDigits = 2) => {
+  const normalizedValue = Number.isFinite(value) ? value : 0;
+  const formatted = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits,
+  }).format(normalizedValue);
 
-const formatCurrency = (value: number, maximumFractionDigits = 2) =>
+  return `${formatted} USDC`;
+};
+
+const formatNumberAmount = (value: number, maximumFractionDigits = 2) =>
   new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    currencyDisplay: "narrowSymbol",
+    minimumFractionDigits: 2,
     maximumFractionDigits,
   }).format(Number.isFinite(value) ? value : 0);
 
@@ -105,7 +113,9 @@ export const TokenizationModal = ({
 
   const defaultValues = useMemo<TokenizationFormValues>(() => {
     return {
-      totalPropertyValue: formatCurrency(property?.totalValue ?? 0),
+      totalPropertyValue: formatNumberAmount(
+        Number((property?.totalValue ?? 0) / Math.pow(10, 6)) || 0,
+      ),
       totalShares: "0",
       rentalIncomeHistory: "",
       expectedAnnualYield: "0",
@@ -137,7 +147,9 @@ export const TokenizationModal = ({
   }, [isConnected]);
 
   const sharesRaw = methods.watch("totalShares");
-  const totalValue = property?.totalValue ?? 0;
+  const totalPropertyValueRaw = methods.watch("totalPropertyValue");
+  const totalValue =
+    parseMoney(totalPropertyValueRaw) ?? property?.totalValue ?? 0;
   const sharesNum = Number(sharesRaw);
   const safeShares =
     Number.isFinite(sharesNum) && sharesNum > 0 ? sharesNum : 0;
@@ -221,7 +233,6 @@ export const TokenizationModal = ({
               name="totalPropertyValue"
               type="text"
               label={t("TokenizationForm.totalPropertyValue")}
-              disabled
               width="w-full md:w-[48%]"
             />
 
@@ -268,11 +279,11 @@ export const TokenizationModal = ({
                   {t("TokenizationForm.pricePerShare")}
                 </div>
                 <div className="text-4xl font-bold leading-tight">
-                  {formatCurrency(pricePerShare)}
+                  {formatUsdcAmount(pricePerShare)}
                 </div>
                 <div className="mt-1 text-xs text-textparagraph dark:text-textparagraphlight">
                   {t("TokenizationForm.calculatedAs", {
-                    totalValue: formatCurrency(totalValue),
+                    totalValue: formatUsdcAmount(totalValue),
                     shares: safeShares,
                   })}
                 </div>
@@ -298,7 +309,7 @@ export const TokenizationModal = ({
                   if (n < 0) return t("TokenizationForm.Errors.rentalMin");
                   if (n > totalValue) {
                     return t("TokenizationForm.Errors.rentalMax", {
-                      max: formatCurrency(totalValue),
+                      max: formatUsdcAmount(totalValue),
                     });
                   }
                   return true;
