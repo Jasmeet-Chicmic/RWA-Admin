@@ -99,29 +99,33 @@ const MODULAR_COMPLIANCE_ABI = [
   },
 ] as const;
 
-const MARKETPLACE_ADDRESS =
-  "0x4f087f31e47F6EC53e3eAaE7Eb7234B7A459DfBA" as `0x${string}`;
-
-const ID_ALICE_ADDRESS =
-  "0x23d76b684d44d82272a0291A0eae847d8D788592" as `0x${string}`;
-const ID_MARKETPLACE_ADDRESS =
-  "0xD6E9089959ADac38D0aB2C4941D9FE1373A1e5d3" as `0x${string}`;
-const ID_VAULT_ADDRESS =
-  "0x24581FB4F28435dC2f400a3c290bf71a5d467BD1" as `0x${string}`;
+const TOKEN_DECIMALS = 6;
+const POLYGON_AMOY_CHAIN_ID = 80002;
+const AMOY_DEPLOY_TREX_SUITE_GAS_CAP = BigInt(30000000);
 
 export type RunTokenizationFlowInput = {
   propertyId: string;
   propertyName: string;
   ownerAddress: `0x${string}`;
   ipfsUri: string;
-  totalUnits: number;
-  totalValue: number;
+  totalUnits: bigint;
+  totalValue: bigint;
 };
+
+export const TOKENIZATION_FLOW_STEPS = {
+  deployTrexSuite: "deployTrexSuite",
+  deployVault: "deployVault",
+  registerProperty: "registerProperty",
+} as const;
+
+export type TokenizationFlowStep =
+  (typeof TOKENIZATION_FLOW_STEPS)[keyof typeof TOKENIZATION_FLOW_STEPS];
 
 type RunTokenizationFlowParams = {
   walletClient: WalletClient;
   publicClient: PublicClient;
   input: RunTokenizationFlowInput;
+  onStepChange?: (step: TokenizationFlowStep) => void;
 };
 
 const toTokenSymbol = (propertyId: string) =>
@@ -136,6 +140,7 @@ export const runTokenizationFlow = async ({
   walletClient,
   publicClient,
   input,
+  onStepChange,
 }: RunTokenizationFlowParams) => {
   console.log("[TokenizationFlow] Starting flow", {
     input,
@@ -157,10 +162,8 @@ export const runTokenizationFlow = async ({
 
   const salt = `${input.propertyId}-${Date.now()}`;
   const claimTopic = BigInt(keccak256(stringToBytes("KYC_CLAIM")));
-  const pricePerShare = parseUnits(
-    (input.totalValue / input.totalUnits).toFixed(6),
-    6,
-  );
+  const tokenScale = BigInt(Math.pow(10, TOKEN_DECIMALS));
+  const pricePerShare = (input.totalValue * tokenScale) / input.totalUnits;
   console.log("[TokenizationFlow] Computed deploy params", {
     salt,
     claimTopic: claimTopic.toString(),
@@ -169,7 +172,13 @@ export const runTokenizationFlow = async ({
   });
 
   // 1) Deploy TREX suite
+  onStepChange?.(TOKENIZATION_FLOW_STEPS.deployTrexSuite);
   console.log("[TokenizationFlow] Step 1/3 deployTREXSuite called");
+  const gasConfig =
+    walletClient.chain?.id === POLYGON_AMOY_CHAIN_ID
+      ? { gas: AMOY_DEPLOY_TREX_SUITE_GAS_CAP }
+      : {};
+
   const deployTokenHash = await walletClient.writeContract({
     address: TOKENIZATION_CONTRACTS.trexFactory,
     abi: TREX_FACTORY_ABI,
@@ -196,6 +205,7 @@ export const runTokenizationFlow = async ({
     ],
     account: activeAccount,
     chain: walletClient.chain,
+    ...gasConfig,
   });
   console.log("[TokenizationFlow] deployTREXSuite tx submitted", {
     txHash: deployTokenHash,
@@ -208,7 +218,13 @@ export const runTokenizationFlow = async ({
     txHash: deployTokenReceipt.transactionHash,
     status: deployTokenReceipt.status,
   });
-
+  if (deployTokenReceipt.status !== "success") {
+    console.error("[TokenizationFlow] deployTREXSuite tx failed", {
+      txHash: deployTokenReceipt.transactionHash,
+      status: deployTokenReceipt.status,
+    });
+    throw new Error("deployTREXSuite tx failed");
+  }
   const tokenAddress = (await publicClient.readContract({
     address: TOKENIZATION_CONTRACTS.trexFactory,
     abi: TREX_FACTORY_ABI,
@@ -228,6 +244,7 @@ export const runTokenizationFlow = async ({
   }
 
   // 2) Deploy vault
+  onStepChange?.(TOKENIZATION_FLOW_STEPS.deployVault);
   console.log("[TokenizationFlow] Step 2/3 deployVault called");
   const deployVaultHash = await walletClient.writeContract({
     address: TOKENIZATION_CONTRACTS.vaultFactory,
@@ -241,6 +258,7 @@ export const runTokenizationFlow = async ({
     ],
     account: activeAccount,
     chain: walletClient.chain,
+    ...gasConfig,
   });
   console.log("[TokenizationFlow] deployVault tx submitted", {
     txHash: deployVaultHash,
@@ -270,6 +288,7 @@ export const runTokenizationFlow = async ({
   }
 
   // 3) Register property
+  onStepChange?.(TOKENIZATION_FLOW_STEPS.registerProperty);
   console.log("[TokenizationFlow] Step 3/3 registerProperty called");
   console.log("input.ownerAddress", input);
   const registerHash = await walletClient.writeContract({
@@ -279,6 +298,7 @@ export const runTokenizationFlow = async ({
     args: [input.ownerAddress, input.ipfsUri, tokenAddress, vaultAddress],
     account: activeAccount,
     chain: walletClient.chain,
+    ...gasConfig,
   });
   console.log("[TokenizationFlow] registerProperty tx submitted", {
     txHash: registerHash,
@@ -348,7 +368,7 @@ export const runTokenizationFlow = async ({
         address: tokenIdentityRegistry,
         abi: IDENTITY_REGISTRY_ABI,
         functionName: "registerIdentity",
-        args: [userAddr, idAddr, 42n],
+        args: [userAddr, idAddr, 42],
 
         account: activeAccount,
         chain: walletClient.chain,
@@ -383,26 +403,30 @@ export const runTokenizationFlow = async ({
 
     console.log(`[TokenizationFlow]   ${userKey} ✅ Verified`);
   };
-  console.log("vaultAddress", vaultAddress, ID_VAULT_ADDRESS);
+  console.log(
+    "vaultAddress",
+    vaultAddress,
+    TOKENIZATION_CONTRACTS.vaultIdentity,
+  );
   await ensureVerified({
     userKey: "Vault",
     userAddr: vaultAddress,
-    idAddr: ID_VAULT_ADDRESS,
+    idAddr: TOKENIZATION_CONTRACTS.vaultIdentity,
   });
   console.log(
     "MARKETPLACE_ADDRESS",
-    MARKETPLACE_ADDRESS,
-    ID_MARKETPLACE_ADDRESS,
+    TOKENIZATION_CONTRACTS.marketplace,
+    TOKENIZATION_CONTRACTS.marketplaceIdentity,
   );
   await ensureVerified({
     userKey: "Marketplace",
-    userAddr: MARKETPLACE_ADDRESS,
-    idAddr: ID_MARKETPLACE_ADDRESS,
+    userAddr: TOKENIZATION_CONTRACTS.marketplace,
+    idAddr: TOKENIZATION_CONTRACTS.marketplaceIdentity,
   });
   await ensureVerified({
     userKey: "Alice",
     userAddr: input.ownerAddress,
-    idAddr: ID_ALICE_ADDRESS,
+    idAddr: TOKENIZATION_CONTRACTS.aliceIdentity,
   });
 
   console.log("[TokenizationFlow] Step 5/5 minting & compliance binding");
@@ -423,6 +447,7 @@ export const runTokenizationFlow = async ({
       functionName: "unpause",
       account: activeAccount,
       chain: walletClient.chain,
+      gas: BigInt(800000),
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({
@@ -448,6 +473,7 @@ export const runTokenizationFlow = async ({
     args: [vaultAddress, mintAmount],
     account: activeAccount,
     chain: walletClient.chain,
+    ...gasConfig,
   });
 
   const mintReceipt = await publicClient.waitForTransactionReceipt({
@@ -486,6 +512,7 @@ export const runTokenizationFlow = async ({
       args: [vaultAddress],
       account: activeAccount,
       chain: walletClient.chain,
+      ...gasConfig,
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({

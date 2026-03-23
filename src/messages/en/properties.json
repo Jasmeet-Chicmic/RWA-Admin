@@ -100,6 +100,11 @@
       "deployed": "Contracts deployed successfully.",
       "failed": "Contract deployment failed."
     },
+    "Progress": {
+      "deployTrexSuite": "Deploying token suite",
+      "deployVault": "Deploying vault",
+      "registerProperty": "Registering property"
+    },
     "Errors": {
       "sharesRequired": "Shares are required",
       "sharesMin": "Shares must be greater than 0",

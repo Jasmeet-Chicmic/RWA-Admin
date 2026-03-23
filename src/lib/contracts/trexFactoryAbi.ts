@@ -1,7 +1,11 @@
 export const TREX_FACTORY_ABI = [
   {
     inputs: [
-      { internalType: "address", name: "implementationAuthority_", type: "address" },
+      {
+        internalType: "address",
+        name: "implementationAuthority_",
+        type: "address",
+      },
       { internalType: "address", name: "idFactory_", type: "address" },
     ],
     stateMutability: "nonpayable",
@@ -9,20 +13,39 @@ export const TREX_FACTORY_ABI = [
   },
   {
     anonymous: false,
-    inputs: [{ indexed: true, internalType: "address", name: "_addr", type: "address" }],
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_addr",
+        type: "address",
+      },
+    ],
     name: "Deployed",
     type: "event",
   },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: "address", name: "_idFactory", type: "address" }],
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_idFactory",
+        type: "address",
+      },
+    ],
     name: "IdFactorySet",
     type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_implementationAuthority", type: "address" },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_implementationAuthority",
+        type: "address",
+      },
     ],
     name: "ImplementationAuthoritySet",
     type: "event",
@@ -30,8 +53,18 @@ export const TREX_FACTORY_ABI = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
     ],
     name: "OwnershipTransferred",
     type: "event",
@@ -39,11 +72,31 @@ export const TREX_FACTORY_ABI = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_token", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
       { indexed: false, internalType: "address", name: "_ir", type: "address" },
-      { indexed: false, internalType: "address", name: "_irs", type: "address" },
-      { indexed: false, internalType: "address", name: "_tir", type: "address" },
-      { indexed: false, internalType: "address", name: "_ctr", type: "address" },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_irs",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_tir",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_ctr",
+        type: "address",
+      },
       { indexed: false, internalType: "address", name: "_mc", type: "address" },
       { indexed: true, internalType: "string", name: "_salt", type: "string" },
     ],
@@ -63,8 +116,16 @@ export const TREX_FACTORY_ABI = [
           { internalType: "address", name: "ONCHAINID", type: "address" },
           { internalType: "address[]", name: "irAgents", type: "address[]" },
           { internalType: "address[]", name: "tokenAgents", type: "address[]" },
-          { internalType: "address[]", name: "complianceModules", type: "address[]" },
-          { internalType: "bytes[]", name: "complianceSettings", type: "bytes[]" },
+          {
+            internalType: "address[]",
+            name: "complianceModules",
+            type: "address[]",
+          },
+          {
+            internalType: "bytes[]",
+            name: "complianceSettings",
+            type: "bytes[]",
+          },
         ],
         internalType: "struct ITREXFactory.TokenDetails",
         name: "_tokenDetails",
@@ -74,7 +135,11 @@ export const TREX_FACTORY_ABI = [
         components: [
           { internalType: "uint256[]", name: "claimTopics", type: "uint256[]" },
           { internalType: "address[]", name: "issuers", type: "address[]" },
-          { internalType: "uint256[][]", name: "issuerClaims", type: "uint256[][]" },
+          {
+            internalType: "uint256[][]",
+            name: "issuerClaims",
+            type: "uint256[][]",
+          },
         ],
         internalType: "struct ITREXFactory.ClaimDetails",
         name: "_claimDetails",
@@ -140,7 +205,11 @@ export const TREX_FACTORY_ABI = [
   },
   {
     inputs: [
-      { internalType: "address", name: "implementationAuthority_", type: "address" },
+      {
+        internalType: "address",
+        name: "implementationAuthority_",
+        type: "address",
+      },
     ],
     name: "setImplementationAuthority",
     outputs: [],
@@ -162,4 +231,3 @@ export const TREX_FACTORY_ABI = [
     type: "function",
   },
 ] as const;
-

@@ -99,6 +99,11 @@
       "deployed": "Contrats déployés avec succès.",
       "failed": "Échec du déploiement des contrats."
     },
+    "Progress": {
+      "deployTrexSuite": "Déploiement de la suite token",
+      "deployVault": "Déploiement du coffre",
+      "registerProperty": "Enregistrement de la propriété"
+    },
     "Errors": {
       "sharesRequired": "Le nombre de parts est requis",
       "sharesMin": "Le nombre de parts doit être supérieur à 0",

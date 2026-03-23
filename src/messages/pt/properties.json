@@ -99,6 +99,11 @@
       "deployed": "Contratos implantados com sucesso.",
       "failed": "Falha ao implantar contratos."
     },
+    "Progress": {
+      "deployTrexSuite": "Implantando suite de token",
+      "deployVault": "Implantando cofre",
+      "registerProperty": "Registrando propriedade"
+    },
     "Errors": {
       "sharesRequired": "As cotas são obrigatórias",
       "sharesMin": "As cotas devem ser maiores que 0",

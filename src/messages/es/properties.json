@@ -99,6 +99,11 @@
       "deployed": "Contratos desplegados correctamente.",
       "failed": "Error al desplegar contratos."
     },
+    "Progress": {
+      "deployTrexSuite": "Desplegando suite de token",
+      "deployVault": "Desplegando bóveda",
+      "registerProperty": "Registrando propiedad"
+    },
     "Errors": {
       "sharesRequired": "Las participaciones son obligatorias",
       "sharesMin": "Las participaciones deben ser mayores que 0",
