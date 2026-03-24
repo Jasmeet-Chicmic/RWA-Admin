@@ -177,3 +177,17 @@ export const API_END_POINTS = {
   BROADCAST_SEND_MESSAGE: `/messaging/api/admin/send-message`,
   MARKETING_SUBSCRIPTION: `/security/api/admin/marketing-subscription`,
 };
+
+export const INTERNAL_API_PATHS = {
+  PROPERTY_ONCHAIN_INITIATE: "/admin-portal/api/property-onchain/initiate",
+  PROPERTY_ONCHAIN_TREX_DEPLOYED:
+    "/admin-portal/api/property-onchain/trex-deployed",
+  PROPERTY_ONCHAIN_VAULT_DEPLOYED:
+    "/admin-portal/api/property-onchain/vault-deployed",
+  PROPERTY_ONCHAIN_PROPERTY_REGISTERED:
+    "/admin-portal/api/property-onchain/property-registered",
+  PROPERTY_ONCHAIN_KYC_DONE: "/admin-portal/api/property-onchain/kyc-done",
+  PROPERTY_ONCHAIN_UNPAUSE_DONE:
+    "/admin-portal/api/property-onchain/unpause-done",
+  PROPERTY_ONCHAIN_MINTED: "/admin-portal/api/property-onchain/minted",
+} as const;

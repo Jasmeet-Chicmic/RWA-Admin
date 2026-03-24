@@ -49,6 +49,19 @@ const getLoadingMessage = (
 
   return step ? progressMessages[step] : progressMessages.deployTrexSuite;
 };
+
+const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error && error.message) return error.message;
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof (error as { message?: unknown }).message === "string"
+  ) {
+    return (error as { message: string }).message;
+  }
+  return undefined;
+};
 //Test
 const formatUsdcAmount = (value: number, maximumFractionDigits = 2) => {
   const normalizedValue = Number.isFinite(value) ? value : 0;
@@ -218,7 +231,11 @@ export const TokenizationModal = ({
       });
 
       console.log("[TokenizationModal] Tokenization flow result", result);
-      toast.success(t("TokenizationForm.Success.deployed"));
+      toast.success(
+        result.apiMessages?.trexDeployed ||
+          result.apiMessages?.initiate ||
+          t("TokenizationForm.Success.deployed"),
+      );
       onClose();
       router.refresh();
     } catch (error) {
@@ -227,7 +244,9 @@ export const TokenizationModal = ({
         propertyId: property.id,
         organisationId,
       });
-      toast.error(t("TokenizationForm.Success.failed"));
+      toast.error(
+        getErrorMessage(error) || t("TokenizationForm.Success.failed"),
+      );
     } finally {
       console.log("[TokenizationModal] Submit flow finished");
       setCurrentStep(undefined);

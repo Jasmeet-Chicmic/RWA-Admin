@@ -12,6 +12,12 @@ import {
   REAL_ESTATE_VAULT_FACTORY_ABI,
 } from "./realEstateFlowAbi";
 import { TOKENIZATION_CONTRACTS } from "./tokenizationConfig";
+import { INTERNAL_API_PATHS } from "@/shared/api";
+import { postApiJson } from "@/shared/clientApi";
+import {
+  InitiateOnchainTrackingResponse,
+  InternalApiBaseResponse,
+} from "@/shared/types/internalApi";
 import { toBaseUnitsBigInt } from "@/shared/utils/unitUtils";
 
 const TOKEN_ABI = [
@@ -103,6 +109,9 @@ const MODULAR_COMPLIANCE_ABI = [
 const TOKEN_DECIMALS = 6;
 const POLYGON_AMOY_CHAIN_ID = 80002;
 const AMOY_DEPLOY_TREX_SUITE_GAS_CAP = BigInt(30000000);
+const AMOY_MIN_PRIORITY_FEE_PER_GAS = BigInt(25000000000);
+const AMOY_MIN_MAX_FEE_PER_GAS = BigInt(30000000000);
+const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 export type RunTokenizationFlowInput = {
   propertyId: string;
@@ -136,6 +145,11 @@ const toTokenSymbol = (propertyId: string) =>
       .slice(-6)
       .toUpperCase() || "RWA"
   }`;
+
+const postTokenizationApi = <TResponse, TBody>(path: string, body: TBody) =>
+  postApiJson<TResponse, TBody>(path, body, {
+    timeoutMs: TOKENIZATION_API_TIMEOUT_MS,
+  });
 
 export const runTokenizationFlow = async ({
   walletClient,
@@ -172,12 +186,63 @@ export const runTokenizationFlow = async ({
     owner: activeAccount.address,
   });
 
+  console.log("[TokenizationFlow] Initiating onchain tracking job");
+  const initiatePayload = await postTokenizationApi<
+    InitiateOnchainTrackingResponse,
+    { propertyId: string }
+  >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_INITIATE, {
+    propertyId: input.propertyId,
+  });
+
+  if (!initiatePayload?.status) {
+    console.error("[TokenizationFlow] Failed to initiate onchain tracking", {
+      status: initiatePayload?.statusCode,
+      payload: initiatePayload,
+    });
+    throw new Error(
+      initiatePayload?.message ||
+        "Failed to initiate onchain property tracking job",
+    );
+  }
+  console.log("[TokenizationFlow] Initiate API succeeded", {
+    statusCode: initiatePayload?.statusCode,
+    message: initiatePayload?.message,
+  });
+
+  const jobId = initiatePayload?.data?.jobId;
+  if (!jobId) {
+    console.error("[TokenizationFlow] Missing jobId in initiate response", {
+      payload: initiatePayload,
+    });
+    throw new Error("Missing jobId from onchain initiate API");
+  }
+
+  console.log("[TokenizationFlow] Onchain tracking job created", { jobId });
+  const apiMessages: {
+    initiate?: string;
+    trexDeployed?: string;
+    vaultDeployed?: string;
+    propertyRegistered?: string;
+    kycDone?: string;
+    unpauseDone?: string;
+    minted?: string;
+  } = {
+    initiate: initiatePayload?.message,
+  };
+
   // 1) Deploy TREX suite
   onStepChange?.(TOKENIZATION_FLOW_STEPS.deployTrexSuite);
   console.log("[TokenizationFlow] Step 1/3 deployTREXSuite called");
   const gasConfig =
     walletClient.chain?.id === POLYGON_AMOY_CHAIN_ID
       ? { gas: AMOY_DEPLOY_TREX_SUITE_GAS_CAP }
+      : {};
+  const feeConfig =
+    walletClient.chain?.id === POLYGON_AMOY_CHAIN_ID
+      ? {
+          maxPriorityFeePerGas: AMOY_MIN_PRIORITY_FEE_PER_GAS,
+          maxFeePerGas: AMOY_MIN_MAX_FEE_PER_GAS,
+        }
       : {};
 
   const deployTokenHash = await walletClient.writeContract({
@@ -207,6 +272,7 @@ export const runTokenizationFlow = async ({
     account: activeAccount,
     chain: walletClient.chain,
     ...gasConfig,
+    ...feeConfig,
   });
   console.log("[TokenizationFlow] deployTREXSuite tx submitted", {
     txHash: deployTokenHash,
@@ -225,7 +291,34 @@ export const runTokenizationFlow = async ({
       status: deployTokenReceipt.status,
     });
     throw new Error("deployTREXSuite tx failed");
+    return;
   }
+
+  const trexDeployedPayload = await postTokenizationApi<
+    InternalApiBaseResponse,
+    { propertyId: string; txHash: `0x${string}` }
+  >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_TREX_DEPLOYED, {
+    propertyId: input.propertyId,
+    txHash: deployTokenReceipt.transactionHash,
+  });
+
+  if (!trexDeployedPayload?.status) {
+    console.error("[TokenizationFlow] Failed to report trex deployment", {
+      status: trexDeployedPayload?.statusCode,
+      payload: trexDeployedPayload,
+    });
+    throw new Error(
+      trexDeployedPayload?.message || "Failed to report trex deployment",
+    );
+    return;
+  }
+  console.log("[TokenizationFlow] trex-deployed API succeeded", {
+    statusCode: trexDeployedPayload?.statusCode,
+    message: trexDeployedPayload?.message,
+    txHash: deployTokenReceipt.transactionHash,
+  });
+  apiMessages.trexDeployed = trexDeployedPayload?.message;
+
   const tokenAddress = (await publicClient.readContract({
     address: TOKENIZATION_CONTRACTS.trexFactory,
     abi: TREX_FACTORY_ABI,
@@ -260,6 +353,7 @@ export const runTokenizationFlow = async ({
     account: activeAccount,
     chain: walletClient.chain,
     ...gasConfig,
+    ...feeConfig,
   });
   console.log("[TokenizationFlow] deployVault tx submitted", {
     txHash: deployVaultHash,
@@ -269,6 +363,30 @@ export const runTokenizationFlow = async ({
   console.log("[TokenizationFlow] deployVault tx confirmed", {
     txHash: deployVaultHash,
   });
+
+  const vaultDeployedPayload = await postTokenizationApi<
+    InternalApiBaseResponse,
+    { propertyId: string; txHash: `0x${string}` }
+  >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_VAULT_DEPLOYED, {
+    propertyId: input.propertyId,
+    txHash: deployVaultHash,
+  });
+
+  if (!vaultDeployedPayload?.status) {
+    console.error("[TokenizationFlow] Failed to report vault deployment", {
+      status: vaultDeployedPayload?.statusCode,
+      payload: vaultDeployedPayload,
+    });
+    throw new Error(
+      vaultDeployedPayload?.message || "Failed to report vault deployment",
+    );
+  }
+  console.log("[TokenizationFlow] vault-deployed API succeeded", {
+    statusCode: vaultDeployedPayload?.statusCode,
+    message: vaultDeployedPayload?.message,
+    txHash: deployVaultHash,
+  });
+  apiMessages.vaultDeployed = vaultDeployedPayload?.message;
 
   const vaultAddress = (await publicClient.readContract({
     address: TOKENIZATION_CONTRACTS.vaultFactory,
@@ -300,6 +418,7 @@ export const runTokenizationFlow = async ({
     account: activeAccount,
     chain: walletClient.chain,
     ...gasConfig,
+    ...feeConfig,
   });
   console.log("[TokenizationFlow] registerProperty tx submitted", {
     txHash: registerHash,
@@ -313,7 +432,34 @@ export const runTokenizationFlow = async ({
     status: registerReceipt.status,
   });
 
+  const propertyRegisteredPayload = await postTokenizationApi<
+    InternalApiBaseResponse,
+    { propertyId: string; txHash: `0x${string}` }
+  >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_PROPERTY_REGISTERED, {
+    propertyId: input.propertyId,
+    txHash: registerReceipt.transactionHash,
+  });
+
+  if (!propertyRegisteredPayload?.status) {
+    console.error("[TokenizationFlow] Failed to report property registration", {
+      status: propertyRegisteredPayload?.statusCode,
+      payload: propertyRegisteredPayload,
+    });
+    throw new Error(
+      propertyRegisteredPayload?.message ||
+        "Failed to report property registration",
+    );
+  }
+  console.log("[TokenizationFlow] property-registered API succeeded", {
+    statusCode: propertyRegisteredPayload?.statusCode,
+    message: propertyRegisteredPayload?.message,
+    txHash: registerReceipt.transactionHash,
+  });
+  apiMessages.propertyRegistered = propertyRegisteredPayload?.message;
+
   const baseResult = {
+    jobId,
+    apiMessages,
     salt,
     tokenAddress,
     vaultAddress,
@@ -374,6 +520,7 @@ export const runTokenizationFlow = async ({
         account: activeAccount,
         chain: walletClient.chain,
         gas: BigInt(800000),
+        ...feeConfig,
       });
 
       const receipt = await publicClient.waitForTransactionReceipt({
@@ -387,6 +534,31 @@ export const runTokenizationFlow = async ({
           txHash: receipt.transactionHash,
         },
       );
+
+      const kycDonePayload = await postTokenizationApi<
+        InternalApiBaseResponse,
+        { propertyId: string; txHash: `0x${string}` }
+      >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_KYC_DONE, {
+        propertyId: input.propertyId,
+        txHash: receipt.transactionHash,
+      });
+
+      if (!kycDonePayload?.status) {
+        console.error("[TokenizationFlow] Failed to report kyc done", {
+          status: kycDonePayload?.statusCode,
+          payload: kycDonePayload,
+          userKey,
+        });
+        throw new Error(kycDonePayload?.message || "Failed to report kyc done");
+      }
+
+      console.log("[TokenizationFlow] kyc-done API succeeded", {
+        statusCode: kycDonePayload?.statusCode,
+        message: kycDonePayload?.message,
+        txHash: receipt.transactionHash,
+        userKey,
+      });
+      apiMessages.kycDone = kycDonePayload?.message;
     }
 
     const verified = (await publicClient.readContract({
@@ -449,6 +621,7 @@ export const runTokenizationFlow = async ({
       account: activeAccount,
       chain: walletClient.chain,
       gas: BigInt(800000),
+      ...feeConfig,
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({
@@ -459,6 +632,31 @@ export const runTokenizationFlow = async ({
       status: receipt.status,
       txHash: receipt.transactionHash,
     });
+
+    const unpauseDonePayload = await postTokenizationApi<
+      InternalApiBaseResponse,
+      { propertyId: string; txHash: `0x${string}` }
+    >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_UNPAUSE_DONE, {
+      propertyId: input.propertyId,
+      txHash: receipt.transactionHash,
+    });
+
+    if (!unpauseDonePayload?.status) {
+      console.error("[TokenizationFlow] Failed to report unpause done", {
+        status: unpauseDonePayload?.statusCode,
+        payload: unpauseDonePayload,
+      });
+      throw new Error(
+        unpauseDonePayload?.message || "Failed to report unpause done",
+      );
+    }
+
+    console.log("[TokenizationFlow] unpause-done API succeeded", {
+      statusCode: unpauseDonePayload?.statusCode,
+      message: unpauseDonePayload?.message,
+      txHash: receipt.transactionHash,
+    });
+    apiMessages.unpauseDone = unpauseDonePayload?.message;
   }
 
   const mintAmount = parseUnits(String(input.totalUnits), 6);
@@ -475,11 +673,35 @@ export const runTokenizationFlow = async ({
     account: activeAccount,
     chain: walletClient.chain,
     ...gasConfig,
+    ...feeConfig,
   });
 
   const mintReceipt = await publicClient.waitForTransactionReceipt({
     hash: mintTxHash,
   });
+
+  const mintedPayload = await postTokenizationApi<
+    InternalApiBaseResponse,
+    { propertyId: string; txHash: `0x${string}` }
+  >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_MINTED, {
+    propertyId: input.propertyId,
+    txHash: mintReceipt.transactionHash,
+  });
+
+  if (!mintedPayload?.status) {
+    console.error("[TokenizationFlow] Failed to report minted", {
+      status: mintedPayload?.statusCode,
+      payload: mintedPayload,
+    });
+    throw new Error(mintedPayload?.message || "Failed to report minted");
+  }
+
+  console.log("[TokenizationFlow] minted API succeeded", {
+    statusCode: mintedPayload?.statusCode,
+    message: mintedPayload?.message,
+    txHash: mintReceipt.transactionHash,
+  });
+  apiMessages.minted = mintedPayload?.message;
 
   console.log("[TokenizationFlow] token.mint confirmed", {
     status: mintReceipt.status,
@@ -514,6 +736,7 @@ export const runTokenizationFlow = async ({
       account: activeAccount,
       chain: walletClient.chain,
       ...gasConfig,
+      ...feeConfig,
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({
