@@ -190,4 +190,7 @@ export const INTERNAL_API_PATHS = {
   PROPERTY_ONCHAIN_UNPAUSE_DONE:
     "/admin-portal/api/property-onchain/unpause-done",
   PROPERTY_ONCHAIN_MINTED: "/admin-portal/api/property-onchain/minted",
+  PROPERTY_ONCHAIN_COMPLIANCE_BOUND:
+    "/admin-portal/api/property-onchain/compliance-bound",
+  PROPERTY_ONCHAIN_STATUS: "/admin-portal/api/property-onchain/status",
 } as const;
