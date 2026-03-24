@@ -26,6 +26,7 @@ import {
   fromBaseUnits,
   toBaseUnitsBigInt,
 } from "@/shared/utils/unitUtils";
+import { handleWeb3Error } from "@/shared/utils/web3Error";
 
 type TokenizationFormValues = {
   ownerAddress: string;
@@ -50,19 +51,6 @@ const getLoadingMessage = (
   return step ? progressMessages[step] : progressMessages.deployTrexSuite;
 };
 
-const getErrorMessage = (error: unknown) => {
-  if (error instanceof Error && error.message) return error.message;
-  if (
-    error &&
-    typeof error === "object" &&
-    "message" in error &&
-    typeof (error as { message?: unknown }).message === "string"
-  ) {
-    return (error as { message: string }).message;
-  }
-  return undefined;
-};
-//Test
 const formatUsdcAmount = (value: number, maximumFractionDigits = 2) => {
   const normalizedValue = Number.isFinite(value) ? value : 0;
   return `${formatToFixed(normalizedValue, maximumFractionDigits)} ${DISPLAY_CURRENCY}`;
@@ -244,9 +232,9 @@ export const TokenizationModal = ({
         propertyId: property.id,
         organisationId,
       });
-      toast.error(
-        getErrorMessage(error) || t("TokenizationForm.Success.failed"),
-      );
+      // Keep full error in logs, but show normalized user-friendly message in UI.
+      const uiMessage = handleWeb3Error(error);
+      toast.error(uiMessage || t("TokenizationForm.Success.failed"));
     } finally {
       console.log("[TokenizationModal] Submit flow finished");
       setCurrentStep(undefined);
