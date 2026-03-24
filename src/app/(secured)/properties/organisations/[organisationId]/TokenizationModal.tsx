@@ -232,8 +232,8 @@ export const TokenizationModal = ({
 
       console.log("[TokenizationModal] Tokenization flow result", result);
       toast.success(
-        result.apiMessages?.trexDeployed ||
-          result.apiMessages?.initiate ||
+        result?.apiMessages?.trexDeployed ||
+          result?.apiMessages?.initiate ||
           t("TokenizationForm.Success.deployed"),
       );
       onClose();
