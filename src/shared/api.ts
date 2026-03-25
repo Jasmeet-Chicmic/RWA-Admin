@@ -179,6 +179,8 @@ export const API_END_POINTS = {
 };
 
 export const INTERNAL_API_PATHS = {
+  ADMIN_AUTH_LOGIN: "/admin-portal/api/admin/auth/login",
+  ADMIN_WALLET_VERIFY: "/admin-portal/api/admin/wallet/verify",
   PROPERTY_ONCHAIN_INITIATE: "/admin-portal/api/property-onchain/initiate",
   PROPERTY_ONCHAIN_TREX_DEPLOYED:
     "/admin-portal/api/property-onchain/trex-deployed",

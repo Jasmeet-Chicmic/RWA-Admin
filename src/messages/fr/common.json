@@ -103,6 +103,8 @@
   },
   "Log out": "Se déconnecter",
   "Connect Wallet": "Connecter le portefeuille",
+  "Verify Wallet Signature": "Verifier la signature du portefeuille",
+  "Back to Login": "Retour à la connexion",
   "Disconnect Wallet": "Déconnecter le portefeuille",
   "Logging out": "Déconnexion en cours...",
   "Search Placeholder": "Rechercher (Ctrl + K)",

@@ -121,6 +121,8 @@
   },
   "Log out": "Log out",
   "Connect Wallet": "Connect Wallet",
+  "Verify Wallet Signature": "Verify Wallet Signature",
+  "Back to Login": "Back to Login",
   "Disconnect Wallet": "Disconnect Wallet",
   "Logging out": "Logging out...",
   "Search Placeholder": "Search (Ctrl + K)",

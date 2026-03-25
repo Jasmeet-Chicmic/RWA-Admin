@@ -103,6 +103,8 @@
   },
   "Log out": "Cerrar sesión",
   "Connect Wallet": "Conectar billetera",
+  "Verify Wallet Signature": "Verificar firma de billetera",
+  "Back to Login": "Volver al inicio de sesión",
   "Disconnect Wallet": "Desconectar billetera",
   "Logging out": "Cerrando sesión...",
   "Search Placeholder": "Buscar (Ctrl + K)",

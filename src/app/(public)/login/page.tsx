@@ -1,47 +1,17 @@
 "use client";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
-import { RayptoLogoDark } from "@/assets";
-import { loginAction } from "@/api/auth";
+
+import { RayptoLogo, RayptoLogoDark } from "@/assets";
 import FormLayout from "@/components/layouts/FormLayout";
 import { FormLayoutType } from "@/components/layouts/FormLayout/helpers/constants";
-import FormBuilder from "@/components/molecules/FormBuilder";
-import { getRequiredFieldMessage } from "@/components/molecules/FormBuilder/helpers/utils";
-import { FormConfig } from "@/components/molecules/FormBuilder/types";
-import { ROUTES } from "@/shared/routes";
-import { FIELD_NAMES, REGEX, STRING } from "@/shared/strings";
 import { THEME_TYPE } from "@/shared/constants";
-import { createSessionClient } from "@/shared/utils";
 
-export interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-const config: FormConfig<LoginFormValues> = [
-  {
-    name: FIELD_NAMES.EMAIL,
-    label: STRING.EMAIL,
-    type: FIELD_NAMES.EMAIL,
-    placeholder: "john.doe@example.com",
-    validation: {
-      required: getRequiredFieldMessage(STRING.EMAIL),
-      pattern: {
-        value: REGEX.EMAIL,
-        message: "Invalid email format",
-      },
-    },
-  },
-  {
-    name: FIELD_NAMES.PASSWORD,
-    label: STRING.PASSWORD,
-    type: FIELD_NAMES.PASSWORD,
-    placeholder: "••••••••",
-  },
-];
+import LoginFormStep from "./LoginFormStep";
+import WalletConnectStep from "./WalletConnectStep";
 
 const blobBase: React.CSSProperties = {
   position: "fixed",
@@ -81,10 +51,10 @@ const blobBottomLeft: React.CSSProperties = {
 };
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
+  const [nonce, setNonce] = useState<string>();
+  const [tempToken, setTempToken] = useState<string>();
 
-  const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -98,46 +68,24 @@ const Login = () => {
   }, [searchParams]);
 
   const logoSrc =
-    mounted && resolvedTheme === THEME_TYPE.LIGHT && RayptoLogoDark.src;
+    mounted && resolvedTheme === THEME_TYPE.LIGHT
+      ? RayptoLogo.src
+      : RayptoLogoDark.src;
 
-  const handleSubmit = async (data: LoginFormValues) => {
-    const payload = {
-      email: data.email,
-      password: data.password,
-      redirectUrl: null,
-    };
+  const handleNonceToken = ({
+    nonce: nextNonce,
+    tempToken: nextTempToken,
+  }: {
+    nonce: string;
+    tempToken: string;
+  }) => {
+    setNonce(nextNonce);
+    setTempToken(nextTempToken);
+  };
 
-    try {
-      setIsLoading(true);
-
-      const res = await loginAction(payload);
-      console.log("🔥 Login API response:", res);
-
-      // Check for success status, status code 200, and ensure data exists
-      if (res.status && res.statusCode === 200 && res.data) {
-        const { token } = res.data;
-
-        if (token) {
-          const success = await createSessionClient(token);
-          if (success) {
-            localStorage.setItem("token", token);
-            toast.success("Login successful");
-            router.push(ROUTES.DASHBOARD_ANALYTICS);
-          }
-        } else {
-          toast.error("Authentication token missing in response.");
-        }
-      } else {
-        toast.error(
-          res.message || "Login failed. Please check your credentials.",
-        );
-      }
-    } catch (error) {
-      console.error("🔥 Login API error:", error);
-      toast.error("An unexpected error occurred. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
+  const handleBackToLogin = () => {
+    setNonce(undefined);
+    setTempToken(undefined);
   };
 
   return (
@@ -159,15 +107,15 @@ const Login = () => {
           <h4 className="mb-1 text-[20px] leading-tight sm:text-[24px] sm:leading-[32px]">
             Welcome back to Townly
           </h4>
-          <p className="mb-6">Please sign in to your Admin account</p>
-          <FormBuilder<LoginFormValues>
-            formConfig={config}
-            onSubmit={handleSubmit}
-            submitText="Login"
-            isLoading={isLoading}
-            className="mb-0"
-            isLoginVariant={true}
-          />
+          {!nonce || !tempToken ? (
+            <LoginFormStep onNonceToken={handleNonceToken} />
+          ) : (
+            <WalletConnectStep
+              nonce={nonce}
+              tempToken={tempToken}
+              onBackToLogin={handleBackToLogin}
+            />
+          )}
         </FormLayout>
       </div>
     </div>

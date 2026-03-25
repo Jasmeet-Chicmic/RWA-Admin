@@ -103,6 +103,8 @@
   },
   "Log out": "Sair",
   "Connect Wallet": "Conectar carteira",
+  "Verify Wallet Signature": "Verificar assinatura da carteira",
+  "Back to Login": "Voltar para login",
   "Disconnect Wallet": "Desconectar carteira",
   "Logging out": "Saindo...",
   "Search Placeholder": "Pesquisar (Ctrl + K)",
