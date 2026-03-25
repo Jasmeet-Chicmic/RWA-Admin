@@ -126,6 +126,8 @@
       "rentalMin": "El ingreso por alquiler no puede ser negativo",
       "rentalMax": "El ingreso por alquiler no puede superar {max}"
     }
-  }
+  },
+  "Edit": "Editar",
+  "Delete": "Eliminar",
+  "View": "Ver"
 }
-

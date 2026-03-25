@@ -1,6 +1,11 @@
 import ErrorState from "@/components/atoms/ErrorState";
-import OrganisationsTable, { OrganisationRow } from "./OrganisationsTable";
-import { getAdminOrganisationsAction } from "@/api/adminOrganisations";
+import PropertyOrganisationsTable, {
+  OrganisationRow,
+} from "./PropertyOrganisationsTable";
+import {
+  getAdminOrganisationsAction,
+  AdminOrganisation,
+} from "@/api/adminOrganisations";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -26,22 +31,25 @@ const OrganisationsPage = async ({
     const items = res?.data?.items ?? [];
     const totalCount = res?.data?.totalCount ?? items.length;
 
-    const organisations: OrganisationRow[] = items.map((org) => ({
-      id: org.id,
-      name: org.name,
-      walletAddress: org.walletAddress,
-      entityType: org.entityType,
-      registrationNumber: org.registrationNumber,
-      jurisdiction: org.jurisdiction,
-      incorporationDate: org.incorporationDate,
-      status: org.status,
-      propertyHolds: org.propertyHolds,
-    }));
+    const organisations: OrganisationRow[] = items.map(
+      (org: AdminOrganisation) => ({
+        id: org.id,
+        name: org.name,
+        entityType: org.entityType,
+        registrationNumber: org.registrationNumber,
+        jurisdiction: org.jurisdiction,
+        incorporationDate: org.incorporationDate,
+        propertyHolds: org.propertyHolds,
+      }),
+    );
 
     return (
-      <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
+      <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase p-6 rounded-xl">
         <div className="overflow-x-auto">
-          <OrganisationsTable data={organisations} totalCount={totalCount} />
+          <PropertyOrganisationsTable
+            data={organisations}
+            totalCount={totalCount}
+          />
         </div>
       </div>
     );

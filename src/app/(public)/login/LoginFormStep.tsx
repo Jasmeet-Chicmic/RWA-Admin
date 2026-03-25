@@ -39,7 +39,11 @@ const config: FormConfig<LoginFormValues> = [
 ];
 
 type LoginFormStepProps = {
-  onNonceToken: (payload: { nonce: string; tempToken: string; message?: string }) => void;
+  onNonceToken: (payload: {
+    nonce: string;
+    tempToken: string;
+    message?: string;
+  }) => void;
 };
 
 const LoginFormStep = ({ onNonceToken }: LoginFormStepProps) => {
@@ -108,4 +112,3 @@ const LoginFormStep = ({ onNonceToken }: LoginFormStepProps) => {
 };
 
 export default LoginFormStep;
-

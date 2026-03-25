@@ -135,5 +135,8 @@
       "rentalMin": "Rental income cannot be negative",
       "rentalMax": "Rental income cannot exceed {max}"
     }
-  }
+  },
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "View": "View"
 }

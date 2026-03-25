@@ -60,7 +60,7 @@ export const navItems: NavItem[] = [
       ROUTES.PROPERTIES_LIST,
       ROUTES.PROPERTIES_DISAPPROVED,
       ROUTES.PROPERTIES_ASSETS,
-      ROUTES.ORGANISATIONS,
+      ROUTES.PROPERTIES_ORGANISATIONS,
     ],
     children: [
       {
@@ -80,8 +80,8 @@ export const navItems: NavItem[] = [
       },
       {
         label: "Organisation Properties",
-        path: ROUTES.ORGANISATIONS,
-        activePaths: [ROUTES.ORGANISATIONS],
+        path: ROUTES.PROPERTIES_ORGANISATIONS,
+        activePaths: [ROUTES.PROPERTIES_ORGANISATIONS],
       },
     ],
   },

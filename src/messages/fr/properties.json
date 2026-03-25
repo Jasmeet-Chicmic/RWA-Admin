@@ -126,6 +126,8 @@
       "rentalMin": "Le revenu locatif ne peut pas être négatif",
       "rentalMax": "Le revenu locatif ne peut pas dépasser {max}"
     }
-  }
+  },
+  "Edit": "Modifier",
+  "Delete": "Supprimer",
+  "View": "Voir"
 }
-

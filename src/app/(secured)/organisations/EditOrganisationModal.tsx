@@ -175,8 +175,8 @@ const EditOrganisationModal = ({
       if (res.statusCode === 200 || res.status) {
         toast.success(
           tCommon("{entity} {action} successfully", {
-            entity: tCommon("Organisation"),
-            action: tCommon("updated"),
+            entity: t("Organisation Name"),
+            action: t("Edit"),
           }),
         );
         setOpen(false);
@@ -185,8 +185,8 @@ const EditOrganisationModal = ({
         toast.error(
           (res as { message?: string }).message ||
             tCommon("Failed to {action} {entity}", {
-              action: tCommon("update"),
-              entity: tCommon("Organisation").toLowerCase(),
+              action: t("Edit").toLowerCase(),
+              entity: t("Organisation Name").toLowerCase(),
             }),
         );
       }

@@ -36,7 +36,10 @@ export async function POST(req: Request) {
       `${baseUrl.replace(/\/$/, "")}/admin/auth/login`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json", accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
         body: JSON.stringify({
           email: body.email,
           password: body.password,
@@ -54,7 +57,9 @@ export async function POST(req: Request) {
       {
         status: false,
         message:
-          error instanceof Error ? error.message : "Failed to perform login request",
+          error instanceof Error
+            ? error.message
+            : "Failed to perform login request",
         statusCode: 500,
       },
       { status: 500 },

@@ -110,65 +110,6 @@ const OrganisationPropertiesTable = ({
           );
         },
       },
-      // {
-      //   title: t("Status.label"),
-      //   field: "status",
-      //   render: (item) => {
-      //     const baseClass =
-      //       "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border";
-
-      //     let labelKey: string = "Status.PendingApproval";
-      //     let className =
-      //       "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800";
-
-      //     switch (item.status) {
-      //       case PropertyStatus.Active:
-      //         labelKey = "Status.Active";
-      //         className =
-      //           "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
-      //         break;
-      //       case PropertyStatus.Draft:
-      //         labelKey = "Status.Draft";
-      //         className =
-      //           "bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800/60 dark:text-zinc-300 dark:border-zinc-700";
-      //         break;
-      //       case PropertyStatus.AdminApproved:
-      //         labelKey = "Status.AdminApproved";
-      //         className =
-      //           "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800";
-      //         break;
-      //       case PropertyStatus.OrganizationAssigned:
-      //         labelKey = "Status.OrganizationAssigned";
-      //         className =
-      //           "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800";
-      //         break;
-      //       case PropertyStatus.SoldOut:
-      //         labelKey = "Status.SoldOut";
-      //         className =
-      //           "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700";
-      //         break;
-      //       case PropertyStatus.Rejected:
-      //         labelKey = "Status.Rejected";
-      //         className =
-      //           "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
-      //         break;
-      //       case PropertyStatus.ModificationRequired:
-      //         labelKey = "Status.ModificationRequired";
-      //         className =
-      //           "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800";
-      //         break;
-      //       default:
-      //         break;
-      //     }
-
-      //     return (
-      //       <span className={`${baseClass} ${className}`}>
-      //         <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
-      //         {t(labelKey)}
-      //       </span>
-      //     );
-      //   },
-      // },
       {
         title: t("Total Value"),
         field: "totalValue",
@@ -178,51 +119,6 @@ const OrganisationPropertiesTable = ({
           </span>
         ),
       },
-      // {
-      //   title: t("Total Units"),
-      //   field: "totalUnits",
-      //   render: (item) => (
-      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-      //       {item.totalUnits.toLocaleString()}
-      //     </span>
-      //   ),
-      // },
-      // {
-      //   title: t("Available Units"),
-      //   field: "availableUnits",
-      //   render: (item) => (
-      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-      //       {item.availableUnits.toLocaleString()}
-      //     </span>
-      //   ),
-      // },
-      // {
-      //   title: t("Price Per Unit"),
-      //   field: "pricePerUnit",
-      //   render: (item) => (
-      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-      //       {item.pricePerUnit.toFixed(2)}
-      //     </span>
-      //   ),
-      // },
-      // {
-      //   title: t("Annual Yield"),
-      //   field: "annualYieldPercent",
-      //   render: (item) => (
-      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-      //       {item.annualYieldPercent.toFixed(2)}%
-      //     </span>
-      //   ),
-      // },
-      // {
-      //   title: t("Risk Score"),
-      //   field: "riskScore",
-      //   render: (item) => (
-      //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-      //       {item.riskScore}
-      //     </span>
-      //   ),
-      // },
       {
         title: t("Actions"),
         field: "",

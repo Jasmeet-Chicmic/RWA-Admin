@@ -126,6 +126,8 @@
       "rentalMin": "A renda de aluguel não pode ser negativa",
       "rentalMax": "A renda de aluguel não pode exceder {max}"
     }
-  }
+  },
+  "Edit": "Editar",
+  "Delete": "Excluir",
+  "View": "Visualizar"
 }
-

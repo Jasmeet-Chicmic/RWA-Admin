@@ -205,27 +205,27 @@ const OrganisationsTable = ({
       },
       {
         field: "",
-        title: tCommon("Actions"),
+        title: t("Actions"),
         render: (item) => (
           <div className="flex items-center justify-end gap-2">
             <button
               onClick={() => handleOpenViewModal(item.id)}
               className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors text-primarycolor"
-              title={tCommon("View")}
+              title={t("View")}
             >
               <Eye className="w-4 h-4" />
             </button>
             <button
               onClick={() => handleOpenEditModal(item.id)}
               className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors text-secondarycolor"
-              title={tCommon("Edit")}
+              title={t("Edit")}
             >
               <Edit className="w-4 h-4" />
             </button>
             <button
               onClick={() => handleOpenDeleteModal(item.id)}
               className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-500"
-              title={tCommon("Delete")}
+              title={t("Delete")}
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -266,7 +266,7 @@ const OrganisationsTable = ({
         </div>
       ),
     };
-  }, [t, tCommon]);
+  }, [t]);
 
   return (
     <>
