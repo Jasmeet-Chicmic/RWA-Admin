@@ -102,6 +102,7 @@
     "description": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
   },
   "Log out": "Cerrar sesión",
+  "Organisation": "Organización",
   "Connect Wallet": "Conectar billetera",
   "Verify Wallet Signature": "Verificar firma de billetera",
   "Back to Login": "Volver al inicio de sesión",

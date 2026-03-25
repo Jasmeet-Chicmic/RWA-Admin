@@ -23,16 +23,18 @@ const OrganisationsPage = async ({
       pageSize,
     });
 
-    const items = res?.items ?? [];
-    const totalCount = res?.totalCount ?? items.length;
+    const items = res?.data?.items ?? [];
+    const totalCount = res?.data?.totalCount ?? items.length;
 
     const organisations: OrganisationRow[] = items.map((org) => ({
       id: org.id,
       name: org.name,
+      walletAddress: org.walletAddress,
       entityType: org.entityType,
       registrationNumber: org.registrationNumber,
       jurisdiction: org.jurisdiction,
       incorporationDate: org.incorporationDate,
+      status: org.status,
       propertyHolds: org.propertyHolds,
     }));
 

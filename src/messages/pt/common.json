@@ -102,6 +102,7 @@
     "description": "Ocorreu um erro inesperado. Tente novamente."
   },
   "Log out": "Sair",
+  "Organisation": "Organização",
   "Connect Wallet": "Conectar carteira",
   "Verify Wallet Signature": "Verificar assinatura da carteira",
   "Back to Login": "Voltar para login",

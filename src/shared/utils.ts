@@ -9,6 +9,9 @@ import {
   BASE_URL,
   ENTITY_STATUS,
   STATUS_COLOR_MAP,
+  ORGANIZATION_STATUS,
+  ORGANIZATION_STATUS_COLOR_MAP,
+  OrganizationStatusValue,
   TRANSACTION_SOURCE_TYPES,
   CURRENCY_PRECISION,
   APP_BASE_PATH,
@@ -366,6 +369,11 @@ export const getStatusColor = (status: ENTITY_STATUS): string => {
   return (
     STATUS_COLOR_MAP[status as ENTITY_STATUS] || "bg-gray-100 text-gray-800"
   );
+};
+export const getOrganizationStatusColor = (
+  status: OrganizationStatusValue,
+): string => {
+  return ORGANIZATION_STATUS_COLOR_MAP[status] || "bg-gray-100 text-gray-800";
 };
 export const walletTruncate = (
   address: string,

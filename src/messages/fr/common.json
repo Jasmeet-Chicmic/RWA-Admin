@@ -102,6 +102,7 @@
     "description": "Une erreur inattendue s'est produite. Veuillez réessayer."
   },
   "Log out": "Se déconnecter",
+  "Organisation": "Organisation",
   "Connect Wallet": "Connecter le portefeuille",
   "Verify Wallet Signature": "Verifier la signature du portefeuille",
   "Back to Login": "Retour à la connexion",

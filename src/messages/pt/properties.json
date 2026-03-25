@@ -58,10 +58,17 @@
   "Organisations": "Organizações",
   "Organisations subtitle": "Organizações registradas que detêm propriedades",
   "Organisation Name": "Nome da organização",
+  "Wallet Address": "Endereço da carteira",
   "Entity Type": "Tipo de entidade",
   "Registration Number": "Número de registro",
   "Jurisdiction": "Jurisdição",
   "Incorporation Date": "Data de constituição",
+  "Organisation Status": "Status",
+  "OrganisationStatus": {
+    "active": "Ativo",
+    "flagged": "Sinalizado",
+    "inactive": "Inativo"
+  },
   "Properties Held": "Propriedades detidas",
   "No organisations found": "Nenhuma organização encontrada",
   "Organisation Properties Title": "Propriedades da organização",
