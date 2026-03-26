@@ -36,6 +36,7 @@ const OrganisationPropertiesPage = async ({
             data={items}
             totalCount={totalCount}
             organisationId={params.organisationId}
+            hideActions={true}
           />
         </div>
       </div>

@@ -19,8 +19,26 @@ type OrganisationProfileResponse = ResponseType & {
   data?: OrganisationProfile;
 };
 
+import {
+  AllPropertiesResponse,
+  GetAllPropertiesParams,
+  BaseResponse,
+} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
+
 export async function getOrganisationProfileAction() {
   return await getRequest<OrganisationProfileResponse, undefined>(
     API_END_POINTS.ORGANIZATION_PROFILE,
   );
+}
+
+export async function getAuthOrganisationPropertiesAction(
+  params: GetAllPropertiesParams,
+) {
+  return await getRequest<
+    BaseResponse<AllPropertiesResponse>,
+    GetAllPropertiesParams,
+    AllPropertiesResponse
+  >(API_END_POINTS.ORGANIZATION_PROPERTIES, params, {
+    transformer: (res) => res.data as AllPropertiesResponse,
+  });
 }

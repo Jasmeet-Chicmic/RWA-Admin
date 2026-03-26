@@ -39,3 +39,13 @@ export async function rejectPropertyAction(
     payload,
   );
 }
+
+export async function assignPropertyToOrganisationAction(
+  propertyId: string,
+  organisationId: string,
+) {
+  return await postRequest<BaseResponse<null>, { organizationId: string }>(
+    API_END_POINTS.ADMIN_PROPERTY_ASSIGN_ORGANIZATION(propertyId),
+    { organizationId: organisationId },
+  );
+}

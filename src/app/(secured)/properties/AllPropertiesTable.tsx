@@ -27,6 +27,7 @@ import {
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import ApprovePropertyModal from "./modals/ApprovePropertyModal";
 import RejectPropertyModal from "./modals/RejectPropertyModal";
+import AssignLLCModal from "./modals/AssignLLCModal";
 
 const getStatusLabel = (status: number): string =>
   PROPERTY_STATUS_LABELS[status as PropertyStatusType] ?? String(status);
@@ -73,6 +74,7 @@ const AllPropertiesTable = ({
   } | null>(null);
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [isAssignLLCModalOpen, setIsAssignLLCModalOpen] = useState(false);
 
   const fetchData = useCallback(
     (page: number, size: number, search: string, status: number | string) => {
@@ -128,6 +130,11 @@ const AllPropertiesTable = ({
   const handleReject = (item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsRejectModalOpen(true);
+  };
+
+  const handleAssignLLC = (item: PropertyItem) => {
+    setSelectedProperty({ id: item.id, name: item.name });
+    setIsAssignLLCModalOpen(true);
   };
 
   const columns: TableColumn<PropertyItem>[] = useMemo(
@@ -216,6 +223,13 @@ const AllPropertiesTable = ({
                   {t("Reject")}
                 </button>
               </>
+            ) : item.status === PROPERTY_STATUS.ADMIN_APPROVED ? (
+              <button
+                onClick={() => handleAssignLLC(item)}
+                className="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors"
+              >
+                {t("Assign to LLC")}
+              </button>
             ) : item.status === PROPERTY_STATUS.ACTIVE ? (
               <button
                 onClick={() => handleReject(item)}
@@ -320,6 +334,15 @@ const AllPropertiesTable = ({
           <RejectPropertyModal
             isOpen={isRejectModalOpen}
             onClose={() => setIsRejectModalOpen(false)}
+            propertyId={selectedProperty.id}
+            propertyName={selectedProperty.name}
+            onSuccess={() =>
+              fetchData(currentPage, pageSize, searchText, statusFilter)
+            }
+          />
+          <AssignLLCModal
+            isOpen={isAssignLLCModalOpen}
+            onClose={() => setIsAssignLLCModalOpen(false)}
             propertyId={selectedProperty.id}
             propertyName={selectedProperty.name}
             onSuccess={() =>

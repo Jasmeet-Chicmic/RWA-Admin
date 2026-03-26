@@ -9,6 +9,7 @@ export const API_END_POINTS = {
   LOGOUT: `/admin/logout`,
   LOGOUT_ORGANISATION: `/organizations/logout`,
   ORGANIZATION_PROFILE: `/organizations/profile`,
+  ORGANIZATION_PROPERTIES: `/organizations/properties`,
   ADMIN_PROFILE: `/admin/profile`,
   USER: `/api/admin/users`,
   USER_BY_ID: `/user-profile/api/admin/users`,
@@ -155,6 +156,8 @@ export const API_END_POINTS = {
     `/admin/properties/${propertyId}/approve`,
   ADMIN_PROPERTY_REJECT: (propertyId: string) =>
     `/admin/properties/${propertyId}/reject`,
+  ADMIN_PROPERTY_ASSIGN_ORGANIZATION: (propertyId: string) =>
+    `/admin/properties/${propertyId}/assign-organization`,
   ADMIN_PROPERTIES_PENDING: `/api/admin/properties/pending`,
   ADMIN_PROPERTIES_DETAILS: `/api/admin/properties/Details`,
 

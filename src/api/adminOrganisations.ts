@@ -8,7 +8,11 @@ import {
   putRequest,
 } from "@/shared/fetcher";
 import { ResponseType } from "@/shared/types";
-import { PropertiesListResponse } from "@/app/(secured)/properties/helpers/types";
+import {
+  AllPropertiesResponse,
+  GetAllPropertiesParams,
+  BaseResponse,
+} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
 
 export type AdminOrganisation = {
   id: string;
@@ -45,7 +49,7 @@ export async function getAdminOrganisationsAction(
   >(API_END_POINTS.ADMIN_ORGANISATIONS, params);
 }
 
-export type OrganisationPropertiesResponse = PropertiesListResponse;
+export type OrganisationPropertiesResponse = AllPropertiesResponse;
 
 export type GetOrganisationPropertiesParams = {
   organisationId: string;
@@ -58,12 +62,20 @@ export async function getOrganisationPropertiesAction(
 ) {
   const { organisationId, page, pageSize } = params;
   return await getRequest<
-    OrganisationPropertiesResponse,
-    { page: number; pageSize: number }
-  >(`${API_END_POINTS.ADMIN_ORGANISATIONS}/${organisationId}/properties`, {
-    page,
-    pageSize,
-  });
+    BaseResponse<AllPropertiesResponse>,
+    GetAllPropertiesParams,
+    AllPropertiesResponse
+  >(
+    API_END_POINTS.ADMIN_ALL_PROPERTIES,
+    {
+      page,
+      pageSize,
+      organizationId: organisationId,
+    },
+    {
+      transformer: (res) => res.data as AllPropertiesResponse,
+    },
+  );
 }
 
 export type ActivateOrganisationPropertyPayload = {

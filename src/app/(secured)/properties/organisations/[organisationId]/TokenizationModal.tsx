@@ -14,6 +14,7 @@ import { InputField } from "@/components/molecules/FormBuilder/fields/InputField
 import Button from "@/components/atoms/Button";
 
 import { AdminProperty } from "../../helpers/types";
+import { PropertyItem } from "../../helpers/allPropertiesTypes";
 import { useWalletState } from "@/components/providers/WalletStateProvider";
 import {
   runTokenizationFlow,
@@ -107,6 +108,8 @@ const preventNegativeAndExponent: React.KeyboardEventHandler<
   }
 };
 
+type PropertyData = PropertyItem | AdminProperty;
+
 export const TokenizationModal = ({
   open,
   onClose,
@@ -115,7 +118,7 @@ export const TokenizationModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  property: AdminProperty | null;
+  property: PropertyData | null;
   organisationId: string;
 }) => {
   const t = useTranslations("properties");
@@ -129,18 +132,25 @@ export const TokenizationModal = ({
   const { data: walletClient } = useWalletClient();
 
   const defaultValues = useMemo<TokenizationFormValues>(() => {
+    const totalVal =
+      (property as PropertyItem)?.approvedValuation ??
+      (property as AdminProperty)?.totalValue ??
+      0;
+    const risk = (property as AdminProperty)?.riskScore ?? 0;
+    const ownerAddr = (property as AdminProperty)?.ownerWalletAddress ?? "";
+    const img =
+      (property as AdminProperty)?.image ??
+      (property as AdminProperty)?.imageUrl ??
+      "";
+
     return {
-      totalPropertyValue: formatNumberAmount(
-        fromBaseUnits(property?.totalValue ?? 0) || 0,
-      ),
+      totalPropertyValue: formatNumberAmount(fromBaseUnits(totalVal) || 0),
       totalShares: "0",
       rentalIncomeHistory: "",
       expectedAnnualYield: "0",
-      riskScore: String(
-        Math.min(Math.max(Number(property?.riskScore ?? 0), 0), 1),
-      ),
-      ownerAddress: property?.ownerWalletAddress ?? "",
-      image: property?.image ?? "",
+      riskScore: String(Math.min(Math.max(Number(risk), 0), 1)),
+      ownerAddress: ownerAddr,
+      image: img,
     };
   }, [property]);
 
@@ -165,8 +175,18 @@ export const TokenizationModal = ({
 
   const sharesRaw = methods.watch("totalShares");
   const totalPropertyValueRaw = methods.watch("totalPropertyValue");
+
+  const currentPropertyValuation = useMemo(() => {
+    if (!property) return 0;
+    return (
+      (property as PropertyItem).approvedValuation ??
+      (property as AdminProperty).totalValue ??
+      0
+    );
+  }, [property]);
+
   const totalValue =
-    parseMoney(totalPropertyValueRaw) ?? property?.totalValue ?? 0;
+    parseMoney(totalPropertyValueRaw) ?? currentPropertyValuation;
   const sharesNum = Number(sharesRaw);
   const safeShares =
     Number.isFinite(sharesNum) && sharesNum > 0 ? sharesNum : 0;

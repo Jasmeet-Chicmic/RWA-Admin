@@ -1,7 +1,9 @@
 import ErrorState from "@/components/atoms/ErrorState";
 import OrganisationPropertiesTable from "../../properties/organisations/[organisationId]/OrganisationPropertiesTable";
-import { getOrganisationPropertiesAction } from "@/api/adminOrganisations";
-import { getOrganisationProfileAction } from "@/api/organizations";
+import {
+  getOrganisationProfileAction,
+  getAuthOrganisationPropertiesAction,
+} from "@/api/organizations";
 import { LOGIN_ROLE } from "@/shared/constants";
 import { ROUTES } from "@/shared/routes";
 import { decrypt } from "@/shared/session";
@@ -35,14 +37,8 @@ const OrganisationPropertiesPage = async ({
 
     const profileRes = await getOrganisationProfileAction();
     const organisationId = profileRes?.data?.id as string | undefined;
-    if (!organisationId) {
-      throw new Error(
-        "Organisation id missing from /organizations/profile response",
-      );
-    }
 
-    const propertiesRes = await getOrganisationPropertiesAction({
-      organisationId,
+    const propertiesRes = await getAuthOrganisationPropertiesAction({
       page: pageNumber,
       pageSize,
     });
@@ -56,7 +52,7 @@ const OrganisationPropertiesPage = async ({
           <OrganisationPropertiesTable
             data={items}
             totalCount={totalCount}
-            organisationId={organisationId}
+            organisationId={organisationId ?? ""}
           />
         </div>
       </div>

@@ -36,6 +36,7 @@ export interface GetAllPropertiesParams {
   pageSize: number;
   status?: number | string;
   search?: string;
+  organizationId?: string;
 }
 
 export interface BaseResponse<T = unknown> {

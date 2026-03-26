@@ -26,7 +26,7 @@ export default async function middleware(req: NextRequest) {
     if (session?.token) {
       redirectPath =
         session.role === LOGIN_ROLE.ORGANISATION
-          ? PRIVATE_ROUTES.ORGANISATIONS
+          ? PRIVATE_ROUTES.ORGANISATIONS_PROPERTIES
           : PRIVATE_ROUTES.DASHBOARD_ANALYTICS;
     }
 
