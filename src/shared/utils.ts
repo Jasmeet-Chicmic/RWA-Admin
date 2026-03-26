@@ -21,12 +21,15 @@ import { DISPLAY_CURRENCY, formatToFixed } from "./utils/unitUtils";
 import { PlanPrice } from "./types";
 
 // Set session cookie by sending token to server
-export async function createSessionClient(token: string): Promise<boolean> {
+export async function createSessionClient(
+  token: string,
+  role: string = "admin",
+): Promise<boolean> {
   try {
     const res = await fetch(`${APP_BASE_PATH}/api/session`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token, role }),
     });
 
     if (!res.ok) {

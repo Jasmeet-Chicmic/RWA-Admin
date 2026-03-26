@@ -4,15 +4,20 @@ import { ChevronDown, ChevronRight, Menu, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { RayptoLogoDark } from "@/assets";
 import { cn } from "@/shared/utils";
-import { NavItem, navItems, getNavItemLabelKey } from "./helpers/constants";
+import {
+  NavItem,
+  getNavItemLabelKey,
+  getFilteredNavItems,
+} from "./helpers/constants";
 import { useTheme } from "next-themes";
-import { THEME_TYPE } from "@/shared/constants";
+import { LOGIN_ROLE, THEME_TYPE } from "@/shared/constants";
 import CommandPalette from "../CommandPalette";
 import { ROUTES } from "@/shared/routes";
+import { APP_BASE_PATH } from "@/shared/constants";
 
 const isItemActive = (pathname: string, item: NavItem): boolean => {
   if (
@@ -30,10 +35,39 @@ const Sidebar: React.FC = () => {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [userRole, setUserRole] = useState<LOGIN_ROLE>(LOGIN_ROLE.ADMIN);
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("common");
+
+  // Fetch role from session on mount
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const res = await fetch(`${APP_BASE_PATH}/api/session`, {
+          method: "GET",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (
+            data.role &&
+            Object.values(LOGIN_ROLE).includes(data.role as LOGIN_ROLE)
+          ) {
+            setUserRole(data.role as LOGIN_ROLE);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch session role:", err);
+      }
+    };
+    void fetchRole();
+  }, []);
+
+  const filteredNavItems = useMemo(
+    () => getFilteredNavItems(userRole),
+    [userRole],
+  );
 
   useEffect(() => {
     const autoExpanded: Record<string, boolean> = {};
@@ -61,10 +95,10 @@ const Sidebar: React.FC = () => {
       }
       return foundActive;
     };
-    checkAndExpand(navItems);
+    checkAndExpand(filteredNavItems);
     setExpanded(autoExpanded);
     setMounted(true);
-  }, [pathname]);
+  }, [pathname, filteredNavItems]);
 
   const toggleExpand = useCallback((label: string) => {
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -245,7 +279,7 @@ const Sidebar: React.FC = () => {
               className="pl-10 pr-4 py-2 w-full border border-bordergray200 rounded-[8px] bg-bgwhite dark:bg-darkbgprimary dark:border-labelprimary text-sm focus:outline-none"
             />
           </div>
-          <ul>{navItems.map((item) => renderNavItem(item))}</ul>
+          <ul>{filteredNavItems.map((item) => renderNavItem(item))}</ul>
         </nav>
       </aside>
       <CommandPalette

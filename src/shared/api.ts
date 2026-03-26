@@ -6,7 +6,9 @@ export const API_END_POINTS = {
   LOGIN_VERIFY: `${API_VERSION}/admin/loginVerify`,
   FORGOT_PASSWORD: `${API_VERSION}/admin/forgotPassword`,
   RESET_PASSWORD: `${API_VERSION}/admin/resetPassword`,
-  LOGOUT: `/security/api/admin/logout`,
+  LOGOUT: `/admin/logout`,
+  LOGOUT_ORGANISATION: `/organizations/logout`,
+  ORGANIZATION_PROFILE: `/organizations/profile`,
   USER: `/api/admin/users`,
   USER_BY_ID: `/user-profile/api/admin/users`,
   USER_TOGGLE_STATUS: `/user-profile/api/admin/users`,
@@ -182,6 +184,8 @@ export const API_END_POINTS = {
 export const INTERNAL_API_PATHS = {
   ADMIN_AUTH_LOGIN: "/admin-portal/api/admin/auth/login",
   ADMIN_WALLET_VERIFY: "/admin-portal/api/admin/wallet/verify",
+  ORG_AUTH_LOGIN: "/admin-portal/api/organizations/login",
+  ORG_WALLET_VERIFY: "/admin-portal/api/organizations/wallet/verify",
   PROPERTY_ONCHAIN_INITIATE: "/admin-portal/api/property-onchain/initiate",
   PROPERTY_ONCHAIN_TREX_DEPLOYED:
     "/admin-portal/api/property-onchain/trex-deployed",

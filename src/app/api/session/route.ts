@@ -4,9 +4,9 @@ import { decrypt, encrypt } from "@/shared/session";
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
-  const { token } = await req.json();
+  const { token, role } = await req.json();
 
-  const session = await encrypt({ token });
+  const session = await encrypt({ token, role });
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   (await cookies()).set("session", session, {
@@ -27,7 +27,10 @@ export async function DELETE() {
 }
 
 export async function GET() {
-  const token = await decrypt((await cookies()).get("session")?.value);
+  const payload = await decrypt((await cookies()).get("session")?.value);
 
-  return NextResponse.json({ token: token?.token || "" });
+  return NextResponse.json({
+    token: payload?.token || "",
+    role: payload?.role || "",
+  });
 }

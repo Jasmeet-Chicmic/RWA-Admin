@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
+import { LOGIN_ROLE } from "@/shared/constants";
 import { ROUTES } from "@/shared/routes";
 
 export type NavItem = {
@@ -29,6 +30,7 @@ export type NavItem = {
   activePaths?: string[];
   children?: NavItem[];
   badge?: string;
+  allowedRoles?: LOGIN_ROLE[];
 };
 
 export const NAV_LABEL_PREFIX = "common.";
@@ -45,6 +47,7 @@ export const navItems: NavItem[] = [
     // path: ROUTES.DASHBOARD,
     activePaths: [ROUTES.DASHBOARD_ANALYTICS],
     badge: "5",
+    allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
         label: "Analytics",
@@ -62,6 +65,7 @@ export const navItems: NavItem[] = [
       ROUTES.PROPERTIES_ASSETS,
       ROUTES.PROPERTIES_ORGANISATIONS,
     ],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
         label: "Pending Properties",
@@ -87,9 +91,17 @@ export const navItems: NavItem[] = [
   },
   {
     icon: Building2,
+    label: "Organisation Properties",
+    path: ROUTES.ORGANISATIONS_PROPERTIES,
+    activePaths: [ROUTES.ORGANISATIONS_PROPERTIES],
+    allowedRoles: [LOGIN_ROLE.ORGANISATION],
+  },
+  {
+    icon: Building2,
     label: "Organisation",
     path: ROUTES.ORGANISATIONS,
     activePaths: [ROUTES.ORGANISATIONS],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
   },
   {
     icon: UserCog,
@@ -101,6 +113,7 @@ export const navItems: NavItem[] = [
       ROUTES.USERS_REPORTED,
       ROUTES.USERS_SPOTLIGHTED,
     ],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
         label: "List",
@@ -124,11 +137,13 @@ export const navItems: NavItem[] = [
     label: "Token Requests",
     path: ROUTES.TOKEN_REQUESTS_LIST,
     activePaths: [ROUTES.TOKEN_REQUESTS_LIST],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
   },
   {
     icon: UserCheck,
     label: "KYC",
     activePaths: [ROUTES.KYC_PENDING],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
         label: "Pending KYC",
@@ -244,3 +259,13 @@ export const navItems: NavItem[] = [
   //   activePaths: [ROUTES.BROADCAST_MESSAGES_LIST],
   // },
 ];
+
+/**
+ * Filter nav items by the current user's role.
+ * Items without `allowedRoles` are visible to all roles.
+ */
+export const getFilteredNavItems = (role: LOGIN_ROLE): NavItem[] => {
+  return navItems.filter(
+    (item) => !item.allowedRoles || item.allowedRoles.includes(role),
+  );
+};

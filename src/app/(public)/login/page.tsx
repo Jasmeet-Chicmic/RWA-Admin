@@ -8,10 +8,15 @@ import { useTheme } from "next-themes";
 import { RayptoLogo, RayptoLogoDark } from "@/assets";
 import FormLayout from "@/components/layouts/FormLayout";
 import { FormLayoutType } from "@/components/layouts/FormLayout/helpers/constants";
-import { THEME_TYPE } from "@/shared/constants";
+import { LOGIN_ROLE, THEME_TYPE } from "@/shared/constants";
 
 import LoginFormStep from "./LoginFormStep";
 import WalletConnectStep from "./WalletConnectStep";
+
+const LOGIN_ROLE_OPTIONS = [
+  { value: LOGIN_ROLE.ADMIN, label: "Admin" },
+  { value: LOGIN_ROLE.ORGANISATION, label: "Organisation" },
+] as const;
 
 const blobBase: React.CSSProperties = {
   position: "fixed",
@@ -54,6 +59,9 @@ const Login = () => {
   const searchParams = useSearchParams();
   const [nonce, setNonce] = useState<string>();
   const [tempToken, setTempToken] = useState<string>();
+  const [selectedRole, setSelectedRole] = useState<LOGIN_ROLE>(
+    LOGIN_ROLE.ADMIN,
+  );
 
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -88,6 +96,13 @@ const Login = () => {
     setTempToken(undefined);
   };
 
+  const handleRoleChange = (role: LOGIN_ROLE) => {
+    setSelectedRole(role);
+    // Reset the login flow when switching roles
+    setNonce(undefined);
+    setTempToken(undefined);
+  };
+
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
       <div style={blobTopLeft} />
@@ -107,13 +122,40 @@ const Login = () => {
           <h4 className="mb-1 text-[20px] leading-tight sm:text-[24px] sm:leading-[32px]">
             Welcome back to Townly
           </h4>
+
+          {/* Role Toggle */}
+          {(!nonce || !tempToken) && (
+            <div className="flex items-center justify-center mb-6 mt-2">
+              <div className="relative flex rounded-lg bg-gray-800/50 p-1 w-full max-w-[280px]">
+                {LOGIN_ROLE_OPTIONS.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => handleRoleChange(value)}
+                    className={`relative z-10 flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-300 ${
+                      selectedRole === value
+                        ? "bg-primarycolor text-black shadow-md"
+                        : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {!nonce || !tempToken ? (
-            <LoginFormStep onNonceToken={handleNonceToken} />
+            <LoginFormStep
+              onNonceToken={handleNonceToken}
+              role={selectedRole}
+            />
           ) : (
             <WalletConnectStep
               nonce={nonce}
               tempToken={tempToken}
               onBackToLogin={handleBackToLogin}
+              role={selectedRole}
             />
           )}
         </FormLayout>

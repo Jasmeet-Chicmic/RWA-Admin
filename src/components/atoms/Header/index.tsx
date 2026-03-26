@@ -67,10 +67,12 @@ const Header = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("email");
       localStorage.removeItem("role");
+      console.log(res, "res logout");
       if (res.status) {
         const success = await deleteSessionClient();
         if (success) {
           toast.success("Logout successful");
+          disconnect();
           router.push(ROUTES.LOGIN);
         } else {
           toast.error("Session deletion failed.");

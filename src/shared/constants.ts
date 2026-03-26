@@ -1104,3 +1104,9 @@ export const CURRENCY_SYMBOLS: Record<string, string> = {
   [CURRENCY_CODES.GBP]: "£",
   [CURRENCY_CODES.USD]: "$",
 };
+
+// Login Role Types
+export enum LOGIN_ROLE {
+  ADMIN = "admin",
+  ORGANISATION = "organisation",
+}

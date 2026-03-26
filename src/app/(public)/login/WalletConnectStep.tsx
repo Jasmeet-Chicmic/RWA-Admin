@@ -11,6 +11,7 @@ import Button from "@/components/atoms/Button";
 import { useWalletState } from "@/components/providers/WalletStateProvider";
 import { INTERNAL_API_PATHS } from "@/shared/api";
 import { postApiJson } from "@/shared/clientApi";
+import { LOGIN_ROLE } from "@/shared/constants";
 import { ROUTES } from "@/shared/routes";
 import { createSessionClient } from "@/shared/utils";
 import { handleWeb3Error } from "@/shared/utils/web3Error";
@@ -31,16 +32,28 @@ function buildSiweMessage({
   return `${domain} wants you to sign in with your Ethereum account:\n${wallet}\n\nURI: https://${domain}\nVersion: 1\nChain ID: ${chainId}\nNonce: ${nonce}\nIssued At: ${issuedAt}\nExpiration Time: ${expiresAt}`;
 }
 
+const WALLET_VERIFY_API_MAP = {
+  [LOGIN_ROLE.ADMIN]: INTERNAL_API_PATHS.ADMIN_WALLET_VERIFY,
+  [LOGIN_ROLE.ORGANISATION]: INTERNAL_API_PATHS.ORG_WALLET_VERIFY,
+} as const;
+
+const ROLE_REDIRECT_MAP = {
+  [LOGIN_ROLE.ADMIN]: ROUTES.DASHBOARD_ANALYTICS,
+  [LOGIN_ROLE.ORGANISATION]: ROUTES.ORGANISATIONS,
+} as const;
+
 type WalletConnectStepProps = {
   nonce: string;
   tempToken: string;
   onBackToLogin: () => void;
+  role: LOGIN_ROLE;
 };
 
 const WalletConnectStep = ({
   nonce,
   tempToken,
   onBackToLogin,
+  role,
 }: WalletConnectStepProps) => {
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -94,6 +107,8 @@ const WalletConnectStep = ({
       });
       console.log("[Auth] Signature received:", signature);
 
+      const verifyEndpoint = WALLET_VERIFY_API_MAP[role];
+
       const res = await postApiJson<
         {
           statusCode?: number;
@@ -103,7 +118,7 @@ const WalletConnectStep = ({
         },
         { message: string; signature: string }
       >(
-        INTERNAL_API_PATHS.ADMIN_WALLET_VERIFY,
+        verifyEndpoint,
         {
           message,
           signature,
@@ -119,10 +134,11 @@ const WalletConnectStep = ({
 
       if (res.status && res.statusCode === 200 && res.data?.token) {
         localStorage.setItem("token", res.data.token);
-        const success = await createSessionClient(res.data.token);
+        const success = await createSessionClient(res.data.token, role);
         if (success) {
           toast.success(res.message || "Login successful");
-          router.push(ROUTES.DASHBOARD_ANALYTICS);
+          const redirectPath = ROLE_REDIRECT_MAP[role];
+          router.push(redirectPath);
           return;
         }
         toast.error("Session creation failed.");
@@ -148,6 +164,7 @@ const WalletConnectStep = ({
     router,
     address,
     chainId,
+    role,
   ]);
 
   const handleWalletDisconnect = useCallback(async () => {
