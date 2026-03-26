@@ -149,7 +149,12 @@ export const API_END_POINTS = {
   ADMIN_POSTS_DELETE: `/post/api/admin/posts`,
 
   // Properties
+  ADMIN_ALL_PROPERTIES: `/admin/properties`,
   ADMIN_PROPERTIES: `/api/admin/properties`,
+  ADMIN_PROPERTY_APPROVE: (propertyId: string) =>
+    `/admin/properties/${propertyId}/approve`,
+  ADMIN_PROPERTY_REJECT: (propertyId: string) =>
+    `/admin/properties/${propertyId}/reject`,
   ADMIN_PROPERTIES_PENDING: `/api/admin/properties/pending`,
   ADMIN_PROPERTIES_DETAILS: `/api/admin/properties/Details`,
 

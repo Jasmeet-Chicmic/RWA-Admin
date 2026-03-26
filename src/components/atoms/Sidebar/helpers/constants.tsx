@@ -59,28 +59,13 @@ export const navItems: NavItem[] = [
   {
     icon: Building2,
     label: "Properties",
-    activePaths: [
-      ROUTES.PROPERTIES_LIST,
-      ROUTES.PROPERTIES_DISAPPROVED,
-      ROUTES.PROPERTIES_ASSETS,
-      ROUTES.PROPERTIES_ORGANISATIONS,
-    ],
+    activePaths: [ROUTES.PROPERTIES, ROUTES.PROPERTIES_ORGANISATIONS],
     allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
-        label: "Pending Properties",
-        path: ROUTES.PROPERTIES_LIST,
-        activePaths: [ROUTES.PROPERTIES_LIST],
-      },
-      {
-        label: "Disapproved Requests",
-        path: ROUTES.PROPERTIES_DISAPPROVED,
-        activePaths: [ROUTES.PROPERTIES_DISAPPROVED],
-      },
-      {
-        label: "Assets",
-        path: ROUTES.PROPERTIES_ASSETS,
-        activePaths: [ROUTES.PROPERTIES_ASSETS],
+        label: "All Properties",
+        path: ROUTES.PROPERTIES,
+        activePaths: [ROUTES.PROPERTIES],
       },
       {
         label: "Organisation Properties",
