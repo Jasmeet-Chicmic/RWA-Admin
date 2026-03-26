@@ -11,6 +11,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "@reown/appkit": "^1.8.19",
     "@reown/appkit-adapter-wagmi": "^1.8.19",
     "@szhsin/react-menu": "^4.4.1",
@@ -39,6 +40,7 @@
     "react-intersection-observer": "^10.0.3",
     "react-paginate": "^8.3.0",
     "react-phone-number-input": "^3.4.12",
+    "react-redux": "^9.2.0",
     "react-select": "^5.10.1",
     "react-select-async-paginate": "^0.7.11",
     "react-svg-worldmap": "^2.0.0-alpha.16",

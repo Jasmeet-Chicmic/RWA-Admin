@@ -30,12 +30,19 @@ const isItemActive = (pathname: string, item: NavItem): boolean => {
   return item.children?.some((child) => isItemActive(pathname, child)) ?? false;
 };
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  initialRole?: LOGIN_ROLE;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [userRole, setUserRole] = useState<LOGIN_ROLE>(LOGIN_ROLE.ADMIN);
+  const [userRole, setUserRole] = useState<LOGIN_ROLE | null>(
+    initialRole || null,
+  );
+  const [loading, setLoading] = useState(!initialRole);
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
@@ -43,8 +50,14 @@ const Sidebar: React.FC = () => {
 
   // Fetch role from session on mount
   useEffect(() => {
+    if (initialRole) {
+      setLoading(false);
+      return;
+    }
+
     const fetchRole = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`${APP_BASE_PATH}/api/session`, {
           method: "GET",
         });
@@ -59,13 +72,15 @@ const Sidebar: React.FC = () => {
         }
       } catch (err) {
         console.error("Failed to fetch session role:", err);
+      } finally {
+        setLoading(false);
       }
     };
     void fetchRole();
-  }, []);
+  }, [initialRole]);
 
   const filteredNavItems = useMemo(
-    () => getFilteredNavItems(userRole),
+    () => (userRole ? getFilteredNavItems(userRole) : []),
     [userRole],
   );
 
@@ -279,7 +294,26 @@ const Sidebar: React.FC = () => {
               className="pl-10 pr-4 py-2 w-full border border-bordergray200 rounded-[8px] bg-bgwhite dark:bg-darkbgprimary dark:border-labelprimary text-sm focus:outline-none"
             />
           </div>
-          <ul>{filteredNavItems.map((item) => renderNavItem(item))}</ul>
+          <ul>
+            {loading ? (
+              // Shimmer/Loader
+              <>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <li
+                    key={i}
+                    className="mb-3 px-3 py-3 rounded-[5px] animate-pulse"
+                  >
+                    <div className="flex items-center">
+                      <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-full mr-3" />
+                      <div className="flex-1 h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+                    </div>
+                  </li>
+                ))}
+              </>
+            ) : (
+              filteredNavItems.map((item) => renderNavItem(item))
+            )}
+          </ul>
         </nav>
       </aside>
       <CommandPalette

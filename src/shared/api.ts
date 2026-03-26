@@ -9,6 +9,7 @@ export const API_END_POINTS = {
   LOGOUT: `/admin/logout`,
   LOGOUT_ORGANISATION: `/organizations/logout`,
   ORGANIZATION_PROFILE: `/organizations/profile`,
+  ADMIN_PROFILE: `/admin/profile`,
   USER: `/api/admin/users`,
   USER_BY_ID: `/user-profile/api/admin/users`,
   USER_TOGGLE_STATUS: `/user-profile/api/admin/users`,

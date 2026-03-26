@@ -19,6 +19,13 @@ import CommandPalette from "../CommandPalette";
 import { logoutAction } from "@/api/auth";
 import { isReownConfigured } from "@/lib/reown";
 import { useWalletState } from "@/components/providers/WalletStateProvider";
+import { getCurrentProfileAction } from "@/api/profile";
+import {
+  clearAuthProfile,
+  setAuthProfile,
+  setAuthProfileLoading,
+} from "@/store/authProfileSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const LANGUAGE_OPTIONS: { code: string; label: string }[] = [
   { code: "en", label: "English" },
@@ -38,19 +45,33 @@ const Header = () => {
   const [showWalletMenu, setShowWalletMenu] = useState(false);
   const [language, setLanguage] = useState<string>();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [userEmail, setUserEmail] = useState<string>("");
-  const [userRole, setUserRole] = useState<string>("");
   const { isConnected, address } = useWalletState();
   const { open } = useAppKit();
   const { disconnect } = useDisconnect();
   const tCommon = useTranslations("common");
 
+  const dispatch = useAppDispatch();
+  const { role: userRole, profile: userProfile } = useAppSelector(
+    (state) => state.authProfile,
+  );
+  const userEmail = userProfile?.email ?? "";
+
   useEffect(() => {
     // setMounted(true);
     setTheme(THEME_TYPE.DARK);
-    setUserEmail(localStorage.getItem("email") || "Admin01@yopmail.com");
-    setUserRole(localStorage.getItem("role") || "Admin");
-  }, []);
+
+    // Populate profile from server on initial load/refresh.
+    dispatch(setAuthProfileLoading(true));
+    void (async () => {
+      try {
+        const res = await getCurrentProfileAction();
+        dispatch(setAuthProfile(res));
+      } catch (error) {
+        console.error("[Header] Failed to load profile:", error);
+        dispatch(clearAuthProfile());
+      }
+    })();
+  }, [dispatch, setTheme]);
 
   const toggleTheme = () => {
     setTheme(
@@ -73,6 +94,7 @@ const Header = () => {
         if (success) {
           toast.success("Logout successful");
           disconnect();
+          dispatch(clearAuthProfile());
           router.push(ROUTES.LOGIN);
         } else {
           toast.error("Session deletion failed.");
@@ -307,7 +329,7 @@ const Header = () => {
               >
                 <div className="w-8 h-8 bg-primarycolor dark:bg-secondarycolor rounded-full flex items-center justify-center">
                   <span className="text-white dark:text-black text-sm font-semibold">
-                    {userRole ? userRole.substring(0, 2).toUpperCase() : "AD"}
+                    {userRole ? userRole.substring(0, 2).toUpperCase() : ""}
                   </span>
                 </div>
               </button>

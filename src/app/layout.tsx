@@ -5,6 +5,7 @@ import FcmProvider from "./FcmProvider";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import Web3Provider from "@/components/providers/Web3Provider";
+import ReduxProvider from "./ReduxProvider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -35,9 +36,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Web3Provider>
-              {children}
-              <ToastContainer position="top-right" />
-              <FcmProvider />
+              <ReduxProvider>
+                {children}
+                <ToastContainer position="top-right" />
+                <FcmProvider />
+              </ReduxProvider>
             </Web3Provider>
           </ThemeProvider>
         </NextIntlClientProvider>
