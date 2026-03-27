@@ -48,16 +48,32 @@ export default async function middleware(req: NextRequest) {
 
   // 4. Redirect to appropriate home page if the user is authenticated and tries to access public routes
   if (isPublicRoute && session?.token) {
-    const redirectPath =
-      session.role === LOGIN_ROLE.ORGANISATION
-        ? PRIVATE_ROUTES.ORGANISATIONS
-        : PRIVATE_ROUTES.DASHBOARD_ANALYTICS;
+    const isOrganisation = session.role === LOGIN_ROLE.ORGANISATION;
+    const redirectPath = isOrganisation
+      ? PRIVATE_ROUTES.ORGANISATIONS_PROPERTIES
+      : PRIVATE_ROUTES.DASHBOARD_ANALYTICS;
 
     if (!req.nextUrl.pathname.startsWith(redirectPath)) {
       return NextResponse.redirect(
         new URL(withBasePath(req, redirectPath), req.nextUrl),
       );
     }
+  }
+
+  // 5. Restrict Organisation users to ONLY access the Properties route
+  if (
+    session?.token &&
+    session.role === LOGIN_ROLE.ORGANISATION &&
+    isProtectedRoute &&
+    path !== PRIVATE_ROUTES.ORGANISATIONS_PROPERTIES
+  ) {
+    console.log("🚫 Organisation access restricted:", path);
+    return NextResponse.redirect(
+      new URL(
+        withBasePath(req, PRIVATE_ROUTES.ORGANISATIONS_PROPERTIES),
+        req.nextUrl,
+      ),
+    );
   }
 
   return NextResponse.next();
