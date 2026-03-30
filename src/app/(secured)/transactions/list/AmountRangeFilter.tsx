@@ -7,11 +7,11 @@ const AmountRangeFilter = () => {
   const t = useTranslations("transactions");
   return (
     <NumericRangeFilter
-      label={t("Amount Range")}
+      label={t("amountRange")}
       minParamName="minAmount"
       maxParamName="maxAmount"
-      placeholderMin={t("Min")}
-      placeholderMax={t("Max")}
+      placeholderMin={t("min")}
+      placeholderMax={t("max")}
     />
   );
 };

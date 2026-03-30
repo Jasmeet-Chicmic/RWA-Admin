@@ -51,13 +51,13 @@ const EditSubscriptionModal = ({
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
-      toast.error(t("Please provide a reason for this adjustment"));
+      toast.error(t("pleaseProvideAReasonForThisAdjustment"));
       return;
     }
 
     if (isSeatCountInvalid) {
       toast.error(
-        t("Seat count error", {
+        t("seatCountError", {
           min: MIN_ORGANISATION_SEATS,
         }),
       );
@@ -76,14 +76,14 @@ const EditSubscriptionModal = ({
       });
 
       if (res.status) {
-        toast.success(t("Subscription adjusted successfully"));
+        toast.success(t("subscriptionAdjustedSuccessfully"));
         onSuccess();
         onClose();
       } else {
-        toast.error(res.message || t("Failed to adjust subscription"));
+        toast.error(res.message || t("failedToAdjustSubscription"));
       }
     } catch {
-      toast.error(t("An unexpected error occurred"));
+      toast.error(t("anUnexpectedErrorOccurred"));
     } finally {
       setIsSubmitting(false);
     }
@@ -99,7 +99,7 @@ const EditSubscriptionModal = ({
     <CustomModal
       isOpen={isOpen}
       onClose={onClose}
-      title={t("Edit Subscription")}
+      title={t("editSubscription")}
       size="lg"
     >
       <div className="space-y-5 overflow-y-auto max-h-[60vh] pr-1">
@@ -117,7 +117,7 @@ const EditSubscriptionModal = ({
 
         {/* Status */}
         <div>
-          <label className={labelClassName}>{t("Status")}</label>
+          <label className={labelClassName}>{t("status")}</label>
           <select
             value={status}
             onChange={(e) => setStatus(Number(e.target.value))}
@@ -133,7 +133,7 @@ const EditSubscriptionModal = ({
 
         {/* Billing Cycle */}
         <div>
-          <label className={labelClassName}>{t("Billing Cycle")}</label>
+          <label className={labelClassName}>{t("billingCycle")}</label>
           <select
             value={billingCycle}
             onChange={(e) => setBillingCycle(Number(e.target.value))}
@@ -149,7 +149,7 @@ const EditSubscriptionModal = ({
 
         {/* End Date */}
         <div>
-          <label className={labelClassName}>{t("End Date")}</label>
+          <label className={labelClassName}>{t("endDate")}</label>
           <input
             type="date"
             value={endDate}
@@ -161,7 +161,7 @@ const EditSubscriptionModal = ({
         {/* Seat Count — Organisation only */}
         {isOrganisation ? (
           <div>
-            <label className={labelClassName}>{t("Seat Count")}</label>
+            <label className={labelClassName}>{t("seatCount")}</label>
             <input
               type="number"
               min={MIN_ORGANISATION_SEATS}
@@ -175,13 +175,13 @@ const EditSubscriptionModal = ({
             />
             {isSeatCountInvalid ? (
               <p className="text-[11px] text-red-500 dark:text-red-400 mt-1">
-                {t("Seat count error", {
+                {t("seatCountError", {
                   min: MIN_ORGANISATION_SEATS,
                 })}
               </p>
             ) : (
               <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
-                {t("Minimum organisation seats info", {
+                {t("minimumOrganisationSeatsInfo", {
                   min: MIN_ORGANISATION_SEATS,
                 })}
               </p>
@@ -189,7 +189,7 @@ const EditSubscriptionModal = ({
           </div>
         ) : (
           <div>
-            <label className={labelClassName}>{t("Seat Count")}</label>
+            <label className={labelClassName}>{t("seatCount")}</label>
             <input
               type="number"
               value={DEFAULT_USER_SEATS}
@@ -197,7 +197,7 @@ const EditSubscriptionModal = ({
               className={`${inputClassName} opacity-50 cursor-not-allowed`}
             />
             <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
-              {t("Seat editing organisation only info")}
+              {t("seatEditingOrganisationOnlyInfo")}
             </p>
           </div>
         )}
@@ -205,12 +205,12 @@ const EditSubscriptionModal = ({
         {/* Reason */}
         <div>
           <label className={labelClassName}>
-            {t("Reason")} <span className="text-red-500">*</span>
+            {t("reason")} <span className="text-red-500">*</span>
           </label>
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder={t("Enter reason for this adjustment")}
+            placeholder={t("enterReasonForThisAdjustment")}
             rows={3}
             className={`${inputClassName} resize-none`}
           />
@@ -224,14 +224,14 @@ const EditSubscriptionModal = ({
           disabled={isSubmitting}
           className="px-5 py-2.5 rounded-xl text-sm font-medium text-textprimary dark:text-sidebartext bg-gray-100 dark:bg-darkbgsecondary hover:bg-gray-200 dark:hover:bg-darkbordercolor1 transition-all"
         >
-          {t("Cancel")}
+          {t("cancel")}
         </button>
         <button
           onClick={handleSubmit}
           disabled={isSubmitting}
           className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-primarycolor dark:bg-secondarycolor dark:text-black hover:bg-primaryhover dark:hover:bg-secondaryhover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? t("Saving") : t("Save Changes")}
+          {isSubmitting ? t("saving") : t("saveChanges")}
         </button>
       </div>
     </CustomModal>

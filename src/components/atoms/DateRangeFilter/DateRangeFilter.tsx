@@ -155,7 +155,7 @@ const DateRangeFilter = ({
             htmlFor={id ? `${id}-from` : undefined}
             className="text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-1"
           >
-            {t("From Date")}
+            {t("fromDate")}
           </label>
           <input
             type="date"
@@ -171,7 +171,7 @@ const DateRangeFilter = ({
             htmlFor={id ? `${id}-to` : undefined}
             className="text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-1"
           >
-            {t("To Date")}
+            {t("toDate")}
           </label>
           <input
             type="date"
@@ -197,14 +197,14 @@ const DateRangeFilter = ({
             !fromDate ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {t("Apply")}
+          {t("apply")}
         </button>
         {hasFilters && (
           <button
             onClick={handleClear}
             className="flex-1 px-4 py-2 border-2 border-bordercolor1 dark:border-secondarycolor text-primarycolor dark:text-white font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-white dark:hover:text-secondarycolor transition-all duration-200"
           >
-            {t("Clear")}
+            {t("clear")}
           </button>
         )}
       </div>

@@ -1,30 +1,23 @@
 "use client";
 
+import { RayptoLogoDark } from "@/assets";
+import { isRouteAllowed } from "@/lib/isRouteAllowed";
+import { sessionService } from "@/services/session-service";
+import { LOGIN_ROLE, THEME_TYPE } from "@/shared/constants";
+import { ROUTES } from "@/shared/routes";
+import { cn } from "@/shared/utils";
 import { ChevronDown, ChevronRight, Menu, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { RayptoLogoDark } from "@/assets";
-import { cn } from "@/shared/utils";
-import {
-  NavItem,
-  getNavItemLabelKey,
-  getFilteredNavItems,
-} from "./helpers/constants";
-import { useTheme } from "next-themes";
-import { LOGIN_ROLE, THEME_TYPE } from "@/shared/constants";
 import CommandPalette from "../CommandPalette";
-import { ROUTES } from "@/shared/routes";
-import { APP_BASE_PATH } from "@/shared/constants";
+import { NavItem, getFilteredNavItems } from "./helpers/constants";
 
 const isItemActive = (pathname: string, item: NavItem): boolean => {
-  if (
-    item.activePaths?.some((path) =>
-      path === "/" ? pathname === "/" : pathname.startsWith(path),
-    )
-  ) {
+  if (item.activePaths?.some((path) => isRouteAllowed(pathname, [path]))) {
     return true;
   }
   return item.children?.some((child) => isItemActive(pathname, child)) ?? false;
@@ -46,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
-  const t = useTranslations("common");
+  const t = useTranslations();
 
   // Fetch role from session on mount
   useEffect(() => {
@@ -58,17 +51,9 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
     const fetchRole = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${APP_BASE_PATH}/api/session`, {
-          method: "GET",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (
-            data.role &&
-            Object.values(LOGIN_ROLE).includes(data.role as LOGIN_ROLE)
-          ) {
-            setUserRole(data.role as LOGIN_ROLE);
-          }
+        const data = await sessionService.getSession();
+        if (data.role && Object.values(LOGIN_ROLE).includes(data.role)) {
+          setUserRole(data.role);
         }
       } catch (err) {
         console.error("Failed to fetch session role:", err);
@@ -103,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
             foundActive = true;
           }
         } else if (
-          item.activePaths?.some((path) => pathname.startsWith(path))
+          item.activePaths?.some((path) => isRouteAllowed(pathname, [path]))
         ) {
           foundActive = true;
         }
@@ -129,11 +114,11 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
     iconClass: string,
   ) => {
     const Icon = item.icon;
-    if (Icon) return <Icon size={24} className={iconClass} />;
+    if (Icon) return <Icon size={20} className={iconClass} />;
     return (
       <span
         className={cn(
-          "list-item-icon transition-transform duration-200 w-[10px] h-[10px] rounded-full flex-shrink-0",
+          "list-item-icon transition-transform duration-200 w-[8px] h-[8px] rounded-full flex-shrink-0",
           isActive
             ? "bg-primarycolor dark:bg-white"
             : "border-none bg-sidebarlinkcolor dark:bg-white/70",
@@ -161,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
             className={cn(
               "flex items-center px-3 py-3 rounded-[5px] sub-menu-item transition-all duration-200 group",
               isActive
-                ? "sub-menu-item-active"
+                ? "sub-menu-item-active bg-primarycolor/15 dark:bg-white/10"
                 : "hover:bg-primaryhover dark:hover:bg-none",
             )}
             prefetch
@@ -179,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
                   : "text-sidebarlinkcolor group-hover:text-white dark:text-white/70 dark:group-hover:text-white",
               )}
             >
-              {t(getNavItemLabelKey(item.label))}
+              {t(item.label)}
             </span>
             {item.badge && (
               <span className="ml-2 px-2 py-1 text-[0.875] font-bold rounded-full bg-bgblue text-white">
@@ -194,7 +179,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
               className={cn(
                 "group flex items-center px-3 py-3 rounded-[5px] cursor-pointer sidebar-menu-item w-full text-left transition-all duration-200 hover:bg-primaryhover hover:text-white dark:hover:bg-primaryhover",
                 isActive &&
-                  "bg-transparent hover:bg-primaryhover dark:hover:bg-none",
+                  "bg-primarycolor/15 text-primarycolor dark:bg-white/10 dark:text-white",
               )}
               style={{ paddingLeft }}
               onClick={() => toggleExpand(item.label)}
@@ -211,14 +196,14 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
                   "group-hover:text-white",
                 )}
               >
-                {t(getNavItemLabelKey(item.label))}
+                {t(item.label)}
               </span>
               {isExpandable && (
                 <div className="ml-2 transition-transform duration-200">
                   {expanded[item.label] ? (
-                    <ChevronDown size={16} className={iconClass} />
+                    <ChevronDown size={14} className={iconClass} />
                   ) : (
-                    <ChevronRight size={16} className={iconClass} />
+                    <ChevronRight size={14} className={iconClass} />
                   )}
                 </div>
               )}
@@ -280,7 +265,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
           </div>
         </div>
 
-        <nav className="p-[7px] pt-[20px] lg:px-9 lg:py-4 h-[calc(100vh-128px)] overflow-y-auto custom-scrollbar">
+        <nav className="p-[7px] pt-[20px] lg:px-3 lg:py-3 h-[calc(100vh-128px)] overflow-y-auto custom-scrollbar">
           {/* Search Bar */}
           <div className="relative mt-2 mb-3 mx-[4px] block lg:hidden">
             <Search
@@ -319,6 +304,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
       <CommandPalette
         isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
+        items={filteredNavItems}
       />
     </>
   );

@@ -32,7 +32,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 dark:text-red-400 mb-2">
-            {t("Promo code not found")}
+            {t("promoCodeNotFound")}
           </p>
         </div>
       </div>
@@ -48,7 +48,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           className="inline-flex items-center gap-2 text-sm font-medium text-textparagraph dark:text-textparagraphlight hover:text-primarycolor dark:hover:text-primarycolor transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{t("Back to promo codes")}</span>
+          <span>{t("backToPromoCodes")}</span>
         </Link>
       </div>
 

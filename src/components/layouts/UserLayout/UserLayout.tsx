@@ -43,16 +43,16 @@ const UserLayout = async ({
 
   const userStats: ProfileStat[] = [
     {
-      title: t("Connections"),
+      title: t("connections"),
       value: data.connectionCount ?? 0,
-      // subtitle: t("Total connections"),
+      // subtitle: t("totalConnections"),
       icon: <Gamepad2 className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Following"),
+      title: t("following"),
       value: data.followingCount ?? 0,
-      // subtitle: t("Total following"),
+      // subtitle: t("totalFollowing"),
       icon: <UserPlus2 className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
@@ -64,9 +64,9 @@ const UserLayout = async ({
     //   color: "bg-bordercolor1 dark:bg-emerald-900/30",
     // },
     {
-      title: t("Followers"),
+      title: t("followers"),
       value: data.followerCount ?? 0,
-      // subtitle: t("Total followers"),
+      // subtitle: t("totalFollowers"),
       icon: <TrendingUp className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },

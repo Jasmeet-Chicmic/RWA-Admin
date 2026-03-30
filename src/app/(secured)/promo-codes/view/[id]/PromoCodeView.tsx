@@ -26,16 +26,16 @@ const PromoCodeView = ({ promoCode }: Props) => {
   const users: RedeemedUser[] = promoCode.users ?? [];
 
   const userColumns: TableColumn<RedeemedUser>[] = [
-    { title: t("User Name"), field: "userName" },
-    { title: t("Email"), field: "email" },
+    { title: t("userName"), field: "userName" },
+    { title: t("email"), field: "email" },
     {
-      title: t("Used At"),
+      title: t("usedAt"),
       field: "usedAt",
       render: (item) =>
         item.usedAt ? <FormattedDate date={item.usedAt} /> : "-",
     },
     {
-      title: t("Stripe Subscription ID"),
+      title: t("stripeSubscriptionId"),
       field: "stripeSubscriptionId",
       render: (item) => item.stripeSubscriptionId || "-",
     },
@@ -67,7 +67,7 @@ const PromoCodeView = ({ promoCode }: Props) => {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-[1.25rem] lg:text-[1.5rem] font-bold text-textprimary dark:text-sidebartext">
-              {t("Promo Code Details")}
+              {t("promoCodeDetails")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
               {promoCode.code}
@@ -78,12 +78,12 @@ const PromoCodeView = ({ promoCode }: Props) => {
 
       <div className="bg-bgwhite dark:bg-darkbgprimary rounded-[0_0_20px_20px] mb-4 border-t border-bordercolor1 dark:border-darkbordercolor1 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          <Info label={t("Code")} value={promoCode.code} />
-          <Info label={t("Description")} value={promoCode.description || "-"} />
-          <Info label={t("Discount")} value={discountLabel} />
-          <Info label={t("Duration")} value={durationLabel} />
+          <Info label={t("code")} value={promoCode.code} />
+          <Info label={t("description")} value={promoCode.description || "-"} />
+          <Info label={t("discount")} value={discountLabel} />
+          <Info label={t("duration")} value={durationLabel} />
           <Info
-            label={t("Valid From")}
+            label={t("validFrom")}
             value={
               promoCode.validFrom ? (
                 <FormattedDate date={promoCode.validFrom} />
@@ -93,7 +93,7 @@ const PromoCodeView = ({ promoCode }: Props) => {
             }
           />
           <Info
-            label={t("Valid Until")}
+            label={t("validUntil")}
             value={
               promoCode.validUntil ? (
                 <FormattedDate date={promoCode.validUntil} />
@@ -103,15 +103,15 @@ const PromoCodeView = ({ promoCode }: Props) => {
             }
           />
           <Info
-            label={t("Is Active")}
-            value={promoCode.isActive ? t("Active") : t("Inactive")}
+            label={t("isActive")}
+            value={promoCode.isActive ? t("active") : t("inactive")}
           />
           <Info
-            label={t("Max Redemptions")}
+            label={t("maxRedemptions")}
             value={String(promoCode.maxRedemptions ?? 0)}
           />
           <Info
-            label={t("Redemptions")}
+            label={t("redemptions")}
             value={String(promoCode.redemptionCount ?? 0)}
           />
         </div>
@@ -121,7 +121,7 @@ const PromoCodeView = ({ promoCode }: Props) => {
         <div className="px-6 py-4 border-b border-bordercolor1 dark:border-bordercolor2">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Redeemed Users")}
+              {t("redeemedUsers")}
             </h3>
             <span className="text-sm font-medium text-textparagraph dark:text-textparagraphlight">
               {users.length}
@@ -133,7 +133,7 @@ const PromoCodeView = ({ promoCode }: Props) => {
           data={users}
           columns={userColumns}
           keyExtractor={(item) => item.userId}
-          emptyMessage={t("No users have redeemed this promo code yet")}
+          emptyMessage={t("noUsersHaveRedeemedThisPromoCodeYet")}
           onRowClick={(item) => {
             if (item.userId) {
               router.push(`/users/view/${item.userId}/account`, {

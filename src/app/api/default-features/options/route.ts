@@ -1,3 +1,7 @@
+/**
+ * This API route is intentionally server-side only.
+ * Reason: server-side DTO shaping for feature options.
+ */
 import { NextRequest, NextResponse } from "next/server";
 
 import { getDefaultFeaturesAction } from "@/api/features";

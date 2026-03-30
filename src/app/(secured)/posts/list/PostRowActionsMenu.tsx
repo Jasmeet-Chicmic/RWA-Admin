@@ -91,7 +91,7 @@ const PostRowActionsMenu = ({
     <CustomModal
       isOpen={isOpen}
       onClose={onClose}
-      title={t("Post actions")}
+      title={t("postActions")}
       size="sm"
     >
       <div className="space-y-1">

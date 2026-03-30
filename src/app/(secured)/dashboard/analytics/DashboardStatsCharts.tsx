@@ -1,13 +1,15 @@
 "use client";
 
-import { Users, Activity, TrendingUp } from "lucide-react";
-import { useTranslations } from "next-intl";
 import StatCard from "@/components/atoms/StatCard";
-import { UserRetentionData } from "@/api/dashboard";
-import { SubscriptionAnalytics } from "@/api/adminPlans";
-import TopPropertiesTable from "./TopPropertiesTable";
-import { AdminPropertiesDetails } from "@/api/adminProperties.types";
+import {
+  AdminPropertiesDetails,
+  SubscriptionAnalytics,
+  UserRetentionData,
+} from "@/services/analytics-service";
 import { DISPLAY_CURRENCY } from "@/shared/utils/unitUtils";
+import { Activity, TrendingUp, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
+import TopPropertiesTable from "./TopPropertiesTable";
 
 interface DashboardStatsChartsProps {
   retentionData: UserRetentionData;
@@ -30,11 +32,6 @@ const DashboardStatsCharts = ({
     const n = typeof value === "number" ? value : Number(value);
     return Number.isFinite(n) ? n : 0;
   };
-  console.log("🔥 propertiesDetails", propertiesDetails);
-  console.log("🔥 retentionData", retentionData);
-  console.log("🔥 subscriptionAnalytics", subscriptionAnalytics);
-  console.log("🔥 initialFromDate", initialFromDate);
-  console.log("🔥 initialToDate", initialToDate);
   const formatNumber = (value: unknown) =>
     new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
       toFiniteNumber(value),

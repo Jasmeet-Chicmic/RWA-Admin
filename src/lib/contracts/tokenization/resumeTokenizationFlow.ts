@@ -1,15 +1,13 @@
+import { propertyOnchainService } from "@/services/property-onchain-service";
 import { PublicClient, WalletClient } from "viem";
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { postApiJson } from "@/shared/clientApi";
-import type { InitiateOnchainTrackingResponse } from "@/shared/types/internalApi";
 import { computeDeployParams } from "./computeDeployParams";
 import { buildGasConfig } from "./gasConfig";
+import { fetchJobStatus } from "./statusCheck";
 import { runIdentityStep } from "./steps/identityStep";
 import { runMintStep } from "./steps/mintStep";
 import { runRegistryStep } from "./steps/registryStep";
 import { runTrexStep } from "./steps/trexStep";
 import { runVaultStep } from "./steps/vaultStep";
-import { fetchJobStatus } from "./statusCheck";
 import {
   PROPERTY_REGISTRATION_JOB_STATUS,
   TOKENIZATION_FLOW_STEPS,
@@ -19,8 +17,6 @@ import {
   type TokenizationFlowResult,
   type TokenizationFlowStep,
 } from "./types";
-
-const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 type RunTokenizationFlowParams = {
   walletClient: WalletClient;
@@ -47,11 +43,6 @@ const START_STEP_ORDER: Record<StartStep, number> = {
   mint: 5,
   compliance: 6,
 };
-
-const postTokenizationApi = <TResponse, TBody>(path: string, body: TBody) =>
-  postApiJson<TResponse, TBody>(path, body, {
-    timeoutMs: TOKENIZATION_API_TIMEOUT_MS,
-  });
 
 const getActiveAccount = (walletClient: WalletClient): ActiveAccount => {
   const account = walletClient.account;
@@ -99,12 +90,21 @@ const shouldRunStep = (
   step: Exclude<StartStep, "initiate">,
 ) => START_STEP_ORDER[startFrom] <= START_STEP_ORDER[step];
 
-const initiateTracking = async (propertyId: string) => {
+const initiateTracking = async ({
+  propertyId,
+  mintAmount,
+  pricePerShare,
+}: {
+  propertyId: string;
+  mintAmount: number;
+  pricePerShare: number;
+}) => {
   console.log("[TokenizationFlow] Initiating onchain tracking job");
-  const payload = await postTokenizationApi<
-    InitiateOnchainTrackingResponse,
-    { propertyId: string }
-  >(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_INITIATE, { propertyId });
+  const payload = await propertyOnchainService.initiate({
+    propertyId,
+    mintAmount,
+    pricePerShare,
+  });
 
   if (!payload?.status || !payload?.data?.jobId) {
     throw new Error(
@@ -140,7 +140,7 @@ const ensureTrexSubmittedJobIsConfirmed = async ({
     throw new Error("Existing deployTREXSuite tx failed while resuming");
   }
 
-  await postTokenizationApi(INTERNAL_API_PATHS.PROPERTY_ONCHAIN_TREX_DEPLOYED, {
+  await propertyOnchainService.trexDeployed({
     propertyId,
     txHash: receipt.transactionHash,
   });
@@ -195,11 +195,19 @@ export const resumeTokenizationFlow = async ({
     existingStatus?.registerPropertyTxHash ?? undefined;
 
   if (startFrom === "initiate") {
-    const initiated = await initiateTracking(input.propertyId);
+    const initiated = await initiateTracking({
+      propertyId: input.propertyId,
+      mintAmount: input.initiateMintAmount,
+      pricePerShare: input.initiatePricePerShare,
+    });
     jobId = initiated.jobId;
     apiMessages.initiate = initiated.message;
   } else if (!jobId) {
-    const initiated = await initiateTracking(input.propertyId);
+    const initiated = await initiateTracking({
+      propertyId: input.propertyId,
+      mintAmount: input.initiateMintAmount,
+      pricePerShare: input.initiatePricePerShare,
+    });
     jobId = initiated.jobId;
     apiMessages.initiate = initiated.message;
   }

@@ -29,7 +29,7 @@ const GroupViewPage = async ({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 dark:text-red-400 mb-2">
-            {t("Group not found")}
+            {t("groupNotFound")}
           </p>
         </div>
       </div>
@@ -38,23 +38,23 @@ const GroupViewPage = async ({
 
   const stats: ProfileStat[] = [
     {
-      title: t("Members"),
+      title: t("members"),
       value: group.membersCount ?? 0,
-      subtitle: t("Total members"),
+      subtitle: t("totalMembers"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("User Reports"),
+      title: t("userReports"),
       value: group.reportCount ?? 0,
-      subtitle: t("Report Count by Users"),
+      subtitle: t("reportCountByUsers"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Group Activity Score"),
+      title: t("groupActivityScore"),
       value: group.healthScore ?? 0,
-      subtitle: t("Group Activity Score"),
+      subtitle: t("groupActivityScore"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
@@ -69,7 +69,7 @@ const GroupViewPage = async ({
           className="inline-flex items-center gap-2 text-sm font-medium text-textparagraph dark:text-textparagraphlight hover:text-primarycolor dark:hover:text-primarycolor transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{t("Back to groups")}</span>
+          <span>{t("backToGroups")}</span>
         </Link>
       </div>
 
@@ -81,7 +81,7 @@ const GroupViewPage = async ({
         {group.description && (
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-2">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Description")}
+              {t("description")}
             </h3>
             <p className="text-[15px] text-textparagraph dark:text-textparagraphlight">
               {group.description}
@@ -93,7 +93,7 @@ const GroupViewPage = async ({
         {group.rules && (
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-2">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Rules")}
+              {t("rules")}
             </h3>
             <div
               className="prose prose-sm max-w-none text-textparagraph dark:text-textparagraphlight prose-p:mb-2"
@@ -107,7 +107,7 @@ const GroupViewPage = async ({
           {/* Owner */}
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-4 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Owner")}
+              {t("owner")}
             </h3>
             <EventParticipantItem
               userId={group.owner.id}
@@ -121,7 +121,7 @@ const GroupViewPage = async ({
           {/* Admins */}
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-4 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Admins")}
+              {t("admins")}
             </h3>
             {group.admins.length ? (
               <div
@@ -146,7 +146,7 @@ const GroupViewPage = async ({
               </div>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No admins available")}
+                {t("noAdminsAvailable")}
               </p>
             )}
           </div>
@@ -154,7 +154,7 @@ const GroupViewPage = async ({
           {/* Moderators */}
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-4 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Moderators")}
+              {t("moderators")}
             </h3>
             {group.moderators && group.moderators.length ? (
               <div
@@ -179,7 +179,7 @@ const GroupViewPage = async ({
               </div>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No moderators available")}
+                {t("noModeratorsAvailable")}
               </p>
             )}
           </div>
@@ -187,7 +187,7 @@ const GroupViewPage = async ({
           {/* Members */}
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-4 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Members")}
+              {t("members")}
             </h3>
             {group.members && group.members.length ? (
               <div
@@ -212,7 +212,7 @@ const GroupViewPage = async ({
               </div>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No members available")}
+                {t("noMembersAvailable")}
               </p>
             )}
           </div>
@@ -222,16 +222,16 @@ const GroupViewPage = async ({
         <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-4 space-y-1 text-sm text-textparagraph dark:text-textparagraphlight">
           <p className="text-[12px] lg:text-[14px]">
             <span className="text-[12px] lg:text-[14px] font-semibold">
-              {t("Created On")}:
+              {t("createdOn")}:
             </span>{" "}
             <FormattedDate date={group.createdOn} />
           </p>
 
           <p className="text-[12px] lg:text-[14px]">
             <span className="text-[12px] lg:text-[14px] font-semibold">
-              {t("Closed")}:
+              {t("closed")}:
             </span>{" "}
-            {group.isClosed ? t("Yes") : t("No")}
+            {group.isClosed ? t("yes") : t("no")}
           </p>
         </div>
       </ProfilePageLayout>

@@ -1,20 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useAppKit } from "@reown/appkit/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useAppKit } from "@reown/appkit/react";
-import { useDisconnect, useSignMessage } from "wagmi";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { useDisconnect, useSignMessage } from "wagmi";
 
 import Button from "@/components/atoms/Button";
 import { useWalletState } from "@/components/providers/WalletStateProvider";
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { postApiJson } from "@/shared/clientApi";
 import { LOGIN_ROLE } from "@/shared/constants";
-import { ROUTES } from "@/shared/routes";
+import { PRIVATE_ROUTES } from "@/shared/routes";
 import { createSessionClient } from "@/shared/utils";
 import { handleWeb3Error } from "@/shared/utils/web3Error";
+import { verifyWalletThunk } from "@/store/authSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 function buildSiweMessage({
   domain,
@@ -32,14 +32,9 @@ function buildSiweMessage({
   return `${domain} wants you to sign in with your Ethereum account:\n${wallet}\n\nURI: https://${domain}\nVersion: 1\nChain ID: ${chainId}\nNonce: ${nonce}\nIssued At: ${issuedAt}\nExpiration Time: ${expiresAt}`;
 }
 
-const WALLET_VERIFY_API_MAP = {
-  [LOGIN_ROLE.ADMIN]: INTERNAL_API_PATHS.ADMIN_WALLET_VERIFY,
-  [LOGIN_ROLE.ORGANISATION]: INTERNAL_API_PATHS.ORG_WALLET_VERIFY,
-} as const;
-
 const ROLE_REDIRECT_MAP = {
-  [LOGIN_ROLE.ADMIN]: ROUTES.DASHBOARD_ANALYTICS,
-  [LOGIN_ROLE.ORGANISATION]: ROUTES.ORGANISATIONS,
+  [LOGIN_ROLE.ADMIN]: PRIVATE_ROUTES.DASHBOARD_ANALYTICS,
+  [LOGIN_ROLE.ORGANISATION]: PRIVATE_ROUTES.ORGANISATIONS_PROPERTIES,
 } as const;
 
 type WalletConnectStepProps = {
@@ -57,6 +52,7 @@ const WalletConnectStep = ({
 }: WalletConnectStepProps) => {
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { open } = useAppKit();
   const { isConnected, address, chainId } = useWalletState();
   const { signMessageAsync } = useSignMessage();
@@ -107,28 +103,14 @@ const WalletConnectStep = ({
       });
       console.log("[Auth] Signature received:", signature);
 
-      const verifyEndpoint = WALLET_VERIFY_API_MAP[role];
-
-      const res = await postApiJson<
-        {
-          statusCode?: number;
-          status?: boolean;
-          message?: string;
-          data?: { token?: string };
-        },
-        { message: string; signature: string }
-      >(
-        verifyEndpoint,
-        {
+      const res = await dispatch(
+        verifyWalletThunk({
+          role,
           message,
           signature,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${tempToken}`,
-          },
-        },
-      );
+          tempToken,
+        }),
+      ).unwrap();
 
       console.log("🔥 Wallet verify response:", res);
 
@@ -149,6 +131,10 @@ const WalletConnectStep = ({
     } catch (error) {
       if (isDisconnectingWalletRef.current) return;
       console.error("🔥 Wallet verify error:", error);
+      if (typeof error === "string" && error.trim()) {
+        toast.error(error);
+        return;
+      }
       toast.error(handleWeb3Error(error));
     } finally {
       if (isMountedRef.current) {
@@ -165,6 +151,7 @@ const WalletConnectStep = ({
     address,
     chainId,
     role,
+    dispatch,
   ]);
 
   const handleWalletDisconnect = useCallback(async () => {
@@ -221,7 +208,7 @@ const WalletConnectStep = ({
         disabled={isVerifyingWallet}
         className="w-full"
       >
-        {tCommon("Back to Login")}
+        {tCommon("backToLogin")}
       </Button>
 
       <Button
@@ -238,8 +225,8 @@ const WalletConnectStep = ({
         className="mt-4 w-full text-black"
       >
         {isConnected && address
-          ? tCommon("Disconnect Wallet")
-          : tCommon("Connect Wallet")}
+          ? tCommon("disconnectWallet")
+          : tCommon("connectWallet")}
       </Button>
     </>
   );

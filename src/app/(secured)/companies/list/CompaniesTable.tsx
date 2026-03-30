@@ -62,20 +62,20 @@ const CompaniesTable = ({
         if (ok) {
           toast.success(
             (res as { message?: string })?.message ??
-              t("Company deleted successfully"),
+              t("companyDeletedSuccessfully"),
           );
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
           toast.error(
             (res as { message?: string })?.message ??
-              t("Failed to delete company"),
+              t("failedToDeleteCompany"),
           );
           setDeleteModal({ open: false, id: null });
         }
       } catch (error) {
         console.error("Failed to delete company", error);
-        toast.error(t("Failed to delete company"));
+        toast.error(t("failedToDeleteCompany"));
         setDeleteModal({ open: false, id: null });
       } finally {
         setDeletingId(null);
@@ -94,14 +94,14 @@ const CompaniesTable = ({
           isActive,
         })) as SimpleResponse;
         if (res.status) {
-          toast.success(t("Company access updated successfully"));
+          toast.success(t("companyAccessUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(t("Failed to update company access"));
+          toast.error(t("failedToUpdateCompanyAccess"));
         }
       } catch (error) {
         console.error("Failed to update company access", error);
-        toast.error(t("Failed to update company access"));
+        toast.error(t("failedToUpdateCompanyAccess"));
       } finally {
         setActionLoading(null);
       }
@@ -113,7 +113,7 @@ const CompaniesTable = ({
     const columns: TableColumn<AdminCompany>[] = [
       createSortableColumn(
         "name",
-        t("Company Name"),
+        t("companyName"),
         (item) => (
           <span
             className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}
@@ -126,7 +126,7 @@ const CompaniesTable = ({
       ),
       createSortableColumn(
         "industry",
-        t("Company Industry"),
+        t("companyIndustry"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.industry || "—"}
@@ -135,7 +135,7 @@ const CompaniesTable = ({
         "Industry",
       ),
       {
-        title: t("Created By"),
+        title: t("createdBy"),
         field: "creatorName",
         render: (item) => (
           <EventParticipantItem
@@ -149,7 +149,7 @@ const CompaniesTable = ({
         ),
       },
       {
-        title: t("Company Status"),
+        title: t("companyStatus"),
         field: "isActive",
         render: (item) => (
           <div className="flex items-center">
@@ -174,7 +174,7 @@ const CompaniesTable = ({
                             : "bg-red-600"
                         }`}
                       />
-                      {isActive ? t("Active") : t("Inactive")}
+                      {isActive ? t("active") : t("inactive")}
                       <ChevronDown size={14} className="opacity-60" />
                     </div>
                   }
@@ -183,7 +183,7 @@ const CompaniesTable = ({
                       label: (
                         <div className="flex items-center gap-2 py-1">
                           <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                          <span className="font-medium">{t("Active")}</span>
+                          <span className="font-medium">{t("active")}</span>
                         </div>
                       ),
                       onClick: () => void handleToggleStatus(item.id, true),
@@ -193,7 +193,7 @@ const CompaniesTable = ({
                       label: (
                         <div className="flex items-center gap-2 py-1">
                           <div className="w-2 h-2 rounded-full bg-red-500" />
-                          <span className="font-medium">{t("Inactive")}</span>
+                          <span className="font-medium">{t("inactive")}</span>
                         </div>
                       ),
                       onClick: () => void handleToggleStatus(item.id, false),
@@ -207,7 +207,7 @@ const CompaniesTable = ({
         ),
       },
       // {
-      //   title: t("Message"),
+      //   title: t("message"),
       //   field: "message",
       //   render: (item) => (
       //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -216,7 +216,7 @@ const CompaniesTable = ({
       //   ),
       // },
       {
-        title: t("Date Created"),
+        title: t("dateCreated"),
         field: "createdOn",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -225,7 +225,7 @@ const CompaniesTable = ({
         ),
       },
       {
-        title: t("Job Listings"),
+        title: t("jobListings"),
         field: "jobsCount",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -234,7 +234,7 @@ const CompaniesTable = ({
         ),
       },
       {
-        title: t("Events Hosted"),
+        title: t("eventsHosted"),
         field: "eventsCount",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -243,7 +243,7 @@ const CompaniesTable = ({
         ),
       },
       {
-        title: t("Follower Count"),
+        title: t("followerCount"),
         field: "followersCount",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -252,7 +252,7 @@ const CompaniesTable = ({
         ),
       },
       {
-        title: t("Actions"),
+        title: t("actions"),
         field: "",
         fixed: "right",
         render: (item) => (
@@ -266,7 +266,7 @@ const CompaniesTable = ({
                 });
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View Company")}
+              title={t("viewCompany")}
             >
               <Eye size={18} />
             </button>
@@ -277,7 +277,7 @@ const CompaniesTable = ({
                 setDeleteModal({ open: true, id: item.id });
               }}
               className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-              title={t("Delete")}
+              title={t("delete")}
               disabled={deletingId === item.id}
             >
               <Trash2 size={18} />
@@ -292,7 +292,7 @@ const CompaniesTable = ({
       keyExtractor: (item) => item.id,
       paginationTitle: "companies",
       hideSelectCol: true,
-      emptyMessage: t("No companies found"),
+      emptyMessage: t("noCompaniesFound"),
       queryConfig: {
         defaultSortKey: "CreatedOn",
         defaultSortDirection: SORT_DIRECTIONS.DESC,
@@ -304,16 +304,16 @@ const CompaniesTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Companies")}
+                {t("companies")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Header subtitle")}
+                {t("headerSubtitle")}
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <SearchToolbar
                 initialQuery={searchText}
-                placeholder={t("Search Companies")}
+                placeholder={t("searchCompanies")}
                 queryParamName="searchText"
               />
             </div>
@@ -336,8 +336,8 @@ const CompaniesTable = ({
           if (!deleteModal.id) return;
           await handleDeleteCompany(deleteModal.id);
         }}
-        title={t("Delete Company")}
-        message={t("Delete Company confirmation")}
+        title={t("deleteCompany")}
+        message={t("deleteCompanyConfirmation")}
         isLoading={!!deletingId}
       />
     </>

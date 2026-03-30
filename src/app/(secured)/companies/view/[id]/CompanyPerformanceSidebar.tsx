@@ -18,7 +18,7 @@ const CompanyPerformanceSidebar = ({
   return (
     <div className="space-y-4 sticky top-[20px]">
       <h3 className="text-base font-semibold text-textprimary dark:text-sidebartext">
-        {t("Company performance")}
+        {t("companyPerformance")}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {stats.map((stat, index) => (

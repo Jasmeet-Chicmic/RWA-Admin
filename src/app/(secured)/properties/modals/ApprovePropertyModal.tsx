@@ -139,7 +139,7 @@ const ApprovePropertyModal = ({
         <div className="px-6 py-4 border-b border-bordergray200 dark:border-darkbordercolor1 flex items-center justify-between bg-gray-50/50 dark:bg-white/5">
           <div>
             <h3 className="text-lg font-bold text-bgblack dark:text-white">
-              {t("Approve Property")}
+              {t("approveProperty")}
             </h3>
             <p className="text-sm text-textprimary dark:text-secondary truncate max-w-[300px]">
               {propertyName}
@@ -159,10 +159,10 @@ const ApprovePropertyModal = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-sm font-semibold text-bgblack dark:text-white">
-                {t("Reason for Approval")}
+                {t("reasonForApproval")}
               </label>
               <span className="text-[10px] uppercase tracking-wider font-bold text-textprimary dark:text-secondary">
-                {t("Optional")}
+                {t("optional")}
               </span>
             </div>
             <textarea
@@ -177,17 +177,17 @@ const ApprovePropertyModal = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-sm font-semibold text-bgblack dark:text-white">
-                {t("Supporting Documents")}
+                {t("supportingDocuments")}
               </label>
               <span className="text-[10px] uppercase tracking-wider font-bold text-textprimary dark:text-secondary">
-                {t("Optional")}
+                {t("optional")}
               </span>
             </div>
 
             {/* Document Type Selector (BEFORE UPLOAD) */}
             <div className="space-y-1.5">
               <p className="text-[11px] font-bold text-textprimary dark:text-secondary uppercase tracking-tight">
-                {t("Document Type")}
+                {t("documentType")}
               </p>
               <div className="relative">
                 <select
@@ -264,7 +264,7 @@ const ApprovePropertyModal = ({
             disabled={isPending}
             className="rounded-xl px-6 h-11"
           >
-            {t("Cancel")}
+            {t("cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -272,7 +272,7 @@ const ApprovePropertyModal = ({
             disabled={isUploading}
             className="rounded-xl px-8 h-11 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20"
           >
-            {t("Approve Property")}
+            {t("approveProperty")}
           </Button>
         </div>
       </div>

@@ -80,7 +80,7 @@ const ViewOrganisationModal = ({
               toast.success(tCommon("{entity} copied", { entity: label }));
             }}
             className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors text-gray-500"
-            title={tCommon("Copy")}
+            title={tCommon("copy")}
           >
             <Copy size={14} />
           </button>
@@ -93,21 +93,21 @@ const ViewOrganisationModal = ({
     <CustomModal
       isOpen={open}
       onClose={() => setOpen(false)}
-      title={t("Organisation Details")}
+      title={t("organisationDetails")}
       size="xl"
     >
       {isPending ? (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
           <Loader2 className="w-8 h-8 animate-spin text-primarycolor" />
           <p className="text-sm text-textparagraph dark:text-textparagraphlight italic">
-            {tCommon("Loading...")}
+            {tCommon("loading")}
           </p>
         </div>
       ) : organisation ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-          <DetailRow label={t("Organisation Name")} value={organisation.name} />
+          <DetailRow label={t("organisationName")} value={organisation.name} />
           <DetailRow
-            label={t("Organisation Status")}
+            label={t("status.label")}
             value={
               <span
                 className={`px-2 py-0.5 rounded-full text-xs font-medium ${getOrganizationStatusColor(
@@ -117,40 +117,40 @@ const ViewOrganisationModal = ({
                 {(() => {
                   const status = organisation.status as number;
                   if (status === ORGANIZATION_STATUS.ACTIVE)
-                    return t("OrganisationStatus.active");
+                    return t("organisationStatus.active");
                   if (status === ORGANIZATION_STATUS.INACTIVE)
-                    return t("OrganisationStatus.inactive");
+                    return t("organisationStatus.inactive");
                   return String(organisation.status);
                 })()}
               </span>
             }
           />
-          <DetailRow label={t("Entity Type")} value={organisation.entityType} />
+          <DetailRow label={t("entityType")} value={organisation.entityType} />
           <DetailRow
-            label={t("Registration Number")}
+            label={t("registrationNumber")}
             value={organisation.registrationNumber}
           />
           <DetailRow
-            label={t("Jurisdiction")}
+            label={t("jurisdiction")}
             value={organisation.jurisdiction}
           />
           <DetailRow
-            label={t("Incorporation Date")}
+            label={t("incorporationDate")}
             value={organisation.incorporationDate}
           />
           <DetailRow
-            label={t("Wallet Address")}
+            label={t("walletAddress")}
             value={organisation.walletAddress}
             copyable
           />
           <DetailRow
-            label={t("Properties Held")}
+            label={t("propertiesHeld")}
             value={organisation.propertyHolds}
           />
         </div>
       ) : (
         <div className="py-8 text-center text-textparagraph dark:text-textparagraphlight">
-          {t("No organisations found")}
+          {t("noOrganisationsFound")}
         </div>
       )}
     </CustomModal>

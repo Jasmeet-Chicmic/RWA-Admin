@@ -71,7 +71,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
       const thumbnailUrl = formData.thumbnailUrl?.trim() ?? "";
 
       if (!youTubeUrl) {
-        toast.error(t("YouTube URL is required"));
+        toast.error(t("youTubeUrlIsRequired"));
         return;
       }
 
@@ -89,21 +89,20 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
 
         if (!ok) {
           toast.error(
-            (res as { message?: string })?.message ??
-              t("Failed to create video"),
+            (res as { message?: string })?.message ?? t("failedToCreateVideo"),
           );
           return;
         }
 
         toast.success(
           (res as { message?: string })?.message ??
-            t("Video created successfully"),
+            t("videoCreatedSuccessfully"),
         );
         setIsCreateOpen(false);
         router.refresh();
       } catch (error) {
         console.error("Failed to create video", error);
-        toast.error(t("Failed to create video"));
+        toast.error(t("failedToCreateVideo"));
       } finally {
         setIsCreating(false);
       }
@@ -121,7 +120,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
       const thumbnailUrl = formData.thumbnailUrl?.trim() ?? "";
 
       if (!youTubeUrl) {
-        toast.error(t("YouTube URL is required"));
+        toast.error(t("youTubeUrlIsRequired"));
         return;
       }
 
@@ -140,21 +139,20 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
 
         if (!ok) {
           toast.error(
-            (res as { message?: string })?.message ??
-              t("Failed to update video"),
+            (res as { message?: string })?.message ?? t("failedToUpdateVideo"),
           );
           return;
         }
 
         toast.success(
           (res as { message?: string })?.message ??
-            t("Video updated successfully"),
+            t("videoUpdatedSuccessfully"),
         );
         setEditModal({ open: false, video: null });
         router.refresh();
       } catch (error) {
         console.error("Failed to update video", error);
-        toast.error(t("Failed to update video"));
+        toast.error(t("failedToUpdateVideo"));
       } finally {
         setIsUpdating(false);
       }
@@ -174,20 +172,19 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
         if (ok) {
           toast.success(
             (res as { message?: string })?.message ??
-              t("Video deleted successfully"),
+              t("videoDeletedSuccessfully"),
           );
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
           toast.error(
-            (res as { message?: string })?.message ??
-              t("Failed to delete video"),
+            (res as { message?: string })?.message ?? t("failedToDeleteVideo"),
           );
           setDeleteModal({ open: false, id: null });
         }
       } catch (error) {
         console.error("Failed to delete video", error);
-        toast.error(t("Failed to delete video"));
+        toast.error(t("failedToDeleteVideo"));
         setDeleteModal({ open: false, id: null });
       } finally {
         setDeletingId(null);
@@ -198,7 +195,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
 
   const columns: TableColumn<Video>[] = [
     {
-      title: t("Thumbnail"),
+      title: t("thumbnail"),
       field: "thumbnailUrl",
       width: "w-[120px]",
       render: (item) =>
@@ -218,7 +215,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
         ),
     },
     {
-      title: t("Title"),
+      title: t("title"),
       field: "title",
       render: (item) => (
         <span
@@ -230,7 +227,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
       ),
     },
     {
-      title: t("Description"),
+      title: t("description"),
       field: "description",
       render: (item) => (
         <p
@@ -242,7 +239,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
       ),
     },
     {
-      title: t("YouTube URL"),
+      title: t("youTubeUrl"),
       field: "youTubeUrl",
       render: (item) =>
         item.youTubeUrl ? (
@@ -259,7 +256,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
         ),
     },
     {
-      title: t("Actions"),
+      title: t("actions"),
       field: "",
       fixed: "right",
       render: (item) => (
@@ -272,7 +269,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
                 window.open(item.youTubeUrl, "_blank", "noopener,noreferrer");
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View")}
+              title={t("view")}
             >
               <Eye size={18} />
             </button>
@@ -284,7 +281,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
               setEditModal({ open: true, video: item });
             }}
             className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-            title={t("Edit")}
+            title={t("edit")}
           >
             <Pencil size={18} />
           </button>
@@ -295,7 +292,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
               setDeleteModal({ open: true, id: item.id });
             }}
             className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-            title={t("Delete")}
+            title={t("delete")}
             disabled={deletingId === item.id}
           >
             <Trash2 size={18} />
@@ -313,16 +310,16 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Videos")}
+              {t("videos")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("Header subtitle")}
+              {t("headerSubtitle")}
             </p>
           </div>
           <div className="flex items-initial space-x-4">
             <SearchToolbar
               initialQuery={searchText}
-              placeholder={t("Search Videos")}
+              placeholder={t("searchVideos")}
               queryParamName="searchText"
             />
             <button
@@ -331,7 +328,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
               className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
             >
               <Plus size={18} />
-              <span>{t("Create")}</span>
+              <span>{t("create")}</span>
             </button>
           </div>
         </div>
@@ -343,7 +340,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
           columns={columns}
           keyExtractor={(item) => item.id}
           hideSelectCol
-          emptyMessage={t("No videos found")}
+          emptyMessage={t("noVideosFound")}
         />
         <div>
           <Pagination
@@ -363,7 +360,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
           if (isCreating) return;
           setIsCreateOpen(false);
         }}
-        title={t("Create Video")}
+        title={t("createVideo")}
         size="md"
       >
         <FormBuilder<VideoFormValues>
@@ -371,42 +368,42 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
             {
               type: FORM_FIELDS_TYPES.TEXT,
               name: "title",
-              label: t("Title"),
-              placeholder: t("Enter video title"),
+              label: t("title"),
+              placeholder: t("enterVideoTitle"),
             },
             {
               type: FORM_FIELDS_TYPES.TEXTAREA,
               name: "description",
-              label: `${t("Description")} (${t("Optional")})`,
-              placeholder: t("Enter video description"),
+              label: `${t("description")} (${t("optional")})`,
+              placeholder: t("enterVideoDescription"),
             },
             {
               type: FORM_FIELDS_TYPES.TEXT,
               name: "youTubeUrl",
-              label: t("YouTube URL"),
+              label: t("youTubeUrl"),
               placeholder: "https://www.youtube.com/watch?v=...",
               validation: {
-                required: t("YouTube URL is required"),
+                required: t("youTubeUrlIsRequired"),
                 pattern: {
                   value: /^https?:\/\/.+/i,
-                  message: t("URL pattern error"),
+                  message: t("urlPatternError"),
                 },
               },
             },
             {
               type: FORM_FIELDS_TYPES.TEXT,
               name: "thumbnailUrl",
-              label: `${t("Thumbnail URL")} (${t("Optional")})`,
-              placeholder: t("Optional thumbnail URL"),
+              label: `${t("thumbnailUrl")} (${t("optional")})`,
+              placeholder: t("optionalThumbnailUrl"),
             },
           ]}
           onSubmit={handleCreateVideo}
-          submitText={isCreating ? t("Creating") : t("Create Video")}
+          submitText={isCreating ? t("creating") : t("createVideo")}
           isLoading={isCreating}
           scrollable={false}
           secondaryAction={
             <span className="text-sm font-medium text-labelprimary dark:text-darklabelprimary">
-              {t("Cancel")}
+              {t("cancel")}
             </span>
           }
           onSecondaryAction={() => {
@@ -423,7 +420,7 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
             if (isUpdating) return;
             setEditModal({ open: false, video: null });
           }}
-          title={t("Edit Video")}
+          title={t("editVideo")}
           size="md"
         >
           <FormBuilder<VideoFormValues>
@@ -437,42 +434,42 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
               {
                 type: FORM_FIELDS_TYPES.TEXT,
                 name: "title",
-                label: t("Title"),
-                placeholder: t("Enter video title"),
+                label: t("title"),
+                placeholder: t("enterVideoTitle"),
               },
               {
                 type: FORM_FIELDS_TYPES.TEXTAREA,
                 name: "description",
-                label: `${t("Description")} (${t("Optional")})`,
-                placeholder: t("Enter video description"),
+                label: `${t("description")} (${t("optional")})`,
+                placeholder: t("enterVideoDescription"),
               },
               {
                 type: FORM_FIELDS_TYPES.TEXT,
                 name: "youTubeUrl",
-                label: t("YouTube URL"),
+                label: t("youTubeUrl"),
                 placeholder: "https://www.youtube.com/watch?v=...",
                 validation: {
-                  required: t("YouTube URL is required"),
+                  required: t("youTubeUrlIsRequired"),
                   pattern: {
                     value: /^https?:\/\/.+/i,
-                    message: t("URL pattern error"),
+                    message: t("urlPatternError"),
                   },
                 },
               },
               {
                 type: FORM_FIELDS_TYPES.TEXT,
                 name: "thumbnailUrl",
-                label: `${t("Thumbnail URL")} (${t("Optional")})`,
-                placeholder: t("Optional thumbnail URL"),
+                label: `${t("thumbnailUrl")} (${t("optional")})`,
+                placeholder: t("optionalThumbnailUrl"),
               },
             ]}
             onSubmit={handleUpdateVideo}
-            submitText={isUpdating ? t("Saving") : t("Save Changes")}
+            submitText={isUpdating ? t("saving") : t("saveChanges")}
             isLoading={isUpdating}
             scrollable={false}
             secondaryAction={
               <span className="text-sm font-medium text-labelprimary dark:text-darklabelprimary">
-                {t("Cancel")}
+                {t("cancel")}
               </span>
             }
             onSecondaryAction={() => {
@@ -493,8 +490,8 @@ const VideosTable = ({ data, totalCount, searchText }: VideosTableProps) => {
           if (!deleteModal.id) return;
           await handleDeleteVideo(deleteModal.id);
         }}
-        title={t("Delete Video")}
-        message={t("Delete Video confirmation")}
+        title={t("deleteVideo")}
+        message={t("deleteVideoConfirmation")}
         isLoading={!!deletingId}
       />
     </>

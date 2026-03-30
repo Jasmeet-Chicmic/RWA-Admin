@@ -1,9 +1,8 @@
 "use client";
 
+import { useDebounce } from "@/hooks/useDebounce";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-import { debounce } from "@/shared/utils";
+import { useEffect, useState } from "react";
 
 import SearchInput from "../SearchInput";
 
@@ -21,22 +20,18 @@ const SearchToolbar = ({
 }: Props) => {
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
+  const debouncedQuery = useDebounce(query, 400);
 
-  const debouncedRedirect = debounce((val: string) => {
+  useEffect(() => {
     const searchParams = new URLSearchParams();
-    if (val) searchParams.set(queryParamName, val);
+    if (debouncedQuery) searchParams.set(queryParamName, debouncedQuery);
     router.push(`?${searchParams.toString()}`);
-  }, 400);
-
-  const handleChange = (val: string) => {
-    setQuery(val);
-    debouncedRedirect(val);
-  };
+  }, [debouncedQuery, queryParamName, router]);
 
   return (
     <SearchInput
       value={query || ""}
-      onChange={handleChange}
+      onChange={setQuery}
       placeholder={placeholder}
     />
   );

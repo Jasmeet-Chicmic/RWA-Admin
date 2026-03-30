@@ -47,7 +47,7 @@ export default function SeeMore({
       let left = 0;
       let right = description.length;
       let bestFit = description;
-      const seeMoreSuffix = `... ${t("See more")}`;
+      const seeMoreSuffix = `... ${t("seeMore")}`;
 
       while (left <= right) {
         const mid = Math.floor((left + right) / 2);
@@ -108,7 +108,7 @@ export default function SeeMore({
               }}
               className="text-primarycolor dark:text-secondarycolor hover:underline font-medium"
             >
-              {t("See less")}
+              {t("seeLess")}
             </button>
           )}
         </div>
@@ -128,7 +128,7 @@ export default function SeeMore({
                 }}
                 className="text-primarycolor dark:text-secondarycolor hover:underline font-medium"
               >
-                {t("See more")}
+                {t("seeMore")}
               </button>
             </>
           ) : (

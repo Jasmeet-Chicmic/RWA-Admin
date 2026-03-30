@@ -1,8 +1,5 @@
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { requestApiJson } from "@/shared/clientApi";
+import { propertyOnchainService } from "@/services/property-onchain-service";
 import type { JobStatusData } from "./types";
-
-const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 type JobStatusResponse = {
   statusCode?: number;
@@ -15,15 +12,9 @@ export const fetchJobStatus = async (
   propertyId: string,
 ): Promise<JobStatusData | null> => {
   try {
-    const payload = await requestApiJson<JobStatusResponse>(
-      `${INTERNAL_API_PATHS.PROPERTY_ONCHAIN_STATUS}?propertyId=${encodeURIComponent(
-        propertyId,
-      )}`,
-      {
-        method: "GET",
-        timeoutMs: TOKENIZATION_API_TIMEOUT_MS,
-      },
-    );
+    const payload = (await propertyOnchainService.status({
+      propertyId,
+    })) as JobStatusResponse;
 
     if (!payload?.status || !payload?.data) {
       return null;

@@ -45,76 +45,76 @@ const AddOrganisationModal = ({
     const fields = [
       {
         name: "name" as const,
-        label: t("Name"),
+        label: t("name"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Name"), tCommon),
+          required: getRequiredFieldMessage(t("name"), tCommon),
         },
       },
       {
         name: "email" as const,
-        label: t("Email"),
+        label: t("email"),
         type: FORM_FIELDS_TYPES.EMAIL,
         validation: {
-          required: getRequiredFieldMessage(t("Email"), tCommon),
+          required: getRequiredFieldMessage(t("email"), tCommon),
           pattern: {
             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: t("Invalid email address"),
+            message: t("invalidEmailAddress"),
           },
         },
       },
       {
         name: "password" as const,
-        label: t("Password"),
+        label: t("password"),
         type: FORM_FIELDS_TYPES.PASSWORD,
         validation: {
-          required: getRequiredFieldMessage(t("Password"), tCommon),
+          required: getRequiredFieldMessage(t("password"), tCommon),
           minLength: {
             value: 6,
-            message: t("Password must be at least 6 characters"),
+            message: t("passwordMustBeAtLeast6Characters"),
           },
         },
       },
       {
         name: "walletAddress" as const,
-        label: t("Wallet Address"),
+        label: t("walletAddress"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Wallet Address"), tCommon),
+          required: getRequiredFieldMessage(t("walletAddress"), tCommon),
         },
       },
       {
         name: "entityType" as const,
-        label: t("Entity Type"),
+        label: t("entityType"),
         type: FORM_FIELDS_TYPES.SELECT,
         options: ORGANIZATION_ENTITY_TYPE_OPTIONS,
         validation: {
-          required: getRequiredFieldMessage(t("Entity Type"), tCommon),
+          required: getRequiredFieldMessage(t("entityType"), tCommon),
         },
       },
       {
         name: "registrationNumber" as const,
-        label: t("Registration Number"),
+        label: t("registrationNumber"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Registration Number"), tCommon),
+          required: getRequiredFieldMessage(t("registrationNumber"), tCommon),
         },
       },
       {
         name: "jurisdiction" as const,
-        label: t("Jurisdiction"),
+        label: t("jurisdiction"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Jurisdiction"), tCommon),
+          required: getRequiredFieldMessage(t("jurisdiction"), tCommon),
         },
       },
       {
         name: "incorporationDate" as const,
-        label: t("Incorporation Date"),
+        label: t("incorporationDate"),
         type: FORM_FIELDS_TYPES.DATE,
         returnISOFormat: true,
         validation: {
-          required: getRequiredFieldMessage(t("Incorporation Date"), tCommon),
+          required: getRequiredFieldMessage(t("incorporationDate"), tCommon),
         },
       },
     ];
@@ -154,7 +154,7 @@ const AddOrganisationModal = ({
     <CustomModal
       isOpen={open}
       onClose={() => setOpen(false)}
-      title={t("Add Organisation")}
+      title={t("addOrganisation")}
       size="2xl"
     >
       <FormBuilder<AddOrganisationForm>

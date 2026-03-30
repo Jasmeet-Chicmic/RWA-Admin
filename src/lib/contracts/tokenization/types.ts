@@ -29,6 +29,8 @@ export type RunTokenizationFlowInput = {
   ipfsUri: string;
   totalUnits: bigint;
   totalValue: bigint;
+  initiateMintAmount: number;
+  initiatePricePerShare: number;
 };
 
 export type GasConfig = {

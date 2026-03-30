@@ -83,15 +83,15 @@ const UserGroupsTable = ({
           groupIds: [id],
         })) as { status?: boolean; message?: string };
         if (res.status) {
-          toast.success(res.message || t("Group deleted successfully"));
+          toast.success(res.message || t("groupDeletedSuccessfully"));
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to delete group"));
+          toast.error(res.message || t("failedToDeleteGroup"));
         }
       } catch (error) {
         console.error("Failed to delete group", error);
-        toast.error(t("Failed to delete group"));
+        toast.error(t("failedToDeleteGroup"));
       } finally {
         setDeletingId(null);
       }
@@ -101,7 +101,7 @@ const UserGroupsTable = ({
 
   const columns: TableColumn<AdminGroup>[] = [
     {
-      title: t("Group Name"),
+      title: t("groupName"),
       field: "name",
       render: (item) => (
         <span className={`font-medium ${TEXT_PRIMARY}`} title={item.name}>
@@ -112,7 +112,7 @@ const UserGroupsTable = ({
       sortKey: "Name",
     },
     {
-      title: t("Group Type"),
+      title: t("groupType"),
       field: "type",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -123,7 +123,7 @@ const UserGroupsTable = ({
       sortKey: "Type",
     },
     {
-      title: t("Member Count"),
+      title: t("memberCount"),
       field: "membersCount",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -134,7 +134,7 @@ const UserGroupsTable = ({
       sortKey: "MembersCount",
     },
     {
-      title: t("Report Count"),
+      title: t("reportCount"),
       field: "reportCount",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -147,50 +147,50 @@ const UserGroupsTable = ({
     {
       title: (
         <TableHeaderWithInfo
-          label={t("Group Status")}
-          options={[t("Active"), t("Inactive")]}
+          label={t("groupStatus")}
+          options={[t("active"), t("inactive")]}
         />
       ),
       field: "isActive",
       render: (item) =>
         item.isActive ? (
-          <StatusPill label={t("Active")} colorClass="primarycolor" />
+          <StatusPill label={t("active")} colorClass="primarycolor" />
         ) : (
-          <StatusPill label={t("Inactive")} colorClass="lightred" />
+          <StatusPill label={t("inactive")} colorClass="lightred" />
         ),
     },
     {
       title: (
         <TableHeaderWithInfo
-          label={t("Join Status")}
-          options={[t("Open"), t("Closed")]}
+          label={t("joinStatus")}
+          options={[t("open"), t("closed")]}
         />
       ),
       field: "isClosed",
       render: (item) =>
         item.isClosed ? (
-          <StatusPill label={t("Closed")} colorClass="secondarycolor" />
+          <StatusPill label={t("closed")} colorClass="secondarycolor" />
         ) : (
-          <StatusPill label={t("Open")} colorClass="lightgreen" />
+          <StatusPill label={t("open")} colorClass="lightgreen" />
         ),
     },
     {
       title: (
         <TableHeaderWithInfo
-          label={t("Publication State")}
-          options={[t("Draft"), t("Published")]}
+          label={t("publicationState")}
+          options={[t("draft"), t("published")]}
         />
       ),
       field: "isDraft",
       render: (item) =>
         item.isDraft ? (
-          <StatusPill label={t("Draft")} colorClass="primarycolor" />
+          <StatusPill label={t("draft")} colorClass="primarycolor" />
         ) : (
-          <StatusPill label={t("Published")} colorClass="lightgreen" />
+          <StatusPill label={t("published")} colorClass="lightgreen" />
         ),
     },
     {
-      title: t("Date Created"),
+      title: t("dateCreated"),
       field: "createdOn",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -201,7 +201,7 @@ const UserGroupsTable = ({
       sortKey: "CreatedOn",
     },
     {
-      title: t("Actions"),
+      title: t("actions"),
       field: "",
       fixed: "right",
       render: (item) => (
@@ -213,7 +213,7 @@ const UserGroupsTable = ({
               setDeleteModal({ open: true, id: item.id });
             }}
             className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-            title={t("Delete")}
+            title={t("delete")}
             disabled={deletingId === item.id}
           >
             <Trash2 size={18} />
@@ -231,16 +231,16 @@ const UserGroupsTable = ({
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("User Groups")}
+              {t("userGroups")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("User Groups subtitle")}
+              {t("userGroupsSubtitle")}
             </p>
           </div>
           <div className="flex items-initial space-x-4">
             <SearchToolbar
               initialQuery={searchText}
-              placeholder={t("Search User Groups")}
+              placeholder={t("searchUserGroups")}
               queryParamName="searchText"
             />
           </div>
@@ -253,7 +253,7 @@ const UserGroupsTable = ({
           columns={columns}
           keyExtractor={(item) => item.id}
           hideSelectCol
-          emptyMessage={t("No groups found")}
+          emptyMessage={t("noGroupsFound")}
           handleSort={handleSort}
           currentSortKey={sortKey}
           currentSortDirection={sortDirection}
@@ -279,8 +279,8 @@ const UserGroupsTable = ({
           if (!deleteModal.id) return;
           await handleDeleteGroup(deleteModal.id);
         }}
-        title={t("Delete Group")}
-        message={t("Delete Group confirmation")}
+        title={t("deleteGroup")}
+        message={t("deleteGroupConfirmation")}
         isLoading={!!deletingId}
       />
     </div>

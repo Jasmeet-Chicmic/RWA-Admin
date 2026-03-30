@@ -1,20 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Loader2, Sparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useAppKit } from "@reown/appkit/react";
+import { Loader2, Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { usePublicClient, useWalletClient } from "wagmi";
 
+import Button from "@/components/atoms/Button";
 import CustomModal from "@/components/molecules/CustomModal/CustomModal";
 import { InputField } from "@/components/molecules/FormBuilder/fields/InputField";
-import Button from "@/components/atoms/Button";
 
-import { AdminProperty } from "../../helpers/types";
-import { PropertyItem } from "../../helpers/allPropertiesTypes";
 import { useWalletState } from "@/components/providers/WalletStateProvider";
 import {
   runTokenizationFlow,
@@ -28,14 +26,13 @@ import {
   toBaseUnitsBigInt,
 } from "@/shared/utils/unitUtils";
 import { handleWeb3Error } from "@/shared/utils/web3Error";
+import { PropertyItem } from "../../helpers/allPropertiesTypes";
+import { AdminProperty } from "../../helpers/types";
 
 type TokenizationFormValues = {
   ownerAddress: string;
   totalPropertyValue: string;
   totalShares: string;
-  rentalIncomeHistory: string;
-  expectedAnnualYield: string;
-  riskScore: string;
   image: string;
 };
 
@@ -44,9 +41,9 @@ const getLoadingMessage = (
   t: ReturnType<typeof useTranslations>,
 ) => {
   const progressMessages: Record<TokenizationFlowStep, string> = {
-    deployTrexSuite: t("TokenizationForm.Progress.deployTrexSuite"),
-    deployVault: t("TokenizationForm.Progress.deployVault"),
-    registerProperty: t("TokenizationForm.Progress.registerProperty"),
+    deployTrexSuite: t("tokenizationForm.progress.deployTrexSuite"),
+    deployVault: t("tokenizationForm.progress.deployVault"),
+    registerProperty: t("tokenizationForm.progress.registerProperty"),
   };
 
   return step ? progressMessages[step] : progressMessages.deployTrexSuite;
@@ -82,22 +79,6 @@ const decimalOnly = (val: string) => {
   const cleaned = val.replace(/[^0-9.]/g, "");
   const [head, ...rest] = cleaned.split(".");
   return rest.length > 0 ? `${head}.${rest.join("")}` : head;
-};
-
-const clampPercent = (val: string) => {
-  const cleaned = decimalOnly(val);
-  if (!cleaned) return "";
-  const n = Number(cleaned);
-  if (!Number.isFinite(n)) return "";
-  return String(Math.min(Math.max(n, 0), 100));
-};
-
-const clampRiskScore = (val: string) => {
-  const cleaned = decimalOnly(val);
-  if (!cleaned) return "";
-  const n = Number(cleaned);
-  if (!Number.isFinite(n)) return "";
-  return String(Math.min(Math.max(n, 0), 1));
 };
 
 const preventNegativeAndExponent: React.KeyboardEventHandler<
@@ -136,7 +117,6 @@ export const TokenizationModal = ({
       (property as PropertyItem)?.approvedValuation ??
       (property as AdminProperty)?.totalValue ??
       0;
-    const risk = (property as AdminProperty)?.riskScore ?? 0;
     const ownerAddr = (property as AdminProperty)?.ownerWalletAddress ?? "";
     const img =
       (property as AdminProperty)?.image ??
@@ -146,9 +126,6 @@ export const TokenizationModal = ({
     return {
       totalPropertyValue: formatNumberAmount(fromBaseUnits(totalVal) || 0),
       totalShares: "0",
-      rentalIncomeHistory: "",
-      expectedAnnualYield: "0",
-      riskScore: String(Math.min(Math.max(Number(risk), 0), 1)),
       ownerAddress: ownerAddr,
       image: img,
     };
@@ -223,6 +200,8 @@ export const TokenizationModal = ({
       const totalValue = toBaseUnitsBigInt(
         values.totalPropertyValue.replace(/,/g, ""),
       );
+      const initiateMintAmount = parseMoney(values.totalPropertyValue) ?? 0;
+      const initiatePricePerShare = Number(values.totalShares);
       const ownerAddress = values.ownerAddress as `0x${string}`;
       const result = await runTokenizationFlow({
         walletClient,
@@ -235,6 +214,8 @@ export const TokenizationModal = ({
           ipfsUri: values.image,
           totalUnits,
           totalValue,
+          initiateMintAmount,
+          initiatePricePerShare,
         },
       });
 
@@ -242,7 +223,7 @@ export const TokenizationModal = ({
       toast.success(
         result?.apiMessages?.trexDeployed ||
           result?.apiMessages?.initiate ||
-          t("TokenizationForm.Success.deployed"),
+          t("tokenizationForm.success.deployed"),
       );
       onClose();
       router.refresh();
@@ -254,7 +235,7 @@ export const TokenizationModal = ({
       });
       // Keep full error in logs, but show normalized user-friendly message in UI.
       const uiMessage = handleWeb3Error(error);
-      toast.error(uiMessage || t("TokenizationForm.Success.failed"));
+      toast.error(uiMessage || t("tokenizationForm.success.failed"));
     } finally {
       console.log("[TokenizationModal] Submit flow finished");
       setCurrentStep(undefined);
@@ -282,12 +263,12 @@ export const TokenizationModal = ({
       <CustomModal
         isOpen={open}
         onClose={onClose}
-        title={t("TokenizationForm.title")}
+        title={t("tokenizationForm.title")}
         size="3xl"
       >
         <div className="relative">
           <p className="text-sm text-textparagraph dark:text-textparagraphlight mb-6">
-            {t("TokenizationForm.subtitle")}
+            {t("tokenizationForm.subtitle")}
           </p>
 
           <FormProvider {...methods}>
@@ -296,15 +277,15 @@ export const TokenizationModal = ({
                 <InputField<TokenizationFormValues>
                   name="totalPropertyValue"
                   type="text"
-                  label={t("TokenizationForm.totalPropertyValue")}
+                  label={t("tokenizationForm.totalPropertyValue")}
                   width="w-full md:w-[48%]"
                 />
 
                 <InputField<TokenizationFormValues>
                   name="totalShares"
                   type="number"
-                  label={t("TokenizationForm.totalShares")}
-                  placeholder={t("TokenizationForm.totalSharesPlaceholder")}
+                  label={t("tokenizationForm.totalShares")}
+                  placeholder={t("tokenizationForm.totalSharesPlaceholder")}
                   width="w-full md:w-[48%]"
                   min={1}
                   max={10000}
@@ -313,17 +294,17 @@ export const TokenizationModal = ({
                   inputMode="numeric"
                   onKeyDown={preventNegativeAndExponent}
                   validation={{
-                    required: t("TokenizationForm.Errors.sharesRequired"),
+                    required: t("tokenizationForm.errors.sharesRequired"),
                     validate: (val) => {
                       const n = Number(val);
                       if (!Number.isFinite(n)) {
-                        return t("TokenizationForm.Errors.sharesRequired");
+                        return t("tokenizationForm.errors.sharesRequired");
                       }
-                      if (n <= 0) return t("TokenizationForm.Errors.sharesMin");
+                      if (n <= 0) return t("tokenizationForm.errors.sharesMin");
                       if (n > 10000)
-                        return t("TokenizationForm.Errors.sharesMax");
+                        return t("tokenizationForm.errors.sharesMax");
                       if (!Number.isInteger(n))
-                        return t("TokenizationForm.Errors.sharesInteger");
+                        return t("tokenizationForm.errors.sharesInteger");
                       return true;
                     },
                   }}
@@ -337,106 +318,23 @@ export const TokenizationModal = ({
                   </div>
                   <div className="flex-1">
                     <div className="text-xs font-semibold">
-                      {t("TokenizationForm.autoCalculated")}
+                      {t("tokenizationForm.autoCalculated")}
                     </div>
 
                     <div className="mt-3 text-sm">
-                      {t("TokenizationForm.pricePerShare")}
+                      {t("tokenizationForm.pricePerShare")}
                     </div>
                     <div className="text-4xl font-bold leading-tight">
                       {formatUsdcAmount(pricePerShare)}
                     </div>
                     <div className="mt-1 text-xs text-textparagraph dark:text-textparagraphlight">
-                      {t("TokenizationForm.calculatedAs", {
+                      {t("tokenizationForm.calculatedAs", {
                         totalValue: formatUsdcAmount(totalValue),
                         shares: safeShares,
                       })}
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="flex flex-wrap gap-x-4 justify-between">
-                <InputField<TokenizationFormValues>
-                  name="rentalIncomeHistory"
-                  type="text"
-                  label={t("TokenizationForm.rentalIncomeHistory")}
-                  placeholder={t("TokenizationForm.rentalIncomePlaceholder")}
-                  width="w-full md:w-[48%]"
-                  interceptor={(val) => decimalOnly(val)}
-                  validation={{
-                    validate: (val) => {
-                      const n = parseMoney(val);
-                      if (n === null) return true;
-                      if (!Number.isFinite(n)) {
-                        return t("TokenizationForm.Errors.rentalInvalid");
-                      }
-                      if (n < 0) return t("TokenizationForm.Errors.rentalMin");
-                      if (n > totalValue) {
-                        return t("TokenizationForm.Errors.rentalMax", {
-                          max: formatUsdcAmount(totalValue),
-                        });
-                      }
-                      return true;
-                    },
-                  }}
-                />
-
-                <InputField<TokenizationFormValues>
-                  name="expectedAnnualYield"
-                  type="number"
-                  label={t("TokenizationForm.expectedAnnualYield")}
-                  placeholder={t(
-                    "TokenizationForm.expectedAnnualYieldPlaceholder",
-                  )}
-                  width="w-full md:w-[48%]"
-                  min={0}
-                  max={100}
-                  step="0.01"
-                  interceptor={(val) => clampPercent(val)}
-                  inputMode="decimal"
-                  onKeyDown={preventNegativeAndExponent}
-                  validation={{
-                    required: t("TokenizationForm.Errors.yieldRequired"),
-                    validate: (val) => {
-                      const n = Number(val);
-                      if (!Number.isFinite(n)) {
-                        return t("TokenizationForm.Errors.yieldRequired");
-                      }
-                      if (n < 0) return t("TokenizationForm.Errors.yieldMin");
-                      if (n > 100) return t("TokenizationForm.Errors.yieldMax");
-                      return true;
-                    },
-                  }}
-                />
-              </div>
-
-              <div className="flex flex-wrap gap-x-4 justify-between">
-                <InputField<TokenizationFormValues>
-                  name="riskScore"
-                  type="number"
-                  label={t("TokenizationForm.riskScore")}
-                  placeholder={t("TokenizationForm.riskScorePlaceholder")}
-                  width="w-full md:w-[48%]"
-                  min={0}
-                  max={1}
-                  step="0.01"
-                  interceptor={(val) => clampRiskScore(val)}
-                  inputMode="decimal"
-                  onKeyDown={preventNegativeAndExponent}
-                  validation={{
-                    required: t("TokenizationForm.Errors.riskRequired"),
-                    validate: (val) => {
-                      const n = Number(val);
-                      if (!Number.isFinite(n)) {
-                        return t("TokenizationForm.Errors.riskRequired");
-                      }
-                      if (n < 0) return t("TokenizationForm.Errors.riskMin");
-                      if (n > 1) return t("TokenizationForm.Errors.riskMax");
-                      return true;
-                    },
-                  }}
-                />
               </div>
 
               <div className="mt-6 flex justify-end gap-2">
@@ -446,7 +344,7 @@ export const TokenizationModal = ({
                   onClick={onClose}
                   className="min-w-[110px]"
                 >
-                  {t("TokenizationForm.cancel")}
+                  {t("tokenizationForm.cancel")}
                 </Button>
                 <Button
                   type="submit"
@@ -454,7 +352,7 @@ export const TokenizationModal = ({
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
-                  {t("TokenizationForm.submit")}
+                  {t("tokenizationForm.submit")}
                 </Button>
               </div>
             </form>
@@ -463,11 +361,11 @@ export const TokenizationModal = ({
         <CustomModal
           isOpen={showWalletConnectModal}
           onClose={() => setShowWalletConnectModal(false)}
-          title={t("TokenizationForm.Wallet.title")}
+          title={t("tokenizationForm.wallet.title")}
           size="md"
         >
           <p className="text-sm text-textparagraph dark:text-textparagraphlight mb-6">
-            {t("TokenizationForm.Wallet.description")}
+            {t("tokenizationForm.wallet.description")}
           </p>
           <div className="flex justify-end gap-2">
             <Button
@@ -476,14 +374,14 @@ export const TokenizationModal = ({
               onClick={() => setShowWalletConnectModal(false)}
               className="min-w-[110px]"
             >
-              {t("TokenizationForm.cancel")}
+              {t("tokenizationForm.cancel")}
             </Button>
             <Button
               type="button"
               onClick={() => void openWalletModal()}
               className="min-w-[140px]"
             >
-              {t("TokenizationForm.Wallet.connect")}
+              {t("tokenizationForm.wallet.connect")}
             </Button>
           </div>
         </CustomModal>

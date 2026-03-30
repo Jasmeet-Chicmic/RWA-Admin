@@ -44,7 +44,7 @@ const UserFeaturesView = ({
   totalCount,
 }: UserFeaturesProps) => {
   const router = useRouter();
-  const t = useTranslations("users.Features");
+  const t = useTranslations("users.features");
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editableFeatures, setEditableFeatures] = useState<EditableFeature[]>(
@@ -78,7 +78,7 @@ const UserFeaturesView = ({
 
         // If minimumValue is null, the feature is inherently unlimited — can't toggle
         if (f.minimumValue === null) {
-          toast.error(t("Unlimited Error"));
+          toast.error(t("unlimitedError"));
           return f;
         }
 
@@ -129,7 +129,7 @@ const UserFeaturesView = ({
     if (!isUnlimited && canSetUnlimited) {
       handleToggleUnlimited(feature.id);
     } else if (!canSetUnlimited) {
-      toast.error(t("Limit Error"));
+      toast.error(t("limitError"));
     }
   };
 
@@ -189,15 +189,15 @@ const UserFeaturesView = ({
       });
       console.log("save response", getFeaturesPayload(), "res", res);
       if (res.status) {
-        toast.success(res.message || t("Save Success"));
+        toast.success(res.message || t("saveSuccess"));
         setIsEditMode(false);
         router.refresh();
       } else {
-        toast.error(res.message || t("Save Error"));
+        toast.error(res.message || t("saveError"));
       }
     } catch (error) {
       console.error("Error saving features:", error);
-      toast.error(t("Save Error"));
+      toast.error(t("saveError"));
     } finally {
       setIsSaving(false);
     }
@@ -228,8 +228,8 @@ const UserFeaturesView = ({
   const hasInvalid = editableFeatures.some((f) => !isFeatureValid(f));
 
   const getStatusLabel = (feature: EditableFeature) => {
-    if (feature.isSubscribed) return t("Subscribed");
-    if (feature.isDefault) return t("Default");
+    if (feature.isSubscribed) return t("subscribed");
+    if (feature.isDefault) return t("default");
     return null;
   };
 
@@ -238,14 +238,14 @@ const UserFeaturesView = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <h3 className="text-[1.25rem] lg:text-[1.5rem] font-bold text-navy dark:text-sidebartext text-textprimary flex items-center gap-2">
           <Shield className="w-5 h-5 text-primarycolor dark:text-white" />
-          {t("Title")}
+          {t("title")}
         </h3>
         <div className="flex items-center gap-4">
           <div className="w-full sm:w-64">
             <SearchInput
               value={searchText}
               onChange={handleSearch}
-              placeholder={t("Search features placeholder")}
+              placeholder={t("searchFeaturesPlaceholder")}
             />
           </div>
           <div className="flex items-center gap-2">
@@ -256,7 +256,7 @@ const UserFeaturesView = ({
                 className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white/80 hover:bg-primaryhover dark:hover:bg-secondaryhover disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Save className="w-4 h-4" />
-                {t("Save Changes")}
+                {t("saveChanges")}
               </button>
             )}
             {/* <button
@@ -271,12 +271,12 @@ const UserFeaturesView = ({
               {isEditMode ? (
                 <>
                   <X className="w-4 h-4" />
-                  {t("Cancel")}
+                  {t("cancel")}
                 </>
               ) : (
                 <>
                   <Pencil className="w-4 h-4" />
-                  {t("Edit")}
+                  {t("edit")}
                 </>
               )}
             </button> */}
@@ -288,7 +288,7 @@ const UserFeaturesView = ({
         <div className="bg-bgwhite dark:bg-darkbgprimary rounded-xl shadow border border-bordercolor1 dark:border-darkbordercolor1 p-12 text-center">
           <Shield className="w-12 h-12 mx-auto mb-3 text-gray-400 opacity-50" />
           <p className="text-gray-500 dark:text-gray-400 text-lg">
-            {t("No Features")}
+            {t("noFeatures")}
           </p>
         </div>
       ) : (
@@ -355,7 +355,7 @@ const UserFeaturesView = ({
                           }`}
                         >
                           <Infinity className="w-3.5 h-3.5" />
-                          {t("Unlimited")}
+                          {t("unlimited")}
                         </button>
                         <button
                           onClick={() => handleCustomClick(feature)}
@@ -369,7 +369,7 @@ const UserFeaturesView = ({
                           }`}
                         >
                           <Hash className="w-3.5 h-3.5" />
-                          {t("Custom")}
+                          {t("custom")}
                         </button>
                       </div>
 
@@ -377,7 +377,7 @@ const UserFeaturesView = ({
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <label className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                              {t("Value")}:
+                              {t("value")}:
                             </label>
                             <input
                               type="number"
@@ -393,7 +393,7 @@ const UserFeaturesView = ({
                             />
                           </div>
                           <p className="text-[10px] text-gray-400 dark:text-gray-500">
-                            {t("Min Value Hint", {
+                            {t("minValueHint", {
                               min: getMinAllowedValue(feature),
                             })}
                           </p>
@@ -402,7 +402,7 @@ const UserFeaturesView = ({
 
                       {!isEditable && (
                         <p className="text-[10px] text-gray-400 dark:text-gray-500">
-                          {t("Unlimited Error")}
+                          {t("unlimitedError")}
                         </p>
                       )}
                     </div>
@@ -413,7 +413,7 @@ const UserFeaturesView = ({
                           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primarycolor/10 dark:bg-secondarycolor/10">
                             <Infinity className="w-4 h-4 text-primarycolor dark:text-white" />
                             <span className="text-sm font-semibold text-primarycolor dark:text-white/60">
-                              {t("Unlimited")}
+                              {t("unlimited")}
                             </span>
                           </div>
                         ) : (
@@ -428,7 +428,7 @@ const UserFeaturesView = ({
                       {feature.minimumValue !== null &&
                         feature.minimumValue !== undefined && (
                           <p className="text-[12px] text-gray-700 dark:text-gray-500 mt-1.5">
-                            {t("Min Value Hint", {
+                            {t("minValueHint", {
                               min: feature.minimumValue,
                             })}
                           </p>

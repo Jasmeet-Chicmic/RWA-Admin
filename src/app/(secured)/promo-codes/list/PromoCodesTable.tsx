@@ -63,7 +63,7 @@ const PromoCodesTable = ({
       const promoId = promoCode.id || promoCode._id;
       if (!promoId) {
         toast.error(
-          tCommon("{entity} ID is missing", { entity: t("Promo code") }),
+          tCommon("{entity} ID is missing", { entity: t("promoCode") }),
         );
         return;
       }
@@ -81,7 +81,7 @@ const PromoCodesTable = ({
           toast.success(
             res.message ||
               tCommon("{entity} {action} successfully", {
-                entity: t("Promo code status"),
+                entity: t("promoCodeStatus"),
                 action: tCommon("updated"),
               }),
           );
@@ -91,7 +91,7 @@ const PromoCodesTable = ({
             res.message ||
               tCommon("Failed to {action} {entity}", {
                 action: tCommon("update"),
-                entity: t("Promo code status").toLowerCase(),
+                entity: t("promoCodeStatus").toLowerCase(),
               }),
           );
         }
@@ -100,7 +100,7 @@ const PromoCodesTable = ({
         toast.error(
           tCommon("An error occurred while {action} {entity}", {
             action: tCommon("updating"),
-            entity: t("Promo code status").toLowerCase(),
+            entity: t("promoCodeStatus").toLowerCase(),
           }),
         );
       } finally {
@@ -128,7 +128,7 @@ const PromoCodesTable = ({
       const promoId = item.id || item._id;
       if (!promoId) {
         toast.error(
-          tCommon("{entity} ID is missing", { entity: t("Promo code") }),
+          tCommon("{entity} ID is missing", { entity: t("promoCode") }),
         );
         return;
       }
@@ -139,17 +139,17 @@ const PromoCodesTable = ({
 
   const columns: TableColumn<PromoCode>[] = [
     {
-      title: t("Promo Code"),
+      title: t("promoCode"),
       field: "code",
     },
     {
-      title: t("Promo Title"),
+      title: t("promoTitle"),
       field: "title",
       sortable: true,
       sortKey: "description",
     },
     {
-      title: t("Discount Value And Type"),
+      title: t("discountValueAndType"),
       field: "discountValue",
       render: (item) => {
         const type = item.discountType as PROMO_DISCOUNT_TYPE | undefined;
@@ -165,7 +165,7 @@ const PromoCodesTable = ({
       },
     },
     {
-      title: t("Valid Duration"),
+      title: t("validDuration"),
       field: "duration",
       render: (item) => {
         const duration = item.duration as PROMO_DURATION | undefined;
@@ -178,7 +178,7 @@ const PromoCodesTable = ({
       },
     },
     {
-      title: t("Times Redeemed"),
+      title: t("timesRedeemed"),
       field: "redemptionCount",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -187,7 +187,7 @@ const PromoCodesTable = ({
       ),
     },
     {
-      title: t("Max Usage Limit"),
+      title: t("maxUsageLimit"),
       field: "maxRedemptions",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -198,8 +198,8 @@ const PromoCodesTable = ({
     {
       title: (
         <TableHeaderWithInfo
-          label={t("Promo Status")}
-          options={[t("Active"), t("Inactive")]}
+          label={t("promoStatus")}
+          options={[t("active"), t("inactive")]}
         />
       ),
       field: "isActive",
@@ -223,7 +223,7 @@ const PromoCodesTable = ({
                     isActive ? "bg-primarycolor dark:bg-white/80" : "bg-red-500"
                   }`}
                 />
-                {isActive ? t("Active") : t("Inactive")}
+                {isActive ? t("active") : t("inactive")}
                 <ChevronDown size={14} className="opacity-60" />
               </div>
             }
@@ -232,7 +232,7 @@ const PromoCodesTable = ({
                 label: (
                   <div className="flex items-center gap-2 py-1">
                     <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                    <span className="font-medium">{t("Active")}</span>
+                    <span className="font-medium">{t("active")}</span>
                   </div>
                 ),
                 onClick: () => void handleToggleStatus(item, true),
@@ -242,7 +242,7 @@ const PromoCodesTable = ({
                 label: (
                   <div className="flex items-center gap-2 py-1">
                     <div className="w-2 h-2 rounded-full bg-red-500" />
-                    <span className="font-medium">{t("Inactive")}</span>
+                    <span className="font-medium">{t("inactive")}</span>
                   </div>
                 ),
                 onClick: () => void handleToggleStatus(item, false),
@@ -256,7 +256,7 @@ const PromoCodesTable = ({
       sortKey: "isActive",
     },
     {
-      title: t("Actions"),
+      title: t("actions"),
       field: "",
       render: (item) => (
         <div className="flex items-center space-x-3">
@@ -272,7 +272,7 @@ const PromoCodesTable = ({
             type="button"
             onClick={() => handleEditPromoCode(item)}
             className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-            title={t("Edit")}
+            title={t("edit")}
           >
             <Pencil size={18} />
           </button>
@@ -280,7 +280,7 @@ const PromoCodesTable = ({
             type="button"
             onClick={() => handleDeleteClick(item)}
             className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext"
-            title={t("Delete")}
+            title={t("delete")}
           >
             <Trash2 size={18} />
           </button>
@@ -316,7 +316,7 @@ const PromoCodesTable = ({
   const handleDelete = async () => {
     const promoId = modal.data?.id || modal.data?._id;
     if (!promoId) {
-      toast.error(t("Promo code ID is missing"));
+      toast.error(t("promoCodeIdIsMissing"));
       return;
     }
 
@@ -326,7 +326,7 @@ const PromoCodesTable = ({
         toast.success(
           res.message ||
             tCommon("{entity} {action} successfully", {
-              entity: t("Promo code"),
+              entity: t("promoCode"),
               action: tCommon("deleted"),
             }),
         );
@@ -337,7 +337,7 @@ const PromoCodesTable = ({
           res.message ||
             tCommon("Failed to {action} {entity}", {
               action: tCommon("delete"),
-              entity: t("Promo code").toLowerCase(),
+              entity: t("promoCode").toLowerCase(),
             }),
         );
       }
@@ -346,7 +346,7 @@ const PromoCodesTable = ({
       toast.error(
         tCommon("An error occurred while {action} {entity}", {
           action: tCommon("deleting"),
-          entity: t("Promo code").toLowerCase(),
+          entity: t("promoCode").toLowerCase(),
         }),
       );
     }
@@ -360,16 +360,16 @@ const PromoCodesTable = ({
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Promo Codes")}
+              {t("promoCodes")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("Promo Codes subtitle")}
+              {t("promoCodesSubtitle")}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-initial gap-3 space-x-0">
             <SearchToolbar
               initialQuery={searchText}
-              placeholder={t("Search Promo Code")}
+              placeholder={t("searchPromoCode")}
               queryParamName="searchText"
             />
             <Button
@@ -379,7 +379,7 @@ const PromoCodesTable = ({
               onClick={() => setOpen(true)}
             >
               <Plus size={18} />
-              <span>{t("Add New Promo Code")}</span>
+              <span>{t("addNewPromoCode")}</span>
             </Button>
           </div>
         </div>
@@ -415,8 +415,8 @@ const PromoCodesTable = ({
         isOpen={modal.open}
         onClose={() => setModal({ open: false })}
         onConfirm={handleDelete}
-        title={t("Delete Promo Code")}
-        message={t("Are you sure you want to delete this promo code?")}
+        title={t("deletePromoCode")}
+        message={t("areYouSureYouWantToDeleteThisPromoCode")}
       />
       <AddPromoCodeModal
         open={open}

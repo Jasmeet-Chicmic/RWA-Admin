@@ -5,11 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
-import {
-  NavItem,
-  navItems,
-  getNavItemLabelKey,
-} from "../Sidebar/helpers/constants";
+import { NavItem, navItems } from "../Sidebar/helpers/constants";
 
 type CommandItem = {
   id: string;
@@ -29,13 +25,18 @@ type CommandItem = {
 type CommandPaletteProps = {
   isOpen: boolean;
   onClose: () => void;
+  items?: NavItem[];
 };
 
-const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
+const CommandPalette: React.FC<CommandPaletteProps> = ({
+  isOpen,
+  onClose,
+  items,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const router = useRouter();
-  const t = useTranslations("common");
+  const t = useTranslations();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const generateNavCommands = (
@@ -45,7 +46,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
     const commands: CommandItem[] = [];
 
     items.forEach((item) => {
-      const translatedLabel = t(getNavItemLabelKey(item.label));
+      const translatedLabel = t(item.label);
       const pathLabels = [...parentLabels, translatedLabel];
       const title = pathLabels.join(" ");
       const subtitle = pathLabels.join(" > ");
@@ -57,13 +58,13 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
           title,
           subtitle,
           icon: item.icon,
-          category: t("Navigation"),
+          category: t("common.navigation"),
           action: () => router.push(item.path!),
           keywords: [
             translatedLabel.toLowerCase(),
             item.label.toLowerCase(),
             ...parentLabels.map((label) => label.toLowerCase()),
-            t("Navigation").toLowerCase(),
+            t("common.navigation").toLowerCase(),
           ],
         });
       }
@@ -76,7 +77,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
 
     return commands;
   };
-  const commands: CommandItem[] = generateNavCommands(navItems);
+  const commands: CommandItem[] = generateNavCommands(items ?? navItems);
 
   const filteredCommands = commands.filter((command) => {
     if (!searchQuery) return true;
@@ -168,7 +169,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
           <input
             ref={inputRef}
             type="text"
-            placeholder={t("Type a command or search")}
+            placeholder={t("common.typeACommandOrSearch")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="flex-1 outline-none text-gray-900 placeholder-gray-500 bg-transparent py-2 px-3 rounded-lg mr-2 dark:bg-darkbgprimary dark:text-sidebartext dark:placeholder-gray-400"
@@ -192,10 +193,10 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
                 size={48}
               />
               <p className="text-gray-500 dark:text-sidebartext">
-                {t("No commands found")}
+                {t("common.noCommandsFound")}
               </p>
               <p className="text-sm text-gray-500 dark:text-sidebartext">
-                {t("Try searching for something else")}
+                {t("common.trySearchingForSomethingElse")}
               </p>
             </div>
           ) : (

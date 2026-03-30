@@ -71,7 +71,7 @@ const SubscriptionsTable = ({
   const config: DataTableConfig<Subscription> = useMemo(() => {
     const columns: TableColumn<Subscription>[] = [
       {
-        title: t("Customer Name"),
+        title: t("customerName"),
         field: "customerName",
         render: (item: Subscription) => (
           <div>
@@ -85,7 +85,7 @@ const SubscriptionsTable = ({
         ),
       },
       {
-        title: t("Subscription Owner"),
+        title: t("subscriptionOwner"),
         field: "ownerType",
         render: (item: Subscription) => {
           const label =
@@ -107,7 +107,7 @@ const SubscriptionsTable = ({
         },
       },
       {
-        title: t("Plan Name"),
+        title: t("planName"),
         field: "planName",
         render: (item: Subscription) => (
           <div>
@@ -123,15 +123,15 @@ const SubscriptionsTable = ({
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Subscription Status")}
+            label={t("subscriptionStatus")}
             options={[
-              t("Active"),
-              t("Past Due"),
-              t("Cancelled"),
-              t("Trialing"),
-              t("Incomplete"),
-              t("Paused"),
-              t("Unknown"),
+              t("active"),
+              t("pastDue"),
+              t("cancelled"),
+              t("trialing"),
+              t("incomplete"),
+              t("paused"),
+              t("unknown"),
             ]}
           />
         ),
@@ -146,7 +146,7 @@ const SubscriptionsTable = ({
             <span
               className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${badgeStyle}`}
             >
-              {label ? t(label) : t("Unknown")}
+              {label ? t(label) : t("unknown")}
             </span>
           );
         },
@@ -154,8 +154,8 @@ const SubscriptionsTable = ({
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Billing Cycle")}
-            options={[t("Monthly"), t("Yearly")]}
+            label={t("billingCycle")}
+            options={[t("monthly"), t("yearly")]}
           />
         ),
         field: "billingCycle",
@@ -175,7 +175,7 @@ const SubscriptionsTable = ({
         },
       },
       {
-        title: t("Seat Count"),
+        title: t("seatCount"),
         field: "seatCount",
         render: (item: Subscription) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -184,7 +184,7 @@ const SubscriptionsTable = ({
         ),
       },
       {
-        title: t("Subscription Start Date"),
+        title: t("subscriptionStartDate"),
         field: "startDate",
         render: (item: Subscription) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -195,7 +195,7 @@ const SubscriptionsTable = ({
         sortKey: "startDate",
       },
       {
-        title: t("Subscription End Date"),
+        title: t("subscriptionEndDate"),
         field: "endDate",
         render: (item: Subscription) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -206,7 +206,7 @@ const SubscriptionsTable = ({
         sortKey: "endDate",
       },
       // {
-      //   title: t("Created"),
+      //   title: t("created"),
       //   field: "createdOn",
       //   render: (item: Subscription) => (
       //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -217,7 +217,7 @@ const SubscriptionsTable = ({
       //   sortKey: "createdOn",
       // },
       // {
-      //   title: t("Actions"),
+      //   title: t("actions"),
       //   field: "subscriptionId",
       //   render: (item: Subscription) => (
       //     <button
@@ -225,7 +225,7 @@ const SubscriptionsTable = ({
       //       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-primarycolor dark:text-secondarycolor bg-primarycolor/10 dark:bg-secondarycolor/10 hover:bg-primarycolor/20 dark:hover:bg-secondarycolor/20 transition-all"
       //     >
       //       <Pencil className="w-3.5 h-3.5" />
-      //       {t("Edit")}
+      //       {t("edit")}
       //     </button>
       //   ),
       // },
@@ -234,9 +234,9 @@ const SubscriptionsTable = ({
     return {
       columns,
       keyExtractor: (item) => item.subscriptionId,
-      paginationTitle: t("Subscriptions").toLowerCase(),
+      paginationTitle: t("subscriptions").toLowerCase(),
       hideSelectCol: true,
-      emptyMessage: t("No subscriptions found"),
+      emptyMessage: t("noSubscriptionsFound"),
       queryConfig: {
         defaultSortKey: "createdOn",
         defaultSortDirection: "DESC",
@@ -248,16 +248,16 @@ const SubscriptionsTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Subscriptions")}
+                {t("subscriptions")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("All subscription plans")}
+                {t("allSubscriptionPlans")}
               </p>
             </div>
             <div className="flex items-initial space-x-4">
               <SearchToolbar
                 initialQuery={searchText}
-                placeholder={t("Search Subscriptions")}
+                placeholder={t("searchSubscriptions")}
                 queryParamName="searchText"
               />
               <button
@@ -265,7 +265,7 @@ const SubscriptionsTable = ({
                 className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
               >
                 <Menu size={18} />
-                <span>{t("Filters")}</span>
+                <span>{t("filters")}</span>
               </button>
             </div>
           </div>
@@ -284,7 +284,7 @@ const SubscriptionsTable = ({
       <FilterSidebar
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t("Subscription Filters")}
+        title={t("subscriptionFilters")}
         footer={
           <button
             onClick={() => {
@@ -294,7 +294,7 @@ const SubscriptionsTable = ({
             className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
           >
             <RotateCcw size={18} />
-            <span>{t("Clear All Filters")}</span>
+            <span>{t("clearAllFilters")}</span>
           </button>
         }
       >

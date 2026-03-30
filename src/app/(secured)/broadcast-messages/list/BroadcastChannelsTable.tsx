@@ -30,7 +30,7 @@ const BroadcastChannelsTable = ({
     const columns: TableColumn<BroadcastChannel>[] = [
       {
         field: "iconUrl",
-        title: t("Icon"),
+        title: t("icon"),
         render: (item) => {
           if (item.iconUrl) {
             return (
@@ -57,7 +57,7 @@ const BroadcastChannelsTable = ({
       },
       {
         field: "title",
-        title: t("Channel Name"),
+        title: t("channelName"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
             {item.title}
@@ -67,7 +67,7 @@ const BroadcastChannelsTable = ({
       },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         render: (item) => (
           <div className="flex items-center justify-end">
             <button
@@ -77,7 +77,7 @@ const BroadcastChannelsTable = ({
                 router.push(`/broadcast-messages/view/${item.threadId}`);
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View Messages")}
+              title={t("viewMessages")}
             >
               <Eye size={18} />
             </button>
@@ -93,17 +93,17 @@ const BroadcastChannelsTable = ({
       keyExtractor: (item) => item.threadId,
       paginationTitle: "broadcast channels",
       hideSelectCol: true,
-      emptyMessage: t("No broadcast channels found"),
-      searchPlaceholder: t("Search channels"),
+      emptyMessage: t("broadcastNoResults"),
+      searchPlaceholder: t("broadcastSearchPlaceholder"),
       header: (
         <div className="mb-4">
           <h2
             className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
           >
-            {t("Broadcast Channels")}
+            {t("broadcastChannels")}
           </h2>
           <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-            {t("Manage and view broadcast message channels")}
+            {t("broadcastChannelsSubtitle")}
           </p>
         </div>
       ),

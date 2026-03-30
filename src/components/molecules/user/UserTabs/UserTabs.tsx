@@ -1,7 +1,8 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { isRouteAllowed } from "@/lib/isRouteAllowed";
 import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 
 const USER_TAB_KEYS = {
   ACCOUNT: "Account",
@@ -53,13 +54,13 @@ const UserTabs = () => {
           key={tab.key}
           onClick={() => router.push(tab.path, { scroll: false })}
           className={`relative px-6 py-4 text-sm font-semibold transition-all duration-200 whitespace-nowrap ${
-            pathname.includes(tab.path)
+            isRouteAllowed(pathname, [tab.path])
               ? "text-primarycolor dark:text-sidebartext"
               : "text-black/70 hover:text-gray-600 dark:text-gray-500 dark:hover:text-darklabelprimary"
           }`}
         >
           <span className="relative z-10">{t(tab.key)}</span>
-          {pathname.includes(tab.path) && (
+          {isRouteAllowed(pathname, [tab.path]) && (
             <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primarycolor rounded-t-full shadow-[0_-1px_10px_rgba(67,24,255,0.3)]" />
           )}
         </button>

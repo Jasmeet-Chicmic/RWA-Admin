@@ -62,7 +62,7 @@ const UserTransactionsTable = ({
 
   const columns: TableColumn<Transaction>[] = [
     {
-      title: t("Transaction Date"),
+      title: t("transactionDate"),
       field: "date",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -73,7 +73,7 @@ const UserTransactionsTable = ({
       sortKey: "date",
     },
     {
-      title: t("Invoice Number"),
+      title: t("invoiceNumber"),
       field: "invoiceNumber",
       render: (item) => (
         <span className={`font-medium ${TEXT_PRIMARY}`}>
@@ -82,7 +82,7 @@ const UserTransactionsTable = ({
       ),
     },
     {
-      title: t("Plan Name"),
+      title: t("planName"),
       field: "planName",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -91,7 +91,7 @@ const UserTransactionsTable = ({
       ),
     },
     {
-      title: t("Transaction Amount"),
+      title: t("transactionAmount"),
       field: "amount",
       render: (item) => (
         <span className={`font-medium ${TEXT_PRIMARY}`}>
@@ -104,13 +104,13 @@ const UserTransactionsTable = ({
     {
       title: (
         <TableHeaderWithInfo
-          label={t("Payment Status")}
+          label={t("paymentStatus")}
           options={[
-            t("Initiated"),
-            t("Success"),
-            t("Failed"),
-            t("Refunded"),
-            t("Unknown"),
+            t("initiated"),
+            t("success"),
+            t("failed"),
+            t("refunded"),
+            t("unknown"),
           ]}
         />
       ),
@@ -141,8 +141,8 @@ const UserTransactionsTable = ({
     {
       title: (
         <TableHeaderWithInfo
-          label={t("Transaction Type")}
-          options={[t("Debit"), t("Credit"), t("Refund")]}
+          label={t("transactionType")}
+          options={[t("debit"), t("credit"), t("refund")]}
         />
       ),
       field: "isCredit",
@@ -173,10 +173,10 @@ const UserTransactionsTable = ({
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
               <CreditCard className="inline-block w-6 h-6 mr-2 -mt-1" />
-              {t("Transactions")}
+              {t("transactions")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("All payment transactions")}
+              {t("allPaymentTransactions")}
             </p>
           </div>
         </div>
@@ -188,7 +188,7 @@ const UserTransactionsTable = ({
           columns={columns}
           keyExtractor={(item) => item.transactionId}
           hideSelectCol
-          emptyMessage={t("No transactions found")}
+          emptyMessage={t("noTransactionsFound")}
           handleSort={handleSort}
           currentSortKey={sortKey}
           currentSortDirection={sortDirection}

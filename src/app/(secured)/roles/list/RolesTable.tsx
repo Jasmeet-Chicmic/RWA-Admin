@@ -28,7 +28,7 @@ const RolesTable = ({ data, totalCount, searchText }: RolesTableProps) => {
     const columns: TableColumn<Role>[] = [
       {
         field: "name",
-        title: t("Role Name"),
+        title: t("roleName"),
         render: (item) => (
           <span className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}>
             {item.name}
@@ -37,16 +37,16 @@ const RolesTable = ({ data, totalCount, searchText }: RolesTableProps) => {
       },
       {
         field: "isActive",
-        title: t("Role Status"),
+        title: t("roleStatus"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.isActive ? t("Active") : t("Inactive")}
+            {item.isActive ? t("active") : t("inactive")}
           </span>
         ),
       },
       {
         field: "featureCount",
-        title: t("Features Assigned"),
+        title: t("featuresAssigned"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.featureCount ?? 0}
@@ -55,7 +55,7 @@ const RolesTable = ({ data, totalCount, searchText }: RolesTableProps) => {
       },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         fixed: "right",
         render: (item) => (
           <div className="flex items-center justify-end space-x-3">
@@ -63,10 +63,10 @@ const RolesTable = ({ data, totalCount, searchText }: RolesTableProps) => {
               type="button"
               onClick={() => router.push(`/roles/view/${item.id}`)}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View Features")}
+              title={t("viewFeatures")}
             >
               <Eye size={18} />
-              <span className="sr-only">{t("View Features")}</span>
+              <span className="sr-only">{t("viewFeatures")}</span>
             </button>
           </div>
         ),
@@ -78,7 +78,7 @@ const RolesTable = ({ data, totalCount, searchText }: RolesTableProps) => {
       keyExtractor: (item) => item.id,
       paginationTitle: "roles",
       hideSelectCol: true,
-      emptyMessage: t("No roles found"),
+      emptyMessage: t("noRolesFound"),
       header: (
         <div className="bg-bgwhite dark:bg-darkbgprimary">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -86,16 +86,16 @@ const RolesTable = ({ data, totalCount, searchText }: RolesTableProps) => {
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Roles")}
+                {t("roles")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Header subtitle")}
+                {t("headerSubtitle")}
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <SearchToolbar
                 initialQuery={searchText}
-                placeholder={t("Search Roles")}
+                placeholder={t("searchRoles")}
               />
             </div>
           </div>

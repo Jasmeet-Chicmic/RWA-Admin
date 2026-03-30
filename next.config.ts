@@ -10,6 +10,18 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
+      {
+        source: "/login",
+        destination: "/admin-portal/login",
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: "/forgot-password",
+        destination: "/admin-portal/forgot-password",
+        basePath: false,
+        permanent: false,
+      },
     ];
   },
   output: "standalone",

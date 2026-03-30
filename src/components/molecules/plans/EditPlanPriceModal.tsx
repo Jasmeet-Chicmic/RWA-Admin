@@ -55,9 +55,9 @@ const EditPlanPriceModal = ({
   const getBillingCycleLabel = (cycle: number) => {
     switch (cycle) {
       case BILLING_CYCLE.MONTHLY:
-        return t("Monthly");
+        return t("monthly");
       case BILLING_CYCLE.YEARLY:
-        return t("Yearly");
+        return t("yearly");
       default:
         return String(cycle) || "—";
     }
@@ -71,7 +71,7 @@ const EditPlanPriceModal = ({
 
   const handleSubmit = async () => {
     if (percentage === "" || numericPercentage === 0) {
-      toast.error(t("Please enter a non-zero percentage"));
+      toast.error(t("pleaseEnterANonZeroPercentage"));
       return;
     }
 
@@ -83,14 +83,14 @@ const EditPlanPriceModal = ({
       });
 
       if (res.status) {
-        toast.success(t("Plan pricing adjusted successfully"));
+        toast.success(t("planPricingAdjustedSuccessfully"));
         onSuccess();
         onClose();
       } else {
-        toast.error(res.message || t("Failed to adjust pricing"));
+        toast.error(res.message || t("failedToAdjustPricing"));
       }
     } catch {
-      toast.error(t("An error occurred"));
+      toast.error(t("anErrorOccurred"));
     } finally {
       setIsSubmitting(false);
     }
@@ -106,7 +106,7 @@ const EditPlanPriceModal = ({
     <CustomModal
       isOpen={isOpen}
       onClose={onClose}
-      title={t("Adjust Plan Price")}
+      title={t("adjustPlanPrice")}
       size="md"
     >
       <div className="space-y-5">
@@ -117,7 +117,7 @@ const EditPlanPriceModal = ({
               {planName}
             </p>
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-              {cycleLabel} &middot; {t("Current price")}:{" "}
+              {cycleLabel} &middot; {t("currentPrice")}:{" "}
               <span className="font-semibold text-primarycolor dark:text-secondarycolor">
                 {currentPriceFormatted}
               </span>
@@ -128,7 +128,7 @@ const EditPlanPriceModal = ({
         {/* Percentage Input */}
         <div>
           <label className={labelClassName}>
-            {t("Increase / Decrease Percentage")}
+            {t("increaseDecreasePercentage")}
           </label>
           <div className="relative">
             <input
@@ -139,12 +139,12 @@ const EditPlanPriceModal = ({
                   e.target.value === "" ? "" : Number(e.target.value),
                 )
               }
-              placeholder={t("Percentage placeholder")}
+              placeholder={t("percentagePlaceholder")}
               className={inputClassName}
             />
           </div>
           <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
-            {t("Percentage positive info")}
+            {t("percentagePositiveInfo")}
           </p>
         </div>
 
@@ -160,7 +160,7 @@ const EditPlanPriceModal = ({
             }`}
           >
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-              {t("New Price Preview")}
+              {t("newPricePreview")}
             </p>
             <div className="flex items-baseline gap-2">
               <span className="text-gray-400 dark:text-gray-500 text-sm line-through">
@@ -193,14 +193,14 @@ const EditPlanPriceModal = ({
           disabled={isSubmitting}
           className="px-5 py-2.5 rounded-xl text-sm font-medium text-textprimary dark:text-sidebartext bg-gray-100 dark:bg-darkbgsecondary hover:bg-gray-200 dark:hover:bg-darkbordercolor1 transition-all"
         >
-          {t("Cancel")}
+          {t("cancel")}
         </button>
         <button
           onClick={handleSubmit}
           disabled={isSubmitting || numericPercentage === 0}
           className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-primarycolor dark:bg-secondarycolor dark:text-black hover:bg-primaryhover dark:hover:bg-secondaryhover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? t("Applying") : t("Apply Change")}
+          {isSubmitting ? t("applying") : t("applyChange")}
         </button>
       </div>
     </CustomModal>

@@ -1,31 +1,31 @@
 "use client";
 
 import { Languages, LogOut, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useTranslations } from "next-intl";
-import { useAppKit } from "@reown/appkit/react";
 import { useDisconnect } from "wagmi";
 
 import Loader from "@/components/atoms/Loader/Loader";
-import { THEME_TYPE } from "@/shared/constants";
+import { LOGIN_ROLE, THEME_TYPE } from "@/shared/constants";
 import { ROUTES } from "@/shared/routes";
 import { deleteSessionClient, getLocale, updateLocale } from "@/shared/utils";
 
-import CheckClickOutside from "../CheckClickOutside";
-import CommandPalette from "../CommandPalette";
 import { logoutAction } from "@/api/auth";
-import { isReownConfigured } from "@/lib/reown";
-import { useWalletState } from "@/components/providers/WalletStateProvider";
 import { getCurrentProfileAction } from "@/api/profile";
+import { useWalletState } from "@/components/providers/WalletStateProvider";
+import { isReownConfigured } from "@/lib/reown";
 import {
   clearAuthProfile,
   setAuthProfile,
   setAuthProfileLoading,
 } from "@/store/authProfileSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import CheckClickOutside from "../CheckClickOutside";
+import CommandPalette from "../CommandPalette";
+import { getFilteredNavItems } from "../Sidebar/helpers/constants";
 
 const LANGUAGE_OPTIONS: { code: string; label: string }[] = [
   { code: "en", label: "English" },
@@ -37,18 +37,16 @@ const LANGUAGE_OPTIONS: { code: string; label: string }[] = [
 const Header = () => {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
-  // const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   // const [notificationCount] = useState(3);
   // const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
-  const [showWalletMenu, setShowWalletMenu] = useState(false);
   const [language, setLanguage] = useState<string>();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { isConnected, address } = useWalletState();
-  const { open } = useAppKit();
   const { disconnect } = useDisconnect();
-  const tCommon = useTranslations("common");
+  const t = useTranslations("common");
 
   const dispatch = useAppDispatch();
   const { role: userRole, profile: userProfile } = useAppSelector(
@@ -72,6 +70,10 @@ const Header = () => {
       }
     })();
   }, [dispatch, setTheme]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(
@@ -131,14 +133,6 @@ const Header = () => {
   const walletAddressLabel = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : "";
-  const handleWalletAction = async () => {
-    if (isConnected) {
-      disconnect();
-      setShowWalletMenu(false);
-      return;
-    }
-    await open();
-  };
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -163,7 +157,7 @@ const Header = () => {
             />
             <input
               type="text"
-              placeholder={tCommon("Search Placeholder")}
+              placeholder={t("searchPlaceholder")}
               onClick={() => setShowCommandPalette(true)}
               className="pl-10 border-none px-4 py-3 w-full border-[1px] placeholder:text-[#8F9BBA] bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack"
             />
@@ -172,39 +166,14 @@ const Header = () => {
 
         {/* Right Section */}
         <div className="flex items-center space-x-3 ml-[10px] ssm:ml-4">
-          {isReownConfigured && isConnected && walletAddressLabel && (
-            <CheckClickOutside onClick={() => setShowWalletMenu(false)}>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowWalletMenu((prev) => !prev)}
-                  className="px-4 py-2.5 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1 hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
-                >
-                  {walletAddressLabel}
-                </button>
-                {showWalletMenu && (
-                  <div className="absolute right-0 mt-2 w-52 bg-bgwhite rounded-xl shadow-lg border bordergray200 py-1.5 z-50 dark:bg-darkbgprimary dark:border-labelprimary">
-                    <button
-                      type="button"
-                      onClick={() => void handleWalletAction()}
-                      className="w-full px-4 py-2.5 text-left text-sm font-medium hover:bg-gray-50 dark:hover:bg-labelprimary flex items-center text-red-600 dark:bordercolor1"
-                    >
-                      {tCommon("Disconnect Wallet")}
-                    </button>
-                  </div>
-                )}
+          {mounted &&
+            isReownConfigured &&
+            isConnected &&
+            walletAddressLabel && (
+              <div className="px-4 py-2.5 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1">
+                {walletAddressLabel}
               </div>
-            </CheckClickOutside>
-          )}
-          {isReownConfigured && !isConnected && (
-            <button
-              type="button"
-              onClick={() => void handleWalletAction()}
-              className="px-4 py-2.5 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1 hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
-            >
-              {tCommon("Connect Wallet")}
-            </button>
-          )}
+            )}
           {/* Language Selector */}
           <CheckClickOutside onClick={() => setShowLanguageMenu(false)}>
             <div className="relative">
@@ -357,7 +326,7 @@ const Header = () => {
                     className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-labelprimary flex items-center text-red-600 dark:bordercolor1"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    {tCommon("Log out")}
+                    {t("logout")}
                   </button>
                 </div>
               )}
@@ -368,13 +337,18 @@ const Header = () => {
       <CommandPalette
         isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
+        items={
+          userRole && Object.values(LOGIN_ROLE).includes(userRole)
+            ? getFilteredNavItems(userRole)
+            : []
+        }
       />
       {isLoggingOut && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bgbgwhite/50 dark:bgbgblack/50 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-4">
             <Loader />
             <p className="text-lg font-medium text-textprimary dark:text-sidebartext">
-              {tCommon("Logging out")}
+              {t("loggingOut")}
             </p>
           </div>
         </div>

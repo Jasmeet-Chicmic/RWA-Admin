@@ -63,8 +63,8 @@ const UserTable = ({
 
   const BOOLEAN_FILTER_OPTIONS = useMemo(
     () => [
-      { label: t("Yes"), value: "true" },
-      { label: t("No"), value: "false" },
+      { label: t("yes"), value: "true" },
+      { label: t("no"), value: "false" },
     ],
     [t],
   );
@@ -80,19 +80,15 @@ const UserTable = ({
         });
         if (res.status) {
           toast.success(
-            res.message || t("Marketing subscription updated successfully"),
+            res.message || t("marketingSubscriptionUpdatedSuccessfully"),
           );
           router.refresh();
         } else {
-          toast.error(
-            res.message || t("Failed to update marketing subscription"),
-          );
+          toast.error(res.message || t("failedToUpdateMarketingSubscription"));
         }
       } catch (error) {
         console.error("Error updating marketing subscription:", error);
-        toast.error(
-          t("An error occurred while updating marketing subscription"),
-        );
+        toast.error(t("anErrorOccurredWhileUpdatingMarketingSubscription"));
       } finally {
         setIsActionLoading(null);
       }
@@ -109,14 +105,14 @@ const UserTable = ({
           isActive: newStatus,
         });
         if (res.status) {
-          toast.success(res.message || t("User status updated successfully"));
+          toast.success(res.message || t("userStatusUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to update user status"));
+          toast.error(res.message || t("failedToUpdateUserStatus"));
         }
       } catch (error) {
         console.error("Error updating user status:", error);
-        toast.error(t("An error occurred while updating user status"));
+        toast.error(t("anErrorOccurredWhileUpdatingUserStatus"));
       } finally {
         setIsActionLoading(null);
       }
@@ -133,14 +129,14 @@ const UserTable = ({
           roleIds: [roleId],
         });
         if (res.status) {
-          toast.success(res.message || t("User role updated successfully"));
+          toast.success(res.message || t("userRoleUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to update user role"));
+          toast.error(res.message || t("failedToUpdateUserRole"));
         }
       } catch (error) {
         console.error("Error updating user role:", error);
-        toast.error(t("An error occurred while updating user role"));
+        toast.error(t("anErrorOccurredWhileUpdatingUserRole"));
       } finally {
         setIsActionLoading(null);
       }
@@ -161,14 +157,14 @@ const UserTable = ({
           assign,
         });
         if (res.status) {
-          toast.success(res.message || t("Admin badge updated successfully"));
+          toast.success(res.message || t("adminBadgeUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to update admin badge"));
+          toast.error(res.message || t("failedToUpdateAdminBadge"));
         }
       } catch (error) {
         console.error("Error updating admin badge:", error);
-        toast.error(t("An error occurred while updating admin badge"));
+        toast.error(t("anErrorOccurredWhileUpdatingAdminBadge"));
       } finally {
         setIsActionLoading(null);
       }
@@ -198,14 +194,14 @@ const UserTable = ({
 
   const config: DataTableConfig<User> = useMemo(() => {
     const columns: TableColumn<User>[] = [
-      createSortableColumn("name", t("Name"), (data) => (
+      createSortableColumn("name", t("name"), (data) => (
         <span className={TEXT_GRAY_WHITE}>
           {data?.fullName ||
             `${data?.firstName ?? ""} ${data?.lastName ?? ""}` ||
             ""}
         </span>
       )),
-      createSortableColumn("email", t("Email"), (data) => {
+      createSortableColumn("email", t("email"), (data) => {
         const email = data?.email;
         if (!email) return <span>-</span>;
         const truncatedEmail =
@@ -222,10 +218,10 @@ const UserTable = ({
               onClick={(e) => {
                 e.stopPropagation();
                 navigator.clipboard.writeText(email);
-                toast.success(t("Email copied to clipboard"));
+                toast.success(t("emailCopiedToClipboard"));
               }}
               className="p-1 rounded hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
-              title={t("Copy email")}
+              title={t("copyEmail")}
             >
               <Copy size={14} className="text-gray-500 dark:bordercolor1" />
             </button>
@@ -234,7 +230,7 @@ const UserTable = ({
       }),
       {
         field: "role",
-        title: t("Role"),
+        title: t("role"),
         render: (item) => {
           const userRole = item.role;
           const currentRoleName =
@@ -268,7 +264,7 @@ const UserTable = ({
                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
-                  <span>{currentRoleName || t("No Role")}</span>
+                  <span>{currentRoleName || t("noRole")}</span>
                   <ChevronDown size={14} className="opacity-60" />
                 </div>
               }
@@ -281,14 +277,14 @@ const UserTable = ({
       },
       // {
       //   field: "phone",
-      //   title: t("Phone"),
+      //   title: t("phone"),
       //   render: (data) => `${data?.phone || "-"}`,
       //   sortable: false,
       //   sortKey: "phone",
       // },
       {
         field: "",
-        title: t("Marketing Subscription"),
+        title: t("marketingSubscription"),
         render: (item) => {
           const activeCampaign = (
             item as unknown as {
@@ -304,8 +300,8 @@ const UserTable = ({
             <StatusToggleMenu
               isActive={isSubscribed}
               isLoading={isLoading}
-              activeLabel={t("Subscribe")}
-              inactiveLabel={t("Unsubscribe")}
+              activeLabel={t("subscribe")}
+              inactiveLabel={t("unsubscribe")}
               onChange={(next) =>
                 handleToggleMarketingSubscription(userId, next)
               }
@@ -316,14 +312,14 @@ const UserTable = ({
       },
       {
         field: "country",
-        title: t("Country"),
+        title: t("country"),
         render: (data) => `${data?.country || "-"}`,
         sortable: false,
         sortKey: "country",
       },
       {
         field: "isAdminBadgeAssigned",
-        title: t("Admin Badge"),
+        title: t("adminBadge"),
         render: (item) => {
           const hasBadge = item.isAdminBadgeAssigned ?? false;
           const userId = item.userId || item._id || "";
@@ -333,8 +329,8 @@ const UserTable = ({
             <StatusToggleMenu
               isActive={hasBadge}
               isLoading={isLoading}
-              activeLabel={t("Active")}
-              inactiveLabel={t("Inactive")}
+              activeLabel={t("active")}
+              inactiveLabel={t("inactive")}
               onChange={(next) =>
                 handleToggleAdminBadge(userId, next, hasBadge)
               }
@@ -346,7 +342,7 @@ const UserTable = ({
       },
       {
         field: "levelOfSeniority",
-        title: t("Seniority Level"),
+        title: t("seniorityLevel"),
         render: (item) => {
           const level = item.levelOfSeniority;
 
@@ -362,7 +358,7 @@ const UserTable = ({
       },
       {
         field: "isActive",
-        title: t("Account Status"),
+        title: t("accountStatus"),
         render: (item) => {
           const isActive = item.isActive ?? false;
           const userId = item.userId || item._id || "";
@@ -372,8 +368,8 @@ const UserTable = ({
             <StatusToggleMenu
               isActive={isActive}
               isLoading={isLoading}
-              activeLabel={t("Active")}
-              inactiveLabel={t("Inactive")}
+              activeLabel={t("active")}
+              inactiveLabel={t("inactive")}
               onChange={(next) => handleToggleStatus(userId, next)}
             />
           );
@@ -383,7 +379,7 @@ const UserTable = ({
       },
       // {
       //   field: "isSpotlighted",
-      //   title: t("Spotlight"),
+      //   title: t("spotlight"),
       //   render: (item) => {
       //     const isSpotlighted = item.isSpotlighted ?? false;
       //     const userId = item.userId || item._id || "";
@@ -406,7 +402,7 @@ const UserTable = ({
       //                   : "bg-gray-500 dark:bg-secondaryhover"
       //               }`}
       //             />
-      //             {isSpotlighted ? t("Yes") : t("No")}
+      //             {isSpotlighted ? t("yes") : t("no")}
       //             <ChevronDown size={14} className="opacity-60" />
       //           </div>
       //         }
@@ -415,7 +411,7 @@ const UserTable = ({
       //             label: (
       //               <div className="flex items-center gap-2 py-1">
       //                 <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-      //                 <span className="font-medium">{t("Yes")}</span>
+      //                 <span className="font-medium">{t("yes")}</span>
       //               </div>
       //             ),
       //             onClick: () => void handleToggleSpotlight(userId, true),
@@ -425,7 +421,7 @@ const UserTable = ({
       //             label: (
       //               <div className="flex items-center gap-2 py-1">
       //                 <div className="w-2 h-2 rounded-full bg-gray-500" />
-      //                 <span className="font-medium">{t("No")}</span>
+      //                 <span className="font-medium">{t("no")}</span>
       //               </div>
       //             ),
       //             onClick: () => void handleToggleSpotlight(userId, false),
@@ -438,16 +434,16 @@ const UserTable = ({
       //   sortable: false,
       //   sortKey: "isSpotlighted",
       // },
-      createSortableColumn("reportCount", t("Report Count"), (data) => (
+      createSortableColumn("reportCount", t("reportCount"), (data) => (
         <span className={TEXT_SIZE_SM}>{data?.reportCount ?? 0}</span>
       )),
-      createSortableColumn("connectionCount", t("Connection Count"), (data) => (
+      createSortableColumn("connectionCount", t("connectionCount"), (data) => (
         <span className={TEXT_SIZE_SM}>{data?.connectionCount ?? 0}</span>
       )),
-      createSortableColumn("pointsEarned", t("Points Earned"), (data) => (
+      createSortableColumn("pointsEarned", t("pointsEarned"), (data) => (
         <span className={TEXT_SIZE_SM}>{data?.pointsEarned ?? 0}</span>
       )),
-      createSortableColumn("createdOn", t("Created On"), (item) => {
+      createSortableColumn("createdOn", t("createdOn"), (item) => {
         const dateValue = item.createdOn;
         return (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -457,7 +453,7 @@ const UserTable = ({
       }),
       {
         field: "",
-        title: t("Last Login Session"),
+        title: t("lastLoginSession"),
         render: (item) => {
           const lastSession = (
             item as unknown as {
@@ -488,7 +484,7 @@ const UserTable = ({
                     isActive ? "bg-green-500" : "bg-gray-500"
                   }`}
                 />
-                {isActive ? t("Active") : t("Inactive")}
+                {isActive ? t("active") : t("inactive")}
               </span>
             </div>
           );
@@ -497,7 +493,7 @@ const UserTable = ({
       },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         render: (data) => (
           <div className="flex items-center space-x-3">
             <button
@@ -510,7 +506,7 @@ const UserTable = ({
                 }
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View User")}
+              title={t("viewUser")}
             >
               <Eye size={18} />
             </button>
@@ -539,20 +535,20 @@ const UserTable = ({
                   <h2
                     className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
                   >
-                    {t("Users")}
+                    {t("users")}
                   </h2>
                 </div>
                 <div className="flex items-initial space-x-4">
                   <SearchToolbar
                     initialQuery={searchString}
-                    placeholder={t("Search User")}
+                    placeholder={t("searchUser")}
                   />
                   <button
                     onClick={() => setIsFilterOpen(true)}
                     className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
                   >
                     <Menu size={18} />
-                    <span>{t("Filters")}</span>
+                    <span>{t("filters")}</span>
                   </button>
                 </div>
               </div>
@@ -562,7 +558,7 @@ const UserTable = ({
           <FilterSidebar
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
-            title={t("User Filters")}
+            title={t("userFilters")}
             footer={
               <button
                 onClick={() => {
@@ -572,7 +568,7 @@ const UserTable = ({
                 className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-primarycolor transition-all border bordergray200 dark:border-white/50 font-medium"
               >
                 <RotateCcw size={18} />
-                <span>{t("Clear All Filters")}</span>
+                <span>{t("clearAllFilters")}</span>
               </button>
             }
           >
@@ -582,13 +578,13 @@ const UserTable = ({
                   htmlFor="is-active-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Account Status")}
+                  {t("accountStatus")}
                 </label>
                 <SelectFilter
                   id="is-active-filter"
                   paramName="isActive"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Active Status")}
+                  placeholder={t("selectActiveStatus")}
                 />
               </div>
 
@@ -597,13 +593,13 @@ const UserTable = ({
                   htmlFor="is-spotlighted-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Spotlight Status")}
+                  {t("spotlightStatus")}
                 </label>
                 <SelectFilter
                   id="is-spotlighted-filter"
                   paramName="isSpotlighted"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Spotlighted Status")}
+                  placeholder={t("selectSpotlightedStatus")}
                 />
               </div>
 
@@ -612,7 +608,7 @@ const UserTable = ({
                   htmlFor="date-range-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Created Date Range")}
+                  {t("createdDateRange")}
                 </label>
                 <DateRangeFilter
                   id="date-range-filter"
@@ -655,13 +651,13 @@ const UserTable = ({
                   htmlFor="min-report-count-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Minimum Report Count")}
+                  {t("minimumReportCount")}
                 </label>
                 <input
                   id="min-report-count-filter"
                   type="number"
                   min="0"
-                  placeholder={t("Enter minimum report count")}
+                  placeholder={t("enterMinimumReportCount")}
                   className="w-full px-4 py-2.5 border border-darklabelprimary dark:border-labelprimary rounded-[8px] text-sm focus:outline-none focus:ring-2 focus:ring-primarycolor dark:bg-darkbgprimary dark:text-darklabelprimary transition-all"
                   onChange={(e) => {
                     const val = e.target.value;

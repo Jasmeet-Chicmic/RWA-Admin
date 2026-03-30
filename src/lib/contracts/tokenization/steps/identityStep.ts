@@ -1,16 +1,12 @@
+import { propertyOnchainService } from "@/services/property-onchain-service";
 import { PublicClient, WalletClient } from "viem";
 import { TOKENIZATION_CONTRACTS } from "../../tokenizationConfig";
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { postApiJson } from "@/shared/clientApi";
-import type { InternalApiBaseResponse } from "@/shared/types/internalApi";
 import { IDENTITY_REGISTRY_ABI, TOKEN_ABI } from "../abis";
 import type {
   ActiveAccount,
   GasConfig,
   RunTokenizationFlowInput,
 } from "../types";
-
-const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 export type IdentityStepInput = {
   input: RunTokenizationFlowInput;
@@ -106,17 +102,10 @@ export const runIdentityStep = async ({
       }
 
       txHashes.push(receipt.transactionHash);
-      const kycDonePayload = await postApiJson<
-        InternalApiBaseResponse,
-        { propertyId: string; txHash: `0x${string}` }
-      >(
-        INTERNAL_API_PATHS.PROPERTY_ONCHAIN_KYC_DONE,
-        {
-          propertyId: input.input.propertyId,
-          txHash: receipt.transactionHash,
-        },
-        { timeoutMs: TOKENIZATION_API_TIMEOUT_MS },
-      );
+      const kycDonePayload = await propertyOnchainService.kycDone({
+        propertyId: input.input.propertyId,
+        txHash: receipt.transactionHash,
+      });
 
       if (!kycDonePayload?.status) {
         throw new Error(kycDonePayload?.message || "Failed to report kyc done");

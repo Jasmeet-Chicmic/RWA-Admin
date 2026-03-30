@@ -1,17 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
-import Link from "next/link";
 import { Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useMemo } from "react";
 
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { ROUTES } from "@/shared/routes";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import { ROUTES } from "@/shared/routes";
 
 export type OrganisationEntityType = "LLC" | "SPV" | "Trust";
 
@@ -39,14 +39,14 @@ const PropertyOrganisationsTable = ({
     const columns: TableColumn<OrganisationRow>[] = [
       {
         field: "name",
-        title: t("Organisation Name"),
+        title: t("organisationName"),
         render: (item) => (
           <span className={`${TEXT_PRIMARY} font-medium`}>{item.name}</span>
         ),
       },
       {
         field: "entityType",
-        title: t("Entity Type"),
+        title: t("entityType"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.entityType}
@@ -55,7 +55,7 @@ const PropertyOrganisationsTable = ({
       },
       {
         field: "registrationNumber",
-        title: t("Registration Number"),
+        title: t("registrationNumber"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.registrationNumber}
@@ -64,7 +64,7 @@ const PropertyOrganisationsTable = ({
       },
       {
         field: "jurisdiction",
-        title: t("Jurisdiction"),
+        title: t("jurisdiction"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.jurisdiction}
@@ -73,7 +73,7 @@ const PropertyOrganisationsTable = ({
       },
       {
         field: "incorporationDate",
-        title: t("Incorporation Date"),
+        title: t("incorporationDate"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.incorporationDate}
@@ -82,7 +82,7 @@ const PropertyOrganisationsTable = ({
       },
       {
         field: "propertyHolds",
-        title: t("Properties Held"),
+        title: t("propertiesHeld"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.propertyHolds}
@@ -91,15 +91,14 @@ const PropertyOrganisationsTable = ({
       },
       {
         field: "",
-        title: tCommon("Actions"),
+        title: t("actions"),
         render: (item) => (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-center">
             <Link
               href={`${ROUTES.PROPERTIES_ORGANISATIONS}/${encodeURIComponent(item.id)}`}
               className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-semibold text-primarycolor hover:underline"
             >
               <Eye className="w-4 h-4" />
-              {tCommon("View")}
             </Link>
           </div>
         ),
@@ -111,7 +110,12 @@ const PropertyOrganisationsTable = ({
       keyExtractor: (item) => item.id,
       paginationTitle: "organisations",
       hideSelectCol: true,
-      emptyMessage: t("No organisations found"),
+      emptyMessage: t("noOrganisationsFound"),
+      queryConfig: {
+        defaultPageSize: 10,
+        defaultSortKey: "",
+        skipFirstRender: true,
+      },
       header: (
         <div className="bg-bgwhite dark:bg-darkbgprimary">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -119,10 +123,10 @@ const PropertyOrganisationsTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Organisations")}
+                {t("organisations")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Organisations subtitle")}
+                {t("organisationsSubtitle")}
               </p>
             </div>
           </div>

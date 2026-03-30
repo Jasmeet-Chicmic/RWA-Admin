@@ -1,13 +1,13 @@
+import axios, { AxiosError } from "axios";
+
+import { axiosInstance } from "@/lib/axiosInstance";
+
 export type ApiRequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: unknown;
   headers?: Record<string, string>;
   cache?: RequestCache;
   timeoutMs?: number;
-};
-
-const DEFAULT_HEADERS: Record<string, string> = {
-  "Content-Type": "application/json",
 };
 
 const toErrorMessage = (
@@ -27,51 +27,41 @@ const toErrorMessage = (
   return `${fallbackMessage} (status: ${status})`;
 };
 
+/**
+ * JSON API helper backed by the shared Axios instance (correct API base URL,
+ * auth interceptors). Prefer `src/services/fetcher.ts` for new code.
+ */
 export const requestApiJson = async <TResponse>(
   path: string,
   options?: ApiRequestOptions,
 ): Promise<TResponse> => {
-  const controller = new AbortController();
+  const method = options?.method ?? "GET";
   const timeoutMs = options?.timeoutMs;
-  const timeoutId =
-    timeoutMs && timeoutMs > 0
-      ? setTimeout(() => controller.abort(), timeoutMs)
-      : undefined;
 
   try {
-    const response = await fetch(path, {
-      method: options?.method ?? "GET",
-      headers: { ...DEFAULT_HEADERS, ...(options?.headers ?? {}) },
-      body:
-        options?.body !== undefined ? JSON.stringify(options.body) : undefined,
-      cache: options?.cache,
-      signal: controller.signal,
+    const response = await axiosInstance.request<TResponse>({
+      url: path,
+      method,
+      data: options?.body,
+      headers: options?.headers,
+      ...(timeoutMs && timeoutMs > 0 ? { timeout: timeoutMs } : {}),
     });
-
-    const responseText = await response.text();
-    const payload = responseText
-      ? (JSON.parse(responseText) as TResponse)
-      : null;
-
-    if (!response.ok) {
-      throw new Error(
-        toErrorMessage(payload, "API request failed", response.status),
-      );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const ax = error as AxiosError<unknown>;
+      const status = ax.response?.status ?? 0;
+      const payload = ax.response?.data;
+      throw new Error(toErrorMessage(payload, "API request failed", status));
     }
 
-    return payload as TResponse;
-  } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
-      throw new Error(
-        `API request timed out${timeoutMs ? ` after ${timeoutMs}ms` : ""}`,
-      );
+      const suffix =
+        timeoutMs && timeoutMs > 0 ? ` after ${String(timeoutMs)}ms` : "";
+      throw new Error(`API request timed out${suffix}`);
     }
 
     throw error;
-  } finally {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
   }
 };
 

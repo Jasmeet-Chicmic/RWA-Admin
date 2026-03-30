@@ -61,7 +61,7 @@ const TokenRequestsPage = () => {
     columns: [
       {
         field: "userId",
-        title: t("User ID"),
+        title: t("userId"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.userId}
@@ -70,7 +70,7 @@ const TokenRequestsPage = () => {
       },
       {
         field: "requestedAmount",
-        title: t("Requested Amount"),
+        title: t("requestedAmount"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.requestedAmount}
@@ -79,7 +79,7 @@ const TokenRequestsPage = () => {
       },
       {
         field: "createdAt",
-        title: t("Token Requests Date"),
+        title: t("tokenRequestsDate"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {new Date(item.createdAt).toLocaleString()}
@@ -88,7 +88,7 @@ const TokenRequestsPage = () => {
       },
       {
         field: "status",
-        title: t("Status"),
+        title: t("status"),
         render: (item) => {
           const isPending = item.status === 0;
           const isApproved = item.status === 1;
@@ -117,18 +117,18 @@ const TokenRequestsPage = () => {
       },
       {
         field: "actions",
-        title: t("Actions"),
+        title: t("actions"),
         render: (item) => (
           <div className="flex items-center justify-end">
             <DropdownMenu
               options={[
                 {
-                  label: t("Approve"),
+                  label: t("approve"),
                   value: 1,
                   icon: <Check className="w-4 h-4 text-emerald-600" />,
                 },
                 {
-                  label: t("Reject"),
+                  label: t("reject"),
                   value: 2,
                   icon: <X className="w-4 h-4 text-red-600" />,
                 },
@@ -149,7 +149,7 @@ const TokenRequestsPage = () => {
     keyExtractor: (item) => item.requestId,
     paginationTitle: "Token Requests",
     hideSelectCol: true,
-    emptyMessage: t("No Token Requests"),
+    emptyMessage: t("noTokenRequests"),
     queryConfig: {
       defaultSortKey: "createdAt",
     },
@@ -160,10 +160,10 @@ const TokenRequestsPage = () => {
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Token Requests Title")}
+              {t("tokenRequestsTitle")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("Token Requests Subtitle")}
+              {t("tokenRequestsSubtitle")}
             </p>
           </div>
         </div>

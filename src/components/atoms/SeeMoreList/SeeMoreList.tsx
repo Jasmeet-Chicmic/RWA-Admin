@@ -29,9 +29,9 @@ export default function SeeMoreList<T>({
   const t = useTranslations("common");
   const [showAll, setShowAll] = useState(false);
 
-  const resolvedShowMore = showMoreButtonText ?? t("Show more");
-  const resolvedShowLess = showLessButtonText ?? t("Show less");
-  const resolvedEmptyState = emptyStateMessage ?? t("No items to display");
+  const resolvedShowMore = showMoreButtonText ?? t("showMore");
+  const resolvedShowLess = showLessButtonText ?? t("showLess");
+  const resolvedEmptyState = emptyStateMessage ?? t("noItemsToDisplay");
 
   const displayedData = useMemo(() => {
     if (showAll || data.length <= initialCount) return data;

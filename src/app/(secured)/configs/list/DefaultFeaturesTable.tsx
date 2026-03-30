@@ -58,11 +58,11 @@ const DefaultFeaturesTable = ({
           );
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to update feature status"));
+          toast.error(res.message || t("failedToUpdateFeatureStatus"));
         }
       } catch (error) {
         console.error("Error toggling feature active status:", error);
-        toast.error(t("Failed to update feature status"));
+        toast.error(t("failedToUpdateFeatureStatus"));
       } finally {
         setIsActionLoading(null);
       }
@@ -74,14 +74,14 @@ const DefaultFeaturesTable = ({
     const columns: TableColumn<SystemFeature>[] = [
       {
         field: "displayName",
-        title: t("Feature Name"),
+        title: t("featureName"),
         render: (item) => (
           <span className={TEXT_GRAY_WHITE}>{item.displayName}</span>
         ),
       },
       {
         field: "featureCode",
-        title: t("Feature Code"),
+        title: t("featureCode"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.featureCode}
@@ -90,7 +90,7 @@ const DefaultFeaturesTable = ({
       },
       {
         field: "isDefault",
-        title: t("Is Default"),
+        title: t("isDefault"),
         render: (item) => (
           <div
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${TEXT_SIZE_SM} font-bold border ${
@@ -99,22 +99,22 @@ const DefaultFeaturesTable = ({
                 : "bg-gray-100 text-gray-600 border-gray-300 dark:bg-primarycolor dark:text-white/80 dark:border-primarycolor"
             }`}
           >
-            {item.isDefault ? t("Yes") : t("No")}
+            {item.isDefault ? t("yes") : t("no")}
           </div>
         ),
       },
       {
         field: "defaultValue",
-        title: t("Default Value"),
+        title: t("defaultValue"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.defaultValue ?? t("Unlimited")}
+            {item.defaultValue ?? t("unlimited")}
           </span>
         ),
       },
       {
         field: "isActive",
-        title: t("Is Active"),
+        title: t("isActive"),
         render: (item) => {
           const isActive = item.isActive ?? false;
           const featureId = item.id;
@@ -137,7 +137,7 @@ const DefaultFeaturesTable = ({
                         : "bg-red-500"
                     }`}
                   />
-                  {isActive ? t("Active") : t("Inactive")}
+                  {isActive ? t("active") : t("inactive")}
                   <ChevronDown size={14} className="opacity-60" />
                 </div>
               }
@@ -146,7 +146,7 @@ const DefaultFeaturesTable = ({
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                      <span className="font-medium">{t("Active")}</span>
+                      <span className="font-medium">{t("active")}</span>
                     </div>
                   ),
                   onClick: () => void handleToggleActive(featureId, true),
@@ -156,7 +156,7 @@ const DefaultFeaturesTable = ({
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="font-medium">{t("Inactive")}</span>
+                      <span className="font-medium">{t("inactive")}</span>
                     </div>
                   ),
                   onClick: () => void handleToggleActive(featureId, false),
@@ -169,13 +169,13 @@ const DefaultFeaturesTable = ({
       },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         render: (item) => (
           <div className="flex items-center space-x-3">
             <button
               onClick={() => handleEditClick(item)}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("Edit")}
+              title={t("edit")}
             >
               <Pencil size={18} />
             </button>
@@ -196,12 +196,12 @@ const DefaultFeaturesTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Default Features")}
+                {t("defaultFeatures")}
               </h2>
             </div>
             <SearchToolbar
               initialQuery={searchString}
-              placeholder={t("Search features placeholder")}
+              placeholder={t("searchFeaturesPlaceholder")}
               queryParamName="searchText"
             />
           </div>

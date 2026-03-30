@@ -56,20 +56,20 @@ const UserCompaniesTable = ({
         if (ok) {
           toast.success(
             (res as { message?: string })?.message ??
-              t("Company deleted successfully"),
+              t("companyDeletedSuccessfully"),
           );
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
           toast.error(
             (res as { message?: string })?.message ??
-              t("Failed to delete company"),
+              t("failedToDeleteCompany"),
           );
           setDeleteModal({ open: false, id: null });
         }
       } catch (error) {
         console.error("Failed to delete company", error);
-        toast.error(t("Failed to delete company"));
+        toast.error(t("failedToDeleteCompany"));
         setDeleteModal({ open: false, id: null });
       } finally {
         setDeletingId(null);
@@ -80,7 +80,7 @@ const UserCompaniesTable = ({
 
   const columns: TableColumn<AdminCompany>[] = [
     {
-      title: t("Company Name"),
+      title: t("companyName"),
       field: "name",
       render: (item) => (
         <span
@@ -92,7 +92,7 @@ const UserCompaniesTable = ({
       ),
     },
     {
-      title: t("Company Industry"),
+      title: t("companyIndustry"),
       field: "industry",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -101,7 +101,7 @@ const UserCompaniesTable = ({
       ),
     },
     // {
-    //   title: t("Message"),
+    //   title: t("message"),
     //   field: "message",
     //   render: (item) => (
     //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -110,7 +110,7 @@ const UserCompaniesTable = ({
     //   ),
     // },
     {
-      title: t("Actions"),
+      title: t("actions"),
       field: "",
       fixed: "right",
       render: (item) => (
@@ -122,7 +122,7 @@ const UserCompaniesTable = ({
               setDeleteModal({ open: true, id: item.id });
             }}
             className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-            title={t("Delete")}
+            title={t("delete")}
             disabled={deletingId === item.id}
           >
             <Trash2 size={18} />
@@ -140,16 +140,16 @@ const UserCompaniesTable = ({
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("User Companies")}
+              {t("userCompanies")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("User Companies subtitle")}
+              {t("userCompaniesSubtitle")}
             </p>
           </div>
           <div className="flex items-center space-x-4">
             <SearchToolbar
               initialQuery={searchText}
-              placeholder={t("Search Companies")}
+              placeholder={t("searchCompanies")}
               queryParamName="searchText"
             />
           </div>
@@ -162,7 +162,7 @@ const UserCompaniesTable = ({
           columns={columns}
           keyExtractor={(item) => item.id}
           hideSelectCol
-          emptyMessage={t("No companies found")}
+          emptyMessage={t("noCompaniesFound")}
         />
         <Pagination
           totalItems={totalCount}
@@ -185,8 +185,8 @@ const UserCompaniesTable = ({
           if (!deleteModal.id) return;
           await handleDeleteCompany(deleteModal.id);
         }}
-        title={t("Delete Company")}
-        message={t("Delete Company confirmation")}
+        title={t("deleteCompany")}
+        message={t("deleteCompanyConfirmation")}
         isLoading={!!deletingId}
       />
     </div>

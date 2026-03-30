@@ -74,14 +74,14 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
         })) as { status?: boolean; message?: string };
 
         if (res.status) {
-          toast.success(res.message || t("Group status updated successfully"));
+          toast.success(res.message || t("groupStatusUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to update group status"));
+          toast.error(res.message || t("failedToUpdateGroupStatus"));
         }
       } catch (error) {
         console.error("Failed to toggle group status", error);
-        toast.error(t("Failed to update group status"));
+        toast.error(t("failedToUpdateGroupStatus"));
       } finally {
         setIsActionLoading(null);
       }
@@ -98,15 +98,15 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
           groupIds: [id],
         })) as { status?: boolean; message?: string };
         if (res.status) {
-          toast.success(res.message || t("Group deleted successfully"));
+          toast.success(res.message || t("groupDeletedSuccessfully"));
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to delete group"));
+          toast.error(res.message || t("failedToDeleteGroup"));
         }
       } catch (error) {
         console.error("Failed to delete group", error);
-        toast.error(t("Failed to delete group"));
+        toast.error(t("failedToDeleteGroup"));
       } finally {
         setDeletingId(null);
       }
@@ -117,7 +117,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
   const config: DataTableConfig<AdminGroup> = useMemo(() => {
     const columns: TableColumn<AdminGroup>[] = [
       {
-        title: t("Group Name"),
+        title: t("groupName"),
         field: "name",
         render: (item: AdminGroup) => (
           <span className={`font-medium ${TEXT_PRIMARY}`} title={item.name}>
@@ -128,7 +128,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
         sortKey: "Name",
       },
       {
-        title: t("Group Type"),
+        title: t("groupType"),
         field: "type",
         render: (item: AdminGroup) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -139,7 +139,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
         sortKey: "Type",
       },
       {
-        title: t("Member Count"),
+        title: t("memberCount"),
         field: "membersCount",
         render: (item: AdminGroup) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -150,7 +150,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
         sortKey: "MembersCount",
       },
       {
-        title: t("Report Count"),
+        title: t("reportCount"),
         field: "reportCount",
         render: (item: AdminGroup) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -163,8 +163,8 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Group Status")}
-            options={[t("Active"), t("Inactive")]}
+            label={t("groupStatus")}
+            options={[t("active"), t("inactive")]}
           />
         ),
         field: "isActive",
@@ -187,7 +187,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
                         : "bg-red-500"
                     }`}
                   />
-                  {item.isActive ? t("Active") : t("Inactive")}
+                  {item.isActive ? t("active") : t("inactive")}
                   <ChevronDown size={14} className="opacity-60" />
                 </div>
               }
@@ -196,7 +196,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                      <span className="font-medium">{t("Active")}</span>
+                      <span className="font-medium">{t("active")}</span>
                     </div>
                   ),
                   onClick: () => void handleToggleGroupStatus(item.id, true),
@@ -206,7 +206,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="font-medium">{t("Inactive")}</span>
+                      <span className="font-medium">{t("inactive")}</span>
                     </div>
                   ),
                   onClick: () => void handleToggleGroupStatus(item.id, false),
@@ -220,35 +220,35 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Join Status")}
-            options={[t("Open"), t("Closed")]}
+            label={t("joinStatus")}
+            options={[t("open"), t("closed")]}
           />
         ),
         field: "isClosed",
         render: (item: AdminGroup) =>
           item.isClosed ? (
-            <StatusPill label={t("Closed")} colorClass="secondarycolor" />
+            <StatusPill label={t("closed")} colorClass="secondarycolor" />
           ) : (
-            <StatusPill label={t("Open")} colorClass="lightgreen" />
+            <StatusPill label={t("open")} colorClass="lightgreen" />
           ),
       },
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Publication State")}
-            options={[t("Draft"), t("Published")]}
+            label={t("publicationState")}
+            options={[t("draft"), t("published")]}
           />
         ),
         field: "isDraft",
         render: (item: AdminGroup) =>
           item.isDraft ? (
-            <StatusPill label={t("Draft")} colorClass="primarycolor" />
+            <StatusPill label={t("draft")} colorClass="primarycolor" />
           ) : (
-            <StatusPill label={t("Published")} colorClass="lightgreen" />
+            <StatusPill label={t("published")} colorClass="lightgreen" />
           ),
       },
       {
-        title: t("Date Created"),
+        title: t("dateCreated"),
         field: "createdOn",
         render: (item: AdminGroup) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -259,7 +259,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
         sortKey: "CreatedOn",
       },
       {
-        title: t("Actions"),
+        title: t("actions"),
         field: "",
         fixed: "right",
         render: (item: AdminGroup) => (
@@ -271,7 +271,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
                 router.push(`/groups/view/${item.id}`);
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View Group")}
+              title={t("viewGroup")}
             >
               <Eye size={18} />
             </button>
@@ -282,7 +282,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
                 setDeleteModal({ open: true, id: item.id });
               }}
               className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-              title={t("Delete")}
+              title={t("delete")}
               disabled={deletingId === item.id}
             >
               <Trash2 size={18} />
@@ -307,16 +307,16 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Groups")}
+                {t("groups")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Groups subtitle")}
+                {t("groupsSubtitle")}
               </p>
             </div>
             <div className="flex items-initial space-x-4">
               <SearchToolbar
                 initialQuery={searchText}
-                placeholder={t("Search Groups")}
+                placeholder={t("searchGroups")}
                 queryParamName="searchText"
               />
               <button
@@ -324,7 +324,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
                 className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
               >
                 <Menu size={18} />
-                <span>{t("Filters")}</span>
+                <span>{t("filters")}</span>
               </button>
             </div>
           </div>
@@ -351,7 +351,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
       <FilterSidebar
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t("Group Filters")}
+        title={t("groupFilters")}
         footer={
           <button
             onClick={() => {
@@ -361,7 +361,7 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
             className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
           >
             <RotateCcw size={18} />
-            <span>{t("Clear All Filters")}</span>
+            <span>{t("clearAllFilters")}</span>
           </button>
         }
       >
@@ -377,8 +377,8 @@ const GroupsTable = ({ data, totalCount, searchText }: GroupsTableProps) => {
           if (!deleteModal.id) return;
           await handleDeleteGroup(deleteModal.id);
         }}
-        title={t("Delete Group")}
-        message={t("Delete Group confirmation")}
+        title={t("deleteGroup")}
+        message={t("deleteGroupConfirmation")}
         isLoading={!!deletingId}
       />
     </>

@@ -10,33 +10,33 @@ const GroupFilters = () => {
 
   const typeOptions = useMemo(
     () => [
-      { label: t("Public"), value: String(GROUP_TYPE.PUBLIC) },
-      { label: t("Private"), value: String(GROUP_TYPE.PRIVATE) },
-      { label: t("Secret"), value: String(GROUP_TYPE.SECRET) },
+      { label: t("public"), value: String(GROUP_TYPE.PUBLIC) },
+      { label: t("private"), value: String(GROUP_TYPE.PRIVATE) },
+      { label: t("secret"), value: String(GROUP_TYPE.SECRET) },
     ],
     [t],
   );
 
   const closedOptions = useMemo(
     () => [
-      { label: t("Closed"), value: "true" },
-      { label: t("Open"), value: "false" },
+      { label: t("closed"), value: "true" },
+      { label: t("open"), value: "false" },
     ],
     [t],
   );
 
   const draftOptions = useMemo(
     () => [
-      { label: t("Draft"), value: "true" },
-      { label: t("Published"), value: "false" },
+      { label: t("draft"), value: "true" },
+      { label: t("published"), value: "false" },
     ],
     [t],
   );
 
   const activeOptions = useMemo(
     () => [
-      { label: t("Active"), value: "true" },
-      { label: t("Inactive"), value: "false" },
+      { label: t("active"), value: "true" },
+      { label: t("inactive"), value: "false" },
     ],
     [t],
   );
@@ -48,13 +48,13 @@ const GroupFilters = () => {
           htmlFor="type-filter"
           className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
         >
-          {t("Type")}
+          {t("type")}
         </label>
         <SelectFilter
           id="type-filter"
           paramName="type"
           options={typeOptions}
-          placeholder={t("Select Type")}
+          placeholder={t("selectType")}
         />
       </div>
 
@@ -63,13 +63,13 @@ const GroupFilters = () => {
           htmlFor="is-closed-filter"
           className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
         >
-          {t("Is Closed")}
+          {t("isClosed")}
         </label>
         <SelectFilter
           id="is-closed-filter"
           paramName="isClosed"
           options={closedOptions}
-          placeholder={t("Select Closed Status")}
+          placeholder={t("selectClosedStatus")}
         />
       </div>
 
@@ -78,13 +78,13 @@ const GroupFilters = () => {
           htmlFor="is-draft-filter"
           className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
         >
-          {t("Is Draft")}
+          {t("isDraft")}
         </label>
         <SelectFilter
           id="is-draft-filter"
           paramName="isDraft"
           options={draftOptions}
-          placeholder={t("Select Draft Status")}
+          placeholder={t("selectDraftStatus")}
         />
       </div>
 
@@ -93,13 +93,13 @@ const GroupFilters = () => {
           htmlFor="is-active-filter"
           className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
         >
-          {t("Is Active")}
+          {t("isActive")}
         </label>
         <SelectFilter
           id="is-active-filter"
           paramName="isActive"
           options={activeOptions}
-          placeholder={t("Select Active Status")}
+          placeholder={t("selectActiveStatus")}
         />
       </div>
     </div>

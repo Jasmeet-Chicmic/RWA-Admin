@@ -21,12 +21,12 @@ export function SkillsSection({ skillsList }: Props) {
       <div className="flex items-center gap-2 mb-4">
         <Tag className="w-5 h-5 text-primarycolor dark:text-white" />
         <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext">
-          {t("Skills")}
+          {t("skills")}
         </h3>
       </div>
       {skillsList.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("No skills information available")}
+          {t("noSkillsInformationAvailable")}
         </p>
       ) : (
         <div className="max-h-[300px] overflow-y-auto space-y-3">

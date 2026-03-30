@@ -16,7 +16,7 @@ const EventProfileCard = ({ event }: { event: AdminEventDetail }) => {
     event.venue ||
     event.locationSummary ||
     [event.city, event.country].filter(Boolean).join(", ") ||
-    t("Location not specified");
+    t("locationNotSpecified");
 
   const coverSrc = event.coverPicture
     ? buildImageUrl(event.coverPicture)
@@ -49,7 +49,7 @@ const EventProfileCard = ({ event }: { event: AdminEventDetail }) => {
       {event.isSponserDiscoverYourEvent && (
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[0.7rem] font-semibold bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-700">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-          <span>{t("Sponsor badge")}</span>
+          <span>{t("sponsorBadge")}</span>
         </div>
       )}
     </div>
@@ -60,14 +60,14 @@ const EventProfileCard = ({ event }: { event: AdminEventDetail }) => {
       icon: (
         <Globe2 className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Event link"),
+      label: t("eventLink"),
       value: event.eventLink || "-",
     },
     {
       icon: (
         <CalendarDays className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Start Date"),
+      label: t("startDate"),
       value: event.startDateTime ? (
         <FormattedDate date={event.startDateTime} />
       ) : (
@@ -78,7 +78,7 @@ const EventProfileCard = ({ event }: { event: AdminEventDetail }) => {
       icon: (
         <CalendarDays className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("End Date"),
+      label: t("endDate"),
       value: event.endDateTime ? (
         <FormattedDate date={event.endDateTime} />
       ) : (

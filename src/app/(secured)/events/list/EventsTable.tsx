@@ -89,20 +89,19 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         if (ok) {
           toast.success(
             (res as { message?: string })?.message ??
-              t("Event deleted successfully"),
+              t("eventDeletedSuccessfully"),
           );
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
           toast.error(
-            (res as { message?: string })?.message ??
-              t("Failed to delete event"),
+            (res as { message?: string })?.message ?? t("failedToDeleteEvent"),
           );
           setDeleteModal({ open: false, id: null });
         }
       } catch (error) {
         console.error("Failed to delete event", error);
-        toast.error(t("Failed to delete event"));
+        toast.error(t("failedToDeleteEvent"));
         setDeleteModal({ open: false, id: null });
       } finally {
         setDeletingId(null);
@@ -126,18 +125,18 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         if (ok) {
           toast.success(
             (res as { message?: string })?.message ??
-              t("Event access updated successfully"),
+              t("eventAccessUpdatedSuccessfully"),
           );
           router.refresh();
         } else {
           toast.error(
             (res as { message?: string })?.message ??
-              t("Failed to update event access"),
+              t("failedToUpdateEventAccess"),
           );
         }
       } catch (error) {
         console.error("Failed to update event access", error);
-        toast.error(t("Failed to update event access"));
+        toast.error(t("failedToUpdateEventAccess"));
       } finally {
         setActionLoading(null);
       }
@@ -173,7 +172,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
     const columns: TableColumn<AdminEvent>[] = [
       createSortableColumn(
         "title",
-        t("Event Title"),
+        t("eventTitle"),
         (item) => (
           <span
             className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}
@@ -186,7 +185,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       ),
       createSortableColumn(
         "eventCategory",
-        t("Event Category"),
+        t("eventCategory"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {EVENT_CATEGORY_LABELS[item.eventCategory] ?? "—"}
@@ -196,7 +195,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       ),
       createSortableColumn(
         "format",
-        t("Event Format"),
+        t("eventFormat"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {EVENT_FORMAT_LABELS[item.format] ?? "—"}
@@ -207,8 +206,8 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Event Status")}
-            options={[t("Draft"), t("Unpublished"), t("Published")]}
+            label={t("eventStatus")}
+            options={[t("draft"), t("unpublished"), t("published")]}
           />
         ),
         field: "status",
@@ -229,7 +228,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       },
       createSortableColumn(
         "startDateTime",
-        t("Event Start Date"),
+        t("eventStartDate"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.startDateTime ? (
@@ -242,7 +241,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         "StartDateTime",
       ),
       {
-        title: t("Event End Date"),
+        title: t("eventEndDate"),
         field: "endDateTime",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -251,7 +250,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         ),
       },
       {
-        title: t("Event Venue"),
+        title: t("eventVenue"),
         field: "venue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -260,7 +259,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         ),
       },
       {
-        title: t("Event Country"),
+        title: t("eventCountry"),
         field: "country",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -269,7 +268,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         ),
       },
       {
-        title: t("Event Ticket Type"),
+        title: t("eventTicketType"),
         field: "ticketType",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -283,8 +282,8 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Event Visibility")}
-            options={[t("Active"), t("Inactive")]}
+            label={t("eventVisibility")}
+            options={[t("active"), t("inactive")]}
           />
         ),
         field: "isActive",
@@ -309,7 +308,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                         : "bg-red-500"
                     }`}
                   />
-                  {isActive ? t("Active") : t("Inactive")}
+                  {isActive ? t("active") : t("inactive")}
                   <ChevronDown size={14} className="opacity-60" />
                 </div>
               }
@@ -318,7 +317,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                      <span className="font-medium">{t("Active")}</span>
+                      <span className="font-medium">{t("active")}</span>
                     </div>
                   ),
                   onClick: () => {
@@ -332,7 +331,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="font-medium">{t("Inactive")}</span>
+                      <span className="font-medium">{t("inactive")}</span>
                     </div>
                   ),
                   onClick: () => {
@@ -349,7 +348,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       },
       createSortableColumn(
         "createdOn",
-        t("Date Created"),
+        t("dateCreated"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             <FormattedDate date={item.createdOn} />
@@ -358,7 +357,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
         "CreatedOn",
       ),
       {
-        title: t("Actions"),
+        title: t("actions"),
         field: "",
         fixed: "right",
         render: (item) => (
@@ -371,7 +370,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                 router.push(`/events/view/${item.id}`);
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View Event")}
+              title={t("viewEvent")}
             >
               <Eye size={18} />
             </button>
@@ -382,7 +381,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                 setDeleteModal({ open: true, id: item.id });
               }}
               className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-              title={t("Delete")}
+              title={t("delete")}
               disabled={deletingId === item.id}
             >
               <Trash2 size={18} />
@@ -397,7 +396,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
       keyExtractor: (item) => item.id,
       paginationTitle: "events",
       hideSelectCol: true,
-      emptyMessage: t("No events found"),
+      emptyMessage: t("noEventsFound"),
       queryConfig: {
         defaultSortKey: "CreatedOn",
         defaultSortDirection: SORT_DIRECTIONS.DESC,
@@ -411,16 +410,16 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   <h2
                     className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
                   >
-                    {t("Events")}
+                    {t("events")}
                   </h2>
                   <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                    {t("Header subtitle")}
+                    {t("headerSubtitle")}
                   </p>
                 </div>
                 <div className="flex items-initial space-x-4">
                   <SearchToolbar
                     initialQuery={searchText}
-                    placeholder={t("Search Events")}
+                    placeholder={t("searchEvents")}
                     queryParamName="searchText"
                   />
                   <button
@@ -428,7 +427,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                     className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
                   >
                     <Menu size={18} />
-                    <span>{t("Filters")}</span>
+                    <span>{t("filters")}</span>
                   </button>
                 </div>
               </div>
@@ -438,7 +437,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
           <FilterSidebar
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
-            title={t("Event Filters")}
+            title={t("eventFilters")}
             footer={
               <button
                 onClick={() => {
@@ -448,7 +447,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                 className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
               >
                 <RotateCcw size={18} />
-                <span>{t("Clear All Filters")}</span>
+                <span>{t("clearAllFilters")}</span>
               </button>
             }
           >
@@ -458,13 +457,13 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   htmlFor="status-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Status")}
+                  {t("status")}
                 </label>
                 <SelectFilter
                   id="status-filter"
                   paramName="status"
                   options={STATUS_FILTER_OPTIONS}
-                  placeholder={t("Select Status")}
+                  placeholder={t("selectStatus")}
                 />
               </div>
 
@@ -473,13 +472,13 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   htmlFor="category-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Category")}
+                  {t("category")}
                 </label>
                 <SelectFilter
                   id="category-filter"
                   paramName="eventCategory"
                   options={CATEGORY_FILTER_OPTIONS}
-                  placeholder={t("Select Category")}
+                  placeholder={t("selectCategory")}
                 />
               </div>
 
@@ -488,13 +487,13 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   htmlFor="format-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Format")}
+                  {t("format")}
                 </label>
                 <SelectFilter
                   id="format-filter"
                   paramName="format"
                   options={FORMAT_FILTER_OPTIONS}
-                  placeholder={t("Select Format")}
+                  placeholder={t("selectFormat")}
                 />
               </div>
 
@@ -503,13 +502,13 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   htmlFor="ticket-type-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Ticket Type")}
+                  {t("ticketType")}
                 </label>
                 <SelectFilter
                   id="ticket-type-filter"
                   paramName="ticketType"
                   options={ticketTypeFilterOptions}
-                  placeholder={t("Select Ticket Type")}
+                  placeholder={t("selectTicketType")}
                 />
               </div>
 
@@ -518,7 +517,7 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
                   htmlFor="start-date-range-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Start Date Range")}
+                  {t("startDateRange")}
                 </label>
                 <DateRangeFilter
                   id="start-date-range-filter"
@@ -587,8 +586,8 @@ const EventsTable = ({ data, totalCount, searchText }: EventsTableProps) => {
           if (!deleteModal.id) return;
           await handleDeleteEvent(deleteModal.id);
         }}
-        title={t("Delete Event")}
-        message={t("Delete Event confirmation")}
+        title={t("deleteEvent")}
+        message={t("deleteEventConfirmation")}
         isLoading={!!deletingId}
       />
     </>

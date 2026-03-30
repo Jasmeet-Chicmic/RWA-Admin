@@ -47,28 +47,28 @@ const ViewPostModal = ({
 
   const detailRows = [
     {
-      label: t("Description"),
-      value: getSafeText(post.description, t("Not available")),
+      label: t("description"),
+      value: getSafeText(post.description, t("notAvailable")),
       longText: true,
     },
     {
-      label: t("Author"),
+      label: t("author"),
       value: post.isCompanyAuthor
         ? `${post.author} (Company)`
-        : getSafeText(post.author, t("Not available")),
+        : getSafeText(post.author, t("notAvailable")),
     },
-    { label: t("Views"), value: post.views.toLocaleString() },
-    { label: t("Engagement"), value: post.engagement.toLocaleString() },
-    { label: t("Trust"), value: formatTrustScore(post.trust) },
-    { label: t("Sponsor"), value: post.sponsorStatus ? t("Yes") : t("No") },
-    { label: t("Reports"), value: String(post.reportCount) },
-    { label: t("Featured"), value: post.isFeatured ? t("Yes") : t("No") },
+    { label: t("views"), value: post.views.toLocaleString() },
+    { label: t("engagement"), value: post.engagement.toLocaleString() },
+    { label: t("trust"), value: formatTrustScore(post.trust) },
+    { label: t("sponsor"), value: post.sponsorStatus ? t("yes") : t("no") },
+    { label: t("reports"), value: String(post.reportCount) },
+    { label: t("featured"), value: post.isFeatured ? t("yes") : t("no") },
     {
-      label: t("Open to Sponsorship"),
-      value: post.isOpenToSponsorship ? t("Yes") : t("No"),
+      label: t("openToSponsorship"),
+      value: post.isOpenToSponsorship ? t("yes") : t("no"),
     },
     {
-      label: t("Date Published"),
+      label: t("datePublished"),
       value: getSafeText(post.publishedAt),
     },
   ] as Array<{ label: string; value: string; longText?: boolean }>;
@@ -79,7 +79,7 @@ const ViewPostModal = ({
       <div className="relative w-full max-w-lg mx-4 bg-bgwhite dark:bg-darkbgprimary rounded-2xl shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-bordercolor1 dark:border-darkbordercolor1">
           <h3 className={`text-lg font-bold ${TEXT_PRIMARY}`}>
-            {t("Post Details")}
+            {t("postDetails")}
           </h3>
           <button
             onClick={onClose}
@@ -123,7 +123,7 @@ const ViewPostModal = ({
             onClick={onClose}
             className="px-5 py-2 rounded-xl font-medium text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
-            {t("Close")}
+            {t("close")}
           </button>
         </div>
       </div>
@@ -255,7 +255,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
     const columns: TableColumn<AdminPost>[] = [
       createSortableColumn(
         "author",
-        t("Post Author"),
+        t("postAuthor"),
         (item) => (
           <div className="flex flex-col">
             {item.authorId ? (
@@ -281,7 +281,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
         "author",
       ),
       {
-        title: t("Post Description"),
+        title: t("postDescription"),
         field: "description",
         render: (item) => (
           <span
@@ -294,7 +294,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       },
       createSortableColumn(
         "views",
-        t("View Count"),
+        t("viewCount"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.views.toLocaleString()}
@@ -304,7 +304,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       ),
       createSortableColumn(
         "engagement",
-        t("Engagement Count"),
+        t("engagementCount"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.engagement.toLocaleString()}
@@ -314,7 +314,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       ),
       createSortableColumn(
         "trust",
-        t("Trust Score"),
+        t("trustScore"),
         (item) => (
           <span
             className={`${TEXT_SIZE_SM} font-bold ${getTrustScoreColor(item.trust)}`}
@@ -327,8 +327,8 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Sponsor Status")}
-            options={[t("Yes"), t("No")]}
+            label={t("sponsorStatus")}
+            options={[t("yes"), t("no")]}
           />
         ),
         field: "sponsorStatus",
@@ -349,13 +349,13 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                     : "bg-gray-500"
                 }`}
               />
-              {isSponsored ? t("Yes") : t("No")}
+              {isSponsored ? t("yes") : t("no")}
             </span>
           );
         },
       },
       {
-        title: t("Report Count"),
+        title: t("reportCount"),
         field: "reportCount",
         render: (item) => (
           <span
@@ -372,8 +372,8 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Featured Status")}
-            options={[t("Yes"), t("No")]}
+            label={t("featuredStatus")}
+            options={[t("yes"), t("no")]}
           />
         ),
         field: "isFeatured",
@@ -394,14 +394,14 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                     : "bg-gray-500"
                 }`}
               />
-              {isFeatured ? t("Yes") : t("No")}
+              {isFeatured ? t("yes") : t("no")}
             </span>
           );
         },
       },
       createSortableColumn(
         "publishedAt",
-        t("Date Published"),
+        t("datePublished"),
         (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.publishedAt ? (
@@ -415,7 +415,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       ),
       // createSortableColumn(
       //   "createdOn",
-      //   t("Date Created"),
+      //   t("dateCreated"),
       //   (item) => (
       //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
       //       {item.createdOn ? formatDate(item.createdOn) : "\u2014"}
@@ -424,7 +424,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       //   "createdOn",
       // ),
       {
-        title: t("Actions"),
+        title: t("actions"),
         field: "",
         fixed: "right",
         render: (item) => (
@@ -447,7 +447,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                 setDeleteModal({ open: true, id: item.id });
               }}
               className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext"
-              title={t("Delete Post")}
+              title={t("deletePost")}
             >
               <Trash2 size={18} />
             </button>
@@ -461,7 +461,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   );
                 }}
                 className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-primarycolor hover:border-primarycolor dark:hover:text-secondarycolor dark:hover:border-secondarycolor bg-bgwhite dark:bg-darkbgprimary shadow-sm"
-                title={t("Row Actions")}
+                title={t("rowActions")}
               >
                 <MoreHorizontal size={18} />
               </button>
@@ -476,7 +476,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
       keyExtractor: (item) => item.id,
       paginationTitle: "posts",
       hideSelectCol: true,
-      emptyMessage: t("No posts found"),
+      emptyMessage: t("noPostsFound"),
       queryConfig: {
         defaultSortKey: "createdOn",
         defaultSortDirection: SORT_DIRECTIONS.DESC,
@@ -490,16 +490,16 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   <h2
                     className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
                   >
-                    {t("Posts")}
+                    {t("posts")}
                   </h2>
                   <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                    {t("Manage and view all posts")}
+                    {t("manageAndViewAllPosts")}
                   </p>
                 </div>
                 <div className="flex items-intial space-x-4">
                   <SearchToolbar
                     initialQuery={searchText}
-                    placeholder={t("Search Posts")}
+                    placeholder={t("searchPosts")}
                     queryParamName="searchText"
                   />
                   <button
@@ -507,7 +507,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                     className="flex items-center space-x-2 px-4 py-2.5 transition-all duration-300 focus:outline-none focus:ring-0 font-bold bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white/80 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 rounded-xl"
                   >
                     <Menu size={18} />
-                    <span>{t("Filters")}</span>
+                    <span>{t("filters")}</span>
                   </button>
                 </div>
               </div>
@@ -517,7 +517,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
           <FilterSidebar
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
-            title={t("Post Filters")}
+            title={t("postFilters")}
             footer={
               <button
                 onClick={() => {
@@ -527,7 +527,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                 className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
               >
                 <RotateCcw size={18} />
-                <span>{t("Clear All Filters")}</span>
+                <span>{t("clearAllFilters")}</span>
               </button>
             }
           >
@@ -537,13 +537,13 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   htmlFor="sponsor-status-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Sponsor Status")}
+                  {t("sponsorStatus")}
                 </label>
                 <SelectFilter
                   id="sponsor-status-filter"
                   paramName="sponsorStatus"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Sponsor Status")}
+                  placeholder={t("selectSponsorStatus")}
                 />
               </div>
 
@@ -552,13 +552,13 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   htmlFor="has-ads-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Has Ads")}
+                  {t("hasAds")}
                 </label>
                 <SelectFilter
                   id="has-ads-filter"
                   paramName="hasAds"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Has Ads")}
+                  placeholder={t("selectHasAds")}
                 />
               </div> */}
 
@@ -567,13 +567,13 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   htmlFor="review-flagged-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Review Flagged")}
+                  {t("reviewFlagged")}
                 </label>
                 <SelectFilter
                   id="review-flagged-filter"
                   paramName="reviewFlagged"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Review Flagged")}
+                  placeholder={t("selectReviewFlagged")}
                 />
               </div>
 
@@ -582,13 +582,13 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   htmlFor="sponsorship-open-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Sponsorship Open")}
+                  {t("sponsorshipOpen")}
                 </label>
                 <SelectFilter
                   id="sponsorship-open-filter"
                   paramName="sponsorAssignment"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Sponsorship Open")}
+                  placeholder={t("selectSponsorshipOpen")}
                 />
               </div> */}
 
@@ -597,13 +597,13 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
                   htmlFor="feature-content-filter"
                   className="block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2"
                 >
-                  {t("Featured Content")}
+                  {t("featuredContent")}
                 </label>
                 <SelectFilter
                   id="feature-content-filter"
                   paramName="featureContent"
                   options={BOOLEAN_FILTER_OPTIONS}
-                  placeholder={t("Select Featured Content")}
+                  placeholder={t("selectFeaturedContent")}
                 />
               </div>
             </div>
@@ -657,7 +657,7 @@ const PostsTable = ({ data, totalCount, searchText }: PostsTableProps) => {
           );
         }}
         title={confirmModal.label}
-        message={t("Single Action Confirmation", {
+        message={t("singleActionConfirmation", {
           action: confirmModal.label,
         })}
         isLoading={isProcessing}

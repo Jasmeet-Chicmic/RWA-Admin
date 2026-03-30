@@ -47,7 +47,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
     const columns: TableColumn<UserPortfolioRow>[] = [
       {
         field: "name",
-        title: t("Name"),
+        title: t("name"),
         render: (item) => (
           <div className="flex flex-col">
             <span className={`${TEXT_PRIMARY} font-medium`}>{item.name}</span>
@@ -56,7 +56,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       {
         field: "walletAddress",
-        title: t("Wallet Address"),
+        title: t("walletAddress"),
         render: (item) => (
           <span
             className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
@@ -68,7 +68,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       {
         field: "properties",
-        title: t("Properties Count"),
+        title: t("propertiesCount"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.properties}
@@ -77,7 +77,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       {
         field: "totalInvestment",
-        title: t("Total Investment"),
+        title: t("totalInvestment"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {formatCurrency(item.totalInvestment)}
@@ -86,7 +86,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       {
         field: "portfolioValue",
-        title: t("Portfolio Value"),
+        title: t("portfolioValue"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {formatCurrency(item.portfolioValue)}
@@ -95,7 +95,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       {
         field: "kycStatus",
-        title: t("KYC Status"),
+        title: t("kycStatus"),
         render: (item) => {
           const isApproved = item.kycStatus === 2;
           const isPending = item.kycStatus === 1;
@@ -128,7 +128,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       // {
       //   field: "",
-      //   title: t("Controls"),
+      //   title: t("controls"),
       //   // fixed: "right",
       //   width: "w-[72px]",
       //   render: () => (
@@ -136,12 +136,12 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       //       <DropdownMenu
       //         options={[
       //           {
-      //             label: t("View User"),
+      //             label: t("viewUser"),
       //             value: 1,
       //             icon: <Eye className="w-4 h-4" />,
       //           },
       //           {
-      //             label: t("Block"),
+      //             label: t("block"),
       //             value: 2,
       //             icon: <Ban className="w-4 h-4" />,
       //           },
@@ -157,7 +157,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       keyExtractor: (item) => item.id,
       paginationTitle: "users",
       hideSelectCol: true,
-      emptyMessage: t("No users found"),
+      emptyMessage: t("noUsersFound"),
       queryConfig: {
         defaultSortKey: "name",
       },
@@ -168,10 +168,10 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Users")}
+                {t("users")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("User Portfolio subtitle")}
+                {t("userPortfolioSubtitle")}
               </p>
             </div>
           </div>

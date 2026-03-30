@@ -1,20 +1,10 @@
 import {
   Building2,
-  // CalendarDays,
-  CreditCard,
   // Crown,
   // FileText,
   LayoutDashboard,
   LucideProps,
-  // Podcast,
-  // Radio,
-  // Repeat,
-  // Settings,
-  // TicketPercent,
-  UserCheck,
   UserCog,
-  // Users,
-  // Video,
 } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
@@ -33,24 +23,17 @@ export type NavItem = {
   allowedRoles?: LOGIN_ROLE[];
 };
 
-export const NAV_LABEL_PREFIX = "common.";
-
-export const getNavItemLabelKey = (label: string): string =>
-  label.startsWith(NAV_LABEL_PREFIX)
-    ? label.slice(NAV_LABEL_PREFIX.length)
-    : label;
-
 export const navItems: NavItem[] = [
   {
     icon: LayoutDashboard,
-    label: "Dashboards",
+    label: "common.dashboards",
     // path: ROUTES.DASHBOARD,
     activePaths: [ROUTES.DASHBOARD_ANALYTICS],
     badge: "5",
     allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
-        label: "Analytics",
+        label: "common.analytics",
         path: ROUTES.DASHBOARD_ANALYTICS,
         activePaths: [ROUTES.DASHBOARD_ANALYTICS],
       },
@@ -58,17 +41,21 @@ export const navItems: NavItem[] = [
   },
   {
     icon: Building2,
-    label: "Properties",
+    label: "common.properties",
     activePaths: [ROUTES.PROPERTIES, ROUTES.PROPERTIES_ORGANISATIONS],
     allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
-        label: "All Properties",
-        path: ROUTES.PROPERTIES,
-        activePaths: [ROUTES.PROPERTIES],
+        label: "common.allProperties",
+        path: ROUTES.PROPERTIES_LIST,
+        activePaths: [
+          ROUTES.PROPERTIES_LIST,
+          ROUTES.PROPERTIES_DISAPPROVED,
+          ROUTES.PROPERTIES_ASSETS,
+        ],
       },
       {
-        label: "Organisation Properties",
+        label: "common.organisationProperties",
         path: ROUTES.PROPERTIES_ORGANISATIONS,
         activePaths: [ROUTES.PROPERTIES_ORGANISATIONS],
       },
@@ -76,21 +63,21 @@ export const navItems: NavItem[] = [
   },
   {
     icon: Building2,
-    label: "Organisation Properties",
+    label: "common.organisationProperties",
     path: ROUTES.ORGANISATIONS_PROPERTIES,
     activePaths: [ROUTES.ORGANISATIONS_PROPERTIES],
     allowedRoles: [LOGIN_ROLE.ORGANISATION],
   },
   {
     icon: Building2,
-    label: "Organisation",
+    label: "common.organisation",
     path: ROUTES.ORGANISATIONS,
     activePaths: [ROUTES.ORGANISATIONS],
     allowedRoles: [LOGIN_ROLE.ADMIN],
   },
   {
     icon: UserCog,
-    label: "Users",
+    label: "common.users",
     // path: ROUTES.USERS,
     activePaths: [
       ROUTES.USERS,
@@ -101,7 +88,7 @@ export const navItems: NavItem[] = [
     allowedRoles: [LOGIN_ROLE.ADMIN],
     children: [
       {
-        label: "List",
+        label: "common.list",
         path: ROUTES.USERS_LIST,
         activePaths: [ROUTES.USERS_LIST],
       },
@@ -117,26 +104,28 @@ export const navItems: NavItem[] = [
       // },
     ],
   },
-  {
-    icon: CreditCard,
-    label: "Token Requests",
-    path: ROUTES.TOKEN_REQUESTS_LIST,
-    activePaths: [ROUTES.TOKEN_REQUESTS_LIST],
-    allowedRoles: [LOGIN_ROLE.ADMIN],
-  },
-  {
-    icon: UserCheck,
-    label: "KYC",
-    activePaths: [ROUTES.KYC_PENDING],
-    allowedRoles: [LOGIN_ROLE.ADMIN],
-    children: [
-      {
-        label: "Pending KYC",
-        path: ROUTES.KYC_PENDING,
-        activePaths: [ROUTES.KYC_PENDING],
-      },
-    ],
-  },
+  // Temporarily hidden - Token Requests
+  // {
+  //   icon: CreditCard,
+  //   label: "Token Requests",
+  //   path: ROUTES.TOKEN_REQUESTS_LIST,
+  //   activePaths: [ROUTES.TOKEN_REQUESTS_LIST],
+  //   allowedRoles: [LOGIN_ROLE.ADMIN],
+  // },
+  // Temporarily hidden - KYC
+  // {
+  //   icon: UserCheck,
+  //   label: "KYC",
+  //   activePaths: [ROUTES.KYC_PENDING],
+  //   allowedRoles: [LOGIN_ROLE.ADMIN],
+  //   children: [
+  //     {
+  //       label: "Pending KYC",
+  //       path: ROUTES.KYC_PENDING,
+  //       activePaths: [ROUTES.KYC_PENDING],
+  //     },
+  //   ],
+  // },
   // {
   //   icon: Video,
   //   label: "Videos",

@@ -65,20 +65,19 @@ const UserEventsTable = ({
         if (ok) {
           toast.success(
             (res as { message?: string })?.message ??
-              t("Event deleted successfully"),
+              t("eventDeletedSuccessfully"),
           );
           setDeleteModal({ open: false, id: null });
           router.refresh();
         } else {
           toast.error(
-            (res as { message?: string })?.message ??
-              t("Failed to delete event"),
+            (res as { message?: string })?.message ?? t("failedToDeleteEvent"),
           );
           setDeleteModal({ open: false, id: null });
         }
       } catch (error) {
         console.error("Failed to delete event", error);
-        toast.error(t("Failed to delete event"));
+        toast.error(t("failedToDeleteEvent"));
         setDeleteModal({ open: false, id: null });
       } finally {
         setDeletingId(null);
@@ -113,7 +112,7 @@ const UserEventsTable = ({
 
   const columns: TableColumn<AdminEvent>[] = [
     {
-      title: t("Event Title"),
+      title: t("eventTitle"),
       field: "title",
       render: (item) => (
         <span
@@ -125,7 +124,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Event Category"),
+      title: t("eventCategory"),
       field: "eventCategory",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -134,7 +133,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Event Format"),
+      title: t("eventFormat"),
       field: "format",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -143,7 +142,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Event Status"),
+      title: t("eventStatus"),
       field: "status",
       render: (item) => (
         <span
@@ -157,7 +156,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Event Start Date"),
+      title: t("eventStartDate"),
       field: "startDateTime",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -170,7 +169,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Event Ticket Type"),
+      title: t("eventTicketType"),
       field: "ticketType",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -182,7 +181,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Date Created"),
+      title: t("dateCreated"),
       field: "createdOn",
       render: (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -191,7 +190,7 @@ const UserEventsTable = ({
       ),
     },
     {
-      title: t("Actions"),
+      title: t("actions"),
       field: "",
       fixed: "right",
       render: (item) => (
@@ -203,7 +202,7 @@ const UserEventsTable = ({
               setDeleteModal({ open: true, id: item.id });
             }}
             className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-            title={t("Delete")}
+            title={t("delete")}
             disabled={deletingId === item.id}
           >
             <Trash2 size={18} />
@@ -221,16 +220,16 @@ const UserEventsTable = ({
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("User Events")}
+              {t("userEvents")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("User Events subtitle")}
+              {t("userEventsSubtitle")}
             </p>
           </div>
           <div className="flex items-center space-x-4">
             <SearchToolbar
               initialQuery={searchText}
-              placeholder={t("Search Events")}
+              placeholder={t("searchEvents")}
               queryParamName="searchText"
             />
           </div>
@@ -243,7 +242,7 @@ const UserEventsTable = ({
           columns={columns}
           keyExtractor={(item) => item.id}
           hideSelectCol
-          emptyMessage={t("No events found")}
+          emptyMessage={t("noEventsFound")}
         />
         <Pagination
           totalItems={totalCount}
@@ -266,8 +265,8 @@ const UserEventsTable = ({
           if (!deleteModal.id) return;
           await handleDeleteEvent(deleteModal.id);
         }}
-        title={t("Delete Event")}
-        message={t("Delete Event confirmation")}
+        title={t("deleteEvent")}
+        message={t("deleteEventConfirmation")}
         isLoading={!!deletingId}
       />
     </div>

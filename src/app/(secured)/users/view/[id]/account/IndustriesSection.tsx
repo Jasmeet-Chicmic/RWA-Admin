@@ -20,12 +20,12 @@ export function IndustriesSection({ industriesList }: Props) {
       <div className="flex items-center gap-2 mb-4">
         <Building2 className="w-5 h-5 text-primarycolor dark:text-white" />
         <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext">
-          {t("Industries")}
+          {t("industries")}
         </h3>
       </div>
       {industriesList.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("No industries information available")}
+          {t("noIndustriesInformationAvailable")}
         </p>
       ) : (
         <div className="max-h-[300px] overflow-y-auto space-y-3">
@@ -41,7 +41,7 @@ export function IndustriesSection({ industriesList }: Props) {
                 industry.subIndustryNames.length > 0 && (
                   <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                     <span className="font-medium">
-                      {t("Sub-industries")}
+                      {t("subIndustries")}
                       {": "}
                     </span>
                     {industry.subIndustryNames.join(", ")}

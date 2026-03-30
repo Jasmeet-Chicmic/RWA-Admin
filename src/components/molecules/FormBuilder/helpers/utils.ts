@@ -3,7 +3,7 @@ export const getRequiredFieldMessage = (
   t?: (key: string, values?: Record<string, string>) => string,
 ) => {
   if (t) {
-    return t("{field} is required", { field: fieldName });
+    return t("fieldIsRequired", { field: fieldName });
   }
   return `${fieldName} is required`;
 };

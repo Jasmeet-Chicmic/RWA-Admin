@@ -37,17 +37,17 @@ const CompanyTeamSection = ({ company, t }: CompanyTeamSectionProps) => {
   return (
     <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6">
       <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext mb-2">
-        {t("Team")}
+        {t("team")}
       </h3>
 
       <div className="space-y-6">
         {company.owners && (
-          <TeamSection title={t("Owners")} count={company.owners.length}>
+          <TeamSection title={t("owners")} count={company.owners.length}>
             {company.owners.map((owner) => (
               <li key={owner.id}>
                 <EventParticipantItem
                   userId={owner.userId}
-                  name={owner.userName || t("Not available")}
+                  name={owner.userName || t("notAvailable")}
                   email={null}
                   userProfilePicture={owner.userProfilePicture}
                   avatarSize="w-9 h-9"
@@ -65,12 +65,12 @@ const CompanyTeamSection = ({ company, t }: CompanyTeamSectionProps) => {
         )}
 
         {company.managers && (
-          <TeamSection title={t("Managers")} count={company.managers.length}>
+          <TeamSection title={t("managers")} count={company.managers.length}>
             {company.managers.map((manager) => (
               <li key={manager.id}>
                 <EventParticipantItem
                   userId={manager.userId}
-                  name={manager.userName || t("Not available")}
+                  name={manager.userName || t("notAvailable")}
                   email={null}
                   userProfilePicture={manager.userProfilePicture}
                   avatarSize="w-9 h-9"
@@ -88,12 +88,12 @@ const CompanyTeamSection = ({ company, t }: CompanyTeamSectionProps) => {
         )}
 
         {company.employees && (
-          <TeamSection title={t("Employees")} count={company.employees.length}>
+          <TeamSection title={t("employees")} count={company.employees.length}>
             {company.employees.map((employee) => (
               <li key={employee.id}>
                 <EventParticipantItem
                   userId={employee.userId}
-                  name={employee.fullName || t("Not available")}
+                  name={employee.fullName || t("notAvailable")}
                   email={employee.email || undefined}
                   userProfilePicture={employee.profilePicture}
                   avatarSize="w-9 h-9"
@@ -106,7 +106,7 @@ const CompanyTeamSection = ({ company, t }: CompanyTeamSectionProps) => {
                     )}
                     {employee.isCurrentEmployee && (
                       <span className="inline-flex items-center rounded-full bg-primarycolor/10 text-primarycolor dark:bg-secondarycolor/10 dark:text-secondarycolor px-2 py-0.5 text-[12px] font-semibold">
-                        {t("Current employee")}
+                        {t("currentEmployee")}
                       </span>
                     )}
                   </div>

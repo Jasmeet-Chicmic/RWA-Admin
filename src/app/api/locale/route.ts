@@ -1,6 +1,10 @@
-// app/api/session/route.ts
-import { NextResponse } from "next/server";
+/**
+ * This API route is intentionally server-side only.
+ * Reason: writes/reads locale cookie at the server boundary.
+ * Do NOT migrate this to a client-side service.
+ */
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { locale } = await req.json();

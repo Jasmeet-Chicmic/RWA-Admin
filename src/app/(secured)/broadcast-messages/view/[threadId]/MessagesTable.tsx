@@ -1,20 +1,23 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
-import type { TableColumn } from "@/components/atoms/Table";
-import CustomModal from "@/components/molecules/CustomModal";
 import { sendBroadcastMessageAction } from "@/api/broadcast";
-import type { Message } from "../../helpers/types";
+import type { TableColumn } from "@/components/atoms/Table";
+import TableActions, {
+  TableActionDisplayMode,
+} from "@/components/atoms/TableActions";
+import CustomModal from "@/components/molecules/CustomModal";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
 import { Eye } from "lucide-react";
+import type { Message } from "../../helpers/types";
 
 interface MessagesTableProps {
   messages: Message[];
@@ -28,18 +31,20 @@ const MessagesTable = ({
   threadId,
 }: MessagesTableProps) => {
   const t = useTranslations("broadcastMessages");
+  const common = useTranslations("common");
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageText, setMessageText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewMessage, setViewMessage] = useState<Message | null>(null);
+  const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
   const columns: TableColumn<Message>[] = useMemo(
     () => [
       //   {
       //     field: "sender",
-      //     title: t("Sender"),
+      //     title: t("sender"),
       //     render: (item) => {
       //       const s = item.sender;
       //       const name =
@@ -58,7 +63,7 @@ const MessagesTable = ({
       //   },
       {
         field: "messageText",
-        title: t("Message"),
+        title: t("messageTitle"),
         render: (item) => (
           <span
             className={`${TEXT_SIZE_SM} text-textparagraph dark:text-textparagraphlight line-clamp-1 max-w-xs`}
@@ -71,7 +76,7 @@ const MessagesTable = ({
       },
       {
         field: "createdAt",
-        title: t("Sent At"),
+        title: t("sentAt"),
         render: (item) => (
           <span className={TEXT_SIZE_SM}>
             {new Date(item.createdAt).toLocaleString()}
@@ -81,22 +86,24 @@ const MessagesTable = ({
       },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         render: (item) => (
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => setViewMessage(item)}
-              className="text-sm font-medium text-primarycolor hover:text-primaryhover dark:text-secondarycolor dark:hover:text-secondaryhover underline"
-            >
-              <Eye size={18} />
-            </button>
-          </div>
+          <TableActions
+            displayMode={actionsDisplayMode}
+            actions={[
+              {
+                id: "view",
+                label: common("View"),
+                icon: <Eye size={16} />,
+                onClick: () => setViewMessage(item),
+              },
+            ]}
+          />
         ),
         sortable: false,
       },
     ],
-    [t],
+    [common, t],
   );
 
   const config: DataTableConfig<Message> = useMemo(
@@ -105,18 +112,18 @@ const MessagesTable = ({
       keyExtractor: (m) => m.id,
       paginationTitle: "messages",
       hideSelectCol: true,
-      emptyMessage: t("No messages found"),
-      searchPlaceholder: t("Search messages"),
+      emptyMessage: t("noMessagesFound"),
+      searchPlaceholder: t("searchMessagesPlaceholder"),
       header: (
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Messages")}
+              {t("messagesTitle")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("View and send broadcast messages")}
+              {t("messagesSubtitle")}
             </p>
           </div>
           <div className="flex justify-end">
@@ -125,7 +132,7 @@ const MessagesTable = ({
               onClick={() => setIsModalOpen(true)}
               className="inline-flex items-center rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-primaryhover dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
             >
-              {t("Broadcast message")}
+              {t("broadcastMessage")}
             </button>
           </div>
         </div>
@@ -148,18 +155,16 @@ const MessagesTable = ({
         });
 
         if (res.status) {
-          toast.success(res.message || t("Message sent successfully"));
+          toast.success(res.message || t("messageSentSuccessfully"));
           setIsModalOpen(false);
           setMessageText("");
           router.refresh();
         } else {
-          toast.error(
-            res.message || t("Failed to send message Please try again"),
-          );
+          toast.error(res.message || t("failedToSendMessage"));
         }
       } catch (error) {
         console.error("Error sending broadcast message:", error);
-        toast.error(t("Failed to send message Please try again"));
+        toast.error(t("failedToSendMessage"));
       } finally {
         setIsSubmitting(false);
       }
@@ -179,7 +184,7 @@ const MessagesTable = ({
       <CustomModal
         isOpen={!!viewMessage}
         onClose={() => setViewMessage(null)}
-        title={t("Message")}
+        title={t("messageTitle")}
         size="md"
       >
         {viewMessage && (
@@ -192,20 +197,20 @@ const MessagesTable = ({
       <CustomModal
         isOpen={isModalOpen}
         onClose={() => !isSubmitting && setIsModalOpen(false)}
-        title={t("Broadcast message")}
+        title={t("broadcastMessage")}
         size="md"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">
-              {t("Message")}
+              {t("messageTitle")}
             </label>
             <textarea
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
               rows={4}
               className="w-full rounded-md border border-bordercolor1 dark:border-darkbordercolor1 bg-bgwhite dark:bg-darkbgprimary px-3 py-2 text-sm text-textprimary dark:text-sidebartext focus:outline-none focus:ring-2 focus:ring-primarycolor dark:focus:ring-secondarycolor"
-              placeholder={t("Type a message")}
+              placeholder={t("typeMessagePlaceholder")}
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">
@@ -215,14 +220,14 @@ const MessagesTable = ({
               className="inline-flex items-center rounded-lg border border-bordercolor1 dark:border-darkbordercolor1 bg-transparent px-4 py-2 text-sm font-medium text-textparagraph dark:text-textparagraphlight hover:bg-bglight dark:hover:bg-darkbgbase"
               disabled={isSubmitting}
             >
-              {t("Cancel")}
+              {t("cancel")}
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !messageText.trim()}
               className="inline-flex items-center rounded-lg bg-primarycolor px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-primaryhover disabled:opacity-50 disabled:cursor-not-allowed dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
             >
-              {isSubmitting ? t("Sending") : t("Broadcast message")}
+              {isSubmitting ? t("sending") : t("broadcastMessage")}
             </button>
           </div>
         </form>

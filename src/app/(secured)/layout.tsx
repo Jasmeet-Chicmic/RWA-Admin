@@ -2,9 +2,10 @@ import React from "react";
 
 import Header from "@/components/atoms/Header";
 import Sidebar from "@/components/atoms/Sidebar";
+import RouteGuard from "@/components/guards/RouteGuard";
+import { LOGIN_ROLE } from "@/shared/constants";
 import { decrypt } from "@/shared/session";
 import { cookies } from "next/headers";
-import { LOGIN_ROLE } from "@/shared/constants";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -21,7 +22,9 @@ const SecuredLayout: React.FC<LayoutProps> = async ({ children }) => {
       <div className="flex-1 flex flex-col lg:ml-72 py-6 pl-0">
         <div className="custom-container w-full">
           <Header />
-          <main className="flex-1 mt-[20px] lg:mt-8">{children}</main>
+          <main className="flex-1 mt-[20px] lg:mt-8">
+            <RouteGuard>{children}</RouteGuard>
+          </main>
         </div>
       </div>
     </div>

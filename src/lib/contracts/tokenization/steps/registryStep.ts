@@ -1,16 +1,12 @@
+import { propertyOnchainService } from "@/services/property-onchain-service";
 import { PublicClient, WalletClient } from "viem";
 import { REAL_ESTATE_REGISTRY_ABI } from "../../realEstateFlowAbi";
 import { TOKENIZATION_CONTRACTS } from "../../tokenizationConfig";
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { postApiJson } from "@/shared/clientApi";
-import type { InternalApiBaseResponse } from "@/shared/types/internalApi";
 import type {
   ActiveAccount,
   GasConfig,
   RunTokenizationFlowInput,
 } from "../types";
-
-const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 export type RegistryStepInput = {
   input: RunTokenizationFlowInput;
@@ -64,17 +60,10 @@ export const runRegistryStep = async ({
     throw new Error("registerProperty tx failed");
   }
 
-  const apiPayload = await postApiJson<
-    InternalApiBaseResponse,
-    { propertyId: string; txHash: `0x${string}` }
-  >(
-    INTERNAL_API_PATHS.PROPERTY_ONCHAIN_PROPERTY_REGISTERED,
-    {
-      propertyId: input.input.propertyId,
-      txHash: receipt.transactionHash,
-    },
-    { timeoutMs: TOKENIZATION_API_TIMEOUT_MS },
-  );
+  const apiPayload = await propertyOnchainService.propertyRegistered({
+    propertyId: input.input.propertyId,
+    txHash: receipt.transactionHash,
+  });
 
   if (!apiPayload?.status) {
     throw new Error(

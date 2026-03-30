@@ -108,10 +108,10 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
           <CreditCard className="w-8 h-8 text-gray-300 dark:text-gray-600" />
         </div>
         <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext mb-1">
-          {t("No active subscription")}
+          {t("noActiveSubscription")}
         </h3>
         <p className="text-sm text-gray-400 dark:text-gray-500">
-          {t("User has no subscription")}
+          {t("userHasNoSubscription")}
         </p>
       </div>
     );
@@ -133,10 +133,10 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-textprimary dark:text-sidebartext">
-                  {t("Subscription")}
+                  {t("subscription")}
                 </h3>
                 <p className="text-xs text-gray-400 dark:text-gray-500">
-                  {t("Current plan details")}
+                  {t("currentPlanDetails")}
                 </p>
               </div>
             </div>
@@ -148,7 +148,7 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-medium text-primarycolor dark:text-secondarycolor bg-primarycolor/10 dark:bg-secondarycolor/10 hover:bg-primarycolor/20 dark:hover:bg-secondarycolor/20 transition-all"
               >
                 <Pencil className="w-3.5 h-3.5" />
-                {t("Edit")}
+                {t("edit")}
               </button> */}
 
               {/* Status Badge */}
@@ -169,7 +169,7 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">
-                {t("Current Plan")}
+                {t("currentPlan")}
               </p>
               <div className="flex items-center gap-2">
                 <h2 className="text-[18px] md:text-2xl font-bold text-textprimary dark:text-sidebartext">
@@ -200,7 +200,7 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <InfoItem
               icon={Calendar}
-              label={t("Start Date")}
+              label={t("startDate")}
               value={
                 subscription.startDate ? (
                   <FormattedDate date={subscription.startDate} />
@@ -211,7 +211,7 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
             />
             <InfoItem
               icon={Calendar}
-              label={t("End Date")}
+              label={t("endDate")}
               value={
                 subscription.endDate ? (
                   <FormattedDate date={subscription.endDate} />
@@ -222,33 +222,33 @@ const UserSubscriptionCard = ({ subscriptions }: UserSubscriptionCardProps) => {
             />
             <InfoItem
               icon={Users}
-              label={t("Seats")}
+              label={t("seats")}
               value={String(subscription.seatCount)}
             />
             <InfoItem
               icon={Zap}
-              label={t("Owner Type")}
+              label={t("ownerType")}
               value={
                 subscription.ownerTypeDisplay ||
                 (subscription.ownerType === SUBSCRIPTION_OWNER_TYPE.ORGANISATION
-                  ? t("Organisation")
-                  : t("User"))
+                  ? t("organisation")
+                  : t("user"))
               }
             />
             <InfoItem
               icon={RefreshCw}
-              label={t("Auto Renew")}
+              label={t("autoRenew")}
               value={
                 <span
                   className={`inline-flex items-center gap-1 ${autoRenew ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"}`}
                 >
-                  {autoRenew ? t("Yes") : t("No")}
+                  {autoRenew ? t("yes") : t("no")}
                 </span>
               }
             />
             <InfoItem
               icon={Clock}
-              label={t("Joined On")}
+              label={t("joinedOn")}
               value={
                 subscription.createdOn ? (
                   <FormattedDate date={subscription.createdOn} />

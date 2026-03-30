@@ -46,15 +46,15 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
         deleteModal.feature.featureId,
       );
       if (res.status) {
-        toast.success(res.message || t("Delete Success"));
+        toast.success(res.message || t("deleteSuccess"));
         setDeleteModal({ open: false, feature: null });
         router.refresh();
       } else {
-        toast.error(res.message || t("Delete Error"));
+        toast.error(res.message || t("deleteError"));
       }
     } catch (error) {
       console.error("Error deleting role feature:", error);
-      toast.error(t("Delete Error"));
+      toast.error(t("deleteError"));
     } finally {
       setIsDeleting(false);
     }
@@ -74,7 +74,7 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
     columns: [
       {
         field: "displayName",
-        title: t("Feature Name"),
+        title: t("featureName"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
             {item.displayName || item.featureCode}
@@ -83,15 +83,15 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
       },
       {
         field: "value",
-        title: t("Value"),
+        title: t("value"),
         render: (item) =>
           item.value === null ? (
             <span
               className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} inline-flex items-center gap-1`}
-              title={t("Unlimited")}
+              title={t("unlimited")}
             >
               <Infinity className="w-4 h-4" />
-              <span className="sr-only">{t("Unlimited")}</span>
+              <span className="sr-only">{t("unlimited")}</span>
             </span>
           ) : (
             <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -101,7 +101,7 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
       },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         fixed: "right",
         render: (item) => (
           <div className="flex items-center justify-end space-x-3">
@@ -109,19 +109,19 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
               type="button"
               onClick={() => handleOpenEdit(item)}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("Edit Feature")}
+              title={t("editFeature")}
             >
               <Pencil size={18} />
-              <span className="sr-only">{t("Edit Feature")}</span>
+              <span className="sr-only">{t("editFeature")}</span>
             </button>
             <button
               type="button"
               onClick={() => setDeleteModal({ open: true, feature: item })}
               className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext"
-              title={t("Delete Feature")}
+              title={t("deleteFeature")}
             >
               <Trash2 size={18} />
-              <span className="sr-only">{t("Delete Feature")}</span>
+              <span className="sr-only">{t("deleteFeature")}</span>
             </button>
           </div>
         ),
@@ -130,7 +130,7 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
     keyExtractor: (item) => String(item.id),
     paginationTitle: "role-features",
     hideSelectCol: true,
-    emptyMessage: t("No features found"),
+    emptyMessage: t("noFeaturesFound"),
     header: (
       <div className="bg-bgwhite dark:bg-darkbgprimary">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -138,7 +138,7 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Role Features")}
+              {t("roleFeatures")}
             </h2>
           </div>
           <div className="flex items-center space-x-4">
@@ -148,14 +148,14 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
               className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg bg-primarycolor text-bgwhite hover:bg-primaryhover dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover"
             >
               <Plus size={16} />
-              <span>{t("Add Feature")}</span>
+              <span>{t("addFeature")}</span>
             </button>
             <button
               type="button"
               onClick={() => router.push("/roles/list")}
               className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 text-labelprimary bg-bgwhite hover:bg-gray-50 dark:bg-darkbgprimary dark:text-darklabelprimary dark:border-darkbordercolor1"
             >
-              {t("Back to Roles")}
+              {t("backToRoles")}
             </button>
           </div>
         </div>
@@ -187,8 +187,8 @@ const RoleFeaturesTable = ({ roleId, features }: RoleFeaturesTableProps) => {
           setDeleteModal({ open: false, feature: null });
         }}
         onConfirm={handleDelete}
-        title={t("Delete Feature")}
-        message={t("Delete Feature confirmation")}
+        title={t("deleteFeature")}
+        message={t("deleteFeatureConfirmation")}
         isLoading={isDeleting}
       />
     </>

@@ -1,16 +1,12 @@
+import { propertyOnchainService } from "@/services/property-onchain-service";
 import { PublicClient, WalletClient, zeroAddress } from "viem";
 import { REAL_ESTATE_VAULT_FACTORY_ABI } from "../../realEstateFlowAbi";
 import { TOKENIZATION_CONTRACTS } from "../../tokenizationConfig";
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { postApiJson } from "@/shared/clientApi";
-import type { InternalApiBaseResponse } from "@/shared/types/internalApi";
 import type {
   ActiveAccount,
   GasConfig,
   RunTokenizationFlowInput,
 } from "../types";
-
-const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 export type VaultStepInput = {
   input: RunTokenizationFlowInput;
@@ -65,17 +61,10 @@ export const runVaultStep = async ({
     throw new Error("deployVault tx failed");
   }
 
-  const apiPayload = await postApiJson<
-    InternalApiBaseResponse,
-    { propertyId: string; txHash: `0x${string}` }
-  >(
-    INTERNAL_API_PATHS.PROPERTY_ONCHAIN_VAULT_DEPLOYED,
-    {
-      propertyId: input.input.propertyId,
-      txHash: receipt.transactionHash,
-    },
-    { timeoutMs: TOKENIZATION_API_TIMEOUT_MS },
-  );
+  const apiPayload = await propertyOnchainService.vaultDeployed({
+    propertyId: input.input.propertyId,
+    txHash: receipt.transactionHash,
+  });
 
   if (!apiPayload?.status) {
     throw new Error(apiPayload?.message || "Failed to report vault deployment");

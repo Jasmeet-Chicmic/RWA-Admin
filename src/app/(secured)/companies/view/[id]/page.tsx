@@ -33,7 +33,7 @@ const CompanyViewPage = async ({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 dark:text-red-400 mb-2">
-            {t("Company not found")}
+            {t("companyNotFound")}
           </p>
         </div>
       </div>
@@ -42,37 +42,37 @@ const CompanyViewPage = async ({
 
   const stats = [
     {
-      title: t("Jobs"),
+      title: t("jobs"),
       value: company.jobsCount,
-      subtitle: t("Total jobs"),
+      subtitle: t("totalJobs"),
       icon: <CreditCard className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Content"),
+      title: t("content"),
       value: company.contentCount,
-      subtitle: t("Total content"),
+      subtitle: t("totalContent"),
       icon: <Building2 className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Followers"),
+      title: t("followers"),
       value: company.followersCount,
-      subtitle: t("Total followers"),
+      subtitle: t("totalFollowers"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Employees"),
+      title: t("employees"),
       value: company.employeesCount,
-      subtitle: t("Total employees"),
+      subtitle: t("totalEmployees"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Groups"),
+      title: t("groups"),
       value: company.groupsCount ?? company.groups?.length ?? 0,
-      subtitle: t("Total groups"),
+      subtitle: t("totalGroups"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
@@ -80,23 +80,23 @@ const CompanyViewPage = async ({
 
   const mainstats = [
     {
-      title: t("Events"),
+      title: t("events"),
       value: company.eventsCount,
-      subtitle: t("Total events"),
+      subtitle: t("totalEvents"),
       icon: <CreditCard className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Reviews"),
+      title: t("reviews"),
       value: company.reviewsCount,
-      subtitle: t("Total reviews"),
+      subtitle: t("totalReviews"),
       icon: <Activity className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Managers"),
+      title: t("managers"),
       value: company.managersCount ?? company.managers?.length ?? 0,
-      subtitle: t("Total managers"),
+      subtitle: t("totalManagers"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
@@ -111,7 +111,7 @@ const CompanyViewPage = async ({
           className="inline-flex items-center gap-2 text-sm font-medium text-textparagraph dark:text-textparagraphlight hover:text-primarycolor dark:hover:text-primarycolor transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{t("Back to companies")}</span>
+          <span>{t("backToCompanies")}</span>
         </Link>
       </div>
 

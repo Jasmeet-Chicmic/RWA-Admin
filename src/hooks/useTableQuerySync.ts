@@ -1,6 +1,7 @@
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
 import { SORT_DIRECTION, SORT_DIRECTIONS } from "@/shared/types";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDebounce } from "./useDebounce";
 
 /**
  * Configuration options for the useTableQuerySync hook
@@ -169,6 +170,7 @@ export const useTableQuerySync = (
   const [searchText, setSearchText] = useState(() => {
     return searchParams.get("searchText") || "";
   });
+  const debouncedSearchText = useDebounce(searchText, 400);
 
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
@@ -206,15 +208,15 @@ export const useTableQuerySync = (
     }
 
     // Handle search parameter
-    if (searchText) {
-      newParams.set("searchText", searchText);
+    if (debouncedSearchText) {
+      newParams.set("searchText", debouncedSearchText);
     } else {
       newParams.delete("searchText");
     }
 
     router.replace(`?${newParams.toString()}`, { scroll: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, pageSize, sortKey, sortDirection, searchText]);
+  }, [currentPage, pageSize, sortKey, sortDirection, debouncedSearchText]);
 
   // Handler for sort changes
   const handleSort = (newSortKey: string, newSortDirection: SORT_DIRECTION) => {

@@ -89,10 +89,10 @@ const PlansView = ({ plans }: PlansViewProps) => {
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Plans")}
+              {t("plans")}
             </h2>
             <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-              {t("All available subscription plans")}
+              {t("allAvailableSubscriptionPlans")}
             </p>
           </div>
         </div>
@@ -133,12 +133,12 @@ const PlansView = ({ plans }: PlansViewProps) => {
                   <div className="flex items-center gap-2 flex-wrap">
                     {/* {plan.isEnterprise && (
                       <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primarycolor/15 text-primarycolor dark:bg-primarycolor/20 dark:text-white">
-                        {t("Enterprise")}
+                        {t("enterprise")}
                       </span>
                     )}
                     {!plan.isSelfServe && (
                       <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-white">
-                        {t("Contact Sales")}
+                        {t("contactSales")}
                       </span>
                     )} */}
                     {plan.prices.length > 0 && !isFreePlan && (
@@ -187,7 +187,7 @@ const PlansView = ({ plans }: PlansViewProps) => {
                           const cycleLabel =
                             BILLING_CYCLE_LABELS[
                               p.billingCycle as BILLING_CYCLE
-                            ] || t("Other");
+                            ] || t("other");
                           return (
                             <span
                               key={p.planPricingId}
@@ -216,7 +216,7 @@ const PlansView = ({ plans }: PlansViewProps) => {
               {/* Features List */}
               <div className="p-4 3xl:px-5 3xl:py-4 flex-1">
                 <p className="text-[12px] font-semibold text-gray-400 dark:text-white uppercase tracking-wider mb-3">
-                  {t("Features", { count: plan.features.length })}
+                  {t("features", { count: plan.features.length })}
                 </p>
                 <ul className="space-y-2">
                   {plan.features.map((feature) => (
@@ -248,10 +248,10 @@ const PlansView = ({ plans }: PlansViewProps) => {
             <Crown className="w-8 h-8 text-gray-300 dark:text-gray-600" />
           </div>
           <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext mb-1">
-            {t("No Plans Found")}
+            {t("noPlansFound")}
           </h3>
           <p className="text-sm text-gray-400 dark:text-gray-500">
-            {t("No plans available message")}
+            {t("noPlansAvailableMessage")}
           </p>
         </div>
       )}

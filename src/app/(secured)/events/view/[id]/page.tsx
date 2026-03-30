@@ -39,7 +39,7 @@ const EventViewPage = async ({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 dark:text-red-400 mb-2">
-            {t("Event not found")}
+            {t("eventNotFound")}
           </p>
         </div>
       </div>
@@ -50,23 +50,23 @@ const EventViewPage = async ({
 
   const eventStats: ProfileStat[] = [
     {
-      title: t("Attendees"),
+      title: t("attendees"),
       value: event.attendeesCount ?? 0,
-      subtitle: t("Total attendees"),
+      subtitle: t("totalAttendees"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Speakers"),
+      title: t("speakers"),
       value: event.speakersCount ?? 0,
-      subtitle: t("Total Speakers"),
+      subtitle: t("totalSpeakers"),
       icon: <Users className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
     {
-      title: t("Created On"),
+      title: t("createdOn"),
       value: <FormattedDate date={event.createdOn} showTime={false} />,
-      subtitle: t("Created On"),
+      subtitle: t("createdOn"),
       icon: <CalendarDays className="w-6 h-6 text-bgwhite dark:text-white" />,
       color: "bg-primarycolor dark:bg-secondarycolor",
     },
@@ -81,7 +81,7 @@ const EventViewPage = async ({
           className="inline-flex items-center gap-2 text-sm font-medium text-textparagraph dark:text-textparagraphlight hover:text-primarycolor dark:hover:text-primarycolor transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{t("Back to events")}</span>
+          <span>{t("backToEvents")}</span>
         </Link>
       </div>
 
@@ -93,7 +93,7 @@ const EventViewPage = async ({
         {normalizedDescription && (
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-2">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Description")}
+              {t("description")}
             </h3>
             <div
               className="prose prose-sm max-w-none break-words text-bgblack font-normal dark:text-white/80 prose-p:mb-2"
@@ -108,7 +108,7 @@ const EventViewPage = async ({
             <CalendarDays className="w-5 h-5 text-primarycolor dark:text-white mt-1" />
             <div>
               <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-                {t("Event schedule")}
+                {t("eventSchedule")}
               </h3>
               <p className="text-sm font-medium text-textprimary dark:text-sidebartext mt-1">
                 <FormattedDate date={event.startDateTime} showTime={false} />{" "}
@@ -124,13 +124,13 @@ const EventViewPage = async ({
             <MapPin className="w-5 h-5 text-primarycolor dark:text-white mt-1" />
             <div>
               <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-                {t("Location")}
+                {t("location")}
               </h3>
               <p className="text-sm font-medium text-textprimary dark:text-sidebartext mt-1">
                 {event.venue ||
                   event.locationSummary ||
                   [event.city, event.country].filter(Boolean).join(", ") ||
-                  t("Location not specified")}
+                  t("locationNotSpecified")}
               </p>
             </div>
           </div>
@@ -139,7 +139,7 @@ const EventViewPage = async ({
             <Star className="w-5 h-5 text-primarycolor dark:text-white mt-1" />
             <div className="flex-1">
               <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext mb-1">
-                {t("Rating")}
+                {t("rating")}
               </h3>
               <div className="flex items-center gap-2 flex-wrap 3xl:flex-nowrap">
                 <StarRating
@@ -155,7 +155,7 @@ const EventViewPage = async ({
                 </span>
                 <span className="text-xs text-textparagraph dark:text-textparagraphlight">
                   ({event.ratingCount ?? 0}{" "}
-                  {event.ratingCount === 1 ? t("Rating") : t("Ratings")})
+                  {event.ratingCount === 1 ? t("rating") : t("ratings")})
                 </span>
               </div>
             </div>
@@ -167,15 +167,15 @@ const EventViewPage = async ({
           <Users className="w-5 h-5 text-primarycolor dark:text-white mt-1" />
           <div>
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Engagement")}
+              {t("engagement")}
             </h3>
             <p className="text-sm text-textprimary dark:text-sidebartext mt-1 flex flex-wrap gap-2">
               <span>
-                {t("Attendees")}:{" "}
+                {t("attendees")}:{" "}
                 <span className="font-semibold">{event.attendeesCount}</span>
               </span>
               <span>
-                {t("Interested")}:{" "}
+                {t("interested")}:{" "}
                 <span className="font-semibold">
                   {event.interestedUsersCount}
                 </span>
@@ -189,7 +189,7 @@ const EventViewPage = async ({
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext flex items-center gap-2">
               <Globe2 className="w-4 h-4" />
-              {t("Event link")}
+              {t("eventLink")}
             </h3>
             {event.eventLink ? (
               <a
@@ -202,17 +202,17 @@ const EventViewPage = async ({
               </a>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No event link provided")}
+                {t("noEventLinkProvided")}
               </p>
             )}
           </div>
 
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Target audience")}
+              {t("targetAudience")}
             </h3>
             <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-              {event.targetAudience || t("No target audience specified")}
+              {event.targetAudience || t("noTargetAudienceSpecified")}
             </p>
           </div>
         </div>
@@ -221,7 +221,7 @@ const EventViewPage = async ({
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Organizers")}
+              {t("organizers")}
             </h3>
             {event.organizersCount > 0 && event.organizers.length > 0 ? (
               <ul className="space-y-3 max-h-[180px] overflow-y-auto">
@@ -238,14 +238,14 @@ const EventViewPage = async ({
               </ul>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No organizers available")}
+                {t("noOrganizersAvailable")}
               </p>
             )}
           </div>
 
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Attendees")}
+              {t("attendees")}
             </h3>
             {event.attendeesCount > 0 && event.attendees.length > 0 ? (
               <ul className="space-y-3 max-h-[180px] overflow-y-auto">
@@ -261,7 +261,7 @@ const EventViewPage = async ({
                 ))}
                 {event.attendeesCount > event.attendees.length && (
                   <li className="text-xs text-textparagraph dark:text-textparagraphlight">
-                    {t("More attendees count", {
+                    {t("moreAttendeesCount", {
                       count: event.attendeesCount - event.attendees.length,
                     })}
                   </li>
@@ -269,14 +269,14 @@ const EventViewPage = async ({
               </ul>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No attendees available")}
+                {t("noAttendeesAvailable")}
               </p>
             )}
           </div>
 
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-3">
             <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext">
-              {t("Speakers")}
+              {t("speakers")}
             </h3>
             {event.speakersCount > 0 && event.speakers.length > 0 ? (
               <ul className="space-y-3 max-h-[180px] overflow-y-auto">
@@ -292,7 +292,7 @@ const EventViewPage = async ({
                 ))}
                 {event.speakersCount > event.speakers.length && (
                   <li className="text-xs text-textparagraph dark:text-textparagraphlight">
-                    {t("More speakers count", {
+                    {t("moreSpeakersCount", {
                       count: event.speakersCount - event.speakers.length,
                     })}
                   </li>
@@ -300,7 +300,7 @@ const EventViewPage = async ({
               </ul>
             ) : (
               <p className="text-sm text-textparagraph dark:text-textparagraphlight">
-                {t("No speakers available")}
+                {t("noSpeakersAvailable")}
               </p>
             )}
           </div>
@@ -309,7 +309,7 @@ const EventViewPage = async ({
         {/* Sponsorship Requests */}
         <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl border border-bordercolor1 dark:border-darkbordercolor1 p-3 lg:p-4 3xl:p-6 space-y-3">
           <h3 className="text-[16px] md:text-lg font-semibold text-textprimary dark:text-sidebartext inline-flex gap-2 items-center justify-between">
-            {t("Sponsorship Requests")}
+            {t("sponsorshipRequests")}
             <span className="mt-[1px] text-xs font-medium px-2 py-0.5 rounded-full bg-primarycolor/10 text-primarycolor dark:bg-secondarycolor/60 dark:text-white">
               {event.sponsorshipRequests.length}
             </span>
@@ -325,7 +325,7 @@ const EventViewPage = async ({
                   userProfilePicture={req.requester.userProfilePicture}
                   avatarSize="w-10 h-10"
                   className="p-3 rounded-xl border border-bordercolor1 dark:border-darkbordercolor1 hover:bg-bglight dark:hover:bg-darkbgbase transition-colors"
-                  fallbackName={t("Unknown User")}
+                  fallbackName={t("unknownUser")}
                 >
                   <div className="flex items-center justify-between mt-1">
                     <span
@@ -348,7 +348,7 @@ const EventViewPage = async ({
             </div>
           ) : (
             <p className="text-sm text-textparagraph dark:text-textparagraphlight py-2">
-              {t("No sponsorship requests available")}
+              {t("noSponsorshipRequestsAvailable")}
             </p>
           )}
         </div>

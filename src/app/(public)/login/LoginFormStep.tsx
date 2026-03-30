@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { toast } from "react-toastify";
 
 import FormBuilder from "@/components/molecules/FormBuilder";
 import { getRequiredFieldMessage } from "@/components/molecules/FormBuilder/helpers/utils";
 import { FormConfig } from "@/components/molecules/FormBuilder/types";
-import { postApiJson } from "@/shared/clientApi";
-import { INTERNAL_API_PATHS } from "@/shared/api";
+import { LOGIN_ROLE } from "@/shared/constants";
 import { FIELD_NAMES, REGEX, STRING } from "@/shared/strings";
 import { handleWeb3Error } from "@/shared/utils/web3Error";
-import { LOGIN_ROLE } from "@/shared/constants";
+import { requestLoginNonceThunk } from "@/store/authSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export interface LoginFormValues {
   email: string;
@@ -39,11 +38,6 @@ const config: FormConfig<LoginFormValues> = [
   },
 ];
 
-const LOGIN_API_MAP = {
-  [LOGIN_ROLE.ADMIN]: INTERNAL_API_PATHS.ADMIN_AUTH_LOGIN,
-  [LOGIN_ROLE.ORGANISATION]: INTERNAL_API_PATHS.ORG_AUTH_LOGIN,
-} as const;
-
 const LOGIN_SUBTITLE_MAP = {
   [LOGIN_ROLE.ADMIN]: "Please sign in to your Admin account",
   [LOGIN_ROLE.ORGANISATION]: "Please sign in to your Organisation account",
@@ -59,29 +53,18 @@ type LoginFormStepProps = {
 };
 
 const LoginFormStep = ({ onNonceToken, role }: LoginFormStepProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.authFlow.loginNonceLoading);
 
   const handleSubmit = async (data: LoginFormValues) => {
     try {
-      setIsLoading(true);
-
-      const loginEndpoint = LOGIN_API_MAP[role];
-
-      const res = await postApiJson<
-        {
-          statusCode?: number;
-          status?: boolean;
-          message?: string;
-          data?: {
-            nonce?: string;
-            token?: string;
-          };
-        },
-        { email: string; password: string }
-      >(loginEndpoint, {
-        email: data.email,
-        password: data.password,
-      });
+      const res = await dispatch(
+        requestLoginNonceThunk({
+          role,
+          email: data.email,
+          password: data.password,
+        }),
+      ).unwrap();
 
       console.log("🔥 Login nonce response:", res);
 
@@ -104,9 +87,11 @@ const LoginFormStep = ({ onNonceToken, role }: LoginFormStepProps) => {
       }
     } catch (error) {
       console.error("🔥 Login API error:", error);
+      if (typeof error === "string" && error.trim()) {
+        toast.error(error);
+        return;
+      }
       toast.error(handleWeb3Error(error));
-    } finally {
-      setIsLoading(false);
     }
   };
 

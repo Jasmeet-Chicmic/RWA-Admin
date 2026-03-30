@@ -82,37 +82,37 @@ const SubscriptionFilters = () => {
     <div className="space-y-6">
       <div>
         <label htmlFor="owner-type-filter" className={LABEL_CLASS}>
-          {t("subscription owner")}
+          {t("subscriptionOwner")}
         </label>
         <SelectFilter
           id="owner-type-filter"
           paramName="ownerType"
           options={ownerTypeOptions}
-          placeholder={t("Select subscription owner")}
+          placeholder={t("selectSubscriptionOwner")}
         />
       </div>
 
       <div>
         <label htmlFor="status-filter" className={LABEL_CLASS}>
-          {t("Status")}
+          {t("status")}
         </label>
         <SelectFilter
           id="status-filter"
           paramName="status"
           options={statusOptions}
-          placeholder={t("Select Status")}
+          placeholder={t("selectStatus")}
         />
       </div>
 
       <div>
         <label htmlFor="billing-cycle-filter" className={LABEL_CLASS}>
-          {t("Billing Cycle")}
+          {t("billingCycle")}
         </label>
         <SelectFilter
           id="billing-cycle-filter"
           paramName="billingCycle"
           options={billingCycleOptions}
-          placeholder={t("Select Billing Cycle")}
+          placeholder={t("selectBillingCycle")}
         />
       </div>
     </div>

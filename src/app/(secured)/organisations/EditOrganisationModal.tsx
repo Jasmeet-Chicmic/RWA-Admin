@@ -82,76 +82,76 @@ const EditOrganisationModal = ({
     const fields = [
       {
         name: "name" as const,
-        label: t("Name"),
+        label: t("name"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Name"), tCommon),
+          required: getRequiredFieldMessage(t("name"), tCommon),
         },
       },
       {
         name: "email" as const,
-        label: t("Email"),
+        label: t("email"),
         type: FORM_FIELDS_TYPES.EMAIL,
         validation: {
-          required: getRequiredFieldMessage(t("Email"), tCommon),
+          required: getRequiredFieldMessage(t("email"), tCommon),
           pattern: {
             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: t("Invalid email address"),
+            message: t("invalidEmailAddress"),
           },
         },
       },
       {
         name: "password" as const,
-        label: t("Password"),
+        label: t("password"),
         type: FORM_FIELDS_TYPES.PASSWORD,
-        placeholder: t("Leave blank to keep current password"),
+        placeholder: t("leaveBlankToKeepCurrentPassword"),
         validation: {
           minLength: {
             value: 6,
-            message: t("Password must be at least 6 characters"),
+            message: t("passwordMustBeAtLeast6Characters"),
           },
         },
       },
       {
         name: "walletAddress" as const,
-        label: t("Wallet Address"),
+        label: t("walletAddress"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Wallet Address"), tCommon),
+          required: getRequiredFieldMessage(t("walletAddress"), tCommon),
         },
       },
       {
         name: "entityType" as const,
-        label: t("Entity Type"),
+        label: t("entityType"),
         type: FORM_FIELDS_TYPES.SELECT,
         options: ORGANIZATION_ENTITY_TYPE_OPTIONS,
         validation: {
-          required: getRequiredFieldMessage(t("Entity Type"), tCommon),
+          required: getRequiredFieldMessage(t("entityType"), tCommon),
         },
       },
       {
         name: "registrationNumber" as const,
-        label: t("Registration Number"),
+        label: t("registrationNumber"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Registration Number"), tCommon),
+          required: getRequiredFieldMessage(t("registrationNumber"), tCommon),
         },
       },
       {
         name: "jurisdiction" as const,
-        label: t("Jurisdiction"),
+        label: t("jurisdiction"),
         type: FORM_FIELDS_TYPES.TEXT,
         validation: {
-          required: getRequiredFieldMessage(t("Jurisdiction"), tCommon),
+          required: getRequiredFieldMessage(t("jurisdiction"), tCommon),
         },
       },
       {
         name: "incorporationDate" as const,
-        label: t("Incorporation Date"),
+        label: t("incorporationDate"),
         type: FORM_FIELDS_TYPES.DATE,
         returnISOFormat: true,
         validation: {
-          required: getRequiredFieldMessage(t("Incorporation Date"), tCommon),
+          required: getRequiredFieldMessage(t("incorporationDate"), tCommon),
         },
       },
     ];
@@ -175,8 +175,8 @@ const EditOrganisationModal = ({
       if (res.statusCode === 200 || res.status) {
         toast.success(
           tCommon("{entity} {action} successfully", {
-            entity: t("Organisation Name"),
-            action: t("Edit"),
+            entity: t("organisationName"),
+            action: t("edit"),
           }),
         );
         setOpen(false);
@@ -185,8 +185,8 @@ const EditOrganisationModal = ({
         toast.error(
           (res as { message?: string }).message ||
             tCommon("Failed to {action} {entity}", {
-              action: t("Edit").toLowerCase(),
-              entity: t("Organisation Name").toLowerCase(),
+              action: t("edit").toLowerCase(),
+              entity: t("organisationName").toLowerCase(),
             }),
         );
       }
@@ -219,14 +219,14 @@ const EditOrganisationModal = ({
     <CustomModal
       isOpen={open}
       onClose={() => setOpen(false)}
-      title={t("Edit Organisation")}
+      title={t("editOrganisation")}
       size="2xl"
     >
       {isFetching ? (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
           <Loader2 className="w-8 h-8 animate-spin text-primarycolor" />
           <p className="text-sm text-textparagraph dark:text-textparagraphlight italic">
-            {tCommon("Loading...")}
+            {tCommon("loading")}
           </p>
         </div>
       ) : organisation ? (

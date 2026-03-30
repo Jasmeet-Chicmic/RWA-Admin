@@ -1,15 +1,11 @@
+import { propertyOnchainService } from "@/services/property-onchain-service";
 import { PublicClient, WalletClient, parseUnits } from "viem";
-import { INTERNAL_API_PATHS } from "@/shared/api";
-import { postApiJson } from "@/shared/clientApi";
-import type { InternalApiBaseResponse } from "@/shared/types/internalApi";
 import { MODULAR_COMPLIANCE_ABI, TOKEN_ABI } from "../abis";
 import type {
   ActiveAccount,
   GasConfig,
   RunTokenizationFlowInput,
 } from "../types";
-
-const TOKENIZATION_API_TIMEOUT_MS = 30000;
 
 export type MintStepInput = {
   input: RunTokenizationFlowInput;
@@ -83,17 +79,10 @@ export const runMintStep = async ({
         throw new Error("token.unpause tx failed");
       }
 
-      const unpauseDonePayload = await postApiJson<
-        InternalApiBaseResponse,
-        { propertyId: string; txHash: `0x${string}` }
-      >(
-        INTERNAL_API_PATHS.PROPERTY_ONCHAIN_UNPAUSE_DONE,
-        {
-          propertyId: input.input.propertyId,
-          txHash: receipt.transactionHash,
-        },
-        { timeoutMs: TOKENIZATION_API_TIMEOUT_MS },
-      );
+      const unpauseDonePayload = await propertyOnchainService.unpauseDone({
+        propertyId: input.input.propertyId,
+        txHash: receipt.transactionHash,
+      });
       if (!unpauseDonePayload?.status) {
         throw new Error(
           unpauseDonePayload?.message || "Failed to report unpause done",
@@ -123,17 +112,10 @@ export const runMintStep = async ({
       throw new Error("token.mint tx failed");
     }
 
-    const mintedPayload = await postApiJson<
-      InternalApiBaseResponse,
-      { propertyId: string; txHash: `0x${string}` }
-    >(
-      INTERNAL_API_PATHS.PROPERTY_ONCHAIN_MINTED,
-      {
-        propertyId: input.input.propertyId,
-        txHash: mintReceipt.transactionHash,
-      },
-      { timeoutMs: TOKENIZATION_API_TIMEOUT_MS },
-    );
+    const mintedPayload = await propertyOnchainService.minted({
+      propertyId: input.input.propertyId,
+      txHash: mintReceipt.transactionHash,
+    });
     if (!mintedPayload?.status) {
       throw new Error(mintedPayload?.message || "Failed to report minted");
     }
@@ -187,16 +169,11 @@ export const runMintStep = async ({
       throw new Error("compliance.addModule tx failed");
     }
 
-    const complianceBoundPayload = await postApiJson<
-      InternalApiBaseResponse,
-      { propertyId: string; txHash: `0x${string}` }
-    >(
-      INTERNAL_API_PATHS.PROPERTY_ONCHAIN_COMPLIANCE_BOUND,
+    const complianceBoundPayload = await propertyOnchainService.complianceBound(
       {
         propertyId: input.input.propertyId,
         txHash: receipt.transactionHash,
       },
-      { timeoutMs: TOKENIZATION_API_TIMEOUT_MS },
     );
     if (!complianceBoundPayload?.status) {
       throw new Error(

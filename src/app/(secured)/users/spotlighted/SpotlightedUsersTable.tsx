@@ -1,30 +1,30 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
-import SearchToolbar from "@/components/atoms/SearchToolbar";
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
-import { TableColumn } from "@/components/atoms/Table";
+import { addUserToSpotlightAction } from "@/api/user";
 import AsyncSelect, {
   AsyncSelectGetDataParams,
   OptionType,
 } from "@/components/atoms/AsyncSelect/AsyncSelect";
-import { User, ResponseType } from "@/shared/types";
-import { createSortableColumn, truncateText } from "@/shared/utils";
 import FormattedDate from "@/components/atoms/FormattedDate";
-import { SORT_DIRECTIONS } from "@/shared/types";
-import { PRIVATE_ROUTES } from "@/shared/routes";
-import { addUserToSpotlightAction } from "@/api/user";
+import SearchToolbar from "@/components/atoms/SearchToolbar";
+import { TableColumn } from "@/components/atoms/Table";
 import ConfirmationModal from "@/components/molecules/ConfirmationModal/ConfirmationModal";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { optionsService } from "@/services/options-service";
+import { PRIVATE_ROUTES } from "@/shared/routes";
 import {
   TEXT_GRAY_WHITE,
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { ResponseType, SORT_DIRECTIONS, User } from "@/shared/types";
+import { createSortableColumn, truncateText } from "@/shared/utils";
 
 const SPOTLIGHT_MODAL_MODE = {
   ADD: "add",
@@ -79,12 +79,12 @@ const SpotlightedUsersTable = ({
     async (event: React.FormEvent) => {
       event.preventDefault();
       if (!spotlightForm.user?.value) {
-        toast.error(t("Spotlight user ID required"));
+        toast.error(t("spotlightUserIdRequired"));
         return;
       }
       const trimmedDescription = spotlightForm.description.trim();
       if (!trimmedDescription) {
-        toast.error(t("Spotlight description is required"));
+        toast.error(t("spotlightDescriptionIsRequired"));
         return;
       }
       setIsSubmitting(true);
@@ -95,7 +95,7 @@ const SpotlightedUsersTable = ({
           spotlightDescription: trimmedDescription,
         });
         if (res.status) {
-          toast.success(res.message || t("Spotlight user added successfully"));
+          toast.success(res.message || t("spotlightUserAddedSuccessfully"));
           setIsAddModalOpen(false);
           setSpotlightForm({
             mode: SPOTLIGHT_MODAL_MODE.ADD,
@@ -105,11 +105,11 @@ const SpotlightedUsersTable = ({
           });
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to add spotlight user"));
+          toast.error(res.message || t("failedToAddSpotlightUser"));
         }
       } catch (error) {
         console.error("Error adding spotlight user:", error);
-        toast.error(t("Failed to add spotlight user"));
+        toast.error(t("failedToAddSpotlightUser"));
       } finally {
         setIsSubmitting(false);
       }
@@ -129,15 +129,15 @@ const SpotlightedUsersTable = ({
         });
         if (res.status) {
           toast.success(
-            res.message || t("User removed from spotlight successfully"),
+            res.message || t("userRemovedFromSpotlightSuccessfully"),
           );
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to remove user from spotlight"));
+          toast.error(res.message || t("failedToRemoveUserFromSpotlight"));
         }
       } catch (error) {
         console.error("Error removing user from spotlight:", error);
-        toast.error(t("Failed to remove user from spotlight"));
+        toast.error(t("failedToRemoveUserFromSpotlight"));
       } finally {
         setRemovingUserId(null);
       }
@@ -155,24 +155,13 @@ const SpotlightedUsersTable = ({
       count: number;
     }> => {
       const skip = (page - 1) * limit;
-      const params = new URLSearchParams();
-      params.set("skip", String(skip));
-      params.set("limit", String(limit));
-      params.set("isSpotlighted", "false");
-      params.set("isActive", "true");
-      if (searchString) {
-        params.set("searchString", searchString);
-      }
-
-      const res = await fetch(
-        `/admin-portal/api/users/options?${params.toString()}`,
-      );
-
-      if (!res.ok) {
-        return { data: [], count: 0 };
-      }
-
-      const json = await res.json();
+      const json = await optionsService.getUserOptions({
+        skip,
+        limit,
+        isSpotlighted: false,
+        isActive: true,
+        ...(searchString ? { searchString } : {}),
+      });
       const options: OptionType[] = json.data;
 
       return {
@@ -185,26 +174,26 @@ const SpotlightedUsersTable = ({
 
   const config: DataTableConfig<User> = useMemo(() => {
     const columns: TableColumn<User>[] = [
-      createSortableColumn("name", t("Name"), (item) => (
+      createSortableColumn("name", t("name"), (item) => (
         <span className={TEXT_GRAY_WHITE}>
           {item.fullName ||
             [item.firstName, item.lastName].filter(Boolean).join(" ")}
         </span>
       )),
-      createSortableColumn("email", t("Email"), (item) => (
+      createSortableColumn("email", t("email"), (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
           {item.email || "-"}
         </span>
       )),
-      createSortableColumn("location", t("Country"), (item) => (
+      createSortableColumn("location", t("country"), (item) => (
         <span className={TEXT_SIZE_SM}>{item.country || "-"}</span>
       )),
-      createSortableColumn("connectionCount", t("Connection Count"), (item) => (
+      createSortableColumn("connectionCount", t("connectionCount"), (item) => (
         <span className={TEXT_SIZE_SM}>{item.connectionCount ?? 0}</span>
       )),
       {
         field: "",
-        title: t("Spotlight"),
+        title: t("spotlight"),
         render: (item) => {
           const desc = (
             item as unknown as { spotlightDescription?: string | null }
@@ -217,14 +206,14 @@ const SpotlightedUsersTable = ({
         },
       },
       // Spotlight status column removed; status is now edited via the Actions column
-      createSortableColumn("createdOn", t("Created On"), (item) => (
+      createSortableColumn("createdOn", t("createdOn"), (item) => (
         <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
           <FormattedDate date={item.createdOn} />
         </span>
       )),
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         render: (item) => {
           const userId = item.userId || item._id;
           return (
@@ -250,7 +239,7 @@ const SpotlightedUsersTable = ({
                   setIsAddModalOpen(true);
                 }}
                 className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-                title={t("Edit")}
+                title={t("edit")}
               >
                 <Pencil size={18} />
               </button>
@@ -259,7 +248,7 @@ const SpotlightedUsersTable = ({
                 onClick={() => userId && setRemoveConfirmUser({ userId })}
                 disabled={removingUserId === userId}
                 className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors dark:text-sidebartext disabled:opacity-50"
-                title={t("Delete")}
+                title={t("delete")}
               >
                 <Trash2 size={18} />
               </button>
@@ -276,7 +265,7 @@ const SpotlightedUsersTable = ({
                   }
                 }}
                 className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-                title={t("View User")}
+                title={t("viewUser")}
               >
                 <Eye size={18} />
               </button>
@@ -292,7 +281,7 @@ const SpotlightedUsersTable = ({
       keyExtractor: (item) => item.userId || item._id || "",
       paginationTitle: "spotlighted users",
       hideSelectCol: true,
-      emptyMessage: t("No spotlighted users found"),
+      emptyMessage: t("noSpotlightedUsersFound"),
       queryConfig: {
         defaultSortKey: "createdOn",
         defaultSortDirection: SORT_DIRECTIONS.DESC,
@@ -302,16 +291,16 @@ const SpotlightedUsersTable = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div>
               <h2 className={`text-[1.5rem] font-bold ${TEXT_PRIMARY}`}>
-                {t("Spotlighted Users")}
+                {t("spotlightedUsers")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Spotlighted Users subtitle")}
+                {t("spotlightedUsersSubtitle")}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-initial gap-3 space-x-0">
               <SearchToolbar
                 initialQuery={searchString}
-                placeholder={t("Search User")}
+                placeholder={t("searchUser")}
                 queryParamName="searchString"
               />
               <button
@@ -328,7 +317,7 @@ const SpotlightedUsersTable = ({
                 className="flex-none min-h-[46px] justify-center inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-primarycolor text-white text-xs font-semibold shadow-sm hover:bg-primarycolor/90 dark:bg-secondarycolor dark:hover:bg-secondarycolor/90 transition-colors"
               >
                 <Plus size={14} />
-                <span>{t("Add Spotlighted User")}</span>
+                <span>{t("addSpotlightedUser")}</span>
               </button>
             </div>
           </div>
@@ -350,18 +339,18 @@ const SpotlightedUsersTable = ({
           <div className="bg-bgwhite dark:bg-darkbgprimary rounded-2xl shadow-xl w-full max-w-md p-6">
             <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext mb-4">
               {spotlightForm.mode === "add"
-                ? t("Add Spotlighted User")
-                : t("Edit Spotlighted User")}
+                ? t("addSpotlightedUser")
+                : t("editSpotlightedUser")}
             </h3>
             <form className="space-y-4" onSubmit={handleAddSpotlightUser}>
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-textparagraph dark:text-textparagraphlight">
-                  {t("Select User")}
+                  {t("selectUser")}
                 </label>
                 {spotlightForm.mode === SPOTLIGHT_MODAL_MODE.ADD ? (
                   <AsyncSelect
                     getData={getUserOptions}
-                    placeholder={t("Select user to spotlight")}
+                    placeholder={t("selectUserToSpotlight")}
                     value={spotlightForm.user}
                     onChange={(option) =>
                       setSpotlightForm((prev) => ({
@@ -379,7 +368,7 @@ const SpotlightedUsersTable = ({
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-textparagraph dark:text-textparagraphlight">
-                  {t("Spotlight Description")}{" "}
+                  {t("spotlightDescription")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -392,7 +381,7 @@ const SpotlightedUsersTable = ({
                   }
                   rows={3}
                   className="w-full rounded-lg border border-bordercolor1 dark:border-darkbordercolor1 bg-bgwhite dark:bg-darkbgsecondary px-3 py-2 text-sm text-textprimary dark:text-sidebartext focus:outline-none focus:ring-2 focus:ring-primarycolor/60 resize-none"
-                  placeholder={t("Enter spotlight description")}
+                  placeholder={t("enterSpotlightDescription")}
                   required
                 />
               </div>
@@ -405,7 +394,7 @@ const SpotlightedUsersTable = ({
                   }}
                   className="px-4 py-2 rounded-full border border-bordercolor1 dark:border-darkbordercolor1 text-xs font-semibold text-textparagraph dark:text-textparagraphlight hover:bg-gray-50 dark:hover:bg-darkbgsecondary transition-colors"
                 >
-                  {t("Cancel")}
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
@@ -413,8 +402,8 @@ const SpotlightedUsersTable = ({
                   className="px-4 py-2 rounded-full bg-primarycolor text-white text-xs font-semibold hover:bg-primarycolor/90 disabled:opacity-60 disabled:cursor-not-allowed dark:bg-secondarycolor dark:hover:bg-secondarycolor/90 transition-colors"
                 >
                   {isSubmitting
-                    ? t("Saving spotlighted user")
-                    : t("Save Spotlighted User")}
+                    ? t("savingSpotlightedUser")
+                    : t("saveSpotlightedUser")}
                 </button>
               </div>
             </form>
@@ -432,8 +421,8 @@ const SpotlightedUsersTable = ({
           await handleRemoveFromSpotlight(removeConfirmUser.userId);
           setRemoveConfirmUser(null);
         }}
-        title={t("Remove from spotlight?")}
-        message={t("Remove from spotlight confirmation")}
+        title={t("removeFromSpotlight")}
+        message={t("removeFromSpotlightConfirmation")}
         isLoading={!!removingUserId}
       />
     </>

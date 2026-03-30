@@ -22,7 +22,7 @@ const CompanyRelationsSection = ({
       {/* Groups */}
       {company.groups && company.groups.length > 0 && (
         <CompanyScrollableSection
-          title={t("Company groups")}
+          title={t("companyGroups")}
           count={company.groups.length}
         >
           {company.groups.map((group) => (
@@ -62,7 +62,7 @@ const CompanyRelationsSection = ({
       {/* Events */}
       {company.events && company.events.length > 0 && (
         <CompanyScrollableSection
-          title={t("Company events")}
+          title={t("companyEvents")}
           count={company.events.length}
         >
           {company.events.map((event) => (
@@ -81,7 +81,7 @@ const CompanyRelationsSection = ({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span>{t("Events")}</span>
+                  <span>{t("events")}</span>
                 )}
               </div>
               <div className="min-w-0 flex-1 space-y-1">
@@ -89,7 +89,7 @@ const CompanyRelationsSection = ({
                   {event.title}
                 </p>
                 <p className="text-[14px] text-textparagraph dark:text-textparagraphlight truncate">
-                  {event.venue || t("Not available")}
+                  {event.venue || t("notAvailable")}
                 </p>
                 <p className="text-[11px] text-textparagraph dark:text-textparagraphlight">
                   <FormattedDate date={event.startDateTime} /> -{" "}
@@ -104,7 +104,7 @@ const CompanyRelationsSection = ({
       {/* Achievements */}
       {company.achievements && company.achievements.length > 0 && (
         <CompanyScrollableSection
-          title={t("Achievements")}
+          title={t("achievements")}
           count={company.achievements.length}
         >
           {company.achievements.map((ach, index) => (
@@ -145,7 +145,7 @@ const CompanyRelationsSection = ({
                     rel="noopener noreferrer"
                     className="text-[14px] text-primarycolor dark:text-secondarycolor underline underline-offset-2"
                   >
-                    {t("View achievement link")}
+                    {t("viewAchievementLink")}
                   </a>
                 )}
               </div>
@@ -157,7 +157,7 @@ const CompanyRelationsSection = ({
       {/* Videos */}
       {company.videos && company.videos.length > 0 && (
         <CompanyScrollableSection
-          title={t("Videos")}
+          title={t("videos")}
           count={company.videos.length}
         >
           {company.videos.map((video, index) => (
@@ -175,7 +175,7 @@ const CompanyRelationsSection = ({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span>{t("Video")}</span>
+                  <span>{t("video")}</span>
                 )}
               </div>
               <div className="min-w-0 flex-1 space-y-1">
@@ -194,7 +194,7 @@ const CompanyRelationsSection = ({
                     rel="noopener noreferrer"
                     className="text-[14px] text-primarycolor dark:text-secondarycolor underline underline-offset-2"
                   >
-                    {t("View video")}
+                    {t("viewVideo")}
                   </a>
                 )}
               </div>
@@ -206,7 +206,7 @@ const CompanyRelationsSection = ({
       {/* Reviews */}
       {company.reviews && company.reviews.length > 0 && (
         <CompanyScrollableSection
-          title={t("Reviews")}
+          title={t("reviews")}
           count={company.reviews.length}
         >
           {company.reviews.map((review) => (
@@ -220,7 +220,7 @@ const CompanyRelationsSection = ({
                     {review.userProfilePicture ? (
                       <Image
                         src={buildImageUrl(review.userProfilePicture)}
-                        alt={review.userName || t("Not available")}
+                        alt={review.userName || t("notAvailable")}
                         width={36}
                         height={36}
                         className="w-full h-full object-cover"
@@ -231,7 +231,7 @@ const CompanyRelationsSection = ({
                   </div>
                   <div className="min-w-0">
                     <p className="text-[16px] font-semibold text-textprimary dark:text-sidebartext truncate">
-                      {review.userName || t("Not available")}
+                      {review.userName || t("notAvailable")}
                     </p>
                     {review.userDesignation && (
                       <p className="text-[14px] text-textparagraph dark:text-textparagraphlight truncate">
@@ -270,7 +270,7 @@ const CompanyRelationsSection = ({
       {company.projectShowCase?.projects &&
         company.projectShowCase.projects.length > 0 && (
           <CompanyScrollableSection
-            title={t("Project showcase")}
+            title={t("projectShowcase")}
             count={company.projectShowCase.projects.length}
           >
             {company.projectShowCase.projects.map((project, index) => (
@@ -290,7 +290,7 @@ const CompanyRelationsSection = ({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span>{t("Projects")}</span>
+                    <span>{t("projects")}</span>
                   )}
                 </div>
                 <div className="min-w-0 flex-1 space-y-1">
@@ -313,7 +313,7 @@ const CompanyRelationsSection = ({
                       rel="noopener noreferrer"
                       className="text-[14px] text-primarycolor dark:text-secondarycolor underline underline-offset-2"
                     >
-                      {t("View project")}
+                      {t("viewProject")}
                     </a>
                   )}
                 </div>

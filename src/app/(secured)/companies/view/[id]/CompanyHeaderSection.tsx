@@ -69,12 +69,12 @@ const CompanyHeaderSection = ({ company, t }: CompanyHeaderSectionProps) => {
                   }`}
                 >
                   <span className="w-2 h-2 rounded-full bg-current mr-2" />
-                  {company.isActive ? t("Active") : t("Inactive")}
+                  {company.isActive ? t("active") : t("inactive")}
                 </span>
 
                 {company.isSuspended && (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300">
-                    {t("Suspended")}
+                    {t("suspended")}
                   </span>
                 )}
               </div>
@@ -108,7 +108,7 @@ const CompanyHeaderSection = ({ company, t }: CompanyHeaderSectionProps) => {
                 </div>
               )}
               <div className="flex items-center gap-2 text-bgblack/60 mt-2">
-                <span className="font-medium">{t("Joined on")}:</span>
+                <span className="font-medium">{t("joinedOn")}:</span>
                 <FormattedDate date={company.createdOn} />
               </div>
             </div>

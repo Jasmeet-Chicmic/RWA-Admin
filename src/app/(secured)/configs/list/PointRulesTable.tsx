@@ -51,15 +51,15 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
 
         const res = await updatePointRuleAction(payload);
         if (res?.status) {
-          toast.success(res.message || t("Point rule updated successfully"));
+          toast.success(res.message || t("pointRuleUpdatedSuccessfully"));
           setEditRule(null);
           router.refresh();
         } else {
-          toast.error(res?.message || t("Failed to update point rule"));
+          toast.error(res?.message || t("failedToUpdatePointRule"));
         }
       } catch (error) {
         console.error("Error updating point rule:", error);
-        toast.error(t("An error occurred while updating point rule"));
+        toast.error(t("anErrorOccurredWhileUpdatingPointRule"));
       } finally {
         setIsSubmitting(false);
       }
@@ -79,16 +79,14 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
         });
 
         if (res?.status) {
-          toast.success(
-            res.message || t("Point rule status updated successfully"),
-          );
+          toast.success(res.message || t("pointRuleStatusUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(res?.message || t("Failed to update point rule status"));
+          toast.error(res?.message || t("failedToUpdatePointRuleStatus"));
         }
       } catch (error) {
         console.error("Error updating point rule status:", error);
-        toast.error(t("An error occurred while updating point rule status"));
+        toast.error(t("anErrorOccurredWhileUpdatingPointRuleStatus"));
       } finally {
         setStatusLoadingId(null);
       }
@@ -100,7 +98,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
     () => [
       {
         field: "displayName",
-        title: t("Rule Name"),
+        title: t("ruleName"),
         sortable: false,
         render: (rule) => (
           <span className="text-sm font-medium text-textprimary dark:text-bgwhite">
@@ -110,7 +108,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       },
       {
         field: "points",
-        title: t("Points"),
+        title: t("points"),
         sortable: false,
         render: (rule) => (
           <span className="text-sm text-textprimary dark:text-bgwhite">
@@ -120,7 +118,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       },
       {
         field: "description",
-        title: t("Description"),
+        title: t("description"),
         sortable: false,
         render: (rule) => (
           <span className="text-sm text-textparagraph dark:text-textparagraphlight">
@@ -130,7 +128,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       },
       {
         field: "isActive",
-        title: t("Status"),
+        title: t("status"),
         sortable: false,
         render: (rule) => {
           const isActive = rule.isActive;
@@ -153,7 +151,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                         : "bg-red-500"
                     }`}
                   />
-                  {isActive ? t("Active") : t("Inactive")}
+                  {isActive ? t("active") : t("inactive")}
                   <ChevronDown size={14} className="opacity-60" />
                 </div>
               }
@@ -162,7 +160,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                      <span className="font-medium">{t("Active")}</span>
+                      <span className="font-medium">{t("active")}</span>
                     </div>
                   ),
                   onClick: () => {
@@ -176,7 +174,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="font-medium">{t("Inactive")}</span>
+                      <span className="font-medium">{t("inactive")}</span>
                     </div>
                   ),
                   onClick: () => {
@@ -193,7 +191,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       },
       // {
       //   field: "createdOn",
-      //   title: t("Created On"),
+      //   title: t("createdOn"),
       //   sortable: false,
       //   render: (rule) => (
       //     <span className="text-sm text-textprimary dark:text-bgwhite">
@@ -203,7 +201,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       // },
       // {
       //   field: "modifiedOn",
-      //   title: t("Modified On"),
+      //   title: t("modifiedOn"),
       //   sortable: false,
       //   render: (rule) => (
       //     <span className="text-sm text-textprimary dark:text-bgwhite">
@@ -213,7 +211,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       // },
       {
         field: "",
-        title: t("Actions"),
+        title: t("actions"),
         sortable: false,
         fixed: "right",
         render: (rule) => (
@@ -246,17 +244,17 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
       columns,
       keyExtractor: (item) => item.id,
       paginationTitle: "point rules",
-      emptyMessage: t("No data") ?? t("No point rules found"),
+      emptyMessage: t("noData") ?? t("noPointRulesFound"),
       header: (
         <div className="bg-bgwhite dark:bg-darkbgprimary">
           <div className="dark:border-darkbgprimary">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
               <div>
                 <h2 className="text-[1.25rem] lg:text-[1.5rem] font-bold text-textprimary dark:text-bgwhite">
-                  {t("Point Rules")}
+                  {t("pointRules")}
                 </h2>
                 <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                  {t("Manage how users earn points across the platform")}
+                  {t("manageHowUsersEarnPointsAcrossThePlatform")}
                 </p>
               </div>
               <div>{/* Add Point Rule button temporarily disabled */}</div>
@@ -320,18 +318,18 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
         <CustomModal
           isOpen={!!viewRule}
           onClose={() => setViewRule(null)}
-          title={t("Point Rule Details")}
+          title={t("pointRuleDetails")}
           size="md"
         >
           <div className="space-y-6 text-sm">
             <div className="rounded-xl border border-bordercolor1 bg-bgsecondary/40 px-4 py-3 dark:border-bordercolor2 dark:bg-darkbgsecondary/40">
               <p className="text-[13px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                {t("Basic Info")}
+                {t("basicInfo")}
               </p>
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                    {t("Rule Name")}
+                    {t("ruleName")}
                   </span>
                   <span className="text-[14px] font-semibold text-textprimary dark:text-bgwhite">
                     {viewRule.displayName}
@@ -339,7 +337,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                    {t("Rule Key")}
+                    {t("ruleKey")}
                   </span>
                   <span className="text-[14px] font-semibold text-textprimary dark:text-bgwhite">
                     {viewRule.ruleKey}
@@ -347,7 +345,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                    {t("Points")}
+                    {t("points")}
                   </span>
                   <span className="text-[14px] font-semibold text-textprimary dark:text-bgwhite">
                     {viewRule.points}
@@ -355,7 +353,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                    {t("Status")}
+                    {t("status")}
                   </span>
                   <span
                     className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
@@ -364,7 +362,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
                         : "bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300"
                     }`}
                   >
-                    {viewRule.isActive ? t("Active") : t("Inactive")}
+                    {viewRule.isActive ? t("active") : t("inactive")}
                   </span>
                 </div>
               </div>
@@ -372,7 +370,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
 
             <div className="rounded-xl border border-bordercolor1 bg-bgsecondary/40 px-4 py-3 dark:border-bordercolor2 dark:bg-darkbgsecondary/40">
               <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                {t("Description")}
+                {t("description")}
               </span>
               <p className="mt-2 text-[14px] leading-relaxed text-textparagraph dark:text-textparagraphlight">
                 {viewRule.description || "-"}
@@ -382,7 +380,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
             {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-bordercolor1 bg-bgsecondary/40 px-4 py-3 dark:border-bordercolor2 dark:bg-darkbgsecondary/40">
                 <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                  {t("Created On")}
+                  {t("createdOn")}
                 </span>
                 <div className="mt-1 text-[13px] text-textparagraph dark:text-textparagraphlight">
                   {viewRule.createdOn ? (
@@ -394,7 +392,7 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
               </div>
               <div className="rounded-xl border border-bordercolor1 bg-bgsecondary/40 px-4 py-3 dark:border-bordercolor2 dark:bg-darkbgsecondary/40">
                 <span className="text-[12px] font-medium uppercase tracking-wide text-labelprimary/80 dark:text-darklabelprimary/80">
-                  {t("Modified On")}
+                  {t("modifiedOn")}
                 </span>
                 <div className="mt-1 text-[13px] text-textparagraph dark:text-textparagraphlight">
                   {viewRule.modifiedOn ? (
@@ -417,19 +415,19 @@ const PointRulesTable = ({ pointRules }: PointRulesTableProps) => {
             if (isSubmitting) return;
             setEditRule(null);
           }}
-          title={t("Point Rule Details")}
+          title={t("pointRuleDetails")}
           size="md"
         >
           <FormBuilder<PointRuleFormValues>
             defaultValues={editDefaultValues}
             formConfig={editFormConfig}
             onSubmit={handleUpdate}
-            submitText={isSubmitting ? t("Saving") : t("Save Changes")}
+            submitText={isSubmitting ? t("saving") : t("saveChanges")}
             isLoading={isSubmitting}
             scrollable={false}
             secondaryAction={
               <span className="text-sm font-medium text-labelprimary dark:text-darklabelprimary">
-                {t("Cancel")}
+                {t("cancel")}
               </span>
             }
             onSecondaryAction={() => {

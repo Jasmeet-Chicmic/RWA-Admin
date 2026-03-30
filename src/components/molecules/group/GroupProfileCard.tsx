@@ -52,7 +52,7 @@ const GroupProfileCard = ({ group }: { group: AdminGroupDetail }) => {
             group.isActive ? "bg-green-500" : "bg-red-500"
           }`}
         />
-        <span>{group.isActive ? t("Active") : t("Inactive")}</span>
+        <span>{group.isActive ? t("active") : t("inactive")}</span>
       </div>
     </div>
   );
@@ -62,28 +62,28 @@ const GroupProfileCard = ({ group }: { group: AdminGroupDetail }) => {
       icon: (
         <Users className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Owner"),
+      label: t("owner"),
       value: group.owner.email || "-",
     },
     {
       icon: (
         <Users className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Type"),
+      label: t("type"),
       value: GROUP_TYPE_LABELS[group.type] ?? "-",
     },
     {
       icon: (
         <Users className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Members"),
+      label: t("members"),
       value: String(group.membersCount ?? 0),
     },
     {
       icon: (
         <Users className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Reports"),
+      label: t("reports"),
       value: String(group.reportCount ?? 0),
     },
   ];

@@ -1,20 +1,20 @@
 "use client";
 
-import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import {
+  AdminProperty,
+  PropertyStatus,
+} from "@/app/(secured)/properties/helpers/types";
 import { TableColumn } from "@/components/atoms/Table";
+import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
-import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
-import {
-  AdminProperty,
-  PropertyStatus,
-} from "@/app/(secured)/properties/helpers/types";
 
 const MOCK_TOP_PROPERTIES: AdminProperty[] = [
   {
@@ -298,7 +298,7 @@ const TopPropertiesTable = () => {
   const config: DataTableConfig<AdminProperty> = useMemo(() => {
     const columns: TableColumn<AdminProperty>[] = [
       {
-        title: t("Property Name"),
+        title: t("propertyName"),
         field: "name",
         render: (item) => (
           <div className="flex flex-col">
@@ -312,7 +312,7 @@ const TopPropertiesTable = () => {
         ),
       },
       {
-        title: t("Property Type"),
+        title: t("propertyType"),
         field: "propertyType",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -321,7 +321,7 @@ const TopPropertiesTable = () => {
         ),
       },
       {
-        title: t("Total Value"),
+        title: t("totalValue"),
         field: "totalValue",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -330,7 +330,7 @@ const TopPropertiesTable = () => {
         ),
       },
       // {
-      //   title: t("Annual Yield"),
+      //   title: t("annualYield"),
       //   field: "annualYieldPercent",
       //   render: (item) => (
       //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -339,7 +339,7 @@ const TopPropertiesTable = () => {
       //   ),
       // },
       // {
-      //   title: t("Risk Score"),
+      //   title: t("riskScore"),
       //   field: "riskScore",
       //   render: (item) => (
       //     <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -354,7 +354,7 @@ const TopPropertiesTable = () => {
       keyExtractor: (item) => item.id,
       paginationTitle: "properties",
       hideSelectCol: true,
-      emptyMessage: t("No properties found"),
+      emptyMessage: t("noPropertiesFound"),
       queryConfig: {
         defaultSortKey: "totalValue",
       },
@@ -368,10 +368,10 @@ const TopPropertiesTable = () => {
           <h2
             className={`text-[1.125rem] lg:text-[1.25rem] font-bold ${TEXT_PRIMARY}`}
           >
-            {t("Top Properties")}
+            {t("topProperties")}
           </h2>
           <p className="text-[13px] font-medium text-textparagraph dark:text-textparagraphlight">
-            {t("Top Properties subtitle")}
+            {t("topPropertiesSubtitle")}
           </p>
         </div>
       </div>

@@ -1,14 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { Check, Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
-import { TableColumn } from "@/components/atoms/Table";
 import { approveAdminKycAction, rejectAdminKycAction } from "@/api/adminKyc";
 import { PendingKycItem } from "@/api/adminKyc.types";
+import { TableColumn } from "@/components/atoms/Table";
+import TableActions, {
+  TableActionDisplayMode,
+} from "@/components/atoms/TableActions";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TEXT_PRIMARY_DARK as TEXT_PRIMARY } from "@/shared/styles";
 
 type PendingKycTableRow = PendingKycItem;
@@ -32,6 +35,7 @@ const PendingKycTable = ({
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectKycId, setRejectKycId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+  const actionsDisplayMode: TableActionDisplayMode = "inline";
 
   const config: DataTableConfig<PendingKycTableRow> = useMemo(() => {
     const columns: TableColumn<PendingKycTableRow>[] = [
@@ -73,61 +77,56 @@ const PendingKycTable = ({
         field: "",
         title: common("Actions"),
         render: (item) => (
-          <div className="flex items-center justify-end">
-            {(() => {
+          <TableActions
+            displayMode={actionsDisplayMode}
+            actions={(() => {
               const isLoading = actionLoadingId === item.kycId;
-
-              return (
-                <div className="flex items-center gap-2 justify-end">
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-emerald-50 text-emerald-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-                    disabled={isLoading}
-                    onClick={() => {
-                      if (isLoading) return;
-                      if (!item.kycId) return;
-                      void (async () => {
-                        try {
-                          setActionLoadingId(item.kycId);
-                          await approveAdminKycAction(item.kycId);
-                          router.refresh();
-                        } finally {
-                          setActionLoadingId(null);
-                        }
-                      })();
-                    }}
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Check className="w-4 h-4" />
-                    )}
-                    {common("Approve")}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-red-50 text-red-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-                    disabled={isLoading}
-                    onClick={() => {
-                      if (isLoading) return;
-                      if (!item.kycId) return;
-                      setRejectKycId(item.kycId);
-                      setRejectReason("");
-                      setRejectModalOpen(true);
-                    }}
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <X className="w-4 h-4" />
-                    )}
-                    {t("disapprove")}
-                  </button>
-                </div>
-              );
+              return [
+                {
+                  id: "approve",
+                  label: common("Approve"),
+                  disabled: isLoading,
+                  className:
+                    "inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-emerald-50 text-emerald-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed",
+                  icon: isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Check className="w-4 h-4" />
+                  ),
+                  onClick: () => {
+                    if (isLoading || !item.kycId) return;
+                    void (async () => {
+                      try {
+                        setActionLoadingId(item.kycId);
+                        await approveAdminKycAction(item.kycId);
+                        router.refresh();
+                      } finally {
+                        setActionLoadingId(null);
+                      }
+                    })();
+                  },
+                },
+                {
+                  id: "reject",
+                  label: t("disapprove"),
+                  disabled: isLoading,
+                  className:
+                    "inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-red-50 text-red-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed",
+                  icon: isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <X className="w-4 h-4" />
+                  ),
+                  onClick: () => {
+                    if (isLoading || !item.kycId) return;
+                    setRejectKycId(item.kycId);
+                    setRejectReason("");
+                    setRejectModalOpen(true);
+                  },
+                },
+              ];
             })()}
-          </div>
+          />
         ),
       },
     ];

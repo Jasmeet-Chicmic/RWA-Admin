@@ -21,20 +21,20 @@ type Props = {
 export function WorkHistorySection({ workHistoryList }: Props) {
   const t = useTranslations("users");
   const formatEducationDate = (dateString: string | null) =>
-    formatMonthYear(dateString, t("N/A"));
+    formatMonthYear(dateString, t("nA"));
   return (
     <div className="bg-bgwhite rounded-lg shadow p-6 dark:bg-darkbgprimary dark:border-darkbordercolor1 border border-bordercolor1">
       <div className="flex items-center gap-2 mb-6">
         <Briefcase className="w-5 h-5 text-primarycolor dark:text-white" />
         <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext">
-          {t("Work History")}
+          {t("workHistory")}
         </h3>
       </div>
 
       {workHistoryList.length === 0 ? (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p>{t("No work history information available")}</p>
+          <p>{t("noWorkHistoryInformationAvailable")}</p>
         </div>
       ) : (
         <div className="space-y-4 max-h-[400px] overflow-y-auto overflow-x-hidden pr-1 custom-scrollbar">
@@ -71,7 +71,7 @@ export function WorkHistorySection({ workHistoryList }: Props) {
                       {formatEducationDate(job.startDate ?? null)}
                       {job.endDate
                         ? ` - ${formatEducationDate(job.endDate ?? null)}`
-                        : ` - ${t("Present")}`}
+                        : ` - ${t("present")}`}
                     </span>
                   </div>
                 </div>

@@ -12,11 +12,11 @@ const TransactionFilters = () => {
   const ownerTypeOptions = useMemo(
     () => [
       {
-        label: t("User"),
+        label: t("user"),
         value: String(SUBSCRIPTION_OWNER_TYPE.USER),
       },
       {
-        label: t("Organisation"),
+        label: t("organisation"),
         value: String(SUBSCRIPTION_OWNER_TYPE.ORGANISATION),
       },
     ],
@@ -26,19 +26,19 @@ const TransactionFilters = () => {
   const statusOptions = useMemo(
     () => [
       {
-        label: t("Initiated"),
+        label: t("initiated"),
         value: String(PAYMENT_STATUS.INITIATED),
       },
       {
-        label: t("Success"),
+        label: t("success"),
         value: String(PAYMENT_STATUS.SUCCESS),
       },
       {
-        label: t("Failed"),
+        label: t("failed"),
         value: String(PAYMENT_STATUS.FAILED),
       },
       {
-        label: t("Refunded"),
+        label: t("refunded"),
         value: String(PAYMENT_STATUS.REFUNDED),
       },
     ],
@@ -47,16 +47,16 @@ const TransactionFilters = () => {
 
   const refundsOnlyOptions = useMemo(
     () => [
-      { label: t("Yes"), value: "true" },
-      { label: t("No"), value: "false" },
+      { label: t("yes"), value: "true" },
+      { label: t("no"), value: "false" },
     ],
     [t],
   );
 
   const creditsOnlyOptions = useMemo(
     () => [
-      { label: t("Yes"), value: "true" },
-      { label: t("No"), value: "false" },
+      { label: t("yes"), value: "true" },
+      { label: t("no"), value: "false" },
     ],
     [t],
   );
@@ -68,25 +68,25 @@ const TransactionFilters = () => {
     <div className="space-y-6">
       <div>
         <label htmlFor="owner-type-filter" className={LABEL_CLASS}>
-          {t("Owner Type")}
+          {t("ownerType")}
         </label>
         <SelectFilter
           id="owner-type-filter"
           paramName="ownerType"
           options={ownerTypeOptions}
-          placeholder={t("Select Owner Type")}
+          placeholder={t("selectOwnerType")}
         />
       </div>
 
       <div>
         <label htmlFor="status-filter" className={LABEL_CLASS}>
-          {t("Status")}
+          {t("status")}
         </label>
         <SelectFilter
           id="status-filter"
           paramName="status"
           options={statusOptions}
-          placeholder={t("Select Status")}
+          placeholder={t("selectStatus")}
         />
       </div>
 
@@ -94,25 +94,25 @@ const TransactionFilters = () => {
 
       <div>
         <label htmlFor="refunds-only-filter" className={LABEL_CLASS}>
-          {t("Refunds Only")}
+          {t("refundsOnly")}
         </label>
         <SelectFilter
           id="refunds-only-filter"
           paramName="refundsOnly"
           options={refundsOnlyOptions}
-          placeholder={t("Select")}
+          placeholder={t("select")}
         />
       </div>
 
       <div>
         <label htmlFor="credits-only-filter" className={LABEL_CLASS}>
-          {t("Credits Only")}
+          {t("creditsOnly")}
         </label>
         <SelectFilter
           id="credits-only-filter"
           paramName="creditsOnly"
           options={creditsOnlyOptions}
-          placeholder={t("Select")}
+          placeholder={t("select")}
         />
       </div>
     </div>

@@ -42,12 +42,12 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
 
   const displayName = buildDisplayName(fullName, firstName, lastName);
 
-  const displayEmail = email || t("N/A");
-  const displayPhone = phoneNumber || t("N/A");
+  const displayEmail = email || t("nA");
+  const displayPhone = phoneNumber || t("nA");
 
   const displayGender = (() => {
     if (gender === null || gender === undefined || gender === "") {
-      return t("N/A");
+      return t("nA");
     }
 
     const numericGender = Number(gender);
@@ -60,7 +60,7 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
 
   const displaySeniority = (() => {
     if (levelOfSeniority === null || levelOfSeniority === undefined) {
-      return t("N/A");
+      return t("nA");
     }
     return LEVEL_OF_SENIORITY_LABELS[levelOfSeniority as LEVEL_OF_SENIORITY];
   })();
@@ -69,7 +69,7 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
     const source =
       (isAdminBadgeAssigned ? adminAssignedBadge : badgeType) ?? null;
     if (source === null || source === undefined) {
-      return t("N/A");
+      return t("nA");
     }
 
     const numeric =
@@ -80,7 +80,7 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
       return t(key);
     }
 
-    return t("N/A");
+    return t("nA");
   })();
 
   const displayLocation =
@@ -88,7 +88,7 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
     [city, country]
       .filter((part) => part && part.trim().length > 0)
       .join(", ") ||
-    t("Location not specified");
+    t("locationNotSpecified");
 
   const profileSrc =
     buildImageUrl(userProfilePicture) || (dummyProfile as unknown as string);
@@ -120,7 +120,7 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
             isActive ? "bg-green-500" : "bg-red-500"
           }`}
         />
-        <span>{isActive ? t("Active") : t("Inactive")}</span>
+        <span>{isActive ? t("active") : t("inactive")}</span>
       </div>
     </div>
   );
@@ -130,37 +130,37 @@ const UserProfileCard = ({ userData }: { userData: User }) => {
       icon: (
         <Mail className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Email Address"),
+      label: t("emailAddress"),
       value: displayEmail,
     },
     {
       icon: (
         <Phone className="w-[25px] h-[25px] text-primarycolor dark:text-white" />
       ),
-      label: t("Contact Number"),
+      label: t("contactNumber"),
       value: displayPhone,
     },
     {
       icon: (
         <span className="text-[25px] font-semibold text-primarycolor dark:text-white">
-          {t("Gender").charAt(0)}
+          {t("gender").charAt(0)}
         </span>
       ),
-      label: t("Gender"),
+      label: t("gender"),
       value: displayGender,
     },
     {
       icon: (
         <Briefcase className="w-[25px] h-[25px] text-primarycolor dark:text-secondarycolor" />
       ),
-      label: t("Seniority Level"),
+      label: t("seniorityLevel"),
       value: displaySeniority,
     },
     {
       icon: (
         <Star className="w-[25px] h-[25px] text-primarycolor dark:text-secondarycolor" />
       ),
-      label: t("Admin Badge"),
+      label: t("adminBadge"),
       value: displayBadge,
     },
   ];

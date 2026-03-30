@@ -57,9 +57,9 @@ const TransactionsTable = ({
 
   const getTransactionTypeLabel = useCallback(
     (transaction: Transaction): string => {
-      if (transaction.isRefund) return t("Refund");
-      if (transaction.isCredit) return t("Credit");
-      return t("Debit");
+      if (transaction.isRefund) return t("refund");
+      if (transaction.isCredit) return t("credit");
+      return t("debit");
     },
     [t],
   );
@@ -68,15 +68,15 @@ const TransactionsTable = ({
     (status: number) => {
       switch (status) {
         case PAYMENT_STATUS.INITIATED:
-          return t("Initiated");
+          return t("initiated");
         case PAYMENT_STATUS.SUCCESS:
-          return t("Success");
+          return t("success");
         case PAYMENT_STATUS.FAILED:
-          return t("Failed");
+          return t("failed");
         case PAYMENT_STATUS.REFUNDED:
-          return t("Refunded");
+          return t("refunded");
         default:
-          return t("Unknown");
+          return t("unknown");
       }
     },
     [t],
@@ -86,9 +86,9 @@ const TransactionsTable = ({
     (ownerType: number) => {
       switch (ownerType) {
         case SUBSCRIPTION_OWNER_TYPE.USER:
-          return t("User");
+          return t("user");
         case SUBSCRIPTION_OWNER_TYPE.ORGANISATION:
-          return t("Organisation");
+          return t("organisation");
         default:
           return "—";
       }
@@ -99,7 +99,7 @@ const TransactionsTable = ({
   const config: DataTableConfig<FlatTransaction> = useMemo(() => {
     const columns: TableColumn<FlatTransaction>[] = [
       {
-        title: t("Transaction Date"),
+        title: t("transactionDate"),
         field: "date",
         render: (item: FlatTransaction) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -110,7 +110,7 @@ const TransactionsTable = ({
         sortKey: "date",
       },
       {
-        title: t("Invoice Number"),
+        title: t("invoiceNumber"),
         field: "invoiceNumber",
         render: (item: FlatTransaction) => (
           <span className={`font-medium ${TEXT_PRIMARY}`}>
@@ -119,7 +119,7 @@ const TransactionsTable = ({
         ),
       },
       {
-        title: t("Payer Type"),
+        title: t("payerType"),
         field: "ownerType",
         render: (item: FlatTransaction) => (
           <span
@@ -134,7 +134,7 @@ const TransactionsTable = ({
         ),
       },
       {
-        title: t("Plan Name"),
+        title: t("planName"),
         field: "planName",
         render: (item: FlatTransaction) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -143,7 +143,7 @@ const TransactionsTable = ({
         ),
       },
       {
-        title: t("Transaction Amount"),
+        title: t("transactionAmount"),
         field: "amount",
         render: (item: FlatTransaction) => (
           <span className={`font-medium ${TEXT_PRIMARY}`}>
@@ -156,13 +156,13 @@ const TransactionsTable = ({
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Payment Status")}
+            label={t("paymentStatus")}
             options={[
-              t("Initiated"),
-              t("Success"),
-              t("Failed"),
-              t("Refunded"),
-              t("Unknown"),
+              t("initiated"),
+              t("success"),
+              t("failed"),
+              t("refunded"),
+              t("unknown"),
             ]}
           />
         ),
@@ -181,7 +181,7 @@ const TransactionsTable = ({
         },
       },
       {
-        title: t("Payment Method"),
+        title: t("paymentMethod"),
         field: "paymentMethodType",
         render: (item: FlatTransaction) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -192,8 +192,8 @@ const TransactionsTable = ({
       {
         title: (
           <TableHeaderWithInfo
-            label={t("Transaction Type")}
-            options={[t("Debit"), t("Credit"), t("Refund")]}
+            label={t("transactionType")}
+            options={[t("debit"), t("credit"), t("refund")]}
           />
         ),
         field: "isCredit",
@@ -218,9 +218,9 @@ const TransactionsTable = ({
     return {
       columns,
       keyExtractor: (item) => item.transactionId,
-      paginationTitle: t("Transactions").toLowerCase(),
+      paginationTitle: t("transactions").toLowerCase(),
       hideSelectCol: true,
-      emptyMessage: t("No transactions found"),
+      emptyMessage: t("noTransactionsFound"),
       queryConfig: {
         defaultSortKey: "date",
         defaultSortDirection: "DESC",
@@ -232,16 +232,16 @@ const TransactionsTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Transactions")}
+                {t("transactions")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("All payment transactions")}
+                {t("allPaymentTransactions")}
               </p>
             </div>
             <div className="flex items-initial space-x-4">
               <SearchToolbar
                 initialQuery={searchText}
-                placeholder={t("Search Transactions")}
+                placeholder={t("searchTransactions")}
                 queryParamName="searchText"
               />
               <button
@@ -249,7 +249,7 @@ const TransactionsTable = ({
                 className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
               >
                 <Menu size={18} />
-                <span>{t("Filters")}</span>
+                <span>{t("filters")}</span>
               </button>
             </div>
           </div>
@@ -274,7 +274,7 @@ const TransactionsTable = ({
       <FilterSidebar
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t("Transaction Filters")}
+        title={t("transactionFilters")}
         footer={
           <button
             onClick={() => {
@@ -284,7 +284,7 @@ const TransactionsTable = ({
             className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
           >
             <RotateCcw size={18} />
-            <span>{t("Clear All Filters")}</span>
+            <span>{t("clearAllFilters")}</span>
           </button>
         }
       >

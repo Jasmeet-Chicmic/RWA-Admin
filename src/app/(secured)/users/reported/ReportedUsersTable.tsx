@@ -57,14 +57,14 @@ const ReportedUsersTable = ({
           isActive: newStatus,
         });
         if (res.status) {
-          toast.success(res.message || t("User status updated successfully"));
+          toast.success(res.message || t("userStatusUpdatedSuccessfully"));
           router.refresh();
         } else {
-          toast.error(res.message || t("Failed to update user status"));
+          toast.error(res.message || t("failedToUpdateUserStatus"));
         }
       } catch (error) {
         console.error("Error updating user status:", error);
-        toast.error(t("An error occurred while updating user status"));
+        toast.error(t("anErrorOccurredWhileUpdatingUserStatus"));
       } finally {
         setIsActionLoading(null);
       }
@@ -76,7 +76,7 @@ const ReportedUsersTable = ({
     const columns: TableColumn<ReportedUserItem>[] = [
       {
         field: "reportedProfile",
-        title: t("Reported User"),
+        title: t("reportedUser"),
         render: (item) => {
           const p = item.reportedProfile;
           const name =
@@ -118,7 +118,7 @@ const ReportedUsersTable = ({
       },
       {
         field: "reportedProfile",
-        title: t("Phone"),
+        title: t("phone"),
         render: (item) => (
           <span className={TEXT_SIZE_SM}>
             {item.reportedProfile?.phone || "—"}
@@ -128,7 +128,7 @@ const ReportedUsersTable = ({
       },
       {
         field: "reportedCount",
-        title: t("Report Count"),
+        title: t("reportCount"),
         render: (item) => (
           <span className={TEXT_SIZE_SM}>{item.reportedCount ?? "0"}</span>
         ),
@@ -136,7 +136,7 @@ const ReportedUsersTable = ({
       },
       {
         field: "reportedByUsers",
-        title: t("Reported By"),
+        title: t("reportedBy"),
         render: (item) => {
           const by = item.reportedByUsers ?? [];
           const count = by.length;
@@ -168,10 +168,10 @@ const ReportedUsersTable = ({
             >
               <span className="inline-flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-primarycolor dark:bg-white/80" />
-                <span>{t("Reported by count", { count })}</span>
+                <span>{t("reportedByCount", { count })}</span>
               </span>
               <span className="text-[10px] text-textparagraph dark:text-textparagraphlight underline underline-offset-2">
-                {t("View all")}
+                {t("viewAll")}
               </span>
             </button>
           );
@@ -180,7 +180,7 @@ const ReportedUsersTable = ({
       },
       {
         field: "reportedProfile",
-        title: t("Account Status"),
+        title: t("accountStatus"),
         render: (item) => {
           const profileId = item.reportedProfile?.id;
           if (!profileId) return "—";
@@ -204,7 +204,7 @@ const ReportedUsersTable = ({
                         : "bg-red-500"
                     }`}
                   />
-                  {isActive ? t("Active") : t("Inactive")}
+                  {isActive ? t("active") : t("inactive")}
                   <ChevronDown size={14} className="opacity-60" />
                 </div>
               }
@@ -213,7 +213,7 @@ const ReportedUsersTable = ({
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-primarycolor dark:bg-white/80" />
-                      <span className="font-medium">{t("Active")}</span>
+                      <span className="font-medium">{t("active")}</span>
                     </div>
                   ),
                   onClick: () => void handleToggleStatus(profileId, true),
@@ -223,7 +223,7 @@ const ReportedUsersTable = ({
                   label: (
                     <div className="flex items-center gap-2 py-1">
                       <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="font-medium">{t("Inactive")}</span>
+                      <span className="font-medium">{t("inactive")}</span>
                     </div>
                   ),
                   onClick: () => void handleToggleStatus(profileId, false),
@@ -242,7 +242,7 @@ const ReportedUsersTable = ({
       keyExtractor: (item) => item.reportedProfile?.id ?? "",
       paginationTitle: "reported users",
       hideSelectCol: true,
-      emptyMessage: t("No reported users found"),
+      emptyMessage: t("noReportedUsersFound"),
       header: (
         <div className="bg-bgwhite dark:bg-darkbgprimary">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -250,15 +250,15 @@ const ReportedUsersTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Reported Users")}
+                {t("reportedUsers")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Reported Users subtitle")}
+                {t("reportedUsersSubtitle")}
               </p>
             </div>
             <SearchToolbar
               initialQuery={searchString}
-              placeholder={t("Search User")}
+              placeholder={t("searchUser")}
             />
           </div>
         </div>
@@ -277,11 +277,11 @@ const ReportedUsersTable = ({
       <CustomModal
         isOpen={reporterModalOpen}
         onClose={() => setReporterModalOpen(false)}
-        title={t("Reported Users")}
+        title={t("reportedUsers")}
         size="md"
       >
         {selectedReporters.length === 0 ? (
-          <p className={TEXT_SIZE_SM}>{t("No reporters found")}</p>
+          <p className={TEXT_SIZE_SM}>{t("noReportersFound")}</p>
         ) : (
           <div
             className={`space-y-3 ${

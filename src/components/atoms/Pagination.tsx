@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
-import { useTranslations } from "next-intl";
 
 import Button from "./Button";
 
@@ -125,18 +125,18 @@ const Pagination: React.FC<PaginationProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-8 h-8 p-0 min-w-0 text-black bg-primarycolor/5 dark:text-white dark:bg-secondarycolor/5 dark:text-bgwhite/50 hover:bg-primarycolor/10 dark:hover:bg-secondarycolor/10"
+                className="w-9 h-9 p-0 min-w-0 text-textprimary dark:text-white bg-bgwhite dark:bg-darkbgprimary border border-bordergray100 dark:border-[#5f5f5f] hover:border-[#5f5f5f] dark:hover:border-white/60 hover:bg-gray-50 dark:hover:bg-labelprimary transition-all"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-5 h-5" />
               </Button>
             }
             nextLabel={
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-8 h-8 p-0 min-w-0 text-black bg-primarycolor/5 dark:text-white dark:bg-secondarycolor/5 dark:text-bgwhite/50 hover:bg-primarycolor/10 dark:hover:bg-secondarycolor/10"
+                className="w-9 h-9 p-0 min-w-0 text-textprimary dark:text-white bg-bgwhite dark:bg-darkbgprimary border border-bordergray100 dark:border-[#5f5f5f] hover:border-[#5f5f5f] dark:hover:border-white/60 hover:bg-gray-50 dark:hover:bg-labelprimary transition-all"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-5 h-5" />
               </Button>
             }
             pageLabelBuilder={(page) => (

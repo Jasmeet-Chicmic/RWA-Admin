@@ -2,7 +2,7 @@ const API_VERSION = "v1";
 const API_VERSION_V2 = "v2";
 
 export const API_END_POINTS = {
-  LOGIN: `/api/admin/auth/login`,
+  LOGIN: `/admin/auth/login`,
   LOGIN_VERIFY: `${API_VERSION}/admin/loginVerify`,
   FORGOT_PASSWORD: `${API_VERSION}/admin/forgotPassword`,
   RESET_PASSWORD: `${API_VERSION}/admin/resetPassword`,
@@ -11,7 +11,7 @@ export const API_END_POINTS = {
   ORGANIZATION_PROFILE: `/organizations/profile`,
   ORGANIZATION_PROPERTIES: `/organizations/properties`,
   ADMIN_PROFILE: `/admin/profile`,
-  USER: `/api/admin/users`,
+  USER: `/admin/users`,
   USER_BY_ID: `/user-profile/api/admin/users`,
   USER_TOGGLE_STATUS: `/user-profile/api/admin/users`,
   USER_TOGGLE_SPOTLIGHT: `/user-profile/api/admin/users`,
@@ -142,7 +142,7 @@ export const API_END_POINTS = {
   // Plans
   PLANS: `/payment/api/plans`,
   ADJUST_PLAN_PRICING: `/payment/api/admin/pricing/adjustSubscription`,
-  SUBSCRIPTION_ANALYTICS: `/payment/api/admin/plans/subscription-analytics`,
+  SUBSCRIPTION_ANALYTICS: `/admin/plans/subscription-analytics`,
 
   // Posts
   ADMIN_POSTS_TABLE: `/post/api/admin/posts/table`,
@@ -151,15 +151,17 @@ export const API_END_POINTS = {
 
   // Properties
   ADMIN_ALL_PROPERTIES: `/admin/properties`,
-  ADMIN_PROPERTIES: `/api/admin/properties`,
+  ADMIN_PROPERTIES: `/admin/properties`,
   ADMIN_PROPERTY_APPROVE: (propertyId: string) =>
     `/admin/properties/${propertyId}/approve`,
   ADMIN_PROPERTY_REJECT: (propertyId: string) =>
     `/admin/properties/${propertyId}/reject`,
   ADMIN_PROPERTY_ASSIGN_ORGANIZATION: (propertyId: string) =>
     `/admin/properties/${propertyId}/assign-organization`,
-  ADMIN_PROPERTIES_PENDING: `/api/admin/properties/pending`,
-  ADMIN_PROPERTIES_DETAILS: `/api/admin/properties/Details`,
+  ADMIN_PROPERTIES_PENDING: `/admin/properties/pending`,
+  /** Single property detail for admin (requires valid property GUID). */
+  ADMIN_PROPERTY_BY_ID: (propertyId: string) =>
+    `/admin/properties/${propertyId}`,
 
   // KYC
   ADMIN_KYC_PENDING: `/api/admin/kyc`,
@@ -173,7 +175,7 @@ export const API_END_POINTS = {
 
   // Reports
   REPORTS_COMPANY_CREATED: `/network/api/admin/reports/company/created`,
-  REPORTS_USER_RETENTION: `/security/api/admin/reports/user-retention`,
+  REPORTS_USER_RETENTION: `/admin/reports/user-retention`,
   REPORTS_COMPANY_FOLLOWER: `/network/api/admin/reports/company/follower`,
   REPORTS_GROUP_CREATED: `/network/api/admin/reports/group/created`,
   REPORTS_GROUP_JOINED: `/network/api/admin/reports/group/joined`,
@@ -191,22 +193,18 @@ export const API_END_POINTS = {
 };
 
 export const INTERNAL_API_PATHS = {
-  ADMIN_AUTH_LOGIN: "/admin-portal/api/admin/auth/login",
-  ADMIN_WALLET_VERIFY: "/admin-portal/api/admin/wallet/verify",
-  ORG_AUTH_LOGIN: "/admin-portal/api/organizations/login",
-  ORG_WALLET_VERIFY: "/admin-portal/api/organizations/wallet/verify",
-  PROPERTY_ONCHAIN_INITIATE: "/admin-portal/api/property-onchain/initiate",
-  PROPERTY_ONCHAIN_TREX_DEPLOYED:
-    "/admin-portal/api/property-onchain/trex-deployed",
-  PROPERTY_ONCHAIN_VAULT_DEPLOYED:
-    "/admin-portal/api/property-onchain/vault-deployed",
+  ADMIN_AUTH_LOGIN: "/admin/auth/login",
+  ADMIN_WALLET_VERIFY: "/admin/wallet/verify",
+  ORG_AUTH_LOGIN: "/organizations/login",
+  ORG_WALLET_VERIFY: "/organizations/wallet/verify",
+  PROPERTY_ONCHAIN_INITIATE: "/v1/property-onchain/initiate",
+  PROPERTY_ONCHAIN_TREX_DEPLOYED: "/v1/property-onchain/trex-deployed",
+  PROPERTY_ONCHAIN_VAULT_DEPLOYED: "/v1/property-onchain/vault-deployed",
   PROPERTY_ONCHAIN_PROPERTY_REGISTERED:
-    "/admin-portal/api/property-onchain/property-registered",
-  PROPERTY_ONCHAIN_KYC_DONE: "/admin-portal/api/property-onchain/kyc-done",
-  PROPERTY_ONCHAIN_UNPAUSE_DONE:
-    "/admin-portal/api/property-onchain/unpause-done",
-  PROPERTY_ONCHAIN_MINTED: "/admin-portal/api/property-onchain/minted",
-  PROPERTY_ONCHAIN_COMPLIANCE_BOUND:
-    "/admin-portal/api/property-onchain/compliance-bound",
-  PROPERTY_ONCHAIN_STATUS: "/admin-portal/api/property-onchain/status",
+    "/v1/property-onchain/property-registered",
+  PROPERTY_ONCHAIN_KYC_DONE: "/v1/property-onchain/kyc-done",
+  PROPERTY_ONCHAIN_UNPAUSE_DONE: "/v1/property-onchain/unpause-done",
+  PROPERTY_ONCHAIN_MINTED: "/v1/property-onchain/minted",
+  PROPERTY_ONCHAIN_COMPLIANCE_BOUND: "/v1/property-onchain/compliance-bound",
+  PROPERTY_ONCHAIN_STATUS: "/v1/property-onchain/status",
 } as const;

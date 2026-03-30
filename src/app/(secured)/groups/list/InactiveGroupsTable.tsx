@@ -51,15 +51,15 @@ const InactiveGroupsTable = ({
       try {
         const res = await sendInactiveGroupAlertAction(groupId);
         if (res?.status) {
-          toast.success(res.message || t("Email sent successfully"));
+          toast.success(res.message || t("emailSentSuccessfully"));
           setSendEmailModal({ open: false, group: null });
           router.refresh();
         } else {
-          toast.error(res?.message || t("Failed to send email"));
+          toast.error(res?.message || t("failedToSendEmail"));
         }
       } catch (error) {
         console.error("Send inactive group email failed", error);
-        toast.error(t("Failed to send email"));
+        toast.error(t("failedToSendEmail"));
       } finally {
         setSendingId(null);
       }
@@ -70,7 +70,7 @@ const InactiveGroupsTable = ({
   const config: DataTableConfig<InactiveGroup> = useMemo(() => {
     const columns: TableColumn<InactiveGroup>[] = [
       {
-        title: t("Group Name"),
+        title: t("groupName"),
         field: "groupName",
         render: (item) => (
           <span
@@ -82,7 +82,7 @@ const InactiveGroupsTable = ({
         ),
       },
       // {
-      //   title: t("Admin Contact Email"),
+      //   title: t("adminContactEmail"),
       //   field: "contactEmail",
       //   render: (item) => (
       //     <span className={TEXT_SIZE_SM}>
@@ -91,7 +91,7 @@ const InactiveGroupsTable = ({
       //   ),
       // },
       {
-        title: t("Owner"),
+        title: t("owner"),
         field: "ownerId",
         render: (item) => (
           <EventParticipantItem
@@ -101,12 +101,12 @@ const InactiveGroupsTable = ({
             userProfilePicture={item.ownerProfilePicture}
             avatarSize="w-8 h-8"
             showEmail={true}
-            fallbackName={t("Unknown User")}
+            fallbackName={t("unknownUser")}
           />
         ),
       },
       {
-        title: t("Date Created"),
+        title: t("dateCreated"),
         field: "createdOn",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -115,7 +115,7 @@ const InactiveGroupsTable = ({
         ),
       },
       {
-        title: t("Days Without Activity"),
+        title: t("daysWithoutActivity"),
         field: "daysSinceLastActivity",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -124,7 +124,7 @@ const InactiveGroupsTable = ({
         ),
       },
       {
-        title: t("Actions"),
+        title: t("actions"),
         field: "",
         fixed: "right",
         render: (item) => (
@@ -136,7 +136,7 @@ const InactiveGroupsTable = ({
                 router.push(`${PRIVATE_ROUTES.GROUPS_VIEW}/${item.groupId}`);
               }}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext"
-              title={t("View Group")}
+              title={t("viewGroup")}
             >
               <Eye size={18} />
             </button>
@@ -148,7 +148,7 @@ const InactiveGroupsTable = ({
               }}
               disabled={!!sendingId}
               className="text-gray-500 hover:text-primarycolor dark:hover:text-secondarycolor transition-colors dark:text-sidebartext disabled:opacity-50"
-              title={t("Send Email")}
+              title={t("sendEmail")}
             >
               <Mail size={18} />
             </button>
@@ -162,7 +162,7 @@ const InactiveGroupsTable = ({
       keyExtractor: (item) => item.groupId,
       paginationTitle: "inactive groups",
       hideSelectCol: true,
-      emptyMessage: t("No inactive groups found"),
+      emptyMessage: t("noInactiveGroupsFound"),
       queryConfig: {
         defaultSortKey: "DaysSinceLastActivity",
         defaultSortDirection: SORT_DIRECTIONS.DESC,
@@ -174,16 +174,16 @@ const InactiveGroupsTable = ({
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
-                {t("Inactive Groups")}
+                {t("inactiveGroups")}
               </h2>
               <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("Inactive Groups subtitle")}
+                {t("inactiveGroupsSubtitle")}
               </p>
             </div>
             <div className="flex items-initial space-x-4">
               <SearchToolbar
                 initialQuery={searchText}
-                placeholder={t("Search Groups")}
+                placeholder={t("searchGroups")}
                 queryParamName="searchText"
               />
               <button
@@ -191,7 +191,7 @@ const InactiveGroupsTable = ({
                 className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
               >
                 <Menu size={18} />
-                <span>{t("Filters")}</span>
+                <span>{t("filters")}</span>
               </button>
             </div>
           </div>
@@ -210,7 +210,7 @@ const InactiveGroupsTable = ({
       <FilterSidebar
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t("Group Filters")}
+        title={t("groupFilters")}
         footer={
           <button
             onClick={() => {
@@ -220,7 +220,7 @@ const InactiveGroupsTable = ({
             className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
           >
             <RotateCcw size={18} />
-            <span>{t("Clear All Filters")}</span>
+            <span>{t("clearAllFilters")}</span>
           </button>
         }
       >
@@ -235,8 +235,8 @@ const InactiveGroupsTable = ({
           if (!sendEmailModal.group) return;
           await handleSendEmail(sendEmailModal.group.groupId);
         }}
-        title={t("Send Email")}
-        message={t("Send email confirmation")}
+        title={t("sendEmail")}
+        message={t("sendEmailConfirmation")}
         isLoading={!!sendingId}
       />
     </>

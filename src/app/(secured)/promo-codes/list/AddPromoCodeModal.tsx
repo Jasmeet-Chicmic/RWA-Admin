@@ -63,57 +63,57 @@ const AddPromoCodeModal = ({
     const fields = [
       {
         name: "code" as const,
-        label: t("Code"),
+        label: t("code"),
         type: FORM_FIELDS_TYPES.TEXT,
         disabled: isEditMode, // Disable code field in edit mode
         validation: {
-          required: getRequiredFieldMessage(t("Code"), tCommon),
+          required: getRequiredFieldMessage(t("code"), tCommon),
         },
       },
       {
         name: "description" as const,
-        label: t("Description"),
+        label: t("description"),
         type: FORM_FIELDS_TYPES.TEXTAREA,
       },
       {
         name: "discountType" as const,
-        label: t("Discount Type"),
+        label: t("discountType"),
         type: FORM_FIELDS_TYPES.SELECT,
         disabled: isEditMode, // Disable in edit mode
         options: [
-          { label: t("Percentage"), value: PROMO_DISCOUNT_TYPE.PERCENTAGE },
-          { label: t("Fixed Amount"), value: PROMO_DISCOUNT_TYPE.FIXED_AMOUNT },
+          { label: t("percentage"), value: PROMO_DISCOUNT_TYPE.PERCENTAGE },
+          { label: t("fixedAmount"), value: PROMO_DISCOUNT_TYPE.FIXED_AMOUNT },
         ],
         validation: {
-          required: getRequiredFieldMessage(t("Discount Type"), tCommon),
+          required: getRequiredFieldMessage(t("discountType"), tCommon),
         },
       },
       {
         name: "discountValue" as const,
-        label: t("Discount Value"),
+        label: t("discountValue"),
         type: FORM_FIELDS_TYPES.NUMBER,
         min: 0,
         disabled: isEditMode, // Disable in edit mode
         validation: {
-          required: getRequiredFieldMessage(t("Discount Value"), tCommon),
+          required: getRequiredFieldMessage(t("discountValue"), tCommon),
           min: {
             value: 1,
-            message: t("Discount value must be greater than 0"),
+            message: t("discountValueMustBeGreaterThan0"),
           },
         },
       },
       {
         name: "duration" as const,
-        label: t("Duration"),
+        label: t("duration"),
         type: FORM_FIELDS_TYPES.SELECT,
         disabled: isEditMode, // Disable in edit mode
         options: [
-          { label: t("Once"), value: PROMO_DURATION.ONCE },
-          { label: t("Repeating"), value: PROMO_DURATION.REPEATING },
-          { label: t("Forever"), value: PROMO_DURATION.FOREVER },
+          { label: t("once"), value: PROMO_DURATION.ONCE },
+          { label: t("repeating"), value: PROMO_DURATION.REPEATING },
+          { label: t("forever"), value: PROMO_DURATION.FOREVER },
         ],
         validation: {
-          required: getRequiredFieldMessage(t("Duration"), tCommon),
+          required: getRequiredFieldMessage(t("duration"), tCommon),
         },
       },
       // Show durationInMonths for REPEATING and FOREVER, but not for ONCE
@@ -122,15 +122,15 @@ const AddPromoCodeModal = ({
         ? [
             {
               name: "durationInMonths" as const,
-              label: t("Duration In Months"),
+              label: t("durationInMonths"),
               type: FORM_FIELDS_TYPES.NUMBER,
-              placeholder: t("Only required for repeating duration"),
+              placeholder: t("onlyRequiredForRepeatingDuration"),
               min: 0,
               disabled: isEditMode, // Disable in edit mode
               validation: {
                 min: {
                   value: 1,
-                  message: t("Duration in months must be greater than 0"),
+                  message: t("durationInMonthsMustBeGreaterThan0"),
                 },
               },
             },
@@ -138,16 +138,16 @@ const AddPromoCodeModal = ({
         : []),
       {
         name: "validFrom" as const,
-        label: t("Valid From"),
+        label: t("validFrom"),
         type: FORM_FIELDS_TYPES.DATE,
         returnISOFormat: true,
         validation: {
-          required: getRequiredFieldMessage(t("Valid From"), tCommon),
+          required: getRequiredFieldMessage(t("validFrom"), tCommon),
         },
       },
       {
         name: "validUntil" as const,
-        label: t("Valid Until"),
+        label: t("validUntil"),
         type: FORM_FIELDS_TYPES.DATE,
         returnISOFormat: true,
         disabled: !validFrom,
@@ -155,21 +155,21 @@ const AddPromoCodeModal = ({
       },
       {
         name: "maxRedemptions" as const,
-        label: t("Max Redemptions"),
+        label: t("maxRedemptions"),
         type: FORM_FIELDS_TYPES.NUMBER,
         min: 0,
         disabled: isEditMode, // Disable in edit mode
         validation: {
-          required: getRequiredFieldMessage(t("Max Redemptions"), tCommon),
+          required: getRequiredFieldMessage(t("maxRedemptions"), tCommon),
           min: {
             value: 1,
-            message: t("Max redemptions must be greater than 0"),
+            message: t("maxRedemptionsMustBeGreaterThan0"),
           },
         },
       },
       {
         name: "isActive" as const,
-        label: t("Is Active"),
+        label: t("isActive"),
         type: FORM_FIELDS_TYPES.SWITCH,
       },
     ];
@@ -192,7 +192,7 @@ const AddPromoCodeModal = ({
           toast.success(
             res.message ||
               tCommon("{entity} {action} successfully", {
-                entity: t("Promo code"),
+                entity: t("promoCode"),
                 action: tCommon("updated"),
               }),
           );
@@ -206,7 +206,7 @@ const AddPromoCodeModal = ({
             res.message ||
               tCommon("Failed to {action} {entity}", {
                 action: tCommon("update"),
-                entity: t("Promo code").toLowerCase(),
+                entity: t("promoCode").toLowerCase(),
               }),
           );
         }
@@ -232,7 +232,7 @@ const AddPromoCodeModal = ({
           toast.success(
             res.message ||
               tCommon("{entity} {action} successfully", {
-                entity: t("Promo code"),
+                entity: t("promoCode"),
                 action: tCommon("created"),
               }),
           );
@@ -246,7 +246,7 @@ const AddPromoCodeModal = ({
             res.message ||
               tCommon("Failed to {action} {entity}", {
                 action: tCommon("create"),
-                entity: t("Promo code").toLowerCase(),
+                entity: t("promoCode").toLowerCase(),
               }),
           );
         }
@@ -260,7 +260,7 @@ const AddPromoCodeModal = ({
         setOpen(false);
         setSelectedPromoCode(undefined);
       }}
-      title={promoCode?.id ? t("Edit Promo Code") : t("Add Promo Code")}
+      title={promoCode?.id ? t("editPromoCode") : t("addPromoCode")}
       size="2xl"
     >
       <FormBuilder<PromoCodeForm>

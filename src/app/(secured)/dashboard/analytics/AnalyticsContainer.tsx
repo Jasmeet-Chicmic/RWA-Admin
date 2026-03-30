@@ -1,0 +1,71 @@
+"use client";
+
+import { useDebounce } from "@/hooks/useDebounce";
+import { fetchAnalyticsSummary } from "@/store/analyticsSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef } from "react";
+import DashboardStatsCharts from "./DashboardStatsCharts";
+
+function getDefaultDateRange() {
+  const today = new Date();
+  const fromDate = new Date();
+  fromDate.setDate(today.getDate() - 6);
+  return {
+    fromDate: fromDate.toISOString().split("T")[0],
+    toDate: today.toISOString().split("T")[0],
+  };
+}
+
+const AnalyticsContainer = () => {
+  const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const lastRequestKeyRef = useRef<string | null>(null);
+  const { retentionData, subscriptionAnalytics, propertiesDetails } =
+    useAppSelector((state) => state.analytics);
+
+  const defaultDates = useMemo(() => getDefaultDateRange(), []);
+
+  const combinedDeps = useMemo(
+    () =>
+      JSON.stringify({
+        fromDate: searchParams.get("fromDate") ?? defaultDates.fromDate,
+        toDate: searchParams.get("toDate") ?? defaultDates.toDate,
+      }),
+    [defaultDates.fromDate, defaultDates.toDate, searchParams],
+  );
+  const debouncedDeps = useDebounce(combinedDeps, 300);
+
+  const payload = useMemo(() => {
+    const parsed = JSON.parse(debouncedDeps) as {
+      fromDate: string;
+      toDate: string;
+    };
+    return {
+      fromDate: parsed.fromDate,
+      toDate: parsed.toDate,
+    };
+  }, [debouncedDeps]);
+
+  useEffect(() => {
+    if (lastRequestKeyRef.current === debouncedDeps) return;
+    lastRequestKeyRef.current = debouncedDeps;
+    dispatch(fetchAnalyticsSummary(payload));
+  }, [debouncedDeps, dispatch, payload]);
+
+  return (
+    <div className="p-0 mt-[20px]">
+      <div className="mb-6">
+        <DashboardStatsCharts
+          retentionData={retentionData}
+          propertiesDetails={propertiesDetails}
+          subscriptionAnalytics={subscriptionAnalytics}
+          initialFromDate={payload.fromDate}
+          initialToDate={payload.toDate}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default AnalyticsContainer;

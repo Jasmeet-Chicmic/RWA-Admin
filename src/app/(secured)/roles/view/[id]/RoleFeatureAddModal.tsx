@@ -1,16 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
-import CustomModal from "@/components/molecules/CustomModal/CustomModal";
+import { updateRoleFeaturesAction } from "@/api/roles";
 import AsyncSelect, {
   AsyncSelectGetDataParams,
   OptionType,
 } from "@/components/atoms/AsyncSelect/AsyncSelect";
+import CustomModal from "@/components/molecules/CustomModal/CustomModal";
+import { optionsService } from "@/services/options-service";
 import { RoleFeature } from "@/shared/types";
-import { updateRoleFeaturesAction } from "@/api/roles";
 
 interface RoleFeatureAddModalProps {
   isOpen: boolean;
@@ -32,7 +33,7 @@ const RoleFeatureAddModal = ({
   existingFeatures,
   onSuccess,
 }: RoleFeatureAddModalProps) => {
-  const t = useTranslations("roles.AddModal");
+  const t = useTranslations("roles.addModal");
   const tRoles = useTranslations("roles");
 
   const [selectedFeature, setSelectedFeature] =
@@ -65,33 +66,23 @@ const RoleFeatureAddModal = ({
   }: AsyncSelectGetDataParams) => {
     const skip = (page - 1) * limit;
 
-    const params = new URLSearchParams();
-    params.set("skip", String(skip));
-    params.set("limit", String(limit));
-    if (searchString) {
-      params.set("searchText", searchString);
-    }
-
-    const res = await fetch(
-      `/admin-portal/api/default-features/options?${params.toString()}`,
-    );
-
-    if (!res.ok) {
-      return { data: [], count: 0 };
-    }
-
-    const json = (await res.json()) as {
+    const json = await optionsService.getDefaultFeatureOptions({
+      skip,
+      limit,
+      ...(searchString ? { searchText: searchString } : {}),
+    });
+    const typedJson = json as {
       data: DefaultFeatureOption[];
       count: number;
     };
 
-    const data = json.data.filter(
+    const data = typedJson.data.filter(
       (opt) => !existingFeatureIds.has(String(opt.value)),
     );
 
     return {
       data,
-      count: json.count,
+      count: typedJson.count,
     };
   };
 
@@ -128,15 +119,15 @@ const RoleFeatureAddModal = ({
       const res = await updateRoleFeaturesAction(roleId, payload);
 
       if (res.status) {
-        toast.success(res.message || t("Save Success"));
+        toast.success(res.message || t("saveSuccess"));
         onSuccess();
         handleClose();
       } else {
-        toast.error(res.message || t("Save Error"));
+        toast.error(res.message || t("saveError"));
       }
     } catch (error) {
       console.error("Error adding role feature:", error);
-      toast.error(t("Save Error"));
+      toast.error(t("saveError"));
     } finally {
       setIsSaving(false);
     }
@@ -146,20 +137,23 @@ const RoleFeatureAddModal = ({
     <CustomModal
       isOpen={isOpen}
       onClose={handleClose}
-      title={t("Title")}
+      title={t("title")}
       size="md"
     >
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-textprimary dark:text-sidebartext mb-1">
-            {t("Select Feature")}
+            {t("selectFeature")}
           </label>
           <AsyncSelect
             getData={getData}
-            placeholder={t("Select Feature Placeholder")}
+            placeholder={t("selectFeaturePlaceholder")}
             value={selectedFeature}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onChange={(option) => handleFeatureChange(option as any)}
+            onChange={(option) =>
+              handleFeatureChange(
+                (option as DefaultFeatureOption | null) ?? null,
+              )
+            }
             inputId="role-feature-add"
           />
         </div>
@@ -207,7 +201,7 @@ const RoleFeatureAddModal = ({
                     e.target.value === "" ? null : Number(e.target.value),
                   )
                 }
-                placeholder={t("ValuePlaceholder")}
+                placeholder={t("valuePlaceholder")}
                 className={`w-full px-4 py-2.5 rounded-xl border bg-transparent text-textprimary dark:text-bgwhite focus:outline-none focus:ring-2 transition-all ${
                   isInvalid
                     ? "border-red-500 focus:ring-red-500/30"
@@ -225,7 +219,7 @@ const RoleFeatureAddModal = ({
             disabled={isSaving}
             className="px-4 py-2 text-sm font-medium rounded-xl border border-gray-300 text-labelprimary bg-bgwhite hover:bg-gray-50 dark:bg-darkbgprimary dark:text-darklabelprimary dark:border-darkbordercolor1 disabled:opacity-50"
           >
-            {t("Cancel")}
+            {t("cancel")}
           </button>
           <button
             type="button"
@@ -233,7 +227,7 @@ const RoleFeatureAddModal = ({
             disabled={isSaving || !selectedFeature || isInvalid}
             className="px-4 py-2 text-sm font-semibold rounded-xl bg-primarycolor text-bgwhite hover:bg-primaryhover dark:bg-secondarycolor dark:text-black dark:hover:bg-secondaryhover disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSaving ? t("Saving") : t("Save Changes")}
+            {isSaving ? t("saving") : t("saveChanges")}
           </button>
         </div>
       </div>

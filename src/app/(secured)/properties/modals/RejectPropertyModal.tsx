@@ -143,7 +143,7 @@ const RejectPropertyModal = ({
             </div>
             <div>
               <h3 className="text-lg font-bold text-bgblack dark:text-white">
-                {t("Reject Property")}
+                {t("rejectProperty")}
               </h3>
               <p className="text-sm text-textprimary dark:text-secondary truncate max-w-[280px]">
                 {propertyName}
@@ -168,10 +168,10 @@ const RejectPropertyModal = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-sm font-semibold text-bgblack dark:text-white">
-                {t("Reason for Rejection")}
+                {t("reasonForRejection")}
               </label>
               <span className="text-[10px] uppercase tracking-wider font-bold text-textprimary dark:text-secondary">
-                {t("Optional")}
+                {t("optional")}
               </span>
             </div>
             <textarea
@@ -186,17 +186,17 @@ const RejectPropertyModal = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-sm font-semibold text-bgblack dark:text-white">
-                {t("Supporting Documents")}
+                {t("supportingDocuments")}
               </label>
               <span className="text-[10px] uppercase tracking-wider font-bold text-textprimary dark:text-secondary">
-                {t("Optional")}
+                {t("optional")}
               </span>
             </div>
 
             {/* Document Type Selector (BEFORE UPLOAD) */}
             <div className="space-y-1.5">
               <p className="text-[11px] font-bold text-textprimary dark:text-secondary uppercase tracking-tight">
-                {t("Document Type")}
+                {t("documentType")}
               </p>
               <div className="relative">
                 <select
@@ -273,7 +273,7 @@ const RejectPropertyModal = ({
             disabled={isPending}
             className="rounded-xl px-6 h-11"
           >
-            {t("Cancel")}
+            {t("cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -281,7 +281,7 @@ const RejectPropertyModal = ({
             disabled={isUploading}
             className="rounded-xl px-8 h-11 bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/20"
           >
-            {t("Reject Property")}
+            {t("rejectProperty")}
           </Button>
         </div>
       </div>

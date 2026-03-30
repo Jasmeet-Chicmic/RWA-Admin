@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
-import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { SORT_DIRECTION, SORT_DIRECTIONS } from "@/shared/types";
+import { ChevronDown, ChevronsUpDown, ChevronUp } from "lucide-react";
+import React from "react";
 
 export interface TableColumn<T> {
   title: string | React.ReactNode;
@@ -92,7 +92,7 @@ export function Table<T>({
       }
     >
       <table className="w-full divide-y divide-bordercolor1 dark:divide-bordercolor2 dark:bg-darkbgprimary">
-        <thead className="bg-transparent">
+        <thead className="bg-gray-50/70 dark:bg-labelprimary/40">
           <tr>
             {!hideSelectCol && (
               <th
@@ -155,9 +155,9 @@ export function Table<T>({
                         ? { right: 0 }
                         : {}
                   }
-                  className={`py-[10px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap ${
+                  className={`py-[12px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap ${
                     index === columns.length - 1 ? "text-right" : "text-left"
-                  } text-[0.875rem] sm:text-[0.875rem] font-bold text-[#3d3d3d] dark:text-bgwhite dark:hover:text-white tracking-widest ${
+                  } text-[0.8125rem] sm:text-[0.875rem] font-semibold uppercase text-[#4b5563] dark:text-white/90 tracking-[0.06em] ${
                     column.width ? column.width : ""
                   } ${column.sortable ? "cursor-pointer select-none hover:text-darkbgprimary transition-colors" : ""} ${stickyClass}`}
                 >
@@ -271,7 +271,7 @@ export function Table<T>({
                             ? { right: 0 }
                             : {}
                       }
-                      className={`py-[10px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap text-[14px] text-textprimary dark:text-sidebartext ${
+                      className={`py-[11px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap text-[0.9375rem] leading-[1.45] font-medium text-textprimary dark:text-sidebartext ${
                         index === columns.length - 1
                           ? "text-right"
                           : "text-left"

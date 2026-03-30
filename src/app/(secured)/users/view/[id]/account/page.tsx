@@ -48,7 +48,7 @@ const AccountPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 dark:text-red-400 mb-2">
-            {t("User not found")}
+            {t("userNotFound")}
           </p>
         </div>
       </div>

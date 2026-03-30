@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState, useTransition } from "react";
 import { toast } from "react-toastify";
 
 import {
-  getAdminOrganisationsAction,
   AdminOrganisation,
+  getAdminOrganisationsAction,
 } from "@/api/adminOrganisations";
 import { assignPropertyToOrganisationAction } from "@/api/allPropertiesActions";
 import AsyncSelect, {
@@ -65,7 +65,7 @@ const AssignLLCModal = ({
 
   const handleConfirm = () => {
     if (!selectedOrganisation) {
-      toast.error(t("Please select an organisation"));
+      toast.error(t("pleaseSelectAnOrganisation"));
       return;
     }
 
@@ -77,7 +77,7 @@ const AssignLLCModal = ({
         );
 
         if (res.status) {
-          toast.success(t("Property assigned successfully"));
+          toast.success(t("propertyAssignedSuccessfully"));
           onSuccess();
           onClose();
         } else {
@@ -98,7 +98,7 @@ const AssignLLCModal = ({
         <div className="px-6 py-4 border-b border-bordergray200 dark:border-darkbordercolor1 flex items-center justify-between bg-gray-50/50 dark:bg-white/5">
           <div>
             <h3 className="text-lg font-bold text-bgblack dark:text-white">
-              {t("Assign Modal Title")}
+              {t("assignModalTitle")}
             </h3>
             <p className="text-sm text-textprimary dark:text-secondary truncate max-w-[300px]">
               {propertyName}
@@ -116,10 +116,10 @@ const AssignLLCModal = ({
         <div className="p-6 space-y-5">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-bgblack dark:text-white">
-              {t("Assign Company Label")}
+              {t("assignCompanyLabel")}
             </label>
             <AsyncSelect
-              placeholder={t("Select LLC")}
+              placeholder={t("assignModalDescription")}
               getData={fetchOrganisations}
               onChange={(val) => setSelectedOrganisation(val as OptionType)}
               value={selectedOrganisation}
@@ -135,7 +135,7 @@ const AssignLLCModal = ({
             disabled={isPending}
             className="rounded-xl px-6 h-11"
           >
-            {t("Cancel")}
+            {t("cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -143,7 +143,7 @@ const AssignLLCModal = ({
             disabled={!selectedOrganisation}
             className="rounded-xl px-8 h-11 bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20"
           >
-            {t("Assign")}
+            {t("assign")}
           </Button>
         </div>
       </div>

@@ -1,3 +1,7 @@
+/**
+ * This API route is intentionally server-side only.
+ * Reason: server-side DTO shaping for async-select options.
+ */
 import { NextRequest, NextResponse } from "next/server";
 
 import { getUsersAction } from "@/api/user";

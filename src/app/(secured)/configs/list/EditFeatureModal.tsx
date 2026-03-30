@@ -21,7 +21,7 @@ const EditFeatureModal = ({
   feature,
   onSuccess,
 }: EditFeatureModalProps) => {
-  const t = useTranslations("users.EditFeatureModal");
+  const t = useTranslations("users.editFeatureModal");
   const [isSaving, setIsSaving] = useState(false);
   const [isUnlimited, setIsUnlimited] = useState(false);
   const [value, setValue] = useState<number | null>(null);
@@ -54,15 +54,15 @@ const EditFeatureModal = ({
 
       const res = await updateDefaultFeaturesAction(payload);
       if (res.status) {
-        toast.success(res.message || t("Save Success"));
+        toast.success(res.message || t("saveSuccess"));
         onSuccess();
         onClose();
       } else {
-        toast.error(res.message || t("Save Error"));
+        toast.error(res.message || t("saveError"));
       }
     } catch (error) {
       console.error("Error updating feature:", error);
-      toast.error(t("Save Error"));
+      toast.error(t("saveError"));
     } finally {
       setIsSaving(false);
     }
@@ -71,11 +71,11 @@ const EditFeatureModal = ({
   if (!feature) return null;
 
   return (
-    <CustomModal isOpen={isOpen} onClose={onClose} title={t("Title")} size="md">
+    <CustomModal isOpen={isOpen} onClose={onClose} title={t("title")} size="md">
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-textprimary dark:text-sidebartext mb-1">
-            {t("Feature Name")}
+            {t("featureName")}
           </label>
           <div className="px-4 py-2 bg-gray-50 dark:bg-darkbgsecondary rounded-lg text-sm text-gray-600 dark:text-gray-400 border border-bordercolor1 dark:border-darkbordercolor1">
             {feature.displayName}
@@ -84,7 +84,7 @@ const EditFeatureModal = ({
 
         <div>
           <label className="block text-sm font-medium text-textprimary dark:text-sidebartext mb-3">
-            {t("Value")}
+            {t("value")}
           </label>
           <div className="flex rounded-lg overflow-hidden border border-bordercolor1 dark:border-darkbordercolor1 mb-3">
             <button
@@ -96,7 +96,7 @@ const EditFeatureModal = ({
               }`}
             >
               <Infinity size={18} />
-              {t("Unlimited")}
+              {t("unlimited")}
             </button>
             <button
               onClick={() => setIsUnlimited(false)}
@@ -107,7 +107,7 @@ const EditFeatureModal = ({
               }`}
             >
               <Hash size={18} />
-              {t("Custom")}
+              {t("custom")}
             </button>
           </div>
 
@@ -118,7 +118,7 @@ const EditFeatureModal = ({
               onChange={(e) =>
                 setValue(e.target.value === "" ? null : Number(e.target.value))
               }
-              placeholder={t("Value")}
+              placeholder={t("value")}
               className={`w-full px-4 py-2.5 rounded-xl border bg-transparent text-textprimary dark:text-bgwhite focus:outline-none focus:ring-2 transition-all ${
                 isInvalid
                   ? "border-red-500 focus:ring-red-500/30"
@@ -130,7 +130,7 @@ const EditFeatureModal = ({
 
         <div>
           <label className="block text-sm font-medium text-textprimary dark:text-sidebartext mb-3">
-            {t("Basic User Rights")}
+            {t("basicUserRights")}
           </label>
           <div className="flex items-center gap-6">
             <label className="flex items-center gap-2 cursor-pointer group">
@@ -145,7 +145,7 @@ const EditFeatureModal = ({
                 <div className="absolute w-2.5 h-2.5 rounded-full bg-primarycolor dark:bg-white/80 scale-0 peer-checked:scale-100 transition-transform" />
               </div>
               <span className="text-sm font-medium text-textprimary dark:text-sidebartext group-hover:text-primarycolor dark:group-hover:text-secondarycolor transition-colors">
-                {t("Yes")}
+                {t("yes")}
               </span>
             </label>
 
@@ -161,7 +161,7 @@ const EditFeatureModal = ({
                 <div className="absolute w-2.5 h-2.5 rounded-full bg-primarycolor dark:bg-white/80 scale-0 peer-checked:scale-100 transition-transform" />
               </div>
               <span className="text-sm font-medium text-textprimary dark:text-sidebartext group-hover:text-primarycolor dark:group-hover:text-secondarycolor transition-colors">
-                {t("No")}
+                {t("no")}
               </span>
             </label>
           </div>
@@ -178,7 +178,7 @@ const EditFeatureModal = ({
             ) : (
               <Save size={18} />
             )}
-            {t("Save Changes")}
+            {t("saveChanges")}
           </button>
         </div>
       </div>

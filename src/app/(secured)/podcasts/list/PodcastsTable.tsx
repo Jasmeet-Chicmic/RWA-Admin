@@ -94,7 +94,7 @@ const PodcastsTable = ({
       const description = data.description?.trim();
 
       if (!mediaUrl) {
-        toast.error(t("Media URL is required"));
+        toast.error(t("mediaUrlIsRequired"));
         return;
       }
 
@@ -114,20 +114,20 @@ const PodcastsTable = ({
         if (!ok) {
           toast.error(
             (res as { message?: string })?.message ||
-              t("Failed to create podcast"),
+              t("failedToCreatePodcast"),
           );
           return;
         }
 
         toast.success(
           (res as { message?: string })?.message ||
-            t("Podcast created successfully"),
+            t("podcastCreatedSuccessfully"),
         );
         setIsCreateOpen(false);
         router.refresh();
       } catch (error) {
         console.error("Failed to create podcast", error);
-        toast.error(t("Failed to create podcast"));
+        toast.error(t("failedToCreatePodcast"));
       } finally {
         setIsCreating(false);
       }
@@ -145,18 +145,17 @@ const PodcastsTable = ({
         router.refresh();
         if (res && typeof res === "object" && "status" in res && !res.status) {
           toast.error(
-            (res as { message?: string }).message ||
-              t("Failed to delete podcast"),
+            (res as { message?: string }).message || t("failedToDeletePodcast"),
           );
         } else {
           toast.success(
             (res as { message?: string })?.message ||
-              t("Podcast deleted successfully"),
+              t("podcastDeletedSuccessfully"),
           );
         }
       } catch (error) {
         console.error("Failed to delete podcast", error);
-        toast.error(t("Failed to delete podcast"));
+        toast.error(t("failedToDeletePodcast"));
       } finally {
         setDeletingId(null);
       }
@@ -184,7 +183,7 @@ const PodcastsTable = ({
         if (!ok) {
           toast.error(
             (res as { message?: string })?.message ||
-              t("Failed to update podcast status"),
+              t("failedToUpdatePodcastStatus"),
           );
           return;
         }
@@ -192,13 +191,13 @@ const PodcastsTable = ({
         toast.success(
           (res as { message?: string })?.message ||
             (episode.isActive
-              ? t("Podcast disabled successfully")
-              : t("Podcast enabled successfully")),
+              ? t("podcastDisabledSuccessfully")
+              : t("podcastEnabledSuccessfully")),
         );
         router.refresh();
       } catch (error) {
         console.error("Failed to toggle podcast status", error);
-        toast.error(t("Failed to update podcast status"));
+        toast.error(t("failedToUpdatePodcastStatus"));
       } finally {
         setTogglingId(null);
       }
@@ -215,7 +214,7 @@ const PodcastsTable = ({
       const description = data.description?.trim();
 
       if (!mediaUrl) {
-        toast.error(t("Media URL is required"));
+        toast.error(t("mediaUrlIsRequired"));
         return;
       }
 
@@ -236,20 +235,20 @@ const PodcastsTable = ({
         if (!ok) {
           toast.error(
             (res as { message?: string })?.message ||
-              t("Failed to update podcast"),
+              t("failedToUpdatePodcast"),
           );
           return;
         }
 
         toast.success(
           (res as { message?: string })?.message ||
-            t("Podcast updated successfully"),
+            t("podcastUpdatedSuccessfully"),
         );
         setEditModal({ open: false, episode: null });
         router.refresh();
       } catch (error) {
         console.error("Failed to update podcast", error);
-        toast.error(t("Failed to update podcast"));
+        toast.error(t("failedToUpdatePodcast"));
       } finally {
         setIsUpdating(false);
       }
@@ -266,16 +265,16 @@ const PodcastsTable = ({
             <h2
               className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
             >
-              {t("Podcasts")}
+              {t("podcasts")}
             </h2>
             <p className="text-[14px] font-medium text-gray-500">
-              {t("Header subtitle")}
+              {t("headerSubtitle")}
             </p>
           </div>
           <div className="flex items-initial space-x-4">
             <SearchToolbar
               initialQuery={searchString}
-              placeholder={t("Search Podcasts")}
+              placeholder={t("searchPodcasts")}
             />
             <button
               type="button"
@@ -283,7 +282,7 @@ const PodcastsTable = ({
               className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
             >
               <Plus size={18} />
-              <span>{t("Create")}</span>
+              <span>{t("create")}</span>
             </button>
             {/* <button
               type="button"
@@ -291,7 +290,7 @@ const PodcastsTable = ({
               className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
             >
               <Menu size={18} />
-              <span>{t("Filters")}</span>
+              <span>{t("filters")}</span>
             </button> */}
           </div>
         </div>
@@ -300,19 +299,17 @@ const PodcastsTable = ({
       <FilterSidebar
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t("Podcast Filters")}
+        title={t("podcastFilters")}
         footer={null}
       >
-        <p className="text-sm text-gray-600">
-          {t("Filter sidebar description")}
-        </p>
+        <p className="text-sm text-gray-600">{t("filterSidebarDescription")}</p>
       </FilterSidebar>
 
       {/* List-style podcast items with embedded players */}
       <div className="bg-bgwhite dark:bg-darkbgprimary rounded-b-[20px] shadow-sm p-[15px] lg:px-6 lg:py-6 space-y-6 lg:space-y-5">
         {data.length === 0 ? (
           <div className="text-center text-gray-500 py-10">
-            {t("No podcasts found")}
+            {t("noPodcastsFound")}
           </div>
         ) : (
           data.map((episode) => (
@@ -333,7 +330,7 @@ const PodcastsTable = ({
                   />
                 ) : (
                   <div className="rounded-xl w-full h-[200px] bg-gray-100 flex items-center justify-center text-gray-500 text-sm">
-                    {t("Media URL invalid message")}
+                    {t("mediaUrlInvalidMessage")}
                   </div>
                 )}
               </div>
@@ -367,7 +364,7 @@ const PodcastsTable = ({
                     }
                     className="px-3 py-1.5 rounded-full border border-gray-300 text-xs font-semibold text-gray-600 dark:text-white/80 dark:hover:text-black/80 hover:bg-gray-50"
                   >
-                    {t("Edit")}
+                    {t("edit")}
                   </button>
                   <button
                     type="button"
@@ -385,10 +382,10 @@ const PodcastsTable = ({
                     disabled={togglingId === episode.id}
                   >
                     {togglingId === episode.id
-                      ? t("Updating")
+                      ? t("updating")
                       : episode.isActive
-                        ? t("Disable")
-                        : t("Enable")}
+                        ? t("disable")
+                        : t("enable")}
                   </button>
                   <button
                     type="button"
@@ -401,7 +398,7 @@ const PodcastsTable = ({
                     className="px-3 py-1.5 rounded-full border border-red-500 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50"
                     disabled={deletingId === episode.id}
                   >
-                    {deletingId === episode.id ? t("Deleting") : t("Delete")}
+                    {deletingId === episode.id ? t("deleting") : t("delete")}
                   </button>
                 </div>
               </div>
@@ -430,7 +427,7 @@ const PodcastsTable = ({
           if (isCreating) return;
           setIsCreateOpen(false);
         }}
-        title={t("Create Podcast")}
+        title={t("createPodcast")}
         size="md"
       >
         <FormBuilder<CreatePodcastFormValues>
@@ -438,36 +435,36 @@ const PodcastsTable = ({
             {
               type: FORM_FIELDS_TYPES.TEXT,
               name: "title",
-              label: t("Title"),
-              placeholder: t("Enter podcast title (optional)"),
+              label: t("title"),
+              placeholder: t("enterPodcastTitleOptional"),
             },
             {
               type: FORM_FIELDS_TYPES.TEXTAREA,
               name: "description",
-              label: t("Description"),
-              placeholder: t("Enter podcast description (optional)"),
+              label: t("description"),
+              placeholder: t("enterPodcastDescriptionOptional"),
             },
             {
               type: FORM_FIELDS_TYPES.TEXT,
               name: "mediaUrl",
-              label: t("Media URL"),
-              placeholder: t("Paste podcast embed URL"),
+              label: t("mediaUrl"),
+              placeholder: t("pastePodcastEmbedUrl"),
               validation: {
-                required: t("Media URL is required"),
+                required: t("mediaUrlIsRequired"),
                 pattern: {
                   value: /^https?:\/\/.+$/i,
-                  message: t("URL pattern error"),
+                  message: t("urlPatternError"),
                 },
               },
             },
           ]}
           onSubmit={handleCreatePodcast}
-          submitText={isCreating ? t("Creating") : t("Create Podcast")}
+          submitText={isCreating ? t("creating") : t("createPodcast")}
           isLoading={isCreating}
           scrollable={false}
           secondaryAction={
             <span className="text-sm font-medium text-labelprimary dark:text-darklabelprimary">
-              {t("Cancel")}
+              {t("cancel")}
             </span>
           }
           onSecondaryAction={() => {
@@ -485,7 +482,7 @@ const PodcastsTable = ({
             if (isUpdating) return;
             setEditModal({ open: false, episode: null });
           }}
-          title={t("Edit Podcast")}
+          title={t("editPodcast")}
           size="md"
         >
           <FormBuilder<CreatePodcastFormValues>
@@ -498,36 +495,36 @@ const PodcastsTable = ({
               {
                 type: FORM_FIELDS_TYPES.TEXT,
                 name: "title",
-                label: t("Title"),
-                placeholder: t("Enter podcast title (optional)"),
+                label: t("title"),
+                placeholder: t("enterPodcastTitleOptional"),
               },
               {
                 type: FORM_FIELDS_TYPES.TEXTAREA,
                 name: "description",
-                label: t("Description"),
-                placeholder: t("Enter podcast description (optional)"),
+                label: t("description"),
+                placeholder: t("enterPodcastDescriptionOptional"),
               },
               {
                 type: FORM_FIELDS_TYPES.TEXT,
                 name: "mediaUrl",
-                label: t("Media URL"),
-                placeholder: t("Paste podcast embed URL"),
+                label: t("mediaUrl"),
+                placeholder: t("pastePodcastEmbedUrl"),
                 validation: {
-                  required: t("Media URL is required"),
+                  required: t("mediaUrlIsRequired"),
                   pattern: {
                     value: /^https?:\/\/.+$/i,
-                    message: t("URL pattern error"),
+                    message: t("urlPatternError"),
                   },
                 },
               },
             ]}
             onSubmit={handleUpdatePodcast}
-            submitText={isUpdating ? t("Saving") : t("Save Changes")}
+            submitText={isUpdating ? t("saving") : t("saveChanges")}
             isLoading={isUpdating}
             scrollable={false}
             secondaryAction={
               <span className="text-sm font-medium text-labelprimary dark:text-darklabelprimary">
-                {t("Cancel")}
+                {t("cancel")}
               </span>
             }
             onSecondaryAction={() => {
@@ -550,8 +547,8 @@ const PodcastsTable = ({
           await handleDeletePodcast(deleteModal.id);
           setDeleteModal({ open: false, id: null });
         }}
-        title={t("Delete Podcast")}
-        message={t("Delete Podcast confirmation")}
+        title={t("deletePodcast")}
+        message={t("deletePodcastConfirmation")}
         isLoading={!!deletingId}
       />
 
@@ -570,13 +567,13 @@ const PodcastsTable = ({
           }}
           title={
             statusModal.episode.isActive
-              ? t("Disable Podcast")
-              : t("Enable Podcast")
+              ? t("disablePodcast")
+              : t("enablePodcast")
           }
           message={
             statusModal.episode.isActive
-              ? t("Disable Podcast confirmation")
-              : t("Enable Podcast confirmation")
+              ? t("disablePodcastConfirmation")
+              : t("enablePodcastConfirmation")
           }
           isLoading={!!togglingId}
         />

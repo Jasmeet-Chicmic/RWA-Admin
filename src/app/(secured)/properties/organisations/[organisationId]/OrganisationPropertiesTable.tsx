@@ -1,40 +1,78 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
+import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
-import { AdminProperty, PropertyStatus } from "../../helpers/types";
-import { TokenizationModal } from "./TokenizationModal";
+import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchOrganisationProperties } from "@/store/propertiesSlice";
 import { PropertyItem } from "../../helpers/allPropertiesTypes";
 import {
   PROPERTY_STATUS_BADGE_CLASSES,
   PROPERTY_STATUS_LABELS,
   PROPERTY_TYPE_LABELS,
 } from "../../helpers/propertiesConstants";
-import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
+import { AdminProperty, PropertyStatus } from "../../helpers/types";
+import { TokenizationModal } from "./TokenizationModal";
 
 type PropertyData = PropertyItem | AdminProperty;
+type OrganisationPropertiesDeps = {
+  skip: number;
+  limitRaw: string | null;
+  pageSize: number;
+  page: number;
+  status: number | null;
+  search: string | null;
+};
+
+function buildOrganisationPropertiesDeps(
+  searchParams: ReturnType<typeof useSearchParams>,
+): OrganisationPropertiesDeps {
+  const params = new URLSearchParams(searchParams.toString());
+  const limitRaw = params.get("limit");
+  const skipRaw = params.get("skip");
+  const statusRaw = params.get("status");
+  const searchRaw = params.get("search");
+  const pageSize = limitRaw ? Number(limitRaw) : 10;
+  const skip = skipRaw ? Number(skipRaw) : 0;
+  const page = Math.floor(skip / pageSize) + 1;
+  const status = statusRaw ? Number(statusRaw) : null;
+  const search = searchRaw ? searchRaw : null;
+
+  return {
+    skip,
+    limitRaw,
+    pageSize,
+    page,
+    status: Number.isFinite(status) ? status : null,
+    search,
+  };
+}
 
 const OrganisationPropertiesTable = ({
-  data,
-  totalCount,
   organisationId,
   hideActions = false,
 }: {
-  data: PropertyData[];
-  totalCount: number;
   organisationId: string;
   hideActions?: boolean;
 }) => {
   const t = useTranslations("properties");
+  const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
+  const { items, totalCount } = useAppSelector(
+    (state) => state.properties.organisation,
+  );
+  const lastRequestKeyRef = useRef<string | null>(null);
 
   const [tokenizationModalOpen, setTokenizationModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] =
@@ -44,7 +82,6 @@ const OrganisationPropertiesTable = ({
   >({});
 
   const openTokenization = (property: PropertyData) => {
-    console.log("property data from api", property);
     setSelectedProperty(property as AdminProperty);
     setTokenizationModalOpen(true);
   };
@@ -60,13 +97,40 @@ const OrganisationPropertiesTable = ({
         ...prev,
         [propertyId]: true,
       }));
-      toast.success(t("Distributed success"));
+      toast.success(t("distributedSuccess"));
     },
     [t],
   );
 
   const formatCurrency = (value: number) =>
     formatDisplayCurrency(value, { maximumFractionDigits: 2 });
+
+  const combinedDeps = useMemo(
+    () => JSON.stringify(buildOrganisationPropertiesDeps(searchParams)),
+    [searchParams],
+  );
+  const debouncedDeps = useDebounce(combinedDeps, 300);
+
+  const requestPayload = useMemo(() => {
+    try {
+      const parsed = JSON.parse(debouncedDeps) as OrganisationPropertiesDeps;
+      return {
+        page: parsed.page,
+        pageSize: parsed.pageSize,
+        ...(typeof parsed.status === "number" ? { status: parsed.status } : {}),
+        ...(parsed.search ? { search: parsed.search } : {}),
+      };
+    } catch {
+      return null;
+    }
+  }, [debouncedDeps]);
+
+  useEffect(() => {
+    if (!requestPayload) return;
+    if (lastRequestKeyRef.current === debouncedDeps) return;
+    lastRequestKeyRef.current = debouncedDeps;
+    dispatch(fetchOrganisationProperties(requestPayload));
+  }, [debouncedDeps, dispatch, requestPayload]);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "—";
@@ -80,7 +144,7 @@ const OrganisationPropertiesTable = ({
   const config: DataTableConfig<PropertyData> = useMemo(() => {
     const columns: TableColumn<PropertyData>[] = [
       {
-        title: t("Property Name"),
+        title: t("propertyName"),
         field: "name",
         render: (item) => (
           <span className={`font-medium line-clamp-2 ${TEXT_PRIMARY}`}>
@@ -89,7 +153,7 @@ const OrganisationPropertiesTable = ({
         ),
       },
       {
-        title: t("Location"),
+        title: t("location"),
         field: "location",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -98,7 +162,7 @@ const OrganisationPropertiesTable = ({
         ),
       },
       {
-        title: t("Property Type"),
+        title: t("propertyType"),
         field: "propertyType",
         render: (item) => {
           const typeLabel =
@@ -115,7 +179,7 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
-        title: t("Status.label"),
+        title: t("status.label"),
         field: "status",
         render: (item) => {
           const baseClass =
@@ -136,7 +200,7 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
-        title: t("Total Value"),
+        title: t("totalValue"),
         field: "",
         render: (item) => {
           const value =
@@ -150,7 +214,7 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
-        title: t("Annual Yield"),
+        title: t("annualYield"),
         field: "",
         render: (item) => {
           const yieldVal =
@@ -166,7 +230,7 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
-        title: t("Price Per Share"),
+        title: t("pricePerShare"),
         field: "",
         render: (item) => {
           const price = (item as PropertyItem).pricePerShare;
@@ -180,7 +244,7 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
-        title: t("Created At"),
+        title: t("createdAt"),
         field: "",
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
@@ -192,7 +256,7 @@ const OrganisationPropertiesTable = ({
 
     if (!hideActions) {
       columns.push({
-        title: t("Actions"),
+        title: t("actions"),
         field: "",
         render: (item) => {
           const isActiveProperty = item.status === PropertyStatus.Active;
@@ -222,9 +286,9 @@ const OrganisationPropertiesTable = ({
               >
                 {isActiveProperty
                   ? isDistributed
-                    ? t("Distributed")
-                    : t("Distribute")
-                  : t("Tokenization")}
+                    ? t("distributed")
+                    : t("distribute")
+                  : t("tokenization")}
               </button>
             </div>
           );
@@ -235,15 +299,15 @@ const OrganisationPropertiesTable = ({
     return {
       columns,
       keyExtractor: (item) => item.id,
-      paginationTitle: t("Organisation Properties Title"),
+      paginationTitle: t("organisationPropertiesTitle"),
       hideSelectCol: true,
-      emptyMessage: t("No properties found"),
+      emptyMessage: t("noPropertiesFound"),
     };
   }, [distributedPropertyIds, t, handleDistribute, hideActions]);
 
   return (
     <>
-      <DataTable data={data} totalCount={totalCount} config={config} />
+      <DataTable data={items} totalCount={totalCount} config={config} />
       <TokenizationModal
         open={tokenizationModalOpen}
         onClose={closeTokenization}

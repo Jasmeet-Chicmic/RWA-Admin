@@ -14,21 +14,21 @@ type Props = {
 export function EducationSection({ educationList }: Props) {
   const t = useTranslations("users");
   const formatEducationDate = (dateString: string | null) =>
-    formatMonthYear(dateString, t("N/A"));
+    formatMonthYear(dateString, t("nA"));
 
   return (
     <div className="bg-bgwhite rounded-lg shadow p-6 dark:bg-darkbgprimary dark:border-darkbordercolor1 border border-bordercolor1">
       <div className="flex items-center gap-2 mb-6">
         <GraduationCap className="w-5 h-5 text-primarycolor dark:text-white" />
         <h3 className="text-lg font-semibold text-textprimary dark:text-sidebartext">
-          {t("Education")}
+          {t("education")}
         </h3>
       </div>
 
       {educationList.length === 0 ? (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           <GraduationCap className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p>{t("No education information available")}</p>
+          <p>{t("noEducationInformationAvailable")}</p>
         </div>
       ) : (
         <div className="space-y-4 max-h-[400px] overflow-y-auto overflow-x-hidden pr-1 custom-scrollbar">
@@ -85,7 +85,7 @@ export function EducationSection({ educationList }: Props) {
                           {formatEducationDate(edu.startDate)}
                           {edu.endDate &&
                             ` - ${formatEducationDate(edu.endDate)}`}
-                          {!edu.endDate && ` - ${t("Present")}`}
+                          {!edu.endDate && ` - ${t("present")}`}
                         </span>
                       </div>
                     </div>
@@ -93,7 +93,7 @@ export function EducationSection({ educationList }: Props) {
                     {edu.grade && (
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         <span className="font-medium">
-                          {t("Grade")}
+                          {t("grade")}
                           {": "}
                         </span>
                         {edu.grade}

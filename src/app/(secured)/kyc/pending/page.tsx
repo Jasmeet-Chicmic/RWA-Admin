@@ -38,7 +38,7 @@ const PendingKycPage = async ({
   } catch (error) {
     console.error("Error fetching pending kyc:", error);
     const t = await getTranslations("common");
-    return <ErrorState title={t("KYC")} />;
+    return <ErrorState title={t("kyc")} />;
   }
 };
 
