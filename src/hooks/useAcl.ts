@@ -40,7 +40,10 @@ export function useACL() {
   const hasAccess = (route: string): boolean =>
     isRouteAllowed(route, currentAllowedRoutes);
 
-  const can = (_action: AclAction, _resource: string): boolean => {
+  const can = (action: AclAction, resource: string): boolean => {
+    // Parameters are part of the ACL API; we don't enforce permissions yet.
+    void action;
+    void resource;
     return isResolved;
   };
 

@@ -74,12 +74,6 @@ const clampShares = (val: string) => {
   if (!Number.isFinite(n)) return "";
   return String(Math.min(n, 10000));
 };
-const decimalOnly = (val: string) => {
-  // allow digits and one decimal point; strip minus/exponent/etc
-  const cleaned = val.replace(/[^0-9.]/g, "");
-  const [head, ...rest] = cleaned.split(".");
-  return rest.length > 0 ? `${head}.${rest.join("")}` : head;
-};
 
 const preventNegativeAndExponent: React.KeyboardEventHandler<
   HTMLInputElement

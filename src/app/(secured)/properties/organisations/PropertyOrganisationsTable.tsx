@@ -33,7 +33,6 @@ const PropertyOrganisationsTable = ({
   totalCount: number;
 }) => {
   const t = useTranslations("properties");
-  const tCommon = useTranslations("common");
 
   const config: DataTableConfig<OrganisationRow> = useMemo(() => {
     const columns: TableColumn<OrganisationRow>[] = [
@@ -133,7 +132,7 @@ const PropertyOrganisationsTable = ({
         </div>
       ),
     };
-  }, [t, tCommon]);
+  }, [t]);
 
   return <DataTable data={data} totalCount={totalCount} config={config} />;
 };

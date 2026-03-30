@@ -20,11 +20,7 @@ interface DashboardStatsChartsProps {
 }
 
 const DashboardStatsCharts = ({
-  retentionData,
-  subscriptionAnalytics,
   propertiesDetails,
-  initialFromDate = "",
-  initialToDate = "",
 }: DashboardStatsChartsProps) => {
   const t = useTranslations("dashboard");
 
