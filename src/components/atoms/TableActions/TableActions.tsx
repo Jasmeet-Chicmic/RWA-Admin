@@ -1,7 +1,8 @@
 "use client";
 
+import CustomMenu from "@/components/atoms/Menu/Menu";
 import { MoreVertical } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 export type TableActionItem = {
   id: string;
@@ -25,35 +26,6 @@ const TableActions = ({
   displayMode = "inline",
   ariaLabel = "Table row actions",
 }: TableActionsProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleOutsideClick = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (!dropdownRef.current?.contains(target)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [isOpen]);
-
   if (displayMode === "inline") {
     return (
       <div
@@ -78,41 +50,31 @@ const TableActions = ({
   }
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
-      <button
-        ref={triggerRef}
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-label={ariaLabel}
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="inline-flex items-center justify-center rounded-md p-2 text-textprimary hover:bg-gray-100 dark:text-sidebartext dark:hover:bg-labelprimary"
-      >
-        <MoreVertical size={16} />
-      </button>
-      {isOpen && (
-        <div
-          role="menu"
-          className="absolute right-0 z-40 mt-2 min-w-[180px] rounded-lg border border-bordergray200 bg-bgwhite p-1 shadow-md dark:border-darkbordercolor1 dark:bg-darkbgprimary"
-        >
-          {actions.map((action) => (
-            <button
-              key={action.id}
-              type="button"
-              role="menuitem"
-              disabled={action.disabled}
-              onClick={() => {
-                action.onClick();
-                setIsOpen(false);
-              }}
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-textprimary hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-sidebartext dark:hover:bg-labelprimary"
+    <div className="inline-flex">
+      <CustomMenu
+        menuButton={
+          <button
+            type="button"
+            aria-label={ariaLabel}
+            className="inline-flex items-center justify-center rounded-md p-2 text-textprimary hover:bg-gray-100 dark:text-sidebartext dark:hover:bg-labelprimary"
+          >
+            <MoreVertical size={16} />
+          </button>
+        }
+        items={actions.map((action) => ({
+          label: (
+            <span
+              className={`flex items-center gap-2 ${action.className || "text-textprimary dark:text-sidebartext"}`}
             >
               {action.icon}
-              <span>{action.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
+              {action.label}
+            </span>
+          ),
+          onClick: action.onClick,
+          disabled: action.disabled,
+        }))}
+        itemClassName="!px-3 !py-2 !text-left !text-sm"
+      />
     </div>
   );
 };

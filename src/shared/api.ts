@@ -133,7 +133,7 @@ export const API_END_POINTS = {
   GROUPS_ALERT_INACTIVE: `/network/api/admin/groups`,
 
   // Admin Transactions
-  ADMIN_TRANSACTIONS: `/payment/api/admin/transactions`,
+  ADMIN_TRANSACTIONS: `/admin/transactions`,
 
   // Admin Subscriptions
   ADMIN_SUBSCRIPTIONS: `/payment/api/admin/subscriptions`,

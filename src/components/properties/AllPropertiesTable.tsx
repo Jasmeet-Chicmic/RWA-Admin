@@ -3,6 +3,7 @@
 import { useDebounce } from "@/hooks/useDebounce";
 import { ChevronDown, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -24,6 +25,10 @@ import AssignLLCModal from "@/app/(secured)/properties/modals/AssignLLCModal";
 import RejectPropertyModal from "@/app/(secured)/properties/modals/RejectPropertyModal";
 import Pagination from "@/components/atoms/Pagination";
 import Table, { TableColumn } from "@/components/atoms/Table/Table";
+import TableActions, {
+  TableActionDisplayMode,
+  TableActionItem,
+} from "@/components/atoms/TableActions";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAllProperties } from "@/store/propertiesSlice";
@@ -64,6 +69,7 @@ const AllPropertiesTable = ({
   hideStatusFilter?: boolean;
 }) => {
   const t = useTranslations("properties");
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { items, totalCount, isLoading } = useAppSelector(
     (state) => state.properties.all,
@@ -88,6 +94,9 @@ const AllPropertiesTable = ({
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [isAssignLLCModalOpen, setIsAssignLLCModalOpen] = useState(false);
   const lastRequestKeyRef = useRef<string | null>(null);
+  const actionsDisplayMode: TableActionDisplayMode = "dropdown";
+  const shouldShowStatusFilter = hideStatusFilter === false;
+  const hasStatusFilterNumber = typeof statusFilterNumber === "number";
 
   const combinedDeps = useMemo(
     () =>
@@ -155,20 +164,20 @@ const AllPropertiesTable = ({
     setCurrentPage(1);
   };
 
-  const handleApprove = (item: PropertyItem) => {
+  const handleApprove = useCallback((item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsApproveModalOpen(true);
-  };
+  }, []);
 
-  const handleReject = (item: PropertyItem) => {
+  const handleReject = useCallback((item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsRejectModalOpen(true);
-  };
+  }, []);
 
-  const handleAssignLLC = (item: PropertyItem) => {
+  const handleAssignLLC = useCallback((item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsAssignLLCModalOpen(true);
-  };
+  }, []);
 
   const columns: TableColumn<PropertyItem>[] = useMemo(
     () => [
@@ -239,47 +248,66 @@ const AllPropertiesTable = ({
       {
         title: t("actions"),
         field: "id" as keyof PropertyItem,
-        render: (item: PropertyItem) => (
-          <div className="flex items-center gap-2 justify-end">
-            {item.status === PROPERTY_STATUS.PENDING_APPROVAL ? (
-              <>
-                <button
-                  onClick={() => handleApprove(item)}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors"
-                >
-                  {t("approve")}
-                </button>
-                <button
-                  onClick={() => handleReject(item)}
-                  className="px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-bold hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
-                >
-                  {t("reject")}
-                </button>
-              </>
-            ) : item.status === PROPERTY_STATUS.ADMIN_APPROVED ? (
-              <button
-                onClick={() => handleAssignLLC(item)}
-                className="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors"
-              >
-                {t("assignToOrganization")}
-              </button>
-            ) : item.status === PROPERTY_STATUS.ACTIVE ? (
-              <button
-                onClick={() => handleReject(item)}
-                className="px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-bold hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
-              >
-                {t("disapprove")}
-              </button>
-            ) : (
-              <span className="text-xs text-textprimary dark:text-secondary italic">
-                {t("noActions")}
-              </span>
-            )}
-          </div>
-        ),
+        render: (item: PropertyItem) => {
+          const actions: TableActionItem[] = [
+            {
+              id: `property-details-${item.id}`,
+              label: t("propertyDetails"),
+              onClick: () => router.push(`/properties/${item.id}`),
+            },
+          ];
+
+          if (item.status === PROPERTY_STATUS.PENDING_APPROVAL) {
+            actions.push(
+              {
+                id: `approve-${item.id}`,
+                label: t("approve"),
+                onClick: () => handleApprove(item),
+                className: "text-emerald-600 dark:text-emerald-400",
+              },
+              {
+                id: `reject-${item.id}`,
+                label: t("reject"),
+                onClick: () => handleReject(item),
+                className: "text-red-600 dark:text-red-400",
+              },
+            );
+          } else if (item.status === PROPERTY_STATUS.ADMIN_APPROVED) {
+            actions.push({
+              id: `assign-${item.id}`,
+              label: t("assignToOrganization"),
+              onClick: () => handleAssignLLC(item),
+              className: "text-indigo-600 dark:text-indigo-400",
+            });
+          } else if (item.status === PROPERTY_STATUS.ACTIVE) {
+            actions.push({
+              id: `disapprove-${item.id}`,
+              label: t("disapprove"),
+              onClick: () => handleReject(item),
+              className: "text-red-600 dark:text-red-400",
+            });
+          }
+
+          return (
+            <div className="flex items-center justify-end">
+              <TableActions
+                displayMode={actionsDisplayMode}
+                actions={actions}
+                ariaLabel={t("actions")}
+              />
+            </div>
+          );
+        },
       },
     ],
-    [t],
+    [
+      actionsDisplayMode,
+      handleApprove,
+      handleAssignLLC,
+      handleReject,
+      router,
+      t,
+    ],
   );
 
   return (
@@ -296,13 +324,11 @@ const AllPropertiesTable = ({
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-            {!hideStatusFilter && (
+            {shouldShowStatusFilter && (
               <div className="relative">
                 <select
                   value={
-                    statusFilterNumber !== undefined
-                      ? String(statusFilterNumber)
-                      : ""
+                    hasStatusFilterNumber ? String(statusFilterNumber) : ""
                   }
                   onChange={(e) => handleStatusFilterChange(e.target.value)}
                   className="appearance-none pr-8 pl-4 py-3 w-full sm:w-[180px] dark:border-white/50 border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer"

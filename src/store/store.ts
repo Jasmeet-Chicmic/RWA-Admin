@@ -4,6 +4,7 @@ import authProfileReducer from "./authProfileSlice";
 import authFlowReducer from "./authSlice";
 import organisationsReducer from "./organisationsSlice";
 import propertiesReducer from "./propertiesSlice";
+import transactionsReducer from "./transactionsSlice";
 import usersReducer from "./usersSlice";
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     authFlow: authFlowReducer,
     organisations: organisationsReducer,
     properties: propertiesReducer,
+    transactions: transactionsReducer,
     users: usersReducer,
   },
 });

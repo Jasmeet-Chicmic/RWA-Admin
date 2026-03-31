@@ -9,6 +9,10 @@ export interface PropertyItem {
   approvedValuation: number;
   annualYieldPercentage: number | null;
   pricePerShare: number | null;
+  owner?: {
+    id?: string;
+    walletAddress?: string;
+  } | null;
   createdAt: string;
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { ReactNode, useEffect } from "react";
 import { X } from "lucide-react";
+import { ReactNode, useEffect } from "react";
 
 import CheckClickOutside from "@/components/atoms/CheckClickOutside";
 
@@ -43,13 +43,13 @@ const CustomModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 dark:bg-black/40 backdrop-blur-sm overflow-y-auto py-8">
+    <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center bg-black/20 dark:bg-black/40 backdrop-blur-sm overflow-y-auto py-4 sm:py-8">
       <CheckClickOutside
         onClick={onClose}
         className={clsx("w-full px-4 my-auto", sizeClassMap[size], className)}
       >
         <div
-          className={`bg-bgwhite dark:bg-darkbgprimary rounded-[20px] shadow-lg p-8 relative border border-bordercolor1 dark:border-bordercolor2 max-h-[90vh] flex flex-col ${className}`}
+          className={`bg-bgwhite dark:bg-darkbgprimary rounded-[20px] shadow-lg p-8 relative border border-bordercolor1 dark:border-bordercolor2 max-h-[90dvh] flex flex-col ${className}`}
           role="dialog"
           aria-modal="true"
         >
@@ -71,7 +71,7 @@ const CustomModal = ({
           )}
 
           {/* Modal Content */}
-          <div className="text-textparagraph dark:text-sidebartext/80 flex-1 min-h-0">
+          <div className="text-textparagraph dark:text-sidebartext/80 flex-1 min-h-0 overflow-y-auto">
             {children}
           </div>
         </div>

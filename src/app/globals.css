@@ -34,21 +34,29 @@
     border-radius: var(--radius-20);
   }
 
-  .lightbgbase {}
+  .lightbgbase {
+  }
 
-  .darkbgbase {}
+  .darkbgbase {
+  }
 
-  .bgwhite {}
+  .bgwhite {
+  }
 
-  .bgblack {}
+  .bgblack {
+  }
 
-  .bgpriamry {}
+  .bgpriamry {
+  }
 
-  .darkbgpriamry {}
+  .darkbgpriamry {
+  }
 
-  .primarycolor {}
+  .primarycolor {
+  }
 
-  .sidebartext {}
+  .sidebartext {
+  }
 }
 
 body {
@@ -67,7 +75,7 @@ p,
 input,
 span,
 a {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
 }
 
@@ -86,7 +94,7 @@ input {
 }
 
 button {
-  outline: none !important
+  outline: none !important;
 }
 
 .divider {
@@ -97,12 +105,12 @@ button {
   white-space: nowrap;
 }
 
-.swiper-pagination-bullets>span {
+.swiper-pagination-bullets > span {
   background-color: var(--bg-white-800);
   margin: 0px !important;
 }
 
-.swiper-pagination-bullets>span.active {
+.swiper-pagination-bullets > span.active {
   background-color: var(--background);
 }
 
@@ -204,7 +212,7 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C7FE1E;
+  background: #c7fe1e;
   border-radius: 10px;
 }
 
@@ -215,7 +223,7 @@ button {
 /* For Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #C7FE1E transparent;
+  scrollbar-color: #c7fe1e transparent;
 }
 
 .preview-main-content {
@@ -228,7 +236,7 @@ button {
   max-height: inherit !important;
 }
 
-@media only screen and (max-width:780px) {
+@media only screen and (max-width: 780px) {
   .custom-container {
     padding: 0px 15px;
   }

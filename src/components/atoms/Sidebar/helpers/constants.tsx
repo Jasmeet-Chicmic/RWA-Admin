@@ -1,5 +1,6 @@
 import {
   Building2,
+  CreditCard,
   // Crown,
   // FileText,
   LayoutDashboard,
@@ -202,12 +203,13 @@ export const navItems: NavItem[] = [
   //     },
   //   ],
   // },
-  // {
-  //   icon: CreditCard,
-  //   label: "Transactions",
-  //   path: ROUTES.TRANSACTIONS_LIST,
-  //   activePaths: [ROUTES.TRANSACTIONS_LIST],
-  // },
+  {
+    icon: CreditCard,
+    label: "common.transactions",
+    path: ROUTES.TRANSACTIONS_LIST,
+    activePaths: [ROUTES.TRANSACTIONS_LIST],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
+  },
   // {
   //   icon: Repeat,
   //   label: "Subscriptions",

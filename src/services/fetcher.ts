@@ -7,10 +7,26 @@ type ApiErrorShape = {
   statusCode?: number;
 };
 
+const DEFAULT_NETWORK_ERROR_MESSAGE =
+  "Network error. Please check your connection and try again.";
+
+const showNetworkErrorToast = async (message: string) => {
+  if (typeof window === "undefined") return;
+  const { toast } = await import("react-toastify");
+  toast.error(message || DEFAULT_NETWORK_ERROR_MESSAGE);
+};
+
 function toError(error: unknown): Error {
   if (error instanceof AxiosError) {
     const responseData = error.response?.data as ApiErrorShape | undefined;
-    const message = responseData?.message || error.message || "Request failed";
+    const isNetworkError = !error.response;
+    const message =
+      responseData?.message ||
+      (isNetworkError ? DEFAULT_NETWORK_ERROR_MESSAGE : error.message) ||
+      "Request failed";
+    if (isNetworkError) {
+      void showNetworkErrorToast(message);
+    }
     return new Error(message);
   }
 

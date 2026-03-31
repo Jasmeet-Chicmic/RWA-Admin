@@ -1,27 +1,16 @@
 "use client";
 
-import { useMemo } from "react";
-import { useTranslations } from "next-intl";
 import SelectFilter from "@/components/atoms/SelectFilter";
-import { PAYMENT_STATUS, SUBSCRIPTION_OWNER_TYPE } from "@/shared/constants";
-import AmountRangeFilter from "./AmountRangeFilter";
+import { PAYMENT_STATUS } from "@/shared/constants";
+import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 const TransactionFilters = () => {
   const t = useTranslations("transactions");
-
-  const ownerTypeOptions = useMemo(
-    () => [
-      {
-        label: t("user"),
-        value: String(SUBSCRIPTION_OWNER_TYPE.USER),
-      },
-      {
-        label: t("organisation"),
-        value: String(SUBSCRIPTION_OWNER_TYPE.ORGANISATION),
-      },
-    ],
-    [t],
-  );
+  const tCommon = useTranslations("common");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const statusOptions = useMemo(
     () => [
@@ -45,40 +34,56 @@ const TransactionFilters = () => {
     [t],
   );
 
-  const refundsOnlyOptions = useMemo(
-    () => [
-      { label: t("yes"), value: "true" },
-      { label: t("no"), value: "false" },
-    ],
-    [t],
-  );
-
-  const creditsOnlyOptions = useMemo(
-    () => [
-      { label: t("yes"), value: "true" },
-      { label: t("no"), value: "false" },
-    ],
-    [t],
-  );
-
   const LABEL_CLASS =
     "block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2";
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <label htmlFor="owner-type-filter" className={LABEL_CLASS}>
-          {t("ownerType")}
-        </label>
-        <SelectFilter
-          id="owner-type-filter"
-          paramName="ownerType"
-          options={ownerTypeOptions}
-          placeholder={t("selectOwnerType")}
-        />
-      </div>
+  const fromDateParam = searchParams.get("fromDate");
+  const toDateParam = searchParams.get("toDate");
+  const fromDateValue = fromDateParam
+    ? new Date(fromDateParam).toISOString().split("T")[0]
+    : "";
+  const toDateValue = toDateParam
+    ? new Date(toDateParam).toISOString().split("T")[0]
+    : "";
+  const today = new Date().toISOString().split("T")[0];
 
-      <div>
+  const handleFromDateChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("skip");
+
+    if (value) {
+      const [year, month, day] = value.split("-").map(Number);
+      const fromDateUTC = new Date(
+        Date.UTC(year, month - 1, day, 0, 0, 0, 0),
+      ).toISOString();
+      params.set("fromDate", fromDateUTC);
+    } else {
+      params.delete("fromDate");
+    }
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
+  const handleToDateChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("skip");
+
+    if (value) {
+      const [year, month, day] = value.split("-").map(Number);
+      const toDateUTC = new Date(
+        Date.UTC(year, month - 1, day, 23, 59, 59, 999),
+      ).toISOString();
+      params.set("toDate", toDateUTC);
+    } else {
+      params.delete("toDate");
+    }
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
+  return (
+    <div className="flex flex-wrap items-end justify-end gap-3">
+      <div className="min-w-[220px]">
         <label htmlFor="status-filter" className={LABEL_CLASS}>
           {t("status")}
         </label>
@@ -90,29 +95,32 @@ const TransactionFilters = () => {
         />
       </div>
 
-      <AmountRangeFilter />
-
-      <div>
-        <label htmlFor="refunds-only-filter" className={LABEL_CLASS}>
-          {t("refundsOnly")}
+      <div className="min-w-[180px]">
+        <label htmlFor="transaction-from-date-filter" className={LABEL_CLASS}>
+          {tCommon("fromDate")}
         </label>
-        <SelectFilter
-          id="refunds-only-filter"
-          paramName="refundsOnly"
-          options={refundsOnlyOptions}
-          placeholder={t("select")}
+        <input
+          id="transaction-from-date-filter"
+          type="date"
+          value={fromDateValue}
+          onChange={(e) => handleFromDateChange(e.target.value)}
+          max={today}
+          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-secondarycolor dark:text-sidebartext"
         />
       </div>
 
-      <div>
-        <label htmlFor="credits-only-filter" className={LABEL_CLASS}>
-          {t("creditsOnly")}
+      <div className="min-w-[180px]">
+        <label htmlFor="transaction-to-date-filter" className={LABEL_CLASS}>
+          {tCommon("toDate")}
         </label>
-        <SelectFilter
-          id="credits-only-filter"
-          paramName="creditsOnly"
-          options={creditsOnlyOptions}
-          placeholder={t("select")}
+        <input
+          id="transaction-to-date-filter"
+          type="date"
+          value={toDateValue}
+          onChange={(e) => handleToDateChange(e.target.value)}
+          min={fromDateValue || undefined}
+          max={today}
+          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-secondarycolor dark:text-sidebartext"
         />
       </div>
     </div>

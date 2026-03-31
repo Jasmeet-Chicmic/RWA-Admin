@@ -59,6 +59,7 @@
   "organisationsSubtitle": "Organisations enregistrées détenant des propriétés",
   "organisationName": "Nom de l’organisation",
   "walletAddress": "Adresse du portefeuille",
+  "leaveBlankToKeepCurrentPassword": "Laissez vide pour conserver le mot de passe actuel",
   "entityType": "Type d’entité",
   "registrationNumber": "Numéro d’enregistrement",
   "jurisdiction": "Juridiction",
@@ -106,9 +107,13 @@
       "failed": "Échec du déploiement des contrats."
     },
     "progress": {
+      "title": "Progression on-chain",
       "deployTrexSuite": "Déploiement de la suite token",
       "deployVault": "Déploiement du coffre",
-      "registerProperty": "Enregistrement de la propriété"
+      "registerProperty": "Enregistrement de la propriété",
+      "inProgress": "En cours",
+      "done": "Terminé",
+      "completedAll": "Toutes les étapes sont terminées"
     },
     "errors": {
       "sharesRequired": "Le nombre de parts est requis",
@@ -131,6 +136,9 @@
   "delete": "Supprimer",
   "view": "Voir",
   "propertyAssignedSuccessfully": "Propriété affectée avec succès",
+  "propertyDetails": "Détails de la propriété",
+  "viewAllProperties": "Voir toutes les propriétés",
+  "propertyDetailsPlaceholder": "Page de détails de la propriété pour l'ID : {id}. L'intégration de l'API sera ajoutée bientôt.",
   "deleteOrganisation": "Supprimer l’organisation",
   "areYouSureYouWantToDeleteThisOrganisation": "Voulez-vous vraiment supprimer cette organisation ?",
   "editOrganisation": "Modifier l’organisation",

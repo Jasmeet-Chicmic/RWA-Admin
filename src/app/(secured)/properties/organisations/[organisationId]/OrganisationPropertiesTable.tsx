@@ -1,11 +1,15 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { TableColumn } from "@/components/atoms/Table";
+import TableActions, {
+  TableActionDisplayMode,
+  TableActionItem,
+} from "@/components/atoms/TableActions";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -67,10 +71,14 @@ const OrganisationPropertiesTable = ({
   hideActions?: boolean;
 }) => {
   const t = useTranslations("properties");
+  const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { items, totalCount } = useAppSelector(
     (state) => state.properties.organisation,
+  );
+  const isLoading = useAppSelector(
+    (state) => state.properties.organisation.isLoading,
   );
   const lastRequestKeyRef = useRef<string | null>(null);
 
@@ -80,6 +88,7 @@ const OrganisationPropertiesTable = ({
   const [distributedPropertyIds, setDistributedPropertyIds] = useState<
     Record<string, boolean>
   >({});
+  const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
   const openTokenization = (property: PropertyData) => {
     setSelectedProperty(property as AdminProperty);
@@ -124,6 +133,11 @@ const OrganisationPropertiesTable = ({
       return null;
     }
   }, [debouncedDeps]);
+
+  const refetchOrganisationProperties = useCallback(() => {
+    if (!requestPayload) return;
+    dispatch(fetchOrganisationProperties(requestPayload));
+  }, [dispatch, requestPayload]);
 
   useEffect(() => {
     if (!requestPayload) return;
@@ -237,7 +251,7 @@ const OrganisationPropertiesTable = ({
           return (
             <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
               {price !== null && price !== undefined
-                ? formatCurrency(price)
+                ? formatCurrency(fromBaseUnits(price))
                 : "—"}
             </span>
           );
@@ -265,31 +279,40 @@ const OrganisationPropertiesTable = ({
           const isDistributed = !!distributedPropertyIds[item.id];
           const shouldDisable =
             isDistributed || (!isActiveProperty && !canTokenize);
+          let primaryActionLabel = t("tokenization");
+          if (isActiveProperty) {
+            primaryActionLabel = isDistributed
+              ? t("distributed")
+              : t("distribute");
+          }
+          const actions: TableActionItem[] = [
+            {
+              id: `property-details-${item.id}`,
+              label: t("propertyDetails"),
+              onClick: () =>
+                router.push(`/organisations/properties/${item.id}`),
+            },
+            {
+              id: `property-action-${item.id}`,
+              label: primaryActionLabel,
+              disabled: shouldDisable,
+              onClick: () => {
+                if (isActiveProperty) {
+                  handleDistribute(item.id);
+                  return;
+                }
+                if (canTokenize) openTokenization(item);
+              },
+            },
+          ];
 
           return (
             <div className="flex items-center justify-end">
-              <button
-                type="button"
-                className={`px-3 py-1 text-xs font-semibold rounded text-white ${
-                  shouldDisable
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-primarycolor hover:opacity-90 !text-black"
-                }`}
-                disabled={shouldDisable}
-                onClick={() => {
-                  if (isActiveProperty) {
-                    handleDistribute(item.id);
-                    return;
-                  }
-                  if (canTokenize) openTokenization(item);
-                }}
-              >
-                {isActiveProperty
-                  ? isDistributed
-                    ? t("distributed")
-                    : t("distribute")
-                  : t("tokenization")}
-              </button>
+              <TableActions
+                displayMode={actionsDisplayMode}
+                actions={actions}
+                ariaLabel={t("actions")}
+              />
             </div>
           );
         },
@@ -303,14 +326,27 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("noPropertiesFound"),
     };
-  }, [distributedPropertyIds, t, handleDistribute, hideActions]);
+  }, [
+    actionsDisplayMode,
+    distributedPropertyIds,
+    handleDistribute,
+    hideActions,
+    router,
+    t,
+  ]);
 
   return (
     <>
-      <DataTable data={items} totalCount={totalCount} config={config} />
+      <DataTable
+        data={items}
+        totalCount={totalCount}
+        isLoading={isLoading}
+        config={config}
+      />
       <TokenizationModal
         open={tokenizationModalOpen}
         onClose={closeTokenization}
+        onSuccess={refetchOrganisationProperties}
         property={selectedProperty}
         organisationId={organisationId}
       />

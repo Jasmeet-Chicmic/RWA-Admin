@@ -1,22 +1,19 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { Menu, RotateCcw } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { Copy } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useCallback, useMemo } from "react";
+import { toast } from "react-toastify";
 
-import SearchToolbar from "@/components/atoms/SearchToolbar";
+import FormattedDate from "@/components/atoms/FormattedDate";
 import { TableColumn } from "@/components/atoms/Table";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
-import FilterSidebar from "@/components/molecules/FilterSidebar";
-import { Transaction } from "@/shared/types";
-import { PAYMENT_STATUS, SUBSCRIPTION_OWNER_TYPE } from "@/shared/constants";
-import FormattedDate from "@/components/atoms/FormattedDate";
+import { AdminTransactionItem } from "@/services/transactions-service";
+import { PAYMENT_STATUS } from "@/shared/constants";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import { TableHeaderWithInfo } from "@/components/atoms/TableHeaderWithInfo";
 import { formatToFixed } from "@/shared/utils/unitUtils";
 import TransactionFilters from "./TransactionFilters";
 
@@ -34,32 +31,22 @@ const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
 const DEFAULT_BADGE_STYLE =
   "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400";
 
-interface FlatTransaction extends Transaction {
-  ownerId: string;
-  ownerType: number;
-}
-
 interface TransactionsTableProps {
-  data: FlatTransaction[];
+  data: AdminTransactionItem[];
   totalCount: number;
-  searchText: string;
+  isLoading?: boolean;
 }
 
 const TransactionsTable = ({
   data,
   totalCount,
-  searchText,
+  isLoading = false,
 }: TransactionsTableProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const t = useTranslations("transactions");
-
-  const getTransactionTypeLabel = useCallback(
-    (transaction: Transaction): string => {
-      if (transaction.isRefund) return t("refund");
-      if (transaction.isCredit) return t("credit");
-      return t("debit");
+  const copyValue = useCallback(
+    async (value: string) => {
+      await navigator.clipboard.writeText(value);
+      toast.success(t("copiedToClipboard"));
     },
     [t],
   );
@@ -82,92 +69,83 @@ const TransactionsTable = ({
     [t],
   );
 
-  const getOwnerTypeLabel = useCallback(
-    (ownerType: number) => {
-      switch (ownerType) {
-        case SUBSCRIPTION_OWNER_TYPE.USER:
-          return t("user");
-        case SUBSCRIPTION_OWNER_TYPE.ORGANISATION:
-          return t("organisation");
-        default:
-          return "—";
-      }
-    },
-    [t],
-  );
-
-  const config: DataTableConfig<FlatTransaction> = useMemo(() => {
-    const columns: TableColumn<FlatTransaction>[] = [
+  const config: DataTableConfig<AdminTransactionItem> = useMemo(() => {
+    const columns: TableColumn<AdminTransactionItem>[] = [
       {
-        title: t("transactionDate"),
-        field: "date",
-        render: (item: FlatTransaction) => (
+        title: t("createdAt"),
+        field: "createdAt",
+        render: (item: AdminTransactionItem) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.date ? <FormattedDate date={item.date} /> : "—"}
-          </span>
-        ),
-        sortable: true,
-        sortKey: "date",
-      },
-      {
-        title: t("invoiceNumber"),
-        field: "invoiceNumber",
-        render: (item: FlatTransaction) => (
-          <span className={`font-medium ${TEXT_PRIMARY}`}>
-            {item.invoiceNumber || "—"}
+            {item.createdAt ? <FormattedDate date={item.createdAt} /> : "—"}
           </span>
         ),
       },
       {
-        title: t("payerType"),
-        field: "ownerType",
-        render: (item: FlatTransaction) => (
-          <span
-            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-              item.ownerType === SUBSCRIPTION_OWNER_TYPE.ORGANISATION
-                ? "bg-primarycolor text-white"
-                : "bg-secondarycolor text-white"
-            }`}
+        title: t("buyerAddress"),
+        field: "buyerAddress",
+        render: (item: AdminTransactionItem) => (
+          <button
+            onClick={() => copyValue(item.buyerAddress)}
+            title={t("copy")}
+            className="inline-flex items-center gap-2 rounded-full border border-bordergray200 px-3 py-1 text-xs text-labelprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgprimary"
           >
-            {getOwnerTypeLabel(item.ownerType)}
-          </span>
+            <span className="max-w-[170px] truncate">{item.buyerAddress}</span>
+            <Copy size={12} />
+          </button>
         ),
       },
       {
-        title: t("planName"),
-        field: "planName",
-        render: (item: FlatTransaction) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.planName || "—"}
+        title: t("sellerAddress"),
+        field: "sellerAddress",
+        render: (item: AdminTransactionItem) => (
+          <button
+            onClick={() => copyValue(item.sellerAddress)}
+            title={t("copy")}
+            className="inline-flex items-center gap-2 rounded-full border border-bordergray200 px-3 py-1 text-xs text-labelprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgprimary"
+          >
+            <span className="max-w-[170px] truncate">{item.sellerAddress}</span>
+            <Copy size={12} />
+          </button>
+        ),
+      },
+      {
+        title: t("transactionHash"),
+        field: "transactionHash",
+        render: (item: AdminTransactionItem) => (
+          <button
+            onClick={() => copyValue(item.transactionHash)}
+            title={t("copy")}
+            className="inline-flex items-center gap-2 rounded-full border border-bordergray200 px-3 py-1 text-xs text-labelprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgprimary"
+          >
+            <span className="max-w-[170px] truncate">
+              {item.transactionHash}
+            </span>
+            <Copy size={12} />
+          </button>
+        ),
+      },
+      {
+        title: t("shares"),
+        field: "shares",
+        render: (item: AdminTransactionItem) => (
+          <span className={`font-medium ${TEXT_PRIMARY}`}>
+            {item.shares ?? 0}
           </span>
         ),
       },
       {
         title: t("transactionAmount"),
         field: "amount",
-        render: (item: FlatTransaction) => (
+        render: (item: AdminTransactionItem) => (
           <span className={`font-medium ${TEXT_PRIMARY}`}>
-            {item.currency} {formatToFixed(item.amount, 2)}
+            {formatToFixed(item.amount, 2)}
           </span>
         ),
-        sortable: true,
-        sortKey: "amount",
       },
       {
-        title: (
-          <TableHeaderWithInfo
-            label={t("paymentStatus")}
-            options={[
-              t("initiated"),
-              t("success"),
-              t("failed"),
-              t("refunded"),
-              t("unknown"),
-            ]}
-          />
-        ),
+        title: t("status"),
         field: "status",
-        render: (item: FlatTransaction) => {
+        render: (item: AdminTransactionItem) => {
           const statusLabel = getStatusLabel(item.status);
           const badgeStyle =
             PAYMENT_STATUS_BADGE_STYLES[item.status] || DEFAULT_BADGE_STYLE;
@@ -180,55 +158,18 @@ const TransactionsTable = ({
           );
         },
       },
-      {
-        title: t("paymentMethod"),
-        field: "paymentMethodType",
-        render: (item: FlatTransaction) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item?.paymentMethodBrand || "—"}
-          </span>
-        ),
-      },
-      {
-        title: (
-          <TableHeaderWithInfo
-            label={t("transactionType")}
-            options={[t("debit"), t("credit"), t("refund")]}
-          />
-        ),
-        field: "isCredit",
-        render: (item: FlatTransaction) => {
-          const typeLabel = getTransactionTypeLabel(item);
-          const isRefund = item.isRefund;
-          return (
-            <span
-              className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                isRefund
-                  ? "bg-secondarycolor text-white"
-                  : "text-white bg-primarycolor"
-              }`}
-            >
-              {typeLabel}
-            </span>
-          );
-        },
-      },
     ];
 
     return {
       columns,
-      keyExtractor: (item) => item.transactionId,
+      keyExtractor: (item) => item.id,
       paginationTitle: t("transactions").toLowerCase(),
       hideSelectCol: true,
       emptyMessage: t("noTransactionsFound"),
-      queryConfig: {
-        defaultSortKey: "date",
-        defaultSortDirection: "DESC",
-      },
       header: (
         <div className="bg-bgwhite dark:bg-darkbgprimary">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <div>
+          <div className="flex items-end justify-between gap-4 overflow-x-auto">
+            <div className="shrink-0">
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
@@ -238,59 +179,22 @@ const TransactionsTable = ({
                 {t("allPaymentTransactions")}
               </p>
             </div>
-            <div className="flex items-initial space-x-4">
-              <SearchToolbar
-                initialQuery={searchText}
-                placeholder={t("searchTransactions")}
-                queryParamName="searchText"
-              />
-              <button
-                onClick={() => setIsFilterOpen(true)}
-                className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 focus:outline-none focus:ring-0 font-medium bg-primarycolor text-bgwhite dark:bg-secondarycolor dark:text-white hover:bg-primaryhover dark:hover:bg-secondaryhover rounded-lg"
-              >
-                <Menu size={18} />
-                <span>{t("filters")}</span>
-              </button>
+            <div className="shrink-0">
+              <TransactionFilters />
             </div>
           </div>
         </div>
       ),
     };
-  }, [
-    searchText,
-    t,
-    getOwnerTypeLabel,
-    getStatusLabel,
-    getTransactionTypeLabel,
-  ]);
+  }, [copyValue, getStatusLabel, t]);
 
   return (
-    <>
-      <DataTable<FlatTransaction>
-        data={data}
-        totalCount={totalCount}
-        config={config}
-      />
-      <FilterSidebar
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-        title={t("transactionFilters")}
-        footer={
-          <button
-            onClick={() => {
-              router.push(pathname);
-              setIsFilterOpen(false);
-            }}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
-          >
-            <RotateCcw size={18} />
-            <span>{t("clearAllFilters")}</span>
-          </button>
-        }
-      >
-        <TransactionFilters />
-      </FilterSidebar>
-    </>
+    <DataTable<AdminTransactionItem>
+      data={data}
+      totalCount={totalCount}
+      isLoading={isLoading}
+      config={config}
+    />
   );
 };
 

@@ -1,8 +1,11 @@
 "use client";
 
-import { Eye } from "lucide-react";
+import TableActions, {
+  TableActionDisplayMode,
+  TableActionItem,
+} from "@/components/atoms/TableActions";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { TableColumn } from "@/components/atoms/Table";
@@ -33,6 +36,8 @@ const PropertyOrganisationsTable = ({
   totalCount: number;
 }) => {
   const t = useTranslations("properties");
+  const router = useRouter();
+  const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
   const config: DataTableConfig<OrganisationRow> = useMemo(() => {
     const columns: TableColumn<OrganisationRow>[] = [
@@ -91,16 +96,28 @@ const PropertyOrganisationsTable = ({
       {
         field: "",
         title: t("actions"),
-        render: (item) => (
-          <div className="flex items-center justify-center">
-            <Link
-              href={`${ROUTES.PROPERTIES_ORGANISATIONS}/${encodeURIComponent(item.id)}`}
-              className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-semibold text-primarycolor hover:underline"
-            >
-              <Eye className="w-4 h-4" />
-            </Link>
-          </div>
-        ),
+        render: (item) => {
+          const actions: TableActionItem[] = [
+            {
+              id: `view-all-properties-${item.id}`,
+              label: t("viewAllProperties"),
+              onClick: () =>
+                router.push(
+                  `${ROUTES.PROPERTIES_ORGANISATIONS}/${encodeURIComponent(item.id)}`,
+                ),
+            },
+          ];
+
+          return (
+            <div className="flex items-center justify-center">
+              <TableActions
+                displayMode={actionsDisplayMode}
+                actions={actions}
+                ariaLabel={t("actions")}
+              />
+            </div>
+          );
+        },
       },
     ];
 
@@ -132,7 +149,7 @@ const PropertyOrganisationsTable = ({
         </div>
       ),
     };
-  }, [t]);
+  }, [actionsDisplayMode, router, t]);
 
   return <DataTable data={data} totalCount={totalCount} config={config} />;
 };

@@ -4,8 +4,8 @@ import { useMemo } from "react";
 // import { Ban,   Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { TableColumn } from "@/components/atoms/Table";
+import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 // import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
@@ -109,12 +109,12 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
                 : "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800";
 
           const labelKey = isApproved
-            ? "KYC.Approved"
+            ? "kyc.approved"
             : isPending
-              ? "KYC.Pending"
+              ? "kyc.pending"
               : isRejected
-                ? "KYC.Rejected"
-                : "KYC.NotStarted";
+                ? "kyc.rejected"
+                : "kyc.notStarted";
 
           return (
             <span

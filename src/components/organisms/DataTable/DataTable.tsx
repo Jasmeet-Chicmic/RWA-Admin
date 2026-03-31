@@ -1,13 +1,13 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
 import Pagination from "@/components/atoms/Pagination";
+import SearchInput from "@/components/atoms/SearchInput/SearchInput";
 import Table, { TableColumn } from "@/components/atoms/Table";
 import {
   useTableQuerySync,
   UseTableQuerySyncOptions,
 } from "@/hooks/useTableQuerySync";
-import SearchInput from "@/components/atoms/SearchInput/SearchInput";
+import { ReactNode, useEffect } from "react";
 
 /**
  * Configuration for the DataTable component
@@ -84,6 +84,11 @@ export interface DataTableProps<T> {
   totalCount: number;
 
   /**
+   * Optional: Loading state for skeleton rows
+   */
+  isLoading?: boolean;
+
+  /**
    * Table configuration
    */
   config: DataTableConfig<T>;
@@ -116,6 +121,7 @@ export interface DataTableProps<T> {
 export function DataTable<T>({
   data,
   totalCount,
+  isLoading = false,
   config,
 }: Readonly<DataTableProps<T>>) {
   const {
@@ -155,6 +161,7 @@ export function DataTable<T>({
 
       <Table<T>
         data={data}
+        isLoading={isLoading}
         columns={config.columns}
         keyExtractor={config.keyExtractor}
         handleSort={handleSort}

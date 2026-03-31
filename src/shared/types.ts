@@ -535,18 +535,11 @@ export interface Transaction {
 
 export interface GetAdminTransactionsParams {
   ownerId?: string;
-  ownerType?: number;
-  itemId?: string;
   status?: number;
-  minAmount?: number;
-  maxAmount?: number;
-  refundsOnly?: boolean;
-  creditsOnly?: boolean;
-  pageNumber?: number;
+  fromDate?: string;
+  toDate?: string;
+  page?: number;
   pageSize?: number;
-  sortBy?: string;
-  sortDirection?: string;
-  searchText?: string;
 }
 
 export interface Subscription {

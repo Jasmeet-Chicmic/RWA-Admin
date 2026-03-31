@@ -63,9 +63,11 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     if (process.env.NODE_ENV === "development") {
       const method = (error.config?.method ?? "GET").toUpperCase();
+      const statusLabel = error.response?.status ?? "NETWORK_ERROR";
+      const errorBody = error.response?.data ?? error.message;
       console.error(
-        `[API] ✗ ${method} ${error.config?.url} — ${error.response?.status}`,
-        error.response?.data,
+        `[API] ✗ ${method} ${error.config?.url} — ${statusLabel}`,
+        errorBody,
       );
     }
 

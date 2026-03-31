@@ -37,6 +37,9 @@ export async function getCurrentProfileAction(): Promise<CurrentProfileResult> {
     const res = await getRequest<ProfileResponse, undefined>(
       API_END_POINTS.ORGANIZATION_PROFILE,
     );
+    if (!res?.status) {
+      throw new Error(res?.message || "Failed to load organisation profile");
+    }
     const profile = res?.data;
     if (!profile?.id) throw new Error("Organisation profile not found");
     return { role, profile };
@@ -45,6 +48,9 @@ export async function getCurrentProfileAction(): Promise<CurrentProfileResult> {
   const res = await getRequest<ProfileResponse, undefined>(
     API_END_POINTS.ADMIN_PROFILE,
   );
+  if (!res?.status) {
+    throw new Error(res?.message || "Failed to load admin profile");
+  }
   const profile = res?.data;
   if (!profile?.id) throw new Error("Admin profile not found");
   return { role, profile };

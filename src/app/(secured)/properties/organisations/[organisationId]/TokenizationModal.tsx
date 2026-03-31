@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppKit } from "@reown/appkit/react";
-import { Loader2, Sparkles } from "lucide-react";
+import { CheckCircle2, Loader2, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -34,19 +34,6 @@ type TokenizationFormValues = {
   totalPropertyValue: string;
   totalShares: string;
   image: string;
-};
-
-const getLoadingMessage = (
-  step: TokenizationFlowStep | undefined,
-  t: ReturnType<typeof useTranslations>,
-) => {
-  const progressMessages: Record<TokenizationFlowStep, string> = {
-    deployTrexSuite: t("tokenizationForm.progress.deployTrexSuite"),
-    deployVault: t("tokenizationForm.progress.deployVault"),
-    registerProperty: t("tokenizationForm.progress.registerProperty"),
-  };
-
-  return step ? progressMessages[step] : progressMessages.deployTrexSuite;
 };
 
 const formatUsdcAmount = (value: number, maximumFractionDigits = 2) => {
@@ -88,11 +75,13 @@ type PropertyData = PropertyItem | AdminProperty;
 export const TokenizationModal = ({
   open,
   onClose,
+  onSuccess,
   property,
   organisationId,
 }: {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   property: PropertyData | null;
   organisationId: string;
 }) => {
@@ -100,6 +89,7 @@ export const TokenizationModal = ({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState<TokenizationFlowStep>();
+  const [isFlowCompleted, setIsFlowCompleted] = useState(false);
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false);
   const { isConnected } = useWalletState();
   const { open: openWalletModal } = useAppKit();
@@ -111,7 +101,10 @@ export const TokenizationModal = ({
       (property as PropertyItem)?.approvedValuation ??
       (property as AdminProperty)?.totalValue ??
       0;
-    const ownerAddr = (property as AdminProperty)?.ownerWalletAddress ?? "";
+    const ownerAddr =
+      (property as PropertyItem)?.owner?.walletAddress ??
+      (property as AdminProperty)?.ownerWalletAddress ??
+      "";
     const img =
       (property as AdminProperty)?.image ??
       (property as AdminProperty)?.imageUrl ??
@@ -135,6 +128,7 @@ export const TokenizationModal = ({
     if (open) {
       methods.reset(defaultValues);
       setShowWalletConnectModal(false);
+      setIsFlowCompleted(false);
     }
   }, [defaultValues, methods, open]);
 
@@ -194,8 +188,15 @@ export const TokenizationModal = ({
       const totalValue = toBaseUnitsBigInt(
         values.totalPropertyValue.replace(/,/g, ""),
       );
-      const initiateMintAmount = parseMoney(values.totalPropertyValue) ?? 0;
-      const initiatePricePerShare = Number(values.totalShares);
+      const submittedShares = Number(values.totalShares);
+      const safeSubmittedShares =
+        Number.isFinite(submittedShares) && submittedShares > 0
+          ? submittedShares
+          : 0;
+      const initiateMintAmount = safeSubmittedShares;
+      const initiatePricePerShare = Number(
+        totalUnits > BigInt(0) ? totalValue / totalUnits : BigInt(0),
+      );
       const ownerAddress = values.ownerAddress as `0x${string}`;
       const result = await runTokenizationFlow({
         walletClient,
@@ -219,6 +220,9 @@ export const TokenizationModal = ({
           result?.apiMessages?.initiate ||
           t("tokenizationForm.success.deployed"),
       );
+      setIsFlowCompleted(true);
+      await new Promise((resolve) => setTimeout(resolve, 900));
+      onSuccess?.();
       onClose();
       router.refresh();
     } catch (error) {
@@ -239,21 +243,15 @@ export const TokenizationModal = ({
 
   if (!property) return null;
 
-  const loadingMessage = getLoadingMessage(currentStep, t);
+  const progressSteps: TokenizationFlowStep[] = [
+    TOKENIZATION_FLOW_STEPS.deployTrexSuite,
+    TOKENIZATION_FLOW_STEPS.deployVault,
+    TOKENIZATION_FLOW_STEPS.registerProperty,
+  ];
+  const activeStepIndex = currentStep ? progressSteps.indexOf(currentStep) : -1;
 
   return (
     <div>
-      {isSubmitting ? (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black/55 backdrop-blur-[1px]">
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-bordergray200 bg-white px-5 py-4 text-center dark:border-darkbordercolor1 dark:bg-darkbgbase">
-            <Loader2 className="h-6 w-6 animate-spin text-textprimary dark:text-sidebartext" />
-            <p className="text-sm font-medium text-textprimary dark:text-sidebartext">
-              {loadingMessage}
-            </p>
-          </div>
-        </div>
-      ) : null}
-
       <CustomModal
         isOpen={open}
         onClose={onClose}
@@ -331,23 +329,76 @@ export const TokenizationModal = ({
                 </div>
               </div>
 
-              <div className="mt-6 flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={onClose}
-                  className="min-w-[110px]"
-                >
-                  {t("tokenizationForm.cancel")}
-                </Button>
-                <Button
-                  type="submit"
-                  className="min-w-[140px]"
-                  isLoading={isSubmitting}
-                  disabled={isSubmitting}
-                >
-                  {t("tokenizationForm.submit")}
-                </Button>
+              <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div className="min-h-[76px] flex-1">
+                  {isSubmitting || isFlowCompleted ? (
+                    <div className="rounded-xl border border-bordergray200 p-3 dark:border-darkbordercolor1">
+                      <p className="text-xs font-semibold text-textparagraph dark:text-textparagraphlight mb-2">
+                        {t("tokenizationForm.progress.title")}
+                      </p>
+                      <div className="space-y-2">
+                        {progressSteps.map((step, index) => {
+                          const isCompleted =
+                            isFlowCompleted || index < activeStepIndex;
+                          const isActive =
+                            !isFlowCompleted &&
+                            isSubmitting &&
+                            activeStepIndex === index;
+                          return (
+                            <div
+                              key={step}
+                              className="flex items-center justify-between gap-3"
+                            >
+                              <span className="text-xs font-medium text-textprimary dark:text-sidebartext">
+                                {t(`tokenizationForm.progress.${step}`)}
+                              </span>
+                              {isCompleted ? (
+                                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  {t("tokenizationForm.progress.done")}
+                                </span>
+                              ) : isActive ? (
+                                <span className="inline-flex items-center gap-1 text-primarycolor text-xs font-semibold">
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                  {t("tokenizationForm.progress.inProgress")}
+                                </span>
+                              ) : (
+                                <span className="text-xs text-textparagraph dark:text-textparagraphlight">
+                                  -
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                        {isFlowCompleted ? (
+                          <p className="pt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            {t("tokenizationForm.progress.completedAll")}
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onClose}
+                    className="min-w-[110px]"
+                    disabled={isSubmitting}
+                  >
+                    {t("tokenizationForm.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="min-w-[140px]"
+                    isLoading={isSubmitting}
+                    disabled={isSubmitting}
+                  >
+                    {t("tokenizationForm.submit")}
+                  </Button>
+                </div>
               </div>
             </form>
           </FormProvider>

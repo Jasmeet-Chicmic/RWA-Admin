@@ -59,6 +59,7 @@
   "organisationsSubtitle": "Organizaciones registradas que poseen propiedades",
   "organisationName": "Nombre de la organización",
   "walletAddress": "Dirección de la billetera",
+  "leaveBlankToKeepCurrentPassword": "Déjalo en blanco para mantener la contraseña actual",
   "entityType": "Tipo de entidad",
   "registrationNumber": "Número de registro",
   "jurisdiction": "Jurisdicción",
@@ -106,9 +107,13 @@
       "failed": "Error al desplegar contratos."
     },
     "progress": {
+      "title": "Progreso on-chain",
       "deployTrexSuite": "Desplegando suite de token",
       "deployVault": "Desplegando bóveda",
-      "registerProperty": "Registrando propiedad"
+      "registerProperty": "Registrando propiedad",
+      "inProgress": "En progreso",
+      "done": "Completado",
+      "completedAll": "Todos los pasos completados"
     },
     "errors": {
       "sharesRequired": "Las participaciones son obligatorias",
@@ -131,6 +136,9 @@
   "delete": "Eliminar",
   "view": "Ver",
   "propertyAssignedSuccessfully": "Propiedad asignada correctamente",
+  "propertyDetails": "Detalles de la propiedad",
+  "viewAllProperties": "Ver todas las propiedades",
+  "propertyDetailsPlaceholder": "Página de detalles de la propiedad para el ID: {id}. La integración del API se agregará pronto.",
   "deleteOrganisation": "Eliminar organización",
   "areYouSureYouWantToDeleteThisOrganisation": "¿Seguro que deseas eliminar esta organización?",
   "editOrganisation": "Editar organización",

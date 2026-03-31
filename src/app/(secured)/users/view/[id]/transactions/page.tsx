@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
 
 import { getAdminTransactionsAction } from "@/api/adminTransactions";
+import ErrorState from "@/components/atoms/ErrorState";
 import { Transaction } from "@/shared/types";
 import UserTransactionsTable from "./UserTransactionsTable";
-import ErrorState from "@/components/atoms/ErrorState";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -15,12 +15,10 @@ const UserTransactionsPage = async ({
   searchParams: Promise<{
     skip?: string;
     limit?: string;
-    sortKey?: string;
-    sortDirection?: string;
   }>;
 }) => {
   const { id } = await params;
-  const { skip, limit, sortKey, sortDirection } = await searchParams;
+  const { skip, limit } = await searchParams;
   const tTransactions = await getTranslations("transactions");
 
   const pageSize = limit ? Number(limit) : DEFAULT_PAGE_SIZE;
@@ -30,13 +28,8 @@ const UserTransactionsPage = async ({
   try {
     const res = await getAdminTransactionsAction({
       ownerId: id,
-      pageNumber,
+      page: pageNumber,
       pageSize,
-      ...(sortKey &&
-        sortDirection && {
-          sortBy: sortKey,
-          sortDirection: sortDirection,
-        }),
     });
 
     const transactions: Transaction[] = res?.data?.transactions ?? [];

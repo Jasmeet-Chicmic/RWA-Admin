@@ -83,6 +83,7 @@ export function Table<T>({
   const hasFixedLeft = columns.some(
     (col) => col.fixed === true || col.fixed === "left",
   );
+  const skeletonRows = 6;
 
   return (
     <div
@@ -181,7 +182,52 @@ export function Table<T>({
           </tr>
         </thead>
         <tbody className="divide-y divide-bordercolor1 dark:divide-bordercolor2">
-          {(!data || data.length === 0) && !isLoading ? (
+          {isLoading ? (
+            Array.from({ length: skeletonRows }).map((_, rowIndex) => (
+              <tr key={`skeleton-${rowIndex}`} className="animate-pulse">
+                {!hideSelectCol && (
+                  <td
+                    className={`px-6 py-4 text-center w-[60px] ${
+                      hasFixedLeft
+                        ? "sticky left-0 z-20 bg-bgwhite dark:bg-darkbgprimary border-r border-b border-bordercolor1 dark:border-bordercolor2"
+                        : ""
+                    }`}
+                  >
+                    <div className="mx-auto h-4 w-4 rounded bg-gray-200 dark:bg-labelprimary/60" />
+                  </td>
+                )}
+                {columns.map((column, index) => {
+                  const isFixedLeft =
+                    column.fixed === true || column.fixed === "left";
+                  const isFixedRight = column.fixed === "right";
+                  const stickyClass = isFixedLeft
+                    ? "sticky z-10 bg-bgwhite dark:bg-darkbgprimary shadow-[4px_0_8px_-3px_rgba(0,0,0,0.1)] border-r border-bordercolor1 dark:border-bordercolor2"
+                    : isFixedRight
+                      ? "sticky z-10 bg-bgwhite dark:bg-darkbgprimary shadow-[-4px_0_8px_-3px_rgba(0,0,0,0.1)] border-l border-bordercolor1 dark:border-bordercolor2"
+                      : "";
+                  return (
+                    <td
+                      key={`skeleton-cell-${rowIndex}-${index}`}
+                      style={
+                        isFixedLeft
+                          ? { left: hideSelectCol ? 0 : 60 }
+                          : isFixedRight
+                            ? { right: 0 }
+                            : {}
+                      }
+                      className={`py-[11px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap ${
+                        index === columns.length - 1
+                          ? "text-right"
+                          : "text-left"
+                      } ${stickyClass}`}
+                    >
+                      <div className="h-4 w-full max-w-[160px] rounded bg-gray-200 dark:bg-labelprimary/60" />
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          ) : !data || data.length === 0 ? (
             <tr className="empty-row">
               <td
                 colSpan={columns.length + (hideSelectCol ? 0 : 1)}
@@ -271,7 +317,7 @@ export function Table<T>({
                             ? { right: 0 }
                             : {}
                       }
-                      className={`py-[11px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap text-[0.9375rem] leading-[1.45] font-medium text-textprimary dark:text-sidebartext ${
+                      className={`py-[11px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap text-[0.9375rem] leading-[1.45]  text-textprimary dark:text-sidebartext ${
                         index === columns.length - 1
                           ? "text-right"
                           : "text-left"
@@ -288,16 +334,6 @@ export function Table<T>({
           )}
         </tbody>
       </table>
-      {isLoading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bgbgwhite/60 dark:bg-darkbgprimary/60 backdrop-blur-sm transition-all">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-bordercolor1 dark:border-bordercolor2 border-t-transparent rounded-full animate-spin shadow-lg shadow-indigo-500/20" />
-            <span className="text-[12px] font-bold text-darklabelprimary dark:text-white/60 dark:text-sidebartext tracking-wider uppercase">
-              Loading...
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -150,13 +150,15 @@ const Pagination: React.FC<PaginationProps> = ({
           {/* Jump to page */}
           <div className="flex items-center space-x-2 bg-gray-50 dark:bg-darkbgprimary p-1 rounded-[10px] border border-bordergray100 dark:border-labelprimary">
             <input
-              type="number"
-              min={1}
-              max={totalPages}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               className="w-16 bg-transparent border-none px-2 py-1 text-sm font-bold text-textprimary dark:text-gray-200 outline-none placeholder:font-medium placeholder:bordercolor1"
               placeholder={t("paginationPagePlaceholder")}
               value={inputPage}
-              onChange={(e) => setInputPage(e.target.value)}
+              onChange={(e) =>
+                setInputPage(e.target.value.replace(/[^\d]/g, ""))
+              }
             />
             <Button
               variant="primary"
