@@ -6,11 +6,9 @@ import { getRequest } from "@/shared/fetcher";
 import {
   AllPropertiesResponse,
   BaseResponse,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
-import {
   GetPropertiesParams,
   PropertiesListResponse,
-} from "@/app/(secured)/properties/helpers/types";
+} from "@/types/properties";
 import { AdminPropertiesDetails } from "./adminProperties.types";
 
 const EMPTY_LIST: AllPropertiesResponse = {

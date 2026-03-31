@@ -3,18 +3,16 @@
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
-import {
-  AdminProperty,
-  PropertyStatus,
-} from "@/app/(secured)/properties/helpers/types";
 import { TableColumn } from "@/components/atoms/Table";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { PropertyStatus } from "@/constants/properties";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
+import { AdminProperty } from "@/types/properties";
 
 const MOCK_TOP_PROPERTIES: AdminProperty[] = [
   {

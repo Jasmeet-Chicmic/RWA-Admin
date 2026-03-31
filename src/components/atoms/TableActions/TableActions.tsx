@@ -1,7 +1,17 @@
 "use client";
 
 import ActionMenu from "@/components/atoms/ActionMenu";
-import { MoreVertical } from "lucide-react";
+import {
+  Building2,
+  Check,
+  Coins,
+  Edit3,
+  Eye,
+  MoreVertical,
+  ShieldCheck,
+  Trash2,
+  X,
+} from "lucide-react";
 import React from "react";
 
 export type TableActionItem = {
@@ -23,6 +33,45 @@ type TableActionsProps = {
   actions: TableActionItem[];
   displayMode?: TableActionDisplayMode;
   ariaLabel?: string;
+};
+
+const toLabelText = (label: React.ReactNode): string => {
+  if (typeof label === "string") return label.toLowerCase();
+  if (typeof label === "number") return String(label).toLowerCase();
+  return "";
+};
+
+const matchesAction = (action: TableActionItem, patterns: string[]) => {
+  const id = action.id.toLowerCase();
+  const label = toLabelText(action.label);
+  return patterns.some(
+    (pattern) => id.includes(pattern) || label.includes(pattern),
+  );
+};
+
+const getDefaultActionIcon = (action: TableActionItem): React.ReactNode => {
+  const iconProps = { className: "w-4 h-4" };
+
+  if (matchesAction(action, ["view", "details"])) {
+    return <Eye {...iconProps} />;
+  }
+  if (matchesAction(action, ["approve"])) return <Check {...iconProps} />;
+  if (matchesAction(action, ["reject", "disapprove"])) {
+    return <X {...iconProps} />;
+  }
+  if (matchesAction(action, ["assign", "organisation", "organization"])) {
+    return <Building2 {...iconProps} />;
+  }
+  if (matchesAction(action, ["edit", "update"])) {
+    return <Edit3 {...iconProps} />;
+  }
+  if (matchesAction(action, ["delete", "remove"])) {
+    return <Trash2 {...iconProps} />;
+  }
+  if (matchesAction(action, ["distribute", "token", "mint"])) {
+    return <Coins {...iconProps} />;
+  }
+  return <ShieldCheck {...iconProps} />;
 };
 
 const TableActions = ({
@@ -68,7 +117,7 @@ const TableActions = ({
         className: action.className,
         label: (
           <span className="inline-flex items-center gap-2">
-            {action.icon}
+            {action.icon ?? getDefaultActionIcon(action)}
             <span>{action.label}</span>
           </span>
         ),

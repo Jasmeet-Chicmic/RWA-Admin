@@ -1,8 +1,8 @@
 "use client";
 
-import { FileText, Trash2, ChevronDown } from "lucide-react";
-import { PropertyDocument } from "../helpers/allPropertiesTypes";
-import { PROPERTY_DOCUMENT_TYPE_LABELS } from "../helpers/propertiesConstants";
+import { PROPERTY_DOCUMENT_TYPE_LABELS } from "@/constants/properties";
+import { PropertyDocument } from "@/types/properties";
+import { ChevronDown, FileText, Trash2 } from "lucide-react";
 
 interface PropertyDocumentListProps {
   documents: PropertyDocument[];

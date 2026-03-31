@@ -1,5 +1,7 @@
 import {
+  Building,
   Building2,
+  ClipboardList,
   CreditCard,
   // Crown,
   // FileText,
@@ -41,29 +43,19 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    icon: Building2,
+    icon: ClipboardList,
     label: "common.properties",
-    activePaths: [ROUTES.PROPERTIES, ROUTES.PROPERTIES_ORGANISATIONS],
-    allowedRoles: [LOGIN_ROLE.ADMIN],
-    children: [
-      {
-        label: "common.allProperties",
-        path: ROUTES.PROPERTIES_LIST,
-        activePaths: [
-          ROUTES.PROPERTIES_LIST,
-          ROUTES.PROPERTIES_DISAPPROVED,
-          ROUTES.PROPERTIES_ASSETS,
-        ],
-      },
-      {
-        label: "common.organisationProperties",
-        path: ROUTES.PROPERTIES_ORGANISATIONS,
-        activePaths: [ROUTES.PROPERTIES_ORGANISATIONS],
-      },
+    path: ROUTES.PROPERTIES_LIST,
+    activePaths: [
+      ROUTES.PROPERTIES,
+      ROUTES.PROPERTIES_LIST,
+      ROUTES.PROPERTIES_DISAPPROVED,
+      ROUTES.PROPERTIES_ASSETS,
     ],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
   },
   {
-    icon: Building2,
+    icon: Building,
     label: "common.organisationProperties",
     path: ROUTES.ORGANISATIONS_PROPERTIES,
     activePaths: [ROUTES.ORGANISATIONS_PROPERTIES],

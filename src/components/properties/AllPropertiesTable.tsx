@@ -6,20 +6,6 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import {
-  GetAllPropertiesParams,
-  PropertyItem,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
-import {
-  DEFAULT_PAGE_SIZE,
-  PROPERTY_STATUS,
-  PROPERTY_STATUS_BADGE_CLASSES,
-  PROPERTY_STATUS_FILTER_OPTIONS,
-  PROPERTY_STATUS_LABELS,
-  PROPERTY_TYPE_LABELS,
-  PropertyStatusType,
-  PropertyType,
-} from "@/app/(secured)/properties/helpers/propertiesConstants";
 import ApprovePropertyModal from "@/app/(secured)/properties/modals/ApprovePropertyModal";
 import AssignLLCModal from "@/app/(secured)/properties/modals/AssignLLCModal";
 import RejectPropertyModal from "@/app/(secured)/properties/modals/RejectPropertyModal";
@@ -29,9 +15,20 @@ import TableActions, {
   TableActionDisplayMode,
   TableActionItem,
 } from "@/components/atoms/TableActions";
+import {
+  DEFAULT_PAGE_SIZE,
+  PROPERTY_STATUS,
+  PROPERTY_STATUS_BADGE_CLASSES,
+  PROPERTY_STATUS_FILTER_OPTIONS,
+  PROPERTY_STATUS_LABELS,
+  PROPERTY_TYPE_LABELS,
+  PropertyStatusType,
+  PropertyType,
+} from "@/constants/properties";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAllProperties } from "@/store/propertiesSlice";
+import { GetAllPropertiesParams, PropertyItem } from "@/types/properties";
 
 const getStatusLabel = (status: number): string =>
   PROPERTY_STATUS_LABELS[status as PropertyStatusType] ?? String(status);
@@ -162,20 +159,20 @@ const AllPropertiesTable = ({
     setCurrentPage(1);
   };
 
-  const handleApprove = (item: PropertyItem) => {
+  const handleApprove = useCallback((item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsApproveModalOpen(true);
-  };
+  }, []);
 
-  const handleReject = (item: PropertyItem) => {
+  const handleReject = useCallback((item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsRejectModalOpen(true);
-  };
+  }, []);
 
-  const handleAssignLLC = (item: PropertyItem) => {
+  const handleAssignLLC = useCallback((item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsAssignLLCModalOpen(true);
-  };
+  }, []);
 
   const columns: TableColumn<PropertyItem>[] = useMemo(
     () => [
@@ -326,9 +323,9 @@ const AllPropertiesTable = ({
               <div className="relative">
                 <select
                   value={
-                    statusFilterNumber !== undefined
-                      ? String(statusFilterNumber)
-                      : ""
+                    statusFilterNumber === undefined
+                      ? ""
+                      : String(statusFilterNumber)
                   }
                   onChange={(e) => handleStatusFilterChange(e.target.value)}
                   className="appearance-none pr-8 pl-4 py-3 w-full sm:w-[180px] dark:border-white/50 border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer"

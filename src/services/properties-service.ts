@@ -1,12 +1,13 @@
 import type { AdminPropertiesDetails } from "@/api/adminProperties.types";
+import { PROPERTY_STATUS } from "@/constants/properties";
+import { getRequest } from "@/services/fetcher";
+import { API_END_POINTS } from "@/shared/api";
 import {
   AllPropertiesResponse,
   BaseResponse,
   GetAllPropertiesParams,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
-import { PROPERTY_STATUS } from "@/app/(secured)/properties/helpers/propertiesConstants";
-import { getRequest } from "@/services/fetcher";
-import { API_END_POINTS } from "@/shared/api";
+  PropertyDetailsItem,
+} from "@/types/properties";
 
 const EMPTY_ALL_PROPERTIES_RESPONSE: AllPropertiesResponse = {
   page: 1,
@@ -112,6 +113,22 @@ export const propertiesService = {
       items: payload.data?.items ?? [],
       totalCount: payload.data?.totalCount ?? 0,
     };
+  },
+
+  async getPropertyDetails(
+    propertyId: string,
+    scope: "admin" | "organisation" = "admin",
+  ): Promise<PropertyDetailsItem> {
+    const endpoint =
+      scope === "organisation"
+        ? API_END_POINTS.ORGANIZATION_PROPERTY_BY_ID(propertyId)
+        : API_END_POINTS.ADMIN_PROPERTY_BY_ID(propertyId);
+    const payload =
+      await getRequest<BaseResponse<PropertyDetailsItem>>(endpoint);
+    if (!payload.data) {
+      throw new Error("Property details not found");
+    }
+    return payload.data;
   },
 
   /**

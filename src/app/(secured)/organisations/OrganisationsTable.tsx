@@ -1,11 +1,16 @@
 "use client";
 
-import { Copy, Edit, Eye, Plus, Trash2 } from "lucide-react";
+import { Building2, Copy, Edit, Eye, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "react-toastify";
 
 import { TableColumn } from "@/components/atoms/Table";
+import TableActions, {
+  TABLE_ACTION_DISPLAY_MODES,
+  TableActionItem,
+} from "@/components/atoms/TableActions";
 import ConfirmationModal from "@/components/molecules/ConfirmationModal/ConfirmationModal";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { organisationsService } from "@/services/organisations-service";
@@ -46,6 +51,7 @@ const OrganisationsTable = ({
 }) => {
   const t = useTranslations("properties");
   const tCommon = useTranslations("common");
+  const router = useRouter();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -198,39 +204,59 @@ const OrganisationsTable = ({
         field: "propertyHolds",
         title: t("propertiesHeld"),
         render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.propertyHolds}
-          </span>
+          <div className="w-full flex justify-center">
+            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+              {item.propertyHolds}
+            </span>
+          </div>
         ),
       },
       {
         field: "",
         title: t("actions"),
-        render: (item) => (
-          <div className="flex items-center justify-end gap-2">
-            <button
-              onClick={() => handleOpenViewModal(item.id)}
-              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors text-primarycolor"
-              title={t("view")}
-            >
-              <Eye className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleOpenEditModal(item.id)}
-              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors text-secondarycolor"
-              title={t("edit")}
-            >
-              <Edit className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleOpenDeleteModal(item.id)}
-              className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-500"
-              title={t("delete")}
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        ),
+        render: (item) => {
+          const actions: TableActionItem[] = [
+            {
+              id: `view-details-${item.id}`,
+              label: t("viewDetails"),
+              icon: <Eye className="w-4 h-4" />,
+              onClick: () => handleOpenViewModal(item.id),
+            },
+            {
+              id: `view-properties-${item.id}`,
+              label: `${t("view")} ${t("properties")}`,
+              icon: <Building2 className="w-4 h-4" />,
+              onClick: () =>
+                router.push(
+                  `/properties/organisations/${encodeURIComponent(item.id)}`,
+                ),
+            },
+            {
+              id: `edit-${item.id}`,
+              label: t("edit"),
+              icon: <Edit className="w-4 h-4" />,
+              onClick: () => handleOpenEditModal(item.id),
+              className: "text-secondarycolor",
+            },
+            {
+              id: `delete-${item.id}`,
+              label: t("delete"),
+              icon: <Trash2 className="w-4 h-4" />,
+              onClick: () => handleOpenDeleteModal(item.id),
+              className: "text-red-500",
+            },
+          ];
+
+          return (
+            <div className="flex items-center justify-end">
+              <TableActions
+                displayMode={TABLE_ACTION_DISPLAY_MODES.DROPDOWN}
+                actions={actions}
+                ariaLabel={t("actions")}
+              />
+            </div>
+          );
+        },
       },
     ];
 
@@ -266,7 +292,7 @@ const OrganisationsTable = ({
         </div>
       ),
     };
-  }, [t]);
+  }, [router, t]);
 
   return (
     <>

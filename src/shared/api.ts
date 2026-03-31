@@ -162,6 +162,8 @@ export const API_END_POINTS = {
   /** Single property detail for admin (requires valid property GUID). */
   ADMIN_PROPERTY_BY_ID: (propertyId: string) =>
     `/admin/properties/${propertyId}`,
+  ORGANIZATION_PROPERTY_BY_ID: (propertyId: string) =>
+    `/organizations/properties/${propertyId}`,
 
   // KYC
   ADMIN_KYC_PENDING: `/api/admin/kyc`,

@@ -128,18 +128,22 @@ const TransactionsTable = ({
         title: t("shares"),
         field: "shares",
         render: (item: AdminTransactionItem) => (
-          <span className={`font-medium ${TEXT_PRIMARY}`}>
-            {item.shares ?? 0}
-          </span>
+          <div className="w-full flex justify-center">
+            <span className={`font-medium ${TEXT_PRIMARY}`}>
+              {item.shares ?? 0}
+            </span>
+          </div>
         ),
       },
       {
         title: t("transactionAmount"),
         field: "amount",
         render: (item: AdminTransactionItem) => (
-          <span className={`font-medium ${TEXT_PRIMARY}`}>
-            {formatToFixed(item.amount, 2)}
-          </span>
+          <div className="w-full flex justify-center">
+            <span className={`font-medium ${TEXT_PRIMARY}`}>
+              {formatToFixed(item.amount, 2)}
+            </span>
+          </div>
         ),
       },
       {

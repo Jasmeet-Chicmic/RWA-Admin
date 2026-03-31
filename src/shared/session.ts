@@ -2,12 +2,14 @@
 import "server-only";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 
-const secretKey = process.env.SESSION_SECRET; // 🔒 Server-only: do NOT use NEXT_PUBLIC_ prefix
-if (!secretKey) throw new Error("SESSION_SECRET env var is required");
-
-const encodedKey = new TextEncoder().encode(secretKey);
+const getEncodedKey = () => {
+  const secretKey = process.env.SESSION_SECRET; // Server-only: do not use NEXT_PUBLIC_ prefix
+  if (!secretKey) throw new Error("SESSION_SECRET env var is required");
+  return new TextEncoder().encode(secretKey);
+};
 
 export async function encrypt(payload: object) {
+  const encodedKey = getEncodedKey();
   return new SignJWT(payload as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -18,6 +20,7 @@ export async function encrypt(payload: object) {
 export async function decrypt(token: string | undefined = "") {
   try {
     if (!token) return;
+    const encodedKey = getEncodedKey();
     const { payload } = await jwtVerify(token, encodedKey, {
       algorithms: ["HS256"],
     });

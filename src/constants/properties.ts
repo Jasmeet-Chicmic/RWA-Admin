@@ -32,6 +32,42 @@ export const PROPERTY_STATUS = {
 export type PropertyStatusType =
   (typeof PROPERTY_STATUS)[keyof typeof PROPERTY_STATUS];
 
+export enum PropertyStatus {
+  Draft = 0,
+  PendingApproval = 1,
+  AdminApproved = 2,
+  OrganizationAssigned = 3,
+  Active = 4,
+  SoldOut = 5,
+  Rejected = 6,
+  ModificationRequired = 7,
+  PENDING_TREX = 8,
+  TREX_DEPLOYING = 9,
+  VAULT_DEPLOYING = 10,
+  REGISTERING = 11,
+  KYC_VERIFYING = 12,
+  MINTING = 13,
+  FAILED = 14,
+}
+
+export const PROPERTY_STATUS_LABEL_MAP: Record<number | string, string> = {
+  [PropertyStatus.Draft]: "Draft",
+  [PropertyStatus.PendingApproval]: "Pending Approval",
+  [PropertyStatus.AdminApproved]: "Admin Approved",
+  [PropertyStatus.OrganizationAssigned]: "Organization Assigned",
+  [PropertyStatus.Active]: "Listed",
+  [PropertyStatus.SoldOut]: "Sold Out",
+  [PropertyStatus.Rejected]: "Rejected",
+  [PropertyStatus.ModificationRequired]: "Modification Required",
+  [PropertyStatus.PENDING_TREX]: "Pending",
+  [PropertyStatus.FAILED]: "Failed",
+  [PropertyStatus.KYC_VERIFYING]: "Pending",
+  [PropertyStatus.MINTING]: "Pending",
+  [PropertyStatus.TREX_DEPLOYING]: "Pending",
+  [PropertyStatus.VAULT_DEPLOYING]: "Pending",
+  [PropertyStatus.REGISTERING]: "Pending",
+};
+
 export const PROPERTY_STATUS_LABELS: Record<PropertyStatusType, string> = {
   [PROPERTY_STATUS.PENDING_APPROVAL]: "Pending Approval",
   [PROPERTY_STATUS.ADMIN_APPROVED]: "Admin Approved",

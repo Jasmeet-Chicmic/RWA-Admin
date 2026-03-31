@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { AlertCircle, ChevronDown, Loader2, Upload, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { X, Loader2, Upload, AlertCircle, ChevronDown } from "lucide-react";
+import { useState, useTransition } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 
-import { PropertyDocument } from "../helpers/allPropertiesTypes";
-import {
-  PROPERTY_DOCUMENT_TYPE,
-  PROPERTY_DOCUMENT_TYPE_LABELS,
-} from "../helpers/propertiesConstants";
 import { uploadAdminPropertyDocumentsAction } from "@/api/adminPropertiesActions";
 import { rejectPropertyAction } from "@/api/allPropertiesActions";
 import Button from "@/components/atoms/Button";
+import {
+  PROPERTY_DOCUMENT_TYPE,
+  PROPERTY_DOCUMENT_TYPE_LABELS,
+} from "@/constants/properties";
+import { PropertyDocument } from "@/types/properties";
 import PropertyDocumentList from "../components/PropertyDocumentList";
 
 interface RejectPropertyModalProps {

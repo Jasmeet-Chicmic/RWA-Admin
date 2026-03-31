@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+import { propertiesService } from "@/services/properties-service";
 import {
   AllPropertiesResponse,
   GetAllPropertiesParams,
+  PropertyDetailsItem,
   PropertyItem,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
-import { propertiesService } from "@/services/properties-service";
+} from "@/types/properties";
 
 type PropertyListState = {
   items: PropertyItem[];
@@ -31,10 +32,17 @@ type PropertyOrganisationListState = {
   error: string | null;
 };
 
+type PropertyDetailsState = {
+  item: PropertyDetailsItem | null;
+  isLoading: boolean;
+  error: string | null;
+};
+
 type PropertiesState = {
   all: PropertyListState;
   organisation: PropertyListState;
   propertyOrganisations: PropertyOrganisationListState;
+  details: PropertyDetailsState;
 };
 
 const initialListState: PropertyListState = {
@@ -50,6 +58,11 @@ const initialState: PropertiesState = {
   propertyOrganisations: {
     items: [],
     totalCount: 0,
+    isLoading: false,
+    error: null,
+  },
+  details: {
+    item: null,
     isLoading: false,
     error: null,
   },
@@ -131,6 +144,25 @@ export const fetchPropertyOrganisations = createAsyncThunk<
   },
 );
 
+export const fetchPropertyDetails = createAsyncThunk<
+  PropertyDetailsItem,
+  { propertyId: string; scope?: "admin" | "organisation" },
+  { rejectValue: string }
+>("properties/fetchDetails", async (params, { rejectWithValue }) => {
+  try {
+    return await propertiesService.getPropertyDetails(
+      params.propertyId,
+      params.scope ?? "admin",
+    );
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch property details",
+    );
+  }
+});
+
 const propertiesSlice = createSlice({
   name: "properties",
   initialState,
@@ -197,6 +229,19 @@ const propertiesSlice = createSlice({
         state.propertyOrganisations.isLoading = false;
         state.propertyOrganisations.error =
           action.payload ?? "Failed to fetch organisations for properties";
+      })
+      .addCase(fetchPropertyDetails.pending, (state) => {
+        state.details.isLoading = true;
+        state.details.error = null;
+      })
+      .addCase(fetchPropertyDetails.fulfilled, (state, action) => {
+        state.details.isLoading = false;
+        state.details.item = action.payload;
+      })
+      .addCase(fetchPropertyDetails.rejected, (state, action) => {
+        state.details.isLoading = false;
+        state.details.error =
+          action.payload ?? "Failed to fetch property details";
       });
   },
 });

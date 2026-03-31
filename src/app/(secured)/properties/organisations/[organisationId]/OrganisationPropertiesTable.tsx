@@ -12,6 +12,12 @@ import TableActions, {
 } from "@/components/atoms/TableActions";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import {
+  PROPERTY_STATUS_BADGE_CLASSES,
+  PROPERTY_STATUS_LABELS,
+  PROPERTY_TYPE_LABELS,
+  PropertyStatus,
+} from "@/constants/properties";
 import { useDebounce } from "@/hooks/useDebounce";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
@@ -23,13 +29,7 @@ import {
   fetchAdminSpecificOrganisationProperties,
   fetchOrganisationProperties,
 } from "@/store/propertiesSlice";
-import { PropertyItem } from "../../helpers/allPropertiesTypes";
-import {
-  PROPERTY_STATUS_BADGE_CLASSES,
-  PROPERTY_STATUS_LABELS,
-  PROPERTY_TYPE_LABELS,
-} from "../../helpers/propertiesConstants";
-import { AdminProperty, PropertyStatus } from "../../helpers/types";
+import { AdminProperty, PropertyItem } from "@/types/properties";
 import { TokenizationModal } from "./TokenizationModal";
 
 type PropertyData = PropertyItem | AdminProperty;
@@ -291,7 +291,7 @@ const OrganisationPropertiesTable = ({
       },
     ];
 
-    if (!hideActions) {
+    if (!hideActions || fetchMode === "adminSpecificOrganisation") {
       columns.push({
         title: t("actions"),
         field: "",
@@ -313,9 +313,15 @@ const OrganisationPropertiesTable = ({
               id: `property-details-${item.id}`,
               label: t("propertyDetails"),
               onClick: () =>
-                router.push(`/organisations/properties/${item.id}`),
+                router.push(
+                  fetchMode === "adminSpecificOrganisation"
+                    ? `/properties/${item.id}`
+                    : `/organisations/properties/${item.id}`,
+                ),
             },
-            {
+          ];
+          if (!hideActions) {
+            actions.push({
               id: `property-action-${item.id}`,
               label: primaryActionLabel,
               disabled: shouldDisable,
@@ -326,8 +332,8 @@ const OrganisationPropertiesTable = ({
                 }
                 if (canTokenize) openTokenization(item);
               },
-            },
-          ];
+            });
+          }
 
           return (
             <div className="flex items-center justify-end">
@@ -352,6 +358,7 @@ const OrganisationPropertiesTable = ({
   }, [
     actionsDisplayMode,
     distributedPropertyIds,
+    fetchMode,
     handleDistribute,
     hideActions,
     router,

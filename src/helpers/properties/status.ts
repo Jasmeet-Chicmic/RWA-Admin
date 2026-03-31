@@ -1,31 +1,13 @@
-import { PropertyStatus } from "./types";
-
-export const PROPERTY_STATUS_LABEL_MAP: Record<number | string, string> = {
-  [PropertyStatus.Draft]: "Draft",
-  [PropertyStatus.PendingApproval]: "Pending Approval",
-  [PropertyStatus.AdminApproved]: "Admin Approved",
-  [PropertyStatus.OrganizationAssigned]: "Organization Assigned",
-  [PropertyStatus.Active]: "Listed",
-  [PropertyStatus.SoldOut]: "Sold Out",
-  [PropertyStatus.Rejected]: "Rejected",
-  [PropertyStatus.ModificationRequired]: "Modification Required",
-
-  // Non-standard statuses (defensive fallback if API sends them as strings)
-  [PropertyStatus.PENDING_TREX]: "Pending",
-  [PropertyStatus.FAILED]: "Failed",
-  [PropertyStatus.KYC_VERIFYING]: "Pending",
-  [PropertyStatus.MINTING]: "Pending",
-  [PropertyStatus.TREX_DEPLOYING]: "Pending",
-  [PropertyStatus.VAULT_DEPLOYING]: "Pending",
-  [PropertyStatus.REGISTERING]: "Pending",
-};
+import {
+  PROPERTY_STATUS_LABEL_MAP,
+  PropertyStatus,
+} from "@/constants/properties";
 
 export const getPropertyStatusTranslationKey = (
   status: PropertyStatus | number | string,
 ): string => {
   const label = PROPERTY_STATUS_LABEL_MAP[status] ?? String(status);
 
-  // Map backend "Listed" -> UI "Active"
   const normalizedLabel =
     label === "Listed" ? "Active" : label.replace(/\s+/g, "");
 

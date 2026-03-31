@@ -5,10 +5,10 @@ import { getRequest, postRequest } from "@/shared/fetcher";
 
 import {
   AllPropertiesResponse,
+  BaseResponse,
   GetAllPropertiesParams,
   PropertyActionPayload,
-  BaseResponse,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
+} from "@/types/properties";
 
 export async function getAllPropertiesAction(params: GetAllPropertiesParams) {
   return await getRequest<

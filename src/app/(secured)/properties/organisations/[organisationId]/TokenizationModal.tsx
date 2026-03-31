@@ -29,8 +29,7 @@ import {
   toBaseUnitsBigInt,
 } from "@/shared/utils/unitUtils";
 import { handleWeb3Error } from "@/shared/utils/web3Error";
-import { PropertyItem } from "../../helpers/allPropertiesTypes";
-import { AdminProperty } from "../../helpers/types";
+import { AdminProperty, PropertyItem } from "@/types/properties";
 
 type TokenizationFormValues = {
   ownerAddress: string;

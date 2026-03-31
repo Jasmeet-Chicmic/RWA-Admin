@@ -21,9 +21,9 @@ type OrganisationProfileResponse = ResponseType & {
 
 import {
   AllPropertiesResponse,
-  GetAllPropertiesParams,
   BaseResponse,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
+  GetAllPropertiesParams,
+} from "@/types/properties";
 
 export async function getOrganisationProfileAction() {
   return await getRequest<OrganisationProfileResponse, undefined>(

@@ -10,9 +10,9 @@ import {
 import { ResponseType } from "@/shared/types";
 import {
   AllPropertiesResponse,
-  GetAllPropertiesParams,
   BaseResponse,
-} from "@/app/(secured)/properties/helpers/allPropertiesTypes";
+  GetAllPropertiesParams,
+} from "@/types/properties";
 
 export type AdminOrganisation = {
   id: string;
