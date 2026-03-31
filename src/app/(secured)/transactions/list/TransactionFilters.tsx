@@ -1,7 +1,7 @@
 "use client";
 
 import SelectFilter from "@/components/atoms/SelectFilter";
-import { PAYMENT_STATUS } from "@/shared/constants";
+import { TRANSACTION_STATUS } from "@/constants/trasaction";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
@@ -15,20 +15,16 @@ const TransactionFilters = () => {
   const statusOptions = useMemo(
     () => [
       {
-        label: t("initiated"),
-        value: String(PAYMENT_STATUS.INITIATED),
+        label: t("pending"),
+        value: String(TRANSACTION_STATUS.PENDING),
       },
       {
         label: t("success"),
-        value: String(PAYMENT_STATUS.SUCCESS),
+        value: String(TRANSACTION_STATUS.SUCCESS),
       },
       {
         label: t("failed"),
-        value: String(PAYMENT_STATUS.FAILED),
-      },
-      {
-        label: t("refunded"),
-        value: String(PAYMENT_STATUS.REFUNDED),
+        value: String(TRANSACTION_STATUS.FAILED),
       },
     ],
     [t],
@@ -39,12 +35,8 @@ const TransactionFilters = () => {
 
   const fromDateParam = searchParams.get("fromDate");
   const toDateParam = searchParams.get("toDate");
-  const fromDateValue = fromDateParam
-    ? new Date(fromDateParam).toISOString().split("T")[0]
-    : "";
-  const toDateValue = toDateParam
-    ? new Date(toDateParam).toISOString().split("T")[0]
-    : "";
+  const fromDateValue = fromDateParam ? fromDateParam.split("T")[0] : "";
+  const toDateValue = toDateParam ? toDateParam.split("T")[0] : "";
   const today = new Date().toISOString().split("T")[0];
 
   const handleFromDateChange = (value: string) => {
@@ -52,11 +44,7 @@ const TransactionFilters = () => {
     params.delete("skip");
 
     if (value) {
-      const [year, month, day] = value.split("-").map(Number);
-      const fromDateUTC = new Date(
-        Date.UTC(year, month - 1, day, 0, 0, 0, 0),
-      ).toISOString();
-      params.set("fromDate", fromDateUTC);
+      params.set("fromDate", value);
     } else {
       params.delete("fromDate");
     }
@@ -69,11 +57,7 @@ const TransactionFilters = () => {
     params.delete("skip");
 
     if (value) {
-      const [year, month, day] = value.split("-").map(Number);
-      const toDateUTC = new Date(
-        Date.UTC(year, month - 1, day, 23, 59, 59, 999),
-      ).toISOString();
-      params.set("toDate", toDateUTC);
+      params.set("toDate", value);
     } else {
       params.delete("toDate");
     }

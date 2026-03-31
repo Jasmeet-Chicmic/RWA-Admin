@@ -6,10 +6,11 @@ import { useCallback, useMemo } from "react";
 import { toast } from "react-toastify";
 
 import FormattedDate from "@/components/atoms/FormattedDate";
+import StatusChip from "@/components/atoms/StatusChip";
 import { TableColumn } from "@/components/atoms/Table";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { TRANSACTION_STATUS } from "@/constants/trasaction";
 import { AdminTransactionItem } from "@/services/transactions-service";
-import { PAYMENT_STATUS } from "@/shared/constants";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
@@ -18,18 +19,19 @@ import { formatToFixed } from "@/shared/utils/unitUtils";
 import TransactionFilters from "./TransactionFilters";
 
 const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
-  [PAYMENT_STATUS.INITIATED]:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-  [PAYMENT_STATUS.SUCCESS]:
-    "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-  [PAYMENT_STATUS.FAILED]:
-    "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-  [PAYMENT_STATUS.REFUNDED]:
-    "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+  [TRANSACTION_STATUS.PENDING]:
+    "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800",
+  [TRANSACTION_STATUS.SUCCESS]:
+    "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
+  [TRANSACTION_STATUS.FAILED]:
+    "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800",
 };
 
 const DEFAULT_BADGE_STYLE =
-  "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400";
+  "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700";
+
+const COPYABLE_CHIP_CLASS =
+  "bg-primarycolor/10 text-primarycolor border-primarycolor/30 hover:bg-primarycolor/15 dark:bg-secondarycolor/15 dark:text-secondarycolor dark:border-secondarycolor/30 dark:hover:bg-secondarycolor/25";
 
 interface TransactionsTableProps {
   data: AdminTransactionItem[];
@@ -54,14 +56,12 @@ const TransactionsTable = ({
   const getStatusLabel = useCallback(
     (status: number) => {
       switch (status) {
-        case PAYMENT_STATUS.INITIATED:
-          return t("initiated");
-        case PAYMENT_STATUS.SUCCESS:
+        case TRANSACTION_STATUS.PENDING:
+          return t("pending");
+        case TRANSACTION_STATUS.SUCCESS:
           return t("success");
-        case PAYMENT_STATUS.FAILED:
+        case TRANSACTION_STATUS.FAILED:
           return t("failed");
-        case PAYMENT_STATUS.REFUNDED:
-          return t("refunded");
         default:
           return t("unknown");
       }
@@ -87,7 +87,7 @@ const TransactionsTable = ({
           <button
             onClick={() => copyValue(item.buyerAddress)}
             title={t("copy")}
-            className="inline-flex items-center gap-2 rounded-full border border-bordergray200 px-3 py-1 text-xs text-labelprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgprimary"
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${COPYABLE_CHIP_CLASS}`}
           >
             <span className="max-w-[170px] truncate">{item.buyerAddress}</span>
             <Copy size={12} />
@@ -101,7 +101,7 @@ const TransactionsTable = ({
           <button
             onClick={() => copyValue(item.sellerAddress)}
             title={t("copy")}
-            className="inline-flex items-center gap-2 rounded-full border border-bordergray200 px-3 py-1 text-xs text-labelprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgprimary"
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${COPYABLE_CHIP_CLASS}`}
           >
             <span className="max-w-[170px] truncate">{item.sellerAddress}</span>
             <Copy size={12} />
@@ -115,7 +115,7 @@ const TransactionsTable = ({
           <button
             onClick={() => copyValue(item.transactionHash)}
             title={t("copy")}
-            className="inline-flex items-center gap-2 rounded-full border border-bordergray200 px-3 py-1 text-xs text-labelprimary hover:bg-gray-50 dark:border-darkbordercolor1 dark:text-darklabelprimary dark:hover:bg-darkbgprimary"
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${COPYABLE_CHIP_CLASS}`}
           >
             <span className="max-w-[170px] truncate">
               {item.transactionHash}
@@ -149,13 +149,7 @@ const TransactionsTable = ({
           const statusLabel = getStatusLabel(item.status);
           const badgeStyle =
             PAYMENT_STATUS_BADGE_STYLES[item.status] || DEFAULT_BADGE_STYLE;
-          return (
-            <span
-              className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${badgeStyle}`}
-            >
-              {statusLabel}
-            </span>
-          );
+          return <StatusChip label={statusLabel} className={badgeStyle} />;
         },
       },
     ];

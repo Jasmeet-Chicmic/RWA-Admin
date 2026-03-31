@@ -85,6 +85,33 @@ export const fetchOrganisationProperties = createAsyncThunk<
   }
 });
 
+export const fetchAdminSpecificOrganisationProperties = createAsyncThunk<
+  AllPropertiesResponse,
+  {
+    organizationId: string;
+    page: number;
+    pageSize: number;
+    status?: number;
+    search?: string;
+  },
+  { rejectValue: string }
+>(
+  "properties/fetchAdminSpecificOrganisation",
+  async (params, { rejectWithValue }) => {
+    try {
+      return await propertiesService.getAdminSpecificOrganisationProperties(
+        params,
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch admin organisation properties",
+      );
+    }
+  },
+);
+
 export const fetchPropertyOrganisations = createAsyncThunk<
   { items: PropertyOrganisationRow[]; totalCount: number },
   { page: number; pageSize: number },
@@ -137,6 +164,26 @@ const propertiesSlice = createSlice({
         state.organisation.error =
           action.payload ?? "Failed to fetch organisation properties";
       })
+      .addCase(fetchAdminSpecificOrganisationProperties.pending, (state) => {
+        state.organisation.isLoading = true;
+        state.organisation.error = null;
+      })
+      .addCase(
+        fetchAdminSpecificOrganisationProperties.fulfilled,
+        (state, action) => {
+          state.organisation.isLoading = false;
+          state.organisation.items = action.payload.items;
+          state.organisation.totalCount = action.payload.totalCount;
+        },
+      )
+      .addCase(
+        fetchAdminSpecificOrganisationProperties.rejected,
+        (state, action) => {
+          state.organisation.isLoading = false;
+          state.organisation.error =
+            action.payload ?? "Failed to fetch organisation properties";
+        },
+      )
       .addCase(fetchPropertyOrganisations.pending, (state) => {
         state.propertyOrganisations.isLoading = true;
         state.propertyOrganisations.error = null;

@@ -95,8 +95,6 @@ const AllPropertiesTable = ({
   const [isAssignLLCModalOpen, setIsAssignLLCModalOpen] = useState(false);
   const lastRequestKeyRef = useRef<string | null>(null);
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
-  const shouldShowStatusFilter = hideStatusFilter === false;
-  const hasStatusFilterNumber = typeof statusFilterNumber === "number";
 
   const combinedDeps = useMemo(
     () =>
@@ -164,20 +162,20 @@ const AllPropertiesTable = ({
     setCurrentPage(1);
   };
 
-  const handleApprove = useCallback((item: PropertyItem) => {
+  const handleApprove = (item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsApproveModalOpen(true);
-  }, []);
+  };
 
-  const handleReject = useCallback((item: PropertyItem) => {
+  const handleReject = (item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsRejectModalOpen(true);
-  }, []);
+  };
 
-  const handleAssignLLC = useCallback((item: PropertyItem) => {
+  const handleAssignLLC = (item: PropertyItem) => {
     setSelectedProperty({ id: item.id, name: item.name });
     setIsAssignLLCModalOpen(true);
-  }, []);
+  };
 
   const columns: TableColumn<PropertyItem>[] = useMemo(
     () => [
@@ -324,11 +322,13 @@ const AllPropertiesTable = ({
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-            {shouldShowStatusFilter && (
+            {!hideStatusFilter && (
               <div className="relative">
                 <select
                   value={
-                    hasStatusFilterNumber ? String(statusFilterNumber) : ""
+                    statusFilterNumber !== undefined
+                      ? String(statusFilterNumber)
+                      : ""
                   }
                   onChange={(e) => handleStatusFilterChange(e.target.value)}
                   className="appearance-none pr-8 pl-4 py-3 w-full sm:w-[180px] dark:border-white/50 border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer"

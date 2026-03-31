@@ -23,6 +23,22 @@ const isItemActive = (pathname: string, item: NavItem): boolean => {
   return item.children?.some((child) => isItemActive(pathname, child)) ?? false;
 };
 
+const getItemMatchScore = (pathname: string, item: NavItem): number => {
+  const ownMatchScore = Math.max(
+    ...(item.activePaths?.map((path) =>
+      isRouteAllowed(pathname, [path]) ? path.length : 0,
+    ) ?? [0]),
+  );
+
+  const childrenMatchScore = Math.max(
+    ...(item.children?.map((child) => getItemMatchScore(pathname, child)) ?? [
+      0,
+    ]),
+  );
+
+  return Math.max(ownMatchScore, childrenMatchScore);
+};
+
 interface SidebarProps {
   initialRole?: LOGIN_ROLE;
 }
@@ -127,8 +143,12 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
     );
   };
 
-  const renderNavItem = (item: NavItem, depth = 0): React.ReactNode => {
-    const isActive = isItemActive(pathname, item);
+  const renderNavItem = (
+    item: NavItem,
+    depth = 0,
+    forceActive?: boolean,
+  ): React.ReactNode => {
+    const isActive = forceActive ?? isItemActive(pathname, item);
     const isExpandable = Boolean(item.children?.length);
     // const paddingLeft = depth * 16 + 16;
     const paddingLeft = 16;
@@ -210,7 +230,21 @@ const Sidebar: React.FC<SidebarProps> = ({ initialRole }) => {
             </button>
             {isExpandable && expanded[item.label] && (
               <ul className="mt-1">
-                {item.children?.map((child) => renderNavItem(child, depth + 1))}
+                {(() => {
+                  const childScores =
+                    item.children?.map((child) =>
+                      getItemMatchScore(pathname, child),
+                    ) ?? [];
+                  const strongestScore = Math.max(...childScores, 0);
+                  const strongestIndex =
+                    strongestScore > 0
+                      ? childScores.indexOf(strongestScore)
+                      : -1;
+
+                  return item.children?.map((child, index) =>
+                    renderNavItem(child, depth + 1, index === strongestIndex),
+                  );
+                })()}
               </ul>
             )}
           </>

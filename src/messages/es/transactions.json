@@ -27,6 +27,7 @@
   "cancelled": "Cancelado",
   "refunded": "Reembolsado",
   "initiated": "Iniciado",
+  "pending": "Pendiente",
   "success": "Éxito",
   "failed": "Fallido",
   "monthly": "Mensual",

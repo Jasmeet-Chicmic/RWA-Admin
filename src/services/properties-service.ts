@@ -46,11 +46,10 @@ function normalizeAllPropertiesResponse(
     "status" in payload &&
     "message" in payload
   ) {
-    const apiPayload = payload as BaseResponse<AllPropertiesResponse>;
-    return apiPayload.data ?? EMPTY_ALL_PROPERTIES_RESPONSE;
+    return payload.data ?? EMPTY_ALL_PROPERTIES_RESPONSE;
   }
 
-  return payload as AllPropertiesResponse;
+  return payload;
 }
 
 const EMPTY_ADMIN_DASHBOARD_SUMMARY: AdminPropertiesDetails = {
@@ -82,6 +81,20 @@ export const propertiesService = {
     const payload = await getRequest<
       BaseResponse<AllPropertiesResponse> | AllPropertiesResponse
     >(API_END_POINTS.ORGANIZATION_PROPERTIES, params);
+
+    return normalizeAllPropertiesResponse(payload);
+  },
+
+  async getAdminSpecificOrganisationProperties(params: {
+    organizationId: string;
+    page: number;
+    pageSize: number;
+    status?: number;
+    search?: string;
+  }): Promise<AllPropertiesResponse> {
+    const payload = await getRequest<
+      BaseResponse<AllPropertiesResponse> | AllPropertiesResponse
+    >(API_END_POINTS.ADMIN_ALL_PROPERTIES, params);
 
     return normalizeAllPropertiesResponse(payload);
   },

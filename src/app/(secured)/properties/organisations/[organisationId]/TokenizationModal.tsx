@@ -19,7 +19,10 @@ import {
   TOKENIZATION_FLOW_STEPS,
   type TokenizationFlowStep,
 } from "@/lib/contracts/runTokenizationFlow";
+import { fetchJobStatus } from "@/lib/contracts/tokenization/statusCheck";
+import type { JobStatusData } from "@/lib/contracts/tokenization/types";
 import {
+  DEFAULT_TOKEN_DECIMALS,
   DISPLAY_CURRENCY,
   formatToFixed,
   fromBaseUnits,
@@ -71,6 +74,100 @@ const preventNegativeAndExponent: React.KeyboardEventHandler<
 };
 
 type PropertyData = PropertyItem | AdminProperty;
+const TOKEN_BASE_MULTIPLIER = 10 ** DEFAULT_TOKEN_DECIMALS;
+
+const toFiniteNumber = (value: unknown): number | null => {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+};
+
+const pickFirstFiniteNumber = (...candidates: unknown[]): number | null => {
+  for (const candidate of candidates) {
+    const parsed = toFiniteNumber(candidate);
+    if (parsed !== null) return parsed;
+  }
+  return null;
+};
+
+const getStatusPrefillValues = (
+  status: JobStatusData | null,
+  fallback: TokenizationFormValues,
+): TokenizationFormValues => {
+  if (!status) return fallback;
+
+  const topLevel = status as unknown as Record<string, unknown>;
+  const requestPayload =
+    status.requestPayload && typeof status.requestPayload === "object"
+      ? status.requestPayload
+      : {};
+
+  const mintAmountBase = pickFirstFiniteNumber(
+    status.mintAmount,
+    topLevel.mintAmount,
+    requestPayload.mintAmount,
+    requestPayload.initiateMintAmount,
+  );
+  const mintAmountScaledToShares =
+    mintAmountBase !== null &&
+    mintAmountBase >= TOKEN_BASE_MULTIPLIER &&
+    mintAmountBase % TOKEN_BASE_MULTIPLIER === 0
+      ? mintAmountBase / TOKEN_BASE_MULTIPLIER
+      : null;
+  const sharesValue = pickFirstFiniteNumber(
+    status.totalShares,
+    topLevel.totalShares,
+    requestPayload.totalShares,
+    // Status API now returns mintAmount as shares (e.g. 10).
+    mintAmountBase,
+    // Keep compatibility if any legacy/status variants return scaled value.
+    mintAmountScaledToShares,
+  );
+  const normalizedShares =
+    sharesValue !== null && sharesValue > 0
+      ? String(Math.trunc(sharesValue))
+      : fallback.totalShares;
+
+  const totalPropertyValueBase = pickFirstFiniteNumber(
+    status.totalPropertyValue,
+    topLevel.totalPropertyValue,
+    requestPayload.totalPropertyValue,
+    requestPayload.totalValue,
+  );
+  const pricePerShareBase = pickFirstFiniteNumber(
+    status.pricePerShare,
+    topLevel.pricePerShare,
+    requestPayload.pricePerShare,
+    requestPayload.initiatePricePerShare,
+  );
+  const resolvedTotalPropertyValue =
+    totalPropertyValueBase !== null
+      ? fromBaseUnits(totalPropertyValueBase)
+      : pricePerShareBase !== null && sharesValue !== null
+        ? fromBaseUnits(pricePerShareBase) * sharesValue
+        : null;
+
+  const ownerAddress =
+    (status.ownerAddress ||
+      (topLevel.ownerAddress as string | undefined) ||
+      (requestPayload.ownerAddress as string | undefined)) ??
+    fallback.ownerAddress;
+
+  return {
+    ...fallback,
+    totalShares: normalizedShares,
+    totalPropertyValue:
+      resolvedTotalPropertyValue !== null
+        ? formatNumberAmount(resolvedTotalPropertyValue)
+        : fallback.totalPropertyValue,
+    ownerAddress,
+  };
+};
 
 export const TokenizationModal = ({
   open,
@@ -125,12 +222,26 @@ export const TokenizationModal = ({
   });
 
   useEffect(() => {
-    if (open) {
+    if (!open || !property) return;
+
+    let isCancelled = false;
+    const initializeForm = async () => {
       methods.reset(defaultValues);
       setShowWalletConnectModal(false);
       setIsFlowCompleted(false);
-    }
-  }, [defaultValues, methods, open]);
+
+      const status = await fetchJobStatus(property.id);
+      if (isCancelled) return;
+      const prefillValues = getStatusPrefillValues(status, defaultValues);
+      methods.reset(prefillValues);
+    };
+
+    void initializeForm();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [defaultValues, methods, open, property]);
 
   useEffect(() => {
     if (isConnected) {
@@ -193,7 +304,7 @@ export const TokenizationModal = ({
         Number.isFinite(submittedShares) && submittedShares > 0
           ? submittedShares
           : 0;
-      const initiateMintAmount = safeSubmittedShares;
+      const initiateMintAmount = safeSubmittedShares * TOKEN_BASE_MULTIPLIER;
       const initiatePricePerShare = Number(
         totalUnits > BigInt(0) ? totalValue / totalUnits : BigInt(0),
       );
@@ -271,6 +382,7 @@ export const TokenizationModal = ({
                   type="text"
                   label={t("tokenizationForm.totalPropertyValue")}
                   width="w-full md:w-[48%]"
+                  disabled={isSubmitting}
                 />
 
                 <InputField<TokenizationFormValues>
@@ -285,6 +397,7 @@ export const TokenizationModal = ({
                   interceptor={(val) => clampShares(val)}
                   inputMode="numeric"
                   onKeyDown={preventNegativeAndExponent}
+                  disabled={isSubmitting}
                   validation={{
                     required: t("tokenizationForm.errors.sharesRequired"),
                     validate: (val) => {

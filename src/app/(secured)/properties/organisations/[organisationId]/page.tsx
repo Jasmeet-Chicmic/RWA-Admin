@@ -11,6 +11,7 @@ const OrganisationPropertiesPage = async ({
         <OrganisationPropertiesTable
           organisationId={organisationId}
           hideActions={true}
+          fetchMode="adminSpecificOrganisation"
         />
       </div>
     </div>

@@ -73,6 +73,12 @@ export type JobStatusData = {
   propertyId: string;
   status: number;
   statusLabel?: string;
+  mintAmount?: number | string | null;
+  pricePerShare?: number | string | null;
+  totalShares?: number | string | null;
+  totalPropertyValue?: number | string | null;
+  ownerAddress?: string | null;
+  requestPayload?: Record<string, unknown> | null;
   tokenAddress: `0x${string}` | null;
   vaultAddress: `0x${string}` | null;
   onChainPropertyId: string | null;

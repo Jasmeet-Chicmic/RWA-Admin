@@ -19,7 +19,10 @@ import {
 } from "@/shared/styles";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchOrganisationProperties } from "@/store/propertiesSlice";
+import {
+  fetchAdminSpecificOrganisationProperties,
+  fetchOrganisationProperties,
+} from "@/store/propertiesSlice";
 import { PropertyItem } from "../../helpers/allPropertiesTypes";
 import {
   PROPERTY_STATUS_BADGE_CLASSES,
@@ -66,9 +69,11 @@ function buildOrganisationPropertiesDeps(
 const OrganisationPropertiesTable = ({
   organisationId,
   hideActions = false,
+  fetchMode = "organisation",
 }: {
   organisationId: string;
   hideActions?: boolean;
+  fetchMode?: "organisation" | "adminSpecificOrganisation";
 }) => {
   const t = useTranslations("properties");
   const router = useRouter();
@@ -136,15 +141,33 @@ const OrganisationPropertiesTable = ({
 
   const refetchOrganisationProperties = useCallback(() => {
     if (!requestPayload) return;
+    if (fetchMode === "adminSpecificOrganisation") {
+      dispatch(
+        fetchAdminSpecificOrganisationProperties({
+          organizationId: organisationId,
+          ...requestPayload,
+        }),
+      );
+      return;
+    }
     dispatch(fetchOrganisationProperties(requestPayload));
-  }, [dispatch, requestPayload]);
+  }, [dispatch, fetchMode, organisationId, requestPayload]);
 
   useEffect(() => {
     if (!requestPayload) return;
     if (lastRequestKeyRef.current === debouncedDeps) return;
     lastRequestKeyRef.current = debouncedDeps;
+    if (fetchMode === "adminSpecificOrganisation") {
+      dispatch(
+        fetchAdminSpecificOrganisationProperties({
+          organizationId: organisationId,
+          ...requestPayload,
+        }),
+      );
+      return;
+    }
     dispatch(fetchOrganisationProperties(requestPayload));
-  }, [debouncedDeps, dispatch, requestPayload]);
+  }, [debouncedDeps, dispatch, fetchMode, organisationId, requestPayload]);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "—";
