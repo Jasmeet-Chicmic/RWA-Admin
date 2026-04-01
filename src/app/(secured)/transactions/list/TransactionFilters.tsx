@@ -1,7 +1,7 @@
 "use client";
 
 import SelectFilter from "@/components/atoms/SelectFilter";
-import { TRANSACTION_STATUS } from "@/constants/trasaction";
+import { TRANSACTION_STATUS } from "@/constants/transaction";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";

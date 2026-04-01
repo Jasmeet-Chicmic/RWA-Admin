@@ -13,6 +13,8 @@ export type MintStepInput = {
   vaultAddress: `0x${string}`;
   skipMinting?: boolean;
   existingMintTxHash?: `0x${string}`;
+  existingComplianceBoundTxHash?: `0x${string}`;
+  forceReportComplianceBound?: boolean;
 };
 
 export type MintStepResult = {
@@ -190,6 +192,33 @@ export const runMintStep = async ({
 
   if (!mintTxHash) {
     throw new Error("Missing mint tx hash before compliance binding");
+  }
+
+  if (
+    (input.forceReportComplianceBound || isBound) &&
+    !apiMessages.complianceBound
+  ) {
+    const txHash =
+      input.existingComplianceBoundTxHash ?? addModuleTxHash ?? mintTxHash;
+
+    const complianceBoundPayload = await propertyOnchainService.complianceBound(
+      {
+        propertyId: input.input.propertyId,
+        txHash,
+      },
+    );
+    if (!complianceBoundPayload?.status) {
+      throw new Error(
+        complianceBoundPayload?.message || "Failed to report compliance bound",
+      );
+    }
+    console.log("[TokenizationFlow] compliance-bound API (resume) succeeded", {
+      statusCode: complianceBoundPayload?.statusCode,
+      message: complianceBoundPayload?.message,
+      txHash,
+      isBound,
+    });
+    apiMessages.complianceBound = complianceBoundPayload?.message;
   }
 
   return {

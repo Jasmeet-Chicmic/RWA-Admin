@@ -84,6 +84,7 @@ export type JobStatusData = {
   onChainPropertyId: string | null;
   trexDeployTxHash: `0x${string}` | null;
   vaultDeployTxHash: `0x${string}` | null;
+  complianceBoundTxHash?: `0x${string}` | null;
   registerPropertyTxHash: `0x${string}` | null;
   kycSetupTxHash: `0x${string}` | null;
   unpauseTxHash: `0x${string}` | null;

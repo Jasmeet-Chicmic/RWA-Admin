@@ -336,6 +336,9 @@ export const resumeTokenizationFlow = async ({
         vaultAddress,
         skipMinting: true,
         existingMintTxHash: existingStatus?.mintTxHash ?? undefined,
+        existingComplianceBoundTxHash:
+          existingStatus?.complianceBoundTxHash ?? undefined,
+        forceReportComplianceBound: true,
       },
     });
     mintTxHash = mintResult.mintTxHash;

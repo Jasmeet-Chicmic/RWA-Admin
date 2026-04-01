@@ -9,7 +9,7 @@ import FormattedDate from "@/components/atoms/FormattedDate";
 import StatusChip from "@/components/atoms/StatusChip";
 import { TableColumn } from "@/components/atoms/Table";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
-import { TRANSACTION_STATUS } from "@/constants/trasaction";
+import { TRANSACTION_STATUS } from "@/constants/transaction";
 import { AdminTransactionItem } from "@/services/transactions-service";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
