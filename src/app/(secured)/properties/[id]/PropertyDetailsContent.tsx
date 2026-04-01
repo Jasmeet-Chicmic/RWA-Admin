@@ -13,7 +13,7 @@ import {
   PROPERTY_TYPE_LABELS,
 } from "@/constants/properties";
 import { PRIVATE_ROUTES } from "@/shared/routes";
-import { getImageUrl } from "@/shared/utils";
+import { buildAssetsUrl } from "@/shared/utils";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchPropertyDetails } from "@/store/propertiesSlice";
@@ -76,7 +76,7 @@ const PropertyDetailsContent = ({
   const propertyImages = item.imageUrls || [];
   const documents = item.documents || [];
   const adminDocuments = item.adminDocuments || [];
-  const coverImage = getImageUrl(propertyImages[0]);
+  const coverImage = buildAssetsUrl(propertyImages[0]);
   const breadcrumbItems: BreadcrumbItem[] =
     detailsScope === "organisation"
       ? [
@@ -252,7 +252,7 @@ const PropertyDetailsContent = ({
                         : t("document")}
                     </p>
                     <a
-                      href={getImageUrl(doc.documentUrl)}
+                      href={buildAssetsUrl(doc.documentUrl)}
                       target="_blank"
                       rel="noreferrer"
                       className="mt-1 block text-sm text-primarycolor underline break-all"
@@ -287,7 +287,7 @@ const PropertyDetailsContent = ({
                         : t("document")}
                     </p>
                     <a
-                      href={getImageUrl(doc.documentUrl)}
+                      href={buildAssetsUrl(doc.documentUrl)}
                       target="_blank"
                       rel="noreferrer"
                       className="mt-1 block text-sm text-primarycolor underline break-all"

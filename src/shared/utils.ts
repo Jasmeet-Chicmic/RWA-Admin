@@ -133,6 +133,29 @@ export const buildImageUrl = (src?: string | null): string => {
   return `${normalizedBase}/${normalizedSrc}`;
 };
 
+/**
+ * Resolves image or document paths against NEXT_PUBLIC_ASSETS_URL.
+ * Use for backend-relative asset keys (same rules as buildImageUrl, but base is assets only).
+ */
+export const buildAssetsUrl = (path: string | null | undefined): string => {
+  if (!path) return "";
+  const src = path.trim();
+  if (!src) return "";
+  if (
+    src.startsWith("http://") ||
+    src.startsWith("https://") ||
+    src.startsWith("blob:")
+  ) {
+    return src;
+  }
+  const baseUrl = process.env.NEXT_PUBLIC_ASSETS_URL?.replace(/\/$/, "") ?? "";
+  if (!baseUrl) {
+    return src;
+  }
+  const normalizedSrc = src.replace(/^\//, "");
+  return `${baseUrl}/${normalizedSrc}`;
+};
+
 export const getSafeText = (
   value: string | null | undefined,
   fallback: string = "-",
