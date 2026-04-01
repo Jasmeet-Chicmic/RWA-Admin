@@ -86,6 +86,15 @@ const toFiniteNumber = (value: unknown): number | null => {
   return null;
 };
 
+const normalizeBase6ToDisplay = (value: number) => fromBaseUnits(value);
+
+const normalizeSharesForDisplay = (value: number): number => {
+  if (value >= TOKEN_BASE_MULTIPLIER && value % TOKEN_BASE_MULTIPLIER === 0) {
+    return value / TOKEN_BASE_MULTIPLIER;
+  }
+  return value;
+};
+
 const pickFirstFiniteNumber = (...candidates: unknown[]): number | null => {
   for (const candidate of candidates) {
     const parsed = toFiniteNumber(candidate);
@@ -106,49 +115,51 @@ const getStatusPrefillValues = (
       ? status.requestPayload
       : {};
 
+  // Status API mirrors initiate payload format:
+  // - mintAmount / initiateMintAmount: base-6 token units
+  // - pricePerShare / initiatePricePerShare: base-6 currency units
   const mintAmountBase = pickFirstFiniteNumber(
-    status.mintAmount,
-    topLevel.mintAmount,
     requestPayload.mintAmount,
     requestPayload.initiateMintAmount,
+    status.mintAmount,
+    topLevel.mintAmount,
   );
   const mintAmountScaledToShares =
-    mintAmountBase !== null &&
-    mintAmountBase >= TOKEN_BASE_MULTIPLIER &&
-    mintAmountBase % TOKEN_BASE_MULTIPLIER === 0
-      ? mintAmountBase / TOKEN_BASE_MULTIPLIER
-      : null;
-  const sharesValue = pickFirstFiniteNumber(
+    mintAmountBase !== null ? normalizeSharesForDisplay(mintAmountBase) : null;
+  const sharesCandidate = pickFirstFiniteNumber(
+    requestPayload.totalShares,
     status.totalShares,
     topLevel.totalShares,
-    requestPayload.totalShares,
-    // Status API now returns mintAmount as shares (e.g. 10).
-    mintAmountBase,
-    // Keep compatibility if any legacy/status variants return scaled value.
+    // Fallback derivation from base-6 mint amount.
     mintAmountScaledToShares,
+    mintAmountBase,
   );
+  const sharesValue =
+    sharesCandidate !== null
+      ? normalizeSharesForDisplay(sharesCandidate)
+      : null;
   const normalizedShares =
     sharesValue !== null && sharesValue > 0
       ? String(Math.trunc(sharesValue))
       : fallback.totalShares;
 
   const totalPropertyValueBase = pickFirstFiniteNumber(
-    status.totalPropertyValue,
-    topLevel.totalPropertyValue,
     requestPayload.totalPropertyValue,
     requestPayload.totalValue,
+    status.totalPropertyValue,
+    topLevel.totalPropertyValue,
   );
   const pricePerShareBase = pickFirstFiniteNumber(
-    status.pricePerShare,
-    topLevel.pricePerShare,
     requestPayload.pricePerShare,
     requestPayload.initiatePricePerShare,
+    status.pricePerShare,
+    topLevel.pricePerShare,
   );
   const resolvedTotalPropertyValue =
     totalPropertyValueBase !== null
-      ? fromBaseUnits(totalPropertyValueBase)
+      ? normalizeBase6ToDisplay(totalPropertyValueBase)
       : pricePerShareBase !== null && sharesValue !== null
-        ? fromBaseUnits(pricePerShareBase) * sharesValue
+        ? normalizeBase6ToDisplay(pricePerShareBase) * sharesValue
         : null;
 
   const ownerAddress =
@@ -253,10 +264,10 @@ export const TokenizationModal = ({
 
   const currentPropertyValuation = useMemo(() => {
     if (!property) return 0;
-    return (
+    return fromBaseUnits(
       (property as PropertyItem).approvedValuation ??
-      (property as AdminProperty).totalValue ??
-      0
+        (property as AdminProperty).totalValue ??
+        0,
     );
   }, [property]);
 

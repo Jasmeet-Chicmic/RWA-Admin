@@ -1,8 +1,5 @@
 import { keccak256, stringToBytes } from "viem";
-import { toBaseUnitsBigInt } from "@/shared/utils/unitUtils";
 import type { RunTokenizationFlowInput } from "./types";
-
-const TOKEN_DECIMALS = 6;
 
 const toTokenSymbol = (propertyId: string) =>
   `P${
@@ -15,8 +12,9 @@ const toTokenSymbol = (propertyId: string) =>
 export const computeDeployParams = (input: RunTokenizationFlowInput) => {
   const salt = `${input.propertyId}-${Date.now()}`;
   const claimTopic = BigInt(keccak256(stringToBytes("KYC_CLAIM")));
-  const tokenScale = toBaseUnitsBigInt(1, TOKEN_DECIMALS);
-  const pricePerShare = (input.totalValue * tokenScale) / input.totalUnits;
+  // `totalValue` is already expressed in 10^6 units (USDC base units),
+  // so dividing by whole-share `totalUnits` keeps pricePerShare in 10^6 scale.
+  const pricePerShare = input.totalValue / input.totalUnits;
 
   return {
     salt,
