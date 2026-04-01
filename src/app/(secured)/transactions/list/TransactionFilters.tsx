@@ -89,7 +89,7 @@ const TransactionFilters = () => {
           value={fromDateValue}
           onChange={(e) => handleFromDateChange(e.target.value)}
           max={today}
-          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-secondarycolor dark:text-sidebartext"
+          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext"
         />
       </div>
 
@@ -104,7 +104,7 @@ const TransactionFilters = () => {
           onChange={(e) => handleToDateChange(e.target.value)}
           min={fromDateValue || undefined}
           max={today}
-          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-secondarycolor dark:text-sidebartext"
+          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext"
         />
       </div>
     </div>

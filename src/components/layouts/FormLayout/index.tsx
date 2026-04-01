@@ -46,7 +46,7 @@ const FormLayout = ({
 
   return (
     <div className="flex items-center justify-center bg-lightbgbase dark:bg-darkbgbase rounded-[8px]">
-      <div className="p-8 rounded-lg shadow-md w-full max-w-md bg-darkbgprimary border-darkbordercolor1 text-sidebartext">
+      <div className="p-8 rounded-lg shadow-md w-full w-[448px] bg-darkbgprimary border-darkbordercolor1 text-sidebartext">
         {children}
       </div>
     </div>

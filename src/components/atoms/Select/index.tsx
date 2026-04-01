@@ -103,13 +103,13 @@ const Select = <OptionType, IsMulti extends boolean = false>(
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? "#623022"
+        ? "#C7FE1E"
         : state.isFocused
           ? isDark
             ? "#374151"
             : "#F3F4F6"
           : "transparent",
-      color: state.isSelected ? "#fff" : isDark ? "#F9FAFB" : "#1A1A1A",
+      color: state.isSelected ? "#000" : isDark ? "#F9FAFB" : "#1A1A1A",
       fontSize: "14px",
       fontWeight: state.isSelected ? 600 : 500,
       padding: "10px 12px",

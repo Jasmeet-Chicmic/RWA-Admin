@@ -8,7 +8,7 @@ type StatusChipProps = {
 const StatusChip = ({ label, className = "" }: StatusChipProps) => {
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[14px] font-medium border ${className}`}
     >
       {label}
     </span>

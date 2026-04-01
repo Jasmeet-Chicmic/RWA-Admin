@@ -198,7 +198,7 @@ const WalletConnectStep = ({
   ]);
 
   return (
-    <>
+    <div className="flex gap-3 items-center mt-4">
       <Button
         type="button"
         variant="outline"
@@ -206,7 +206,7 @@ const WalletConnectStep = ({
           void handleBackToLogin();
         }}
         disabled={isVerifyingWallet}
-        className="w-full"
+        className="w-full hover:opacity-[0.6] !hover:-translate-y-px !transition-all !duration-150"
       >
         {tCommon("backToLogin")}
       </Button>
@@ -222,13 +222,13 @@ const WalletConnectStep = ({
         }}
         isLoading={isVerifyingWallet}
         disabled={isVerifyingWallet}
-        className="mt-4 w-full text-black"
+        className="w-full text-black !hover:-translate-y-px !transition-all !duration-150"
       >
         {isConnected && address
           ? tCommon("disconnectWallet")
           : tCommon("connectWallet")}
       </Button>
-    </>
+    </div>
   );
 };
 

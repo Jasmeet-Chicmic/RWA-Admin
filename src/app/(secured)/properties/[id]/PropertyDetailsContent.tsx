@@ -62,7 +62,7 @@ const PropertyDetailsContent = ({
 
   if (isLoading) {
     return (
-      <div className="w-full py-8 lg:py-12">
+      <div className="w-full !pt-0 py-8 lg:py-12">
         <div className="w-full max-w-[1260px] min-[1680px]:max-w-[1480px] px-[20px] mx-auto">
           <div className="rounded-[11.57px] border border-[#292929] bg-[#141414] p-6 text-white">
             <h1 className="text-xl font-semibold">{t("propertyDetails")}</h1>
@@ -77,7 +77,7 @@ const PropertyDetailsContent = ({
 
   if (error || !item) {
     return (
-      <div className="w-full py-8 lg:py-12">
+      <div className="w-full !pt-0 py-8 lg:py-12">
         <div className="w-full max-w-[1260px] min-[1680px]:max-w-[1480px] px-[20px] mx-auto">
           <div className="rounded-[11.57px] border border-[#292929] bg-[#141414] p-6 text-white">
             <h1 className="text-xl font-semibold">{t("propertyDetails")}</h1>
@@ -148,7 +148,7 @@ const PropertyDetailsContent = ({
   };
 
   return (
-    <div className="w-full py-8 lg:py-12">
+    <div className="w-full !pt-0 py-8 lg:py-12">
       <div className="w-full max-w-[1260px] min-[1680px]:max-w-[1480px] px-[20px] mx-auto">
         <div className="flex flex-col gap-6 md:gap-[37px] w-full text-white">
           <Breadcrumbs

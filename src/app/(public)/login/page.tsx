@@ -119,14 +119,14 @@ const Login = () => {
           />
         </div>
         <FormLayout layout={FormLayoutType.Default}>
-          <h4 className="mb-1 text-[20px] leading-tight sm:text-[24px] sm:leading-[32px]">
+          <h4 className="mb-1 text-[20px] leading-tight sm:text-[24px] sm:leading-[32px] ">
             Welcome back to Townly
           </h4>
 
           {/* Role Toggle */}
           {(!nonce || !tempToken) && (
             <div className="flex items-center justify-center mb-6 mt-2">
-              <div className="relative flex rounded-lg bg-gray-800/50 p-1 w-full max-w-[280px]">
+              <div className="relative flex rounded-lg bg-gray-800/50 p-1 w-full max-w-full">
                 {LOGIN_ROLE_OPTIONS.map(({ value, label }) => (
                   <button
                     key={value}

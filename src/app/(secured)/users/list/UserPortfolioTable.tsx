@@ -118,7 +118,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
 
           return (
             <span
-              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border ${colorClasses}`}
+              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[14px] font-semibold border ${colorClasses}`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
               {t(labelKey)}
