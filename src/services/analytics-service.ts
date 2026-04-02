@@ -52,6 +52,16 @@ export interface UserSignupGraphPoint {
   total: number;
 }
 
+export interface InDemandPropertyItem {
+  propertyId: string;
+  name: string;
+  propertyType: number;
+  location: string;
+  approvedValuation: number;
+  status: number;
+  demandScore: number;
+}
+
 type WithData<T> = ResponseType & { data?: T };
 
 export const analyticsService = {
@@ -116,5 +126,21 @@ export const analyticsService = {
       API_END_POINTS.DASHBOARD_USER_GRAPH,
     );
     return payload.data ?? [];
+  },
+
+  async getInDemandProperties(params?: { skip?: number; limit?: number }) {
+    const payload = await getRequest<
+      WithData<{
+        totalCount: number;
+        limit: number;
+        skip: number;
+        items: InDemandPropertyItem[];
+      }>
+    >(API_END_POINTS.DASHBOARD_IN_DEMAND_PROPERTIES, params);
+
+    return {
+      items: payload.data?.items ?? [],
+      totalCount: payload.data?.totalCount ?? 0,
+    };
   },
 };

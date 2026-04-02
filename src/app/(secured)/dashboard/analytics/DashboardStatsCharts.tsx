@@ -8,13 +8,11 @@ import {
   UserSignupGraphPoint,
   UserRetentionData,
 } from "@/services/analytics-service";
-import { CHART_COLORS, THEME_TYPE } from "@/shared/constants";
 // import { DISPLAY_CURRENCY } from "@/shared/utils/unitUtils";
 import { ApexOptions } from "apexcharts";
 import { Activity, TrendingUp, Users } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
 import { useMemo } from "react";
 import TopPropertiesTable from "./TopPropertiesTable";
 
@@ -33,15 +31,7 @@ const UserSignupTimelineChart = ({
   data: UserSignupGraphPoint[];
 }) => {
   const t = useTranslations("dashboard");
-  const { resolvedTheme } = useTheme();
-
-  const chartColor = useMemo(
-    () =>
-      resolvedTheme === THEME_TYPE.DARK
-        ? CHART_COLORS.SECONDARY
-        : CHART_COLORS.PRIMARY,
-    [resolvedTheme],
-  );
+  const chartColor = "#C7FE1E";
 
   const categories = useMemo(
     () =>
@@ -67,14 +57,21 @@ const UserSignupTimelineChart = ({
   const options: ApexOptions = useMemo(
     () => ({
       chart: {
-        type: "bar",
+        type: "area",
         toolbar: { show: false },
         zoom: { enabled: false },
       },
-      plotOptions: {
-        bar: {
-          borderRadius: 8,
-          columnWidth: "55%",
+      stroke: {
+        curve: "smooth",
+        width: 3,
+      },
+      markers: {
+        size: 4,
+        strokeWidth: 2,
+        strokeColors: "#0f172a",
+        colors: [chartColor],
+        hover: {
+          size: 6,
         },
       },
       xaxis: {
@@ -102,18 +99,20 @@ const UserSignupTimelineChart = ({
       fill: {
         type: "gradient",
         gradient: {
-          shade: "light",
+          shade: "dark",
           type: "vertical",
-          shadeIntensity: 1,
-          opacityFrom: 0.85,
-          opacityTo: 0.25,
+          shadeIntensity: 0.35,
+          opacityFrom: 0.9,
+          opacityTo: 0.2,
           colorStops: [
             { offset: 0, color: chartColor, opacity: 1 },
-            { offset: 100, color: "#ffffff", opacity: 0 },
+            { offset: 100, color: "#4d7f00", opacity: 0.15 },
           ],
         },
       },
       tooltip: {
+        shared: true,
+        intersect: false,
         y: {
           formatter: (value: number) => `${value} ${t("userSignupsTooltip")}`,
         },
@@ -142,7 +141,8 @@ const UserSignupTimelineChart = ({
 
       {data.length > 0 ? (
         <ReactApexCharts
-          type="bar"
+          type="area"
+          width="100%"
           height={400}
           series={series}
           options={options}
@@ -240,9 +240,13 @@ const DashboardStatsCharts = ({
           color="bg-primarycolor dark:bg-secondarycolor"
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <UserSignupTimelineChart data={userSignupGraph} />
-        <TopPropertiesTable />
+      <div className="space-y-4">
+        <div className="w-full">
+          <UserSignupTimelineChart data={userSignupGraph} />
+        </div>
+        <div className="w-full">
+          <TopPropertiesTable />
+        </div>
       </div>
     </div>
   );

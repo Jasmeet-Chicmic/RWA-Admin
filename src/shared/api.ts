@@ -46,6 +46,7 @@ export const API_END_POINTS = {
   DASHBOARD_ACTIVITY: `${API_VERSION}/dashboard/activity`,
   DASHBOARD_COUNTRY: `${API_VERSION}/dashboard/country`,
   DASHBOARD_USER_GRAPH: `${API_VERSION}/dashboard/user/graph`,
+  DASHBOARD_IN_DEMAND_PROPERTIES: `${API_VERSION}/dashboard/in-demand-properties`,
 
   PAYMENY_METHODS: `${API_VERSION}/paymentMethods`,
   INVOICE_COUNTER: `${API_VERSION}/counters`,
