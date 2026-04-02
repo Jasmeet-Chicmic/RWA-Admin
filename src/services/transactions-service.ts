@@ -44,4 +44,17 @@ export const transactionsService = {
       totalCount: payload?.data?.totalCount ?? 0,
     };
   },
+
+  async getOrganisationTransactions(params: GetAdminTransactionsParams) {
+    const payload = await getRequest<
+      TransactionsListResponse,
+      GetAdminTransactionsParams
+    >(API_END_POINTS.ORGANIZATION_TRANSACTIONS, params);
+
+    const items = payload?.data?.items ?? [];
+    return {
+      transactions: items,
+      totalCount: payload?.data?.totalCount ?? 0,
+    };
+  },
 };

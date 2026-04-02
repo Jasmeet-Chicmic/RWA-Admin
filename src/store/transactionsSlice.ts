@@ -42,6 +42,25 @@ export const fetchTransactionsList = createAsyncThunk<
   }
 });
 
+export const fetchOrganisationTransactionsList = createAsyncThunk<
+  { items: AdminTransactionItem[]; totalCount: number },
+  GetAdminTransactionsParams,
+  { rejectValue: string }
+>("transactions/fetchOrganisationList", async (params, { rejectWithValue }) => {
+  try {
+    const payload =
+      await transactionsService.getOrganisationTransactions(params);
+    return {
+      items: payload.transactions ?? [],
+      totalCount: payload.totalCount ?? 0,
+    };
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Failed to fetch transactions",
+    );
+  }
+});
+
 const transactionsSlice = createSlice({
   name: "transactions",
   initialState,
@@ -62,6 +81,24 @@ const transactionsSlice = createSlice({
       .addCase(fetchTransactionsList.rejected, (state, action) => {
         state.list.isLoading = false;
         state.list.error = action.payload ?? "Failed to fetch transactions";
+      });
+
+    builder
+      .addCase(fetchOrganisationTransactionsList.pending, (state) => {
+        state.list.isLoading = true;
+        state.list.error = null;
+        state.list.items = [];
+        state.list.totalCount = 0;
+      })
+      .addCase(fetchOrganisationTransactionsList.fulfilled, (state, action) => {
+        state.list.isLoading = false;
+        state.list.items = action.payload.items;
+        state.list.totalCount = action.payload.totalCount;
+      })
+      .addCase(fetchOrganisationTransactionsList.rejected, (state, action) => {
+        state.list.isLoading = false;
+        state.list.error =
+          action.payload ?? "Failed to fetch organisation transactions";
       });
   },
 });

@@ -134,6 +134,8 @@ export const API_END_POINTS = {
 
   // Admin Transactions
   ADMIN_TRANSACTIONS: `/admin/transactions`,
+  // Organisation Transactions
+  ORGANIZATION_TRANSACTIONS: `/organizations/transactions`,
 
   // Admin Subscriptions
   ADMIN_SUBSCRIPTIONS: `/payment/api/admin/subscriptions`,

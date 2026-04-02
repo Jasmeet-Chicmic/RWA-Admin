@@ -16,7 +16,10 @@ import { buildAssetsUrl } from "@/shared/utils";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchPropertyDetails } from "@/store/propertiesSlice";
-import { fetchTransactionsList } from "@/store/transactionsSlice";
+import {
+  fetchOrganisationTransactionsList,
+  fetchTransactionsList,
+} from "@/store/transactionsSlice";
 import TransactionsTable from "@/app/(secured)/transactions/list/TransactionsTable";
 import PropertyDetailsContentSkeleton from "./PropertyDetailsContentSkeleton";
 
@@ -63,7 +66,7 @@ const PropertyDetailsContent = ({
     isLoading: propertyTransactionsLoading,
   } = useAppSelector((state) => state.transactions.list);
 
-  const lastRequestedTransactionsPropertyIdRef = useRef<string | null>(null);
+  const lastRequestedTransactionsKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (lastRequestedPropertyIdRef.current === propertyId) return;
@@ -72,16 +75,23 @@ const PropertyDetailsContent = ({
   }, [detailsScope, dispatch, propertyId]);
 
   useEffect(() => {
-    if (lastRequestedTransactionsPropertyIdRef.current === propertyId) return;
-    lastRequestedTransactionsPropertyIdRef.current = propertyId;
+    const requestKey = `${detailsScope}:${propertyId}`;
+    if (lastRequestedTransactionsKeyRef.current === requestKey) return;
+    lastRequestedTransactionsKeyRef.current = requestKey;
     dispatch(
-      fetchTransactionsList({
-        propertyId,
-        page: 1,
-        pageSize: 10,
-      }),
+      detailsScope === "organisation"
+        ? fetchOrganisationTransactionsList({
+            propertyId,
+            page: 1,
+            pageSize: 10,
+          })
+        : fetchTransactionsList({
+            propertyId,
+            page: 1,
+            pageSize: 10,
+          }),
     );
-  }, [dispatch, propertyId]);
+  }, [detailsScope, dispatch, propertyId]);
 
   if (isLoading) {
     return <PropertyDetailsContentSkeleton />;

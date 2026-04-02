@@ -44,4 +44,3 @@ const CopyToClipboardPill = ({
 };
 
 export default CopyToClipboardPill;
-
