@@ -26,6 +26,7 @@ const AnalyticsContainer = () => {
     subscriptionAnalytics,
     propertiesDetails,
     dashboardAnalytics,
+    userSignupGraph,
   } = useAppSelector((state) => state.analytics);
 
   const defaultDates = useMemo(() => getDefaultDateRange(), []);
@@ -65,6 +66,7 @@ const AnalyticsContainer = () => {
           propertiesDetails={propertiesDetails}
           subscriptionAnalytics={subscriptionAnalytics}
           dashboardAnalytics={dashboardAnalytics}
+          userSignupGraph={userSignupGraph}
           initialFromDate={payload.fromDate}
           initialToDate={payload.toDate}
         />
