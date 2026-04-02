@@ -1,6 +1,15 @@
 "use client";
 
-import { BarChart2, ChevronLeft, ChevronRight, MapPin, Minus, Plus, TrendingUp, Wallet } from "lucide-react";
+import {
+  BarChart2,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Minus,
+  Plus,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
@@ -45,14 +54,21 @@ const StatAnalytics = ({
       className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
       style={{ background: "#000", border: `0.5px solid ${accentColor}35` }}
     >
-      <span style={{ color: "#fff" }} className="w-full h-full flex justify-center items-center">
+      <span
+        style={{ color: "#fff" }}
+        className="w-full h-full flex justify-center items-center"
+      >
         {icon}
       </span>
     </div>
     <span className="font-inter text-[16px] font-medium">{label}</span>
-    <span className="font-roboto font-property-heading font-bold text-white">{value}</span>
+    <span className="font-roboto font-property-heading font-bold text-white">
+      {value}
+    </span>
     {subtitle && (
-      <span className="font-inter text-sm text-[#99A1AF] mt-[-4px]">{subtitle}</span>
+      <span className="font-inter text-sm text-[#99A1AF] mt-[-4px]">
+        {subtitle}
+      </span>
     )}
     {barPercent !== undefined && (
       <div className="h-[3px] w-full bg-white/[0.06] rounded-full overflow-hidden">
@@ -75,9 +91,13 @@ const StatItem = ({
   valueClassName?: string;
 }) => (
   <div className="flex flex-col gap-2 md:gap-3 min-[780px]:border-r border-white/10 last:border-r-0 py-3 md:py-[27.77px] px-[15px] lg:px-[20px]">
-      <span className="font-roboto font-h5 font-normal text-white">{label}</span>
-      <span className={`font-roboto font-property-heading font-bold text-white ${valueClassName}`}>{value}</span>
-    </div>
+    <span className="font-roboto font-h5 font-normal text-white">{label}</span>
+    <span
+      className={`font-roboto font-property-heading font-bold text-white ${valueClassName}`}
+    >
+      {value}
+    </span>
+  </div>
 );
 
 const PropertyDetailsContent = ({
@@ -192,8 +212,10 @@ const PropertyDetailsContent = ({
   const hasMultipleImages = propertyImages.length > 1;
 
   // TODO: replace with real share data from store
-  const totalUnits = (item as unknown as Record<string, number>).totalShares ?? 10_000;
-  const soldUnits = (item as unknown as Record<string, number>).soldShares ?? 3_500;
+  const totalUnits =
+    (item as unknown as Record<string, number>).totalShares ?? 10_000;
+  const soldUnits =
+    (item as unknown as Record<string, number>).soldShares ?? 3_500;
   const availableUnits = totalUnits - soldUnits;
   const availablePercent = Math.round((availableUnits / totalUnits) * 100);
   const soldPercent = 100 - availablePercent;
@@ -344,7 +366,9 @@ const PropertyDetailsContent = ({
           {/* Stat items 2 — Share breakdown */}
           <div className="bg-[#141414] border border-[#292929] rounded-[11.57px] overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 border-b border-[#292929]">
-              <span className="font-roboto font-semibold text-lg">Share breakdown</span>
+              <span className="font-roboto font-semibold text-lg">
+                Share breakdown
+              </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#292929]">
               <StatAnalytics
@@ -353,11 +377,18 @@ const PropertyDetailsContent = ({
                 value={
                   isListedOrSoldOut ? (
                     <span className="font-property-heading text-white">
-                      {availableUnits.toLocaleString()} / {totalUnits.toLocaleString()}
+                      {availableUnits.toLocaleString()} /{" "}
+                      {totalUnits.toLocaleString()}
                     </span>
-                  ) : "N/A"
+                  ) : (
+                    "N/A"
+                  )
                 }
-                subtitle={isListedOrSoldOut ? `${availablePercent}% remaining` : undefined}
+                subtitle={
+                  isListedOrSoldOut
+                    ? `${availablePercent}% remaining`
+                    : undefined
+                }
                 barPercent={isListedOrSoldOut ? availablePercent : undefined}
               />
               <StatAnalytics
@@ -368,9 +399,13 @@ const PropertyDetailsContent = ({
                     <span className="font-property-heading text-[#C7FE1E]">
                       {soldUnits.toLocaleString()}
                     </span>
-                  ) : "N/A"
+                  ) : (
+                    "N/A"
+                  )
                 }
-                subtitle={isListedOrSoldOut ? `${soldPercent}% of supply` : undefined}
+                subtitle={
+                  isListedOrSoldOut ? `${soldPercent}% of supply` : undefined
+                }
                 barPercent={isListedOrSoldOut ? soldPercent : undefined}
                 accentColor="#C7FE1E"
               />
@@ -419,7 +454,11 @@ const PropertyDetailsContent = ({
                 Property Documents
               </h3>
               <span className="text-sm text-white/70">
-                {isDocumentsExpanded ? <Minus className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+                {isDocumentsExpanded ? (
+                  <Minus className="w-6 h-6" />
+                ) : (
+                  <Plus className="w-6 h-6" />
+                )}
               </span>
             </button>
 
