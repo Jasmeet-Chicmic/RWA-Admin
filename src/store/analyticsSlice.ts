@@ -3,6 +3,7 @@ import {
   analyticsService,
   DashboardAnalyticsData,
   SubscriptionAnalytics,
+  UserSignupGraphPoint,
   UserRetentionData,
 } from "@/services/analytics-service";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -12,6 +13,7 @@ type AnalyticsState = {
   subscriptionAnalytics: SubscriptionAnalytics;
   propertiesDetails: AdminPropertiesDetails;
   dashboardAnalytics: DashboardAnalyticsData;
+  userSignupGraph: UserSignupGraphPoint[];
   isLoading: boolean;
   error: string | null;
 };
@@ -46,6 +48,7 @@ const initialState: AnalyticsState = {
     totalProperties: 0,
     totalInvestments: 0,
   },
+  userSignupGraph: [],
   isLoading: false,
   error: null,
 };
@@ -56,6 +59,7 @@ export const fetchAnalyticsSummary = createAsyncThunk<
     subscriptionAnalytics: SubscriptionAnalytics;
     propertiesDetails: AdminPropertiesDetails;
     dashboardAnalytics: DashboardAnalyticsData;
+    userSignupGraph: UserSignupGraphPoint[];
   },
   { fromDate: string; toDate: string },
   { rejectValue: string }
@@ -69,6 +73,7 @@ export const fetchAnalyticsSummary = createAsyncThunk<
       }),
       analyticsService.getPropertiesDetails(),
       analyticsService.getDashboardAnalytics(),
+      analyticsService.getUserSignupGraph(),
     ]);
 
     return {
@@ -113,6 +118,8 @@ export const fetchAnalyticsSummary = createAsyncThunk<
               totalProperties: 0,
               totalInvestments: 0,
             },
+      userSignupGraph:
+        results[4].status === "fulfilled" ? results[4].value : [],
     };
   } catch (error) {
     return rejectWithValue(
@@ -137,6 +144,7 @@ const analyticsSlice = createSlice({
         state.subscriptionAnalytics = action.payload.subscriptionAnalytics;
         state.propertiesDetails = action.payload.propertiesDetails;
         state.dashboardAnalytics = action.payload.dashboardAnalytics;
+        state.userSignupGraph = action.payload.userSignupGraph;
       })
       .addCase(fetchAnalyticsSummary.rejected, (state, action) => {
         state.isLoading = false;

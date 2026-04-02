@@ -47,6 +47,11 @@ export interface DashboardAnalyticsData {
   totalInvestments: number;
 }
 
+export interface UserSignupGraphPoint {
+  createdAt: string;
+  total: number;
+}
+
 type WithData<T> = ResponseType & { data?: T };
 
 export const analyticsService = {
@@ -104,5 +109,12 @@ export const analyticsService = {
         totalInvestments: 0,
       }
     );
+  },
+
+  async getUserSignupGraph(): Promise<UserSignupGraphPoint[]> {
+    const payload = await getRequest<WithData<UserSignupGraphPoint[]>>(
+      API_END_POINTS.DASHBOARD_USER_GRAPH,
+    );
+    return payload.data ?? [];
   },
 };

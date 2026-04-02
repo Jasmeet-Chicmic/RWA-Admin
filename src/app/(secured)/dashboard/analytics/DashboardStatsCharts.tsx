@@ -5,18 +5,163 @@ import {
   AdminPropertiesDetails,
   DashboardAnalyticsData,
   SubscriptionAnalytics,
+  UserSignupGraphPoint,
   UserRetentionData,
 } from "@/services/analytics-service";
+import { CHART_COLORS, THEME_TYPE } from "@/shared/constants";
 // import { DISPLAY_CURRENCY } from "@/shared/utils/unitUtils";
+import { ApexOptions } from "apexcharts";
 import { Activity, TrendingUp, Users } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import { useMemo } from "react";
 import TopPropertiesTable from "./TopPropertiesTable";
+
+const ReactApexCharts = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
+
+function parseYyyyMmDdToDate(value: string): Date {
+  // Ensure timezone-stable parsing for YYYY-MM-DD.
+  return new Date(`${value}T00:00:00Z`);
+}
+
+const UserSignupTimelineChart = ({
+  data,
+}: {
+  data: UserSignupGraphPoint[];
+}) => {
+  const t = useTranslations("dashboard");
+  const { resolvedTheme } = useTheme();
+
+  const chartColor = useMemo(
+    () =>
+      resolvedTheme === THEME_TYPE.DARK
+        ? CHART_COLORS.SECONDARY
+        : CHART_COLORS.PRIMARY,
+    [resolvedTheme],
+  );
+
+  const categories = useMemo(
+    () =>
+      data.map((item) =>
+        parseYyyyMmDdToDate(item.createdAt).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+      ),
+    [data],
+  );
+
+  const series: ApexOptions["series"] = useMemo(
+    () => [
+      {
+        name: t("userSignupsSeries"),
+        data: data.map((item) => item.total),
+      },
+    ],
+    [data, t],
+  );
+
+  const options: ApexOptions = useMemo(
+    () => ({
+      chart: {
+        type: "bar",
+        toolbar: { show: false },
+        zoom: { enabled: false },
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 8,
+          columnWidth: "55%",
+        },
+      },
+      xaxis: {
+        categories,
+        labels: {
+          style: {
+            colors: "#99a1af",
+            fontFamily: "inherit",
+            fontSize: "12px",
+          },
+        },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: "#99a1af",
+            fontFamily: "inherit",
+          },
+          formatter: (value: number) => Math.round(value).toString(),
+        },
+      },
+      colors: [chartColor],
+      fill: {
+        type: "gradient",
+        gradient: {
+          shade: "light",
+          type: "vertical",
+          shadeIntensity: 1,
+          opacityFrom: 0.85,
+          opacityTo: 0.25,
+          colorStops: [
+            { offset: 0, color: chartColor, opacity: 1 },
+            { offset: 100, color: "#ffffff", opacity: 0 },
+          ],
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: (value: number) => `${value} ${t("userSignupsTooltip")}`,
+        },
+      },
+      grid: {
+        borderColor: "transparent",
+        strokeDashArray: 4,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    }),
+    [categories, chartColor, t],
+  );
+
+  return (
+    <div className="bg-bgwhite rounded-[20px] border border-bordergray200 p-3 lg:p-6 dark:bg-darkbgprimary dark:border-darkbordercolor1">
+      <div className="mb-4">
+        <h3 className="text-[1.25rem] lg:text-[1.5rem] font-bold text-textprimary dark:text-bgwhite">
+          {t("userSignupsTitle")}
+        </h3>
+        <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
+          {t("userSignupsSubtitle")}
+        </p>
+      </div>
+
+      {data.length > 0 ? (
+        <ReactApexCharts
+          type="bar"
+          height={400}
+          series={series}
+          options={options}
+        />
+      ) : (
+        <div className="flex items-center justify-center h-[400px] text-gray-500">
+          {t("noData")}
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface DashboardStatsChartsProps {
   retentionData: UserRetentionData;
   subscriptionAnalytics: SubscriptionAnalytics;
   propertiesDetails: AdminPropertiesDetails;
   dashboardAnalytics: DashboardAnalyticsData;
+  userSignupGraph: UserSignupGraphPoint[];
   initialFromDate?: string;
   initialToDate?: string;
 }
@@ -24,6 +169,7 @@ interface DashboardStatsChartsProps {
 const DashboardStatsCharts = ({
   // propertiesDetails,
   dashboardAnalytics,
+  userSignupGraph,
 }: DashboardStatsChartsProps) => {
   const t = useTranslations("dashboard");
 
@@ -94,7 +240,10 @@ const DashboardStatsCharts = ({
           color="bg-primarycolor dark:bg-secondarycolor"
         />
       </div>
-      <TopPropertiesTable />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <UserSignupTimelineChart data={userSignupGraph} />
+        <TopPropertiesTable />
+      </div>
     </div>
   );
 };
