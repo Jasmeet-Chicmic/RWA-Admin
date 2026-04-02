@@ -535,6 +535,7 @@ export interface Transaction {
 
 export interface GetAdminTransactionsParams {
   ownerId?: string;
+  propertyId?: string;
   status?: number;
   fromDate?: string;
   toDate?: string;

@@ -51,6 +51,8 @@ const transactionsSlice = createSlice({
       .addCase(fetchTransactionsList.pending, (state) => {
         state.list.isLoading = true;
         state.list.error = null;
+        state.list.items = [];
+        state.list.totalCount = 0;
       })
       .addCase(fetchTransactionsList.fulfilled, (state, action) => {
         state.list.isLoading = false;

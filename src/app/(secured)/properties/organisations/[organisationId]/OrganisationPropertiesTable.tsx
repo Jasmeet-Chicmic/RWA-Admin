@@ -1,5 +1,6 @@
 "use client";
 
+import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -10,6 +11,7 @@ import TableActions, {
   TableActionDisplayMode,
   TableActionItem,
 } from "@/components/atoms/TableActions";
+import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import {
@@ -23,6 +25,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { truncateText } from "@/shared/utils";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -76,6 +79,7 @@ const OrganisationPropertiesTable = ({
   fetchMode?: "organisation" | "adminSpecificOrganisation";
 }) => {
   const t = useTranslations("properties");
+  const tTransactions = useTranslations("transactions");
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
@@ -192,11 +196,28 @@ const OrganisationPropertiesTable = ({
       {
         title: t("location"),
         field: "location",
-        render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            <TruncatedText text={item.location} maxLength={40} />
-          </span>
-        ),
+        render: (item) => {
+          const locationValue = item.location ?? "";
+          return (
+            <div className="flex items-center gap-2">
+              <MapPin size={14} className={TEXT_PRIMARY} />
+              <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+                {truncateText(locationValue, 40, "—")}
+              </span>
+              {locationValue ? (
+                <CopyToClipboardPill
+                  value={locationValue}
+                  showText={false}
+                  title={tTransactions("copy")}
+                  onCopied={() =>
+                    toast.success(tTransactions("copiedToClipboard"))
+                  }
+                  className="px-2 py-1"
+                />
+              ) : null}
+            </div>
+          );
+        },
       },
       {
         title: t("propertyType"),
@@ -363,6 +384,7 @@ const OrganisationPropertiesTable = ({
     hideActions,
     router,
     t,
+    tTransactions,
   ]);
 
   return (

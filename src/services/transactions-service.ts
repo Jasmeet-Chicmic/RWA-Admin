@@ -5,7 +5,13 @@ import { getRequest } from "./fetcher";
 export type AdminTransactionItem = {
   id: string;
   status: number;
-  propertyId: string;
+  // Backend returns a `property` object now.
+  // Keep `propertyId` optional for backwards compatibility if any endpoint still returns the old shape.
+  property?: {
+    id: string;
+    name: string;
+  };
+  propertyId?: string;
   transactionHash: string;
   buyerAddress: string;
   sellerAddress: string;

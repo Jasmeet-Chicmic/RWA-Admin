@@ -1,11 +1,12 @@
 "use client";
 
-import { Copy } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useCallback, useMemo } from "react";
 import { toast } from "react-toastify";
 
 import FormattedDate from "@/components/atoms/FormattedDate";
+import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import StatusChip from "@/components/atoms/StatusChip";
 import { TableColumn } from "@/components/atoms/Table";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
@@ -15,8 +16,9 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import { formatToFixed } from "@/shared/utils/unitUtils";
+import { DISPLAY_CURRENCY, fromBaseUnits } from "@/shared/utils/unitUtils";
 import TransactionFilters from "./TransactionFilters";
+import { walletTruncate } from "@/shared/utils";
 
 const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
   [TRANSACTION_STATUS.PENDING]:
@@ -30,28 +32,23 @@ const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
 const DEFAULT_BADGE_STYLE =
   "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700";
 
-const COPYABLE_CHIP_CLASS =
-  "bg-primarycolor/10 text-primarycolor border-primarycolor/30 hover:bg-primarycolor/15 dark:bg-secondarycolor/15 dark:text-secondarycolor dark:border-secondarycolor/30 dark:hover:bg-secondarycolor/25";
-
 interface TransactionsTableProps {
   data: AdminTransactionItem[];
   totalCount: number;
   isLoading?: boolean;
+  hidePropertiesColumn?: boolean;
+  showFilters?: boolean;
 }
 
 const TransactionsTable = ({
   data,
   totalCount,
   isLoading = false,
+  hidePropertiesColumn = false,
+  showFilters = true,
 }: TransactionsTableProps) => {
   const t = useTranslations("transactions");
-  const copyValue = useCallback(
-    async (value: string) => {
-      await navigator.clipboard.writeText(value);
-      toast.success(t("copiedToClipboard"));
-    },
-    [t],
-  );
+  const tCommon = useTranslations("common");
 
   const getStatusLabel = useCallback(
     (status: number) => {
@@ -70,7 +67,45 @@ const TransactionsTable = ({
   );
 
   const config: DataTableConfig<AdminTransactionItem> = useMemo(() => {
+    const propertiesColumn: TableColumn<AdminTransactionItem> = {
+      title: tCommon("Properties"),
+      field: "propertyId",
+      render: (item: AdminTransactionItem) => (
+        <div className="w-full flex justify-center">
+          {(() => {
+            const propertyId = item.property?.id ?? item.propertyId;
+            const propertyName = item.property?.name ?? "";
+            const displayText = propertyName || propertyId || "—";
+
+            if (!propertyId) {
+              return (
+                <span className={`text-sm font-medium ${TEXT_PRIMARY}`}>
+                  {displayText}
+                </span>
+              );
+            }
+
+            const shortened =
+              displayText.length > 10
+                ? `${displayText.slice(0, 6)}...${displayText.slice(-4)}`
+                : displayText;
+
+            return (
+              <Link
+                href={`/properties/${propertyId}`}
+                className={`text-sm font-medium ${TEXT_PRIMARY} underline`}
+                title={propertyName || propertyId}
+              >
+                {shortened}
+              </Link>
+            );
+          })()}
+        </div>
+      ),
+    };
+
     const columns: TableColumn<AdminTransactionItem>[] = [
+      ...(hidePropertiesColumn ? [] : [propertiesColumn]),
       {
         title: t("createdAt"),
         field: "createdAt",
@@ -84,44 +119,36 @@ const TransactionsTable = ({
         title: t("buyerAddress"),
         field: "buyerAddress",
         render: (item: AdminTransactionItem) => (
-          <button
-            onClick={() => copyValue(item.buyerAddress)}
+          <CopyToClipboardPill
+            value={item.buyerAddress}
+            displayValue={walletTruncate(item.buyerAddress)}
             title={t("copy")}
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${COPYABLE_CHIP_CLASS}`}
-          >
-            <span className="max-w-[170px] truncate">{item.buyerAddress}</span>
-            <Copy size={12} />
-          </button>
+            onCopied={() => toast.success(t("copiedToClipboard"))}
+          />
         ),
       },
       {
         title: t("sellerAddress"),
         field: "sellerAddress",
         render: (item: AdminTransactionItem) => (
-          <button
-            onClick={() => copyValue(item.sellerAddress)}
+          <CopyToClipboardPill
+            value={item.sellerAddress}
+            displayValue={walletTruncate(item.sellerAddress)}
             title={t("copy")}
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${COPYABLE_CHIP_CLASS}`}
-          >
-            <span className="max-w-[170px] truncate">{item.sellerAddress}</span>
-            <Copy size={12} />
-          </button>
+            onCopied={() => toast.success(t("copiedToClipboard"))}
+          />
         ),
       },
       {
         title: t("transactionHash"),
         field: "transactionHash",
         render: (item: AdminTransactionItem) => (
-          <button
-            onClick={() => copyValue(item.transactionHash)}
+          <CopyToClipboardPill
+            value={item.transactionHash}
+            displayValue={item.transactionHash}
             title={t("copy")}
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${COPYABLE_CHIP_CLASS}`}
-          >
-            <span className="max-w-[170px] truncate">
-              {item.transactionHash}
-            </span>
-            <Copy size={12} />
-          </button>
+            onCopied={() => toast.success(t("copiedToClipboard"))}
+          />
         ),
       },
       {
@@ -130,7 +157,7 @@ const TransactionsTable = ({
         render: (item: AdminTransactionItem) => (
           <div className="w-full flex justify-center">
             <span className={`font-medium ${TEXT_PRIMARY}`}>
-              {item.shares ?? 0}
+              {fromBaseUnits(item.shares) ?? 0}
             </span>
           </div>
         ),
@@ -141,7 +168,7 @@ const TransactionsTable = ({
         render: (item: AdminTransactionItem) => (
           <div className="w-full flex justify-center">
             <span className={`font-medium ${TEXT_PRIMARY}`}>
-              {formatToFixed(item.amount, 2)}
+              {fromBaseUnits(item.amount)} {DISPLAY_CURRENCY}
             </span>
           </div>
         ),
@@ -177,14 +204,16 @@ const TransactionsTable = ({
                 {t("allPaymentTransactions")}
               </p>
             </div>
-            <div className="shrink-0">
-              <TransactionFilters />
-            </div>
+            {showFilters ? (
+              <div className="shrink-0">
+                <TransactionFilters />
+              </div>
+            ) : null}
           </div>
         </div>
       ),
     };
-  }, [copyValue, getStatusLabel, t]);
+  }, [getStatusLabel, hidePropertiesColumn, showFilters, t, tCommon]);
 
   return (
     <DataTable<AdminTransactionItem>
