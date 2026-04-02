@@ -21,8 +21,13 @@ const AnalyticsContainer = () => {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const lastRequestKeyRef = useRef<string | null>(null);
-  const { retentionData, subscriptionAnalytics, propertiesDetails } =
-    useAppSelector((state) => state.analytics);
+  const {
+    retentionData,
+    subscriptionAnalytics,
+    propertiesDetails,
+    dashboardAnalytics,
+    userSignupGraph,
+  } = useAppSelector((state) => state.analytics);
 
   const defaultDates = useMemo(() => getDefaultDateRange(), []);
 
@@ -60,6 +65,8 @@ const AnalyticsContainer = () => {
           retentionData={retentionData}
           propertiesDetails={propertiesDetails}
           subscriptionAnalytics={subscriptionAnalytics}
+          dashboardAnalytics={dashboardAnalytics}
+          userSignupGraph={userSignupGraph}
           initialFromDate={payload.fromDate}
           initialToDate={payload.toDate}
         />

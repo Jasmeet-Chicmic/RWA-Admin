@@ -40,6 +40,28 @@ export interface SubscriptionAnalyticsParams {
   to?: string;
 }
 
+export interface DashboardAnalyticsData {
+  totalUsers: number;
+  totalOrganizations: number;
+  totalProperties: number;
+  totalInvestments: number;
+}
+
+export interface UserSignupGraphPoint {
+  createdAt: string;
+  total: number;
+}
+
+export interface InDemandPropertyItem {
+  propertyId: string;
+  name: string;
+  propertyType: number;
+  location: string;
+  approvedValuation: number;
+  status: number;
+  demandScore: number;
+}
+
 type WithData<T> = ResponseType & { data?: T };
 
 export const analyticsService = {
@@ -83,5 +105,42 @@ export const analyticsService = {
    */
   async getPropertiesDetails(): Promise<AdminPropertiesDetails> {
     return await propertiesService.getAdminDashboardSummary();
+  },
+
+  async getDashboardAnalytics(): Promise<DashboardAnalyticsData> {
+    const payload = await getRequest<WithData<DashboardAnalyticsData>>(
+      API_END_POINTS.DASHBOARD_ANALYTICS,
+    );
+    return (
+      payload.data ?? {
+        totalUsers: 0,
+        totalOrganizations: 0,
+        totalProperties: 0,
+        totalInvestments: 0,
+      }
+    );
+  },
+
+  async getUserSignupGraph(): Promise<UserSignupGraphPoint[]> {
+    const payload = await getRequest<WithData<UserSignupGraphPoint[]>>(
+      API_END_POINTS.DASHBOARD_USER_GRAPH,
+    );
+    return payload.data ?? [];
+  },
+
+  async getInDemandProperties(params?: { skip?: number; limit?: number }) {
+    const payload = await getRequest<
+      WithData<{
+        totalCount: number;
+        limit: number;
+        skip: number;
+        items: InDemandPropertyItem[];
+      }>
+    >(API_END_POINTS.DASHBOARD_IN_DEMAND_PROPERTIES, params);
+
+    return {
+      items: payload.data?.items ?? [],
+      totalCount: payload.data?.totalCount ?? 0,
+    };
   },
 };
