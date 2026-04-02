@@ -20,7 +20,10 @@ import {
   type TokenizationFlowStep,
 } from "@/lib/contracts/runTokenizationFlow";
 import { fetchJobStatus } from "@/lib/contracts/tokenization/statusCheck";
-import type { JobStatusData } from "@/lib/contracts/tokenization/types";
+import {
+  PROPERTY_REGISTRATION_JOB_STATUS,
+  type JobStatusData,
+} from "@/lib/contracts/tokenization/types";
 import {
   DEFAULT_TOKEN_DECIMALS,
   DISPLAY_CURRENCY,
@@ -179,6 +182,14 @@ const getStatusPrefillValues = (
   };
 };
 
+const isStatusResumeLocked = (status: JobStatusData | null): boolean => {
+  if (!status) return false;
+  return (
+    status.status >= PROPERTY_REGISTRATION_JOB_STATUS.PENDING_TREX &&
+    status.status < PROPERTY_REGISTRATION_JOB_STATUS.COMPLETED
+  );
+};
+
 export const TokenizationModal = ({
   open,
   onClose,
@@ -197,6 +208,7 @@ export const TokenizationModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState<TokenizationFlowStep>();
   const [isFlowCompleted, setIsFlowCompleted] = useState(false);
+  const [isResumeLocked, setIsResumeLocked] = useState(false);
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false);
   const { isConnected } = useWalletState();
   const { open: openWalletModal } = useAppKit();
@@ -239,11 +251,13 @@ export const TokenizationModal = ({
       methods.reset(defaultValues);
       setShowWalletConnectModal(false);
       setIsFlowCompleted(false);
+      setIsResumeLocked(false);
 
       const status = await fetchJobStatus(property.id);
       if (isCancelled) return;
       const prefillValues = getStatusPrefillValues(status, defaultValues);
       methods.reset(prefillValues);
+      setIsResumeLocked(isStatusResumeLocked(status));
     };
 
     void initializeForm();
@@ -392,7 +406,7 @@ export const TokenizationModal = ({
                   type="text"
                   label={t("tokenizationForm.totalPropertyValue")}
                   width="w-full md:w-[48%]"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isResumeLocked}
                 />
 
                 <InputField<TokenizationFormValues>
@@ -407,7 +421,7 @@ export const TokenizationModal = ({
                   interceptor={(val) => clampShares(val)}
                   inputMode="numeric"
                   onKeyDown={preventNegativeAndExponent}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isResumeLocked}
                   validation={{
                     required: t("tokenizationForm.errors.sharesRequired"),
                     validate: (val) => {
