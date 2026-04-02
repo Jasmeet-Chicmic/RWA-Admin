@@ -55,6 +55,9 @@ export interface PropertyDetailsItem {
   approvedValuation: number;
   annualYieldPercentage: number | null;
   pricePerShare: number | null;
+  totalUnitMint?: number | null;
+  soldUnits?: number | null;
+  availableUnits?: number | null;
   documents: PropertyDocument[];
   adminDocuments: PropertyDocument[];
 }

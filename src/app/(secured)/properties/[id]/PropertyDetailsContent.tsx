@@ -211,14 +211,26 @@ const PropertyDetailsContent = ({
     item.sellingPercentage == null ? "-" : `${item.sellingPercentage}%`;
   const hasMultipleImages = propertyImages.length > 1;
 
-  // TODO: replace with real share data from store
-  const totalUnits =
-    (item as unknown as Record<string, number>).totalShares ?? 10_000;
-  const soldUnits =
-    (item as unknown as Record<string, number>).soldShares ?? 3_500;
-  const availableUnits = totalUnits - soldUnits;
-  const availablePercent = Math.round((availableUnits / totalUnits) * 100);
-  const soldPercent = 100 - availablePercent;
+  const totalUnits = fromBaseUnits(item.totalUnitMint ?? 0);
+  const soldUnits = fromBaseUnits(item.soldUnits ?? 0);
+  const availableUnits = fromBaseUnits(item.availableUnits ?? 0);
+  const rawAvailablePercent =
+    totalUnits > 0 ? (availableUnits / totalUnits) * 100 : 0;
+  const rawSoldPercent = totalUnits > 0 ? (soldUnits / totalUnits) * 100 : 0;
+  const availablePercent =
+    totalUnits > 0
+      ? soldUnits > 0
+        ? Math.min(99, Math.floor(rawAvailablePercent))
+        : 100
+      : 0;
+  const soldPercent =
+    totalUnits > 0
+      ? soldUnits > 0
+        ? Math.max(1, Math.ceil(rawSoldPercent))
+        : 0
+      : 0;
+  const availablePercentLabel = availablePercent.toFixed(2);
+  const soldPercentLabel = soldPercent.toFixed(2);
 
   const handlePrevImage = () => {
     if (!propertyImages.length) return;
@@ -386,7 +398,7 @@ const PropertyDetailsContent = ({
                 }
                 subtitle={
                   isListedOrSoldOut
-                    ? `${availablePercent}% remaining`
+                    ? `${availablePercentLabel}% remaining`
                     : undefined
                 }
                 barPercent={isListedOrSoldOut ? availablePercent : undefined}
@@ -404,7 +416,9 @@ const PropertyDetailsContent = ({
                   )
                 }
                 subtitle={
-                  isListedOrSoldOut ? `${soldPercent}% of supply` : undefined
+                  isListedOrSoldOut
+                    ? `${soldPercentLabel}% of supply`
+                    : undefined
                 }
                 barPercent={isListedOrSoldOut ? soldPercent : undefined}
                 accentColor="#C7FE1E"
