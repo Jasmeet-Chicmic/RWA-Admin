@@ -40,6 +40,13 @@ export interface SubscriptionAnalyticsParams {
   to?: string;
 }
 
+export interface DashboardAnalyticsData {
+  totalUsers: number;
+  totalOrganizations: number;
+  totalProperties: number;
+  totalInvestments: number;
+}
+
 type WithData<T> = ResponseType & { data?: T };
 
 export const analyticsService = {
@@ -83,5 +90,19 @@ export const analyticsService = {
    */
   async getPropertiesDetails(): Promise<AdminPropertiesDetails> {
     return await propertiesService.getAdminDashboardSummary();
+  },
+
+  async getDashboardAnalytics(): Promise<DashboardAnalyticsData> {
+    const payload = await getRequest<WithData<DashboardAnalyticsData>>(
+      API_END_POINTS.DASHBOARD_ANALYTICS,
+    );
+    return (
+      payload.data ?? {
+        totalUsers: 0,
+        totalOrganizations: 0,
+        totalProperties: 0,
+        totalInvestments: 0,
+      }
+    );
   },
 };
