@@ -33,30 +33,6 @@
   .rounded-20 {
     border-radius: var(--radius-20);
   }
-
-  .lightbgbase {
-  }
-
-  .darkbgbase {
-  }
-
-  .bgwhite {
-  }
-
-  .bgblack {
-  }
-
-  .bgpriamry {
-  }
-
-  .darkbgpriamry {
-  }
-
-  .primarycolor {
-  }
-
-  .sidebartext {
-  }
 }
 
 body {
@@ -95,6 +71,16 @@ input {
 
 button {
   outline: none !important;
+}
+
+.font-property-heading {
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.font-h5 {
+  font-size: 18px;
+  line-height: 20px;
 }
 
 .divider {
@@ -164,39 +150,6 @@ button {
   background: transparent;
 }
 
-.myshadow1 {
-  /* box-shadow: 0px 5px 10px rgba(163, 174, 208, 10%); */
-}
-
-/* .sidebar-menu-item:hover span {
-  color: #99a1af !important;
-}
-
-.sidebar-menu-item:hover span svg,
-.sidebar-menu-item:hover div svg {
-  stroke: #99a1af !important;
-}
-
-.sub-menu-item span {
-  color: #99a1af;
-}
-
-.sub-menu-item .list-item {
-  color: #99a1af;
-}
-
-.sub-menu-item .list-item-icon {
-  border-color: #99a1af;
-}
-
-.sub-menu-item-active span {
-  color: #99a1af;
-}
-
-.sub-menu-item-active .list-item-icon {
-  border-color: #99a1af;
-} */
-
 /* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 6px;
@@ -234,6 +187,18 @@ button {
 
 .grid-view-cards {
   max-height: inherit !important;
+}
+
+@media only screen and (max-width: 1380px) {
+  .font-h5 {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .font-property-heading {
+    font-size: 20px;
+    line-height: 24px;
+  }
 }
 
 @media only screen and (max-width: 780px) {

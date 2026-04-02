@@ -279,7 +279,7 @@ const RejectPropertyModal = ({
             onClick={handleConfirm}
             isLoading={isPending}
             disabled={isUploading}
-            className="rounded-xl px-8 h-11 bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/20"
+            className="rounded-xl px-8 h-11 !bg-red-600 !hover:bg-red-700 !text-white shadow-lg"
           >
             {t("rejectProperty")}
           </Button>

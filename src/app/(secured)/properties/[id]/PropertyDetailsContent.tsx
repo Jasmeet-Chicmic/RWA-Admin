@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { BarChart2, ChevronLeft, ChevronRight, MapPin, Minus, Plus, TrendingUp, Wallet } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +23,48 @@ import {
 import TransactionsTable from "@/app/(secured)/transactions/list/TransactionsTable";
 import PropertyDetailsContentSkeleton from "./PropertyDetailsContentSkeleton";
 
+interface StatAnalyticsProps {
+  label: React.ReactNode;
+  value: React.ReactNode;
+  subtitle?: React.ReactNode;
+  icon: React.ReactNode;
+  accentColor?: string;
+  barPercent?: number;
+}
+
+const StatAnalytics = ({
+  label,
+  value,
+  subtitle,
+  icon,
+  accentColor = "#C7FE1E",
+  barPercent,
+}: Readonly<StatAnalyticsProps>) => (
+  <div className="flex flex-col gap-3 p-5 !border-b-[0.5px] !border-b-white/20 last:!border-b-0 lg:border-0 lg:!border-b-0">
+    <div
+      className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+      style={{ background: "#000", border: `0.5px solid ${accentColor}35` }}
+    >
+      <span style={{ color: "#fff" }} className="w-full h-full flex justify-center items-center">
+        {icon}
+      </span>
+    </div>
+    <span className="font-inter text-[16px] font-medium">{label}</span>
+    <span className="font-roboto font-property-heading font-bold text-white">{value}</span>
+    {subtitle && (
+      <span className="font-inter text-sm text-[#99A1AF] mt-[-4px]">{subtitle}</span>
+    )}
+    {barPercent !== undefined && (
+      <div className="h-[3px] w-full bg-white/[0.06] rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full"
+          style={{ width: `${barPercent}%`, background: accentColor }}
+        />
+      </div>
+    )}
+  </div>
+);
+
 const StatItem = ({
   label,
   value,
@@ -32,16 +74,10 @@ const StatItem = ({
   value: string;
   valueClassName?: string;
 }) => (
-  <div className="flex flex-col gap-2 md:gap-3">
-    <span className="font-roboto text-xs md:text-sm font-normal text-white">
-      {label}
-    </span>
-    <span
-      className={`font-roboto text-xl md:text-[30px] leading-tight font-bold ${valueClassName}`}
-    >
-      {value}
-    </span>
-  </div>
+  <div className="flex flex-col gap-2 md:gap-3 min-[780px]:border-r border-white/10 last:border-r-0 py-3 md:py-[27.77px] px-[15px] lg:px-[20px]">
+      <span className="font-roboto font-h5 font-normal text-white">{label}</span>
+      <span className={`font-roboto font-property-heading font-bold text-white ${valueClassName}`}>{value}</span>
+    </div>
 );
 
 const PropertyDetailsContent = ({
@@ -155,6 +191,13 @@ const PropertyDetailsContent = ({
     item.sellingPercentage == null ? "-" : `${item.sellingPercentage}%`;
   const hasMultipleImages = propertyImages.length > 1;
 
+  // TODO: replace with real share data from store
+  const totalUnits = (item as unknown as Record<string, number>).totalShares ?? 10_000;
+  const soldUnits = (item as unknown as Record<string, number>).soldShares ?? 3_500;
+  const availableUnits = totalUnits - soldUnits;
+  const availablePercent = Math.round((availableUnits / totalUnits) * 100);
+  const soldPercent = 100 - availablePercent;
+
   const handlePrevImage = () => {
     if (!propertyImages.length) return;
     setActiveImageIndex((prev) =>
@@ -179,56 +222,82 @@ const PropertyDetailsContent = ({
             ariaLabel={t("propertyDetails")}
           />
 
-          <div className="w-full h-[250px] sm:h-[350px] md:h-[444px] rounded-[11.57px] overflow-hidden border border-[#292929] bg-[#141414] relative">
-            {activeImage ? (
-              <Image
-                src={activeImage}
-                alt={item.name || t("images")}
-                width={1200}
-                height={800}
-                className="h-full w-full object-cover"
-                unoptimized
-              />
-            ) : (
-              <div className="h-full w-full flex items-center justify-center text-sm text-white/60">
-                {t("noImagesAvailable")}
-              </div>
-            )}
-            {hasMultipleImages && (
-              <>
-                <button
-                  type="button"
-                  onClick={handlePrevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-[#C7FE1E] text-black flex items-center justify-center hover:brightness-95 transition"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-[#C7FE1E] text-black flex items-center justify-center hover:brightness-95 transition"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={20} />
-                </button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                  {propertyImages.map((_, index) => (
-                    <button
-                      key={`image-dot-${index}`}
-                      type="button"
-                      onClick={() => setActiveImageIndex(index)}
-                      aria-label={`Go to image ${index + 1}`}
-                      className={`h-2.5 rounded-full transition-all ${
-                        index === activeImageIndex
-                          ? "w-6 bg-[#C7FE1E]"
-                          : "w-2.5 bg-white/70"
-                      }`}
-                    />
-                  ))}
+          {/* Parent Property Container  */}
+          <div>
+            <div className="w-full h-[250px] sm:h-[350px] md:h-[444px] rounded-[11.57px] overflow-hidden border border-[#292929] bg-[#141414] relative rounded-b-none">
+              {activeImage ? (
+                <Image
+                  src={activeImage}
+                  alt={item.name || t("images")}
+                  width={1200}
+                  height={800}
+                  className="h-full w-full object-cover"
+                  unoptimized
+                />
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-sm text-white/60">
+                  {t("noImagesAvailable")}
                 </div>
-              </>
-            )}
+              )}
+              {hasMultipleImages && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handlePrevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-[#C7FE1E] text-black flex items-center justify-center hover:brightness-95 transition"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-[#C7FE1E] text-black flex items-center justify-center hover:brightness-95 transition"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                    {propertyImages.map((_, index) => (
+                      <button
+                        key={`image-dot-${index}`}
+                        type="button"
+                        onClick={() => setActiveImageIndex(index)}
+                        aria-label={`Go to image ${index + 1}`}
+                        className={`h-2.5 rounded-full transition-all ${
+                          index === activeImageIndex
+                            ? "w-6 bg-[#C7FE1E]"
+                            : "w-2.5 bg-white/70"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="grid grid-cols-2 min-[600px]:grid-cols-3 min-[780px]:grid-cols-5 gap-0 lg:gap-[22px] bg-[#141414] border border-[#292929] rounded-[11.57px] rounded-t-none shadow-[0px_-20px_20px_#414141ad] relative z-1">
+              <StatItem label="Total Value" value={valuation} />
+              <StatItem
+                label="Price/Share"
+                value={isListedOrSoldOut ? sharePrice : "-"}
+              />
+              <StatItem
+                label="Annual Yield"
+                value={isListedOrSoldOut ? annualYield : "-"}
+                valueClassName={
+                  isListedOrSoldOut ? "text-[#00A63E]" : "text-white"
+                }
+              />
+              <StatItem
+                label="Property Size"
+                value={
+                  item.squareFeet != null
+                    ? `${item.squareFeet.toLocaleString()} sq ft`
+                    : "-"
+                }
+              />
+              <StatItem label="Listed Percentage" value={listedPercent} />
+            </div>
           </div>
 
           <div className="flex flex-col gap-4 md:gap-[18.5px]">
@@ -239,12 +308,12 @@ const PropertyDetailsContent = ({
                 </h1>
                 <div className="flex items-center gap-[9px]">
                   <MapPin size={20} className="text-[#C7FE1E]" />
-                  <span className="font-roboto text-sm md:text-lg font-normal capitalize">
+                  <span className="font-roboto text-sm md:text-lg font-normal text-white/80 capitalize">
                     {item.location || "—"}
                   </span>
                 </div>
               </div>
-              <span className="inline-flex items-center border-none rounded-[33px] px-3 py-1 text-[12px] font-bold bg-[#00A63E] text-white">
+              <span className="inline-flex items-center border-none rounded-[33px] px-3 py-1 text-[12px] font-bold bg-[#00A63E] text-white flex-none">
                 {statusLabel}
               </span>
             </div>
@@ -272,36 +341,54 @@ const PropertyDetailsContent = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-[22px] p-6 md:p-[27.77px] bg-[#141414] border border-[#292929] rounded-[11.57px]">
-            <StatItem label="Total Value" value={valuation} />
-            <StatItem
-              label="Price/Share"
-              value={isListedOrSoldOut ? sharePrice : "-"}
-            />
-            <StatItem
-              label="Annual Yield"
-              value={isListedOrSoldOut ? annualYield : "-"}
-              valueClassName={
-                isListedOrSoldOut ? "text-[#00A63E]" : "text-white"
-              }
-            />
-            <StatItem
-              label="Rental Income History"
-              value={
-                isListedOrSoldOut && item.rentalIncomeHistory != null
-                  ? String(item.rentalIncomeHistory)
-                  : "-"
-              }
-            />
-            <StatItem
-              label="Property Size"
-              value={
-                item.squareFeet != null
-                  ? `${item.squareFeet.toLocaleString()} sq ft`
-                  : "-"
-              }
-            />
-            <StatItem label="Listed %" value={listedPercent} />
+          {/* Stat items 2 — Share breakdown */}
+          <div className="bg-[#141414] border border-[#292929] rounded-[11.57px] overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#292929]">
+              <span className="font-roboto font-semibold text-lg">Share breakdown</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#292929]">
+              <StatAnalytics
+                icon={<BarChart2 size={24} />}
+                label="Available Shares"
+                value={
+                  isListedOrSoldOut ? (
+                    <span className="font-property-heading text-white">
+                      {availableUnits.toLocaleString()} / {totalUnits.toLocaleString()}
+                    </span>
+                  ) : "N/A"
+                }
+                subtitle={isListedOrSoldOut ? `${availablePercent}% remaining` : undefined}
+                barPercent={isListedOrSoldOut ? availablePercent : undefined}
+              />
+              <StatAnalytics
+                icon={<TrendingUp size={24} />}
+                label="Sold Shares"
+                value={
+                  isListedOrSoldOut ? (
+                    <span className="font-property-heading text-[#C7FE1E]">
+                      {soldUnits.toLocaleString()}
+                    </span>
+                  ) : "N/A"
+                }
+                subtitle={isListedOrSoldOut ? `${soldPercent}% of supply` : undefined}
+                barPercent={isListedOrSoldOut ? soldPercent : undefined}
+                accentColor="#C7FE1E"
+              />
+              <StatAnalytics
+                icon={<Wallet size={24} />}
+                label="Rental Income History"
+                value={
+                  isListedOrSoldOut && item.rentalIncomeHistory != null
+                    ? String(item.rentalIncomeHistory)
+                    : "N/A"
+                }
+                subtitle={
+                  isListedOrSoldOut && item.rentalIncomeHistory == null
+                    ? "No history yet"
+                    : undefined
+                }
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-4 md:gap-[18.5px]">
@@ -309,14 +396,14 @@ const PropertyDetailsContent = ({
               Property Highlights
             </h3>
             <div className="flex flex-col gap-1 md:gap-[12px]">
-              <p className="font-inter text-sm md:text-base font-normal capitalize">
+              <p className="font-inter text-sm md:text-base font-normal capitalize text-white/80">
                 • {typeLabel} property in {item.location || "—"}
               </p>
-              <p className="font-inter text-sm md:text-base font-normal capitalize">
+              <p className="font-inter text-sm md:text-base font-normal capitalize text-white/80">
                 • Approx. {(item.squareFeet ?? 0).toLocaleString()} sq ft,{" "}
                 {listedPercent} listed for sale
               </p>
-              <p className="font-inter text-sm md:text-base font-normal">
+              <p className="font-inter text-sm md:text-base font-normal text-white/80">
                 • {item.description || "—"}
               </p>
             </div>
@@ -332,7 +419,7 @@ const PropertyDetailsContent = ({
                 Property Documents
               </h3>
               <span className="text-sm text-white/70">
-                {isDocumentsExpanded ? "Collapse -" : "Expand +"}
+                {isDocumentsExpanded ? <Minus className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
               </span>
             </button>
 
