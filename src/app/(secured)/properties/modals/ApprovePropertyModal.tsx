@@ -1,14 +1,15 @@
 "use client";
 
-import { ChevronDown, Loader2, Upload, X } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 
 import { uploadAdminPropertyDocumentsAction } from "@/api/adminPropertiesActions";
 import { approvePropertyAction } from "@/api/allPropertiesActions";
 import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
 import {
   PROPERTY_DOCUMENT_TYPE,
   PROPERTY_DOCUMENT_TYPE_LABELS,
@@ -39,6 +40,14 @@ const ApprovePropertyModal = ({
   );
   const [isUploading, setIsUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const documentTypeOptions = useMemo(
+    () =>
+      Object.entries(PROPERTY_DOCUMENT_TYPE_LABELS).map(([val, label]) => ({
+        value: Number(val),
+        label,
+      })),
+    [],
+  );
 
   const onDrop = async (acceptedFiles: File[]) => {
     if (!acceptedFiles.length) return;
@@ -168,7 +177,7 @@ const ApprovePropertyModal = ({
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full h-24 p-3 rounded-xl border border-bordergray200 dark:border-darkbordercolor1 bg-bgwhite dark:bg-darkbgbase text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all resize-none dark:text-white"
+              className="w-full h-24 p-3 rounded-xl border border-bordergray200 dark:border-darkbordercolor1 bg-bgwhite dark:bg-darkbgbase text-sm focus:outline-none focus:ring-2 focus:ring-primarycolor transition-all resize-none dark:text-white"
               placeholder={t("approveReasonPlaceholder")}
             />
           </div>
@@ -189,42 +198,29 @@ const ApprovePropertyModal = ({
               <p className="text-[11px] font-bold text-textprimary dark:text-secondary uppercase tracking-tight">
                 {t("documentType")}
               </p>
-              <div className="relative">
-                <select
-                  value={selectedDocType}
-                  onChange={(e) => setSelectedDocType(Number(e.target.value))}
-                  className="w-full appearance-none pl-4 pr-10 py-2.5 bg-gray-50 dark:bg-white/5 border border-bordergray200 dark:border-darkbordercolor1 rounded-xl text-sm font-medium text-bgblack dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all cursor-pointer"
-                >
-                  {Object.entries(PROPERTY_DOCUMENT_TYPE_LABELS).map(
-                    ([val, label]) => (
-                      <option
-                        key={val}
-                        value={val}
-                        className="dark:bg-darkbgprimary"
-                      >
-                        {label}
-                      </option>
-                    ),
-                  )}
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-textprimary dark:text-secondary">
-                  <ChevronDown size={18} />
-                </div>
-              </div>
+              <Select
+                value={
+                  documentTypeOptions.find(
+                    (option) => option.value === selectedDocType,
+                  ) ?? null
+                }
+                options={documentTypeOptions}
+                onChange={(option) => setSelectedDocType(Number(option?.value))}
+              />
             </div>
 
             {/* Dropzone */}
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 ${
+              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 border-primarycolor/30 ${
                 isDragActive
-                  ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-500/10"
-                  : "border-bordergray200 dark:border-darkbordercolor1 hover:border-emerald-500/50 hover:bg-gray-50 dark:hover:bg-white/5"
+                  ? "border-emerald-500 bg-primarycolor dark:bg-primarycolor"
+                  : "hover:bg-gray-50 dark:hover:bg-white/5"
               }`}
             >
               <input {...getInputProps()} />
               <div className="flex flex-col items-center gap-2">
-                <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 rounded-full text-emerald-600">
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 rounded-full text-primarycolor/30">
                   <Upload size={24} />
                 </div>
                 <div>

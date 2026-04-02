@@ -1,13 +1,13 @@
 import { ToastContainer } from "react-toastify";
 import { ThemeProvider } from "next-themes";
-import { DM_Sans } from "next/font/google";
+import { Roboto } from "next/font/google";
 import FcmProvider from "./FcmProvider";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import Web3Provider from "@/components/providers/Web3Provider";
 import ReduxProvider from "./ReduxProvider";
 
-const dmSans = DM_Sans({
+const dmSans = Roboto({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-dm-sans",

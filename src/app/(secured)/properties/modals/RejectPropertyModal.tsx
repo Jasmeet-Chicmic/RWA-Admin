@@ -1,14 +1,15 @@
 "use client";
 
-import { AlertCircle, ChevronDown, Loader2, Upload, X } from "lucide-react";
+import { AlertCircle, Loader2, Upload, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 
 import { uploadAdminPropertyDocumentsAction } from "@/api/adminPropertiesActions";
 import { rejectPropertyAction } from "@/api/allPropertiesActions";
 import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
 import {
   PROPERTY_DOCUMENT_TYPE,
   PROPERTY_DOCUMENT_TYPE_LABELS,
@@ -39,6 +40,14 @@ const RejectPropertyModal = ({
   );
   const [isUploading, setIsUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const documentTypeOptions = useMemo(
+    () =>
+      Object.entries(PROPERTY_DOCUMENT_TYPE_LABELS).map(([val, label]) => ({
+        value: Number(val),
+        label,
+      })),
+    [],
+  );
 
   const onDrop = async (acceptedFiles: File[]) => {
     if (!acceptedFiles.length) return;
@@ -198,28 +207,15 @@ const RejectPropertyModal = ({
               <p className="text-[11px] font-bold text-textprimary dark:text-secondary uppercase tracking-tight">
                 {t("documentType")}
               </p>
-              <div className="relative">
-                <select
-                  value={selectedDocType}
-                  onChange={(e) => setSelectedDocType(Number(e.target.value))}
-                  className="w-full appearance-none pl-4 pr-10 py-2.5 bg-gray-50 dark:bg-white/5 border border-bordergray200 dark:border-darkbordercolor1 rounded-xl text-sm font-medium text-bgblack dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all cursor-pointer"
-                >
-                  {Object.entries(PROPERTY_DOCUMENT_TYPE_LABELS).map(
-                    ([val, label]) => (
-                      <option
-                        key={val}
-                        value={val}
-                        className="dark:bg-darkbgprimary"
-                      >
-                        {label}
-                      </option>
-                    ),
-                  )}
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-textprimary dark:text-secondary">
-                  <ChevronDown size={18} />
-                </div>
-              </div>
+              <Select
+                value={
+                  documentTypeOptions.find(
+                    (option) => option.value === selectedDocType,
+                  ) ?? null
+                }
+                options={documentTypeOptions}
+                onChange={(option) => setSelectedDocType(Number(option?.value))}
+              />
             </div>
 
             {/* Dropzone */}
@@ -279,7 +275,7 @@ const RejectPropertyModal = ({
             onClick={handleConfirm}
             isLoading={isPending}
             disabled={isUploading}
-            className="rounded-xl px-8 h-11 bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/20"
+            className="rounded-xl px-8 h-11 !bg-red-600 !hover:bg-red-700 !text-white shadow-lg"
           >
             {t("rejectProperty")}
           </Button>

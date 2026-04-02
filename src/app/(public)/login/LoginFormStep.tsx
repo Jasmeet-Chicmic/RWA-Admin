@@ -79,7 +79,7 @@ const LoginFormStep = ({ onNonceToken, role }: LoginFormStepProps) => {
           tempToken: res.data.token,
           message: res.message,
         });
-        toast.success(res.message || "Nonce generated successfully.");
+        // toast.success(res.message || "Nonce generated successfully.");
       } else {
         toast.error(
           res.message || "Login failed. Please check your credentials.",
