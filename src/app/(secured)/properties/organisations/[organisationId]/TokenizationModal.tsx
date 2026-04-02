@@ -34,6 +34,8 @@ import {
 import { handleWeb3Error } from "@/shared/utils/web3Error";
 import { AdminProperty, PropertyItem } from "@/types/properties";
 
+import { TokenizationModalSkeleton } from "./TokenizationModalSkeleton";
+
 type TokenizationFormValues = {
   ownerAddress: string;
   totalPropertyValue: string;
@@ -59,12 +61,13 @@ const parseMoney = (value: string): number | null => {
   return n;
 };
 
-const clampShares = (val: string) => {
+/** Strips non-digits; does not cap — max is enforced via validation + error message. */
+const sanitizeShareIntegerInput = (val: string) => {
   const digits = val.replace(/[^\d]/g, "");
   if (!digits) return "";
   const n = Number(digits);
   if (!Number.isFinite(n)) return "";
-  return String(Math.min(n, 10000));
+  return String(n);
 };
 
 const preventNegativeAndExponent: React.KeyboardEventHandler<
@@ -209,6 +212,7 @@ export const TokenizationModal = ({
   const [currentStep, setCurrentStep] = useState<TokenizationFlowStep>();
   const [isFlowCompleted, setIsFlowCompleted] = useState(false);
   const [isResumeLocked, setIsResumeLocked] = useState(false);
+  const [isJobStatusLoading, setIsJobStatusLoading] = useState(false);
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false);
   const { isConnected } = useWalletState();
   const { open: openWalletModal } = useAppKit();
@@ -248,22 +252,30 @@ export const TokenizationModal = ({
 
     let isCancelled = false;
     const initializeForm = async () => {
+      setIsJobStatusLoading(true);
       methods.reset(defaultValues);
       setShowWalletConnectModal(false);
       setIsFlowCompleted(false);
       setIsResumeLocked(false);
 
-      const status = await fetchJobStatus(property.id);
-      if (isCancelled) return;
-      const prefillValues = getStatusPrefillValues(status, defaultValues);
-      methods.reset(prefillValues);
-      setIsResumeLocked(isStatusResumeLocked(status));
+      try {
+        const status = await fetchJobStatus(property.id);
+        if (isCancelled) return;
+        const prefillValues = getStatusPrefillValues(status, defaultValues);
+        methods.reset(prefillValues);
+        setIsResumeLocked(isStatusResumeLocked(status));
+      } finally {
+        if (!isCancelled) {
+          setIsJobStatusLoading(false);
+        }
+      }
     };
 
     void initializeForm();
 
     return () => {
       isCancelled = true;
+      setIsJobStatusLoading(false);
     };
   }, [defaultValues, methods, open, property]);
 
@@ -400,71 +412,76 @@ export const TokenizationModal = ({
 
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
-              <div className="flex flex-wrap gap-x-3 justify-between">
-                <InputField<TokenizationFormValues>
-                  name="totalPropertyValue"
-                  type="text"
-                  label={t("tokenizationForm.totalPropertyValue")}
-                  width="w-full md:w-[48%] !mb-0"
-                  disabled={isSubmitting || isResumeLocked}
-                />
+              {isJobStatusLoading ? (
+                <TokenizationModalSkeleton />
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-x-3 justify-between">
+                    <InputField<TokenizationFormValues>
+                      name="totalPropertyValue"
+                      type="text"
+                      label={t("tokenizationForm.totalPropertyValue")}
+                      width="w-full md:w-[48%] !mb-0"
+                      disabled={isSubmitting || isResumeLocked}
+                    />
 
-                <InputField<TokenizationFormValues>
-                  name="totalShares"
-                  type="number"
-                  label={t("tokenizationForm.totalShares")}
-                  placeholder={t("tokenizationForm.totalSharesPlaceholder")}
-                  width="w-full md:w-[48%] !mb-0"
-                  min={1}
-                  max={10000}
-                  step={1}
-                  interceptor={(val) => clampShares(val)}
-                  inputMode="numeric"
-                  onKeyDown={preventNegativeAndExponent}
-                  disabled={isSubmitting || isResumeLocked}
-                  validation={{
-                    required: t("tokenizationForm.errors.sharesRequired"),
-                    validate: (val) => {
-                      const n = Number(val);
-                      if (!Number.isFinite(n)) {
-                        return t("tokenizationForm.errors.sharesRequired");
-                      }
-                      if (n <= 0) return t("tokenizationForm.errors.sharesMin");
-                      if (n > 10000)
-                        return t("tokenizationForm.errors.sharesMax");
-                      if (!Number.isInteger(n))
-                        return t("tokenizationForm.errors.sharesInteger");
-                      return true;
-                    },
-                  }}
-                />
-              </div>
-
-              <div className="my-4 rounded-2xl bg-gray-100 p-6 text-textprimary border border-bordergray200 dark:bg-darkbgbase dark:text-sidebartext dark:border-darkbordercolor1">
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 dark:bg-darkbgprimary">
-                    <Sparkles className="h-4 w-4" />
+                    <InputField<TokenizationFormValues>
+                      name="totalShares"
+                      type="number"
+                      label={t("tokenizationForm.totalShares")}
+                      placeholder={t("tokenizationForm.totalSharesPlaceholder")}
+                      width="w-full md:w-[48%] !mb-0"
+                      step={1}
+                      interceptor={(val) => sanitizeShareIntegerInput(val)}
+                      inputMode="numeric"
+                      onKeyDown={preventNegativeAndExponent}
+                      disabled={isSubmitting || isResumeLocked}
+                      validation={{
+                        required: t("tokenizationForm.errors.sharesRequired"),
+                        validate: (val) => {
+                          const n = Number(val);
+                          if (!Number.isFinite(n)) {
+                            return t("tokenizationForm.errors.sharesRequired");
+                          }
+                          if (n <= 0)
+                            return t("tokenizationForm.errors.sharesMin");
+                          if (n > 10000)
+                            return t("tokenizationForm.errors.sharesMax");
+                          if (!Number.isInteger(n))
+                            return t("tokenizationForm.errors.sharesInteger");
+                          return true;
+                        },
+                      }}
+                    />
                   </div>
-                  <div className="flex-1">
-                    <div className="text-xs font-semibold">
-                      {t("tokenizationForm.autoCalculated")}
-                    </div>
 
-                    <div className="mt-1 text-sm">
-                      {t("tokenizationForm.pricePerShare")}
-                    </div>
-                    <div className="text-4xl font-bold leading-tight mt-2">
-                      {formatUsdcAmount(pricePerShare)}
-                    </div>
-                    <div className="mt-1 text-xs text-textparagraph dark:text-textparagraphlight">
-                      {t("tokenizationForm.calculatedAs", {
-                        totalValue: formatUsdcAmount(totalValue),
-                        shares: safeShares,
-                      })}
+                  <div className="my-4 rounded-2xl bg-gray-100 p-6 text-textprimary border border-bordergray200 dark:bg-darkbgbase dark:text-sidebartext dark:border-darkbordercolor1">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 dark:bg-darkbgprimary">
+                        <Sparkles className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-xs font-semibold">
+                          {t("tokenizationForm.autoCalculated")}
+                        </div>
+
+                        <div className="mt-1 text-sm">
+                          {t("tokenizationForm.pricePerShare")}
+                        </div>
+                        <div className="text-4xl font-bold leading-tight mt-2">
+                          {formatUsdcAmount(pricePerShare)}
+                        </div>
+                        <div className="mt-1 text-xs text-textparagraph dark:text-textparagraphlight">
+                          {t("tokenizationForm.calculatedAs", {
+                            totalValue: formatUsdcAmount(totalValue),
+                            shares: safeShares,
+                          })}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </>
+              )}
 
               <div className="mt-6 flex flex-col gap-4 md:items-end md:justify-between">
                 <div className="min-h-[76px] flex-1 w-full">
@@ -531,7 +548,7 @@ export const TokenizationModal = ({
                     type="submit"
                     className="min-w-[140px]"
                     isLoading={isSubmitting}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isJobStatusLoading}
                   >
                     {t("tokenizationForm.submit")}
                   </Button>

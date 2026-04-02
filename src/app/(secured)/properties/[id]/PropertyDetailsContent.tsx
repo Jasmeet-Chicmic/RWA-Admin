@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import Breadcrumbs, { BreadcrumbItem } from "@/components/atoms/Breadcrumbs";
 import {
@@ -122,7 +123,24 @@ const PropertyDetailsContent = ({
     isLoading: propertyTransactionsLoading,
   } = useAppSelector((state) => state.transactions.list);
 
-  const lastRequestedTransactionsKeyRef = useRef<string | null>(null);
+  const searchParams = useSearchParams();
+  const transactionsQueryKey = searchParams.toString();
+
+  const transactionsFetchParams = useMemo(() => {
+    const params = new URLSearchParams(transactionsQueryKey);
+    const skipRaw = params.get("skip");
+    const limitRaw = params.get("limit");
+    const rawLimit = limitRaw ? Number(limitRaw) : 10;
+    const pageSize = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10;
+    const skip = skipRaw ? Number(skipRaw) : 0;
+    const page = Math.floor(skip / pageSize) + 1;
+    const search = (params.get("search") ?? "").trim();
+    return {
+      page,
+      pageSize,
+      ...(search ? { search } : {}),
+    };
+  }, [transactionsQueryKey]);
 
   useEffect(() => {
     if (lastRequestedPropertyIdRef.current === propertyId) return;
@@ -131,23 +149,18 @@ const PropertyDetailsContent = ({
   }, [detailsScope, dispatch, propertyId]);
 
   useEffect(() => {
-    const requestKey = `${detailsScope}:${propertyId}`;
-    if (lastRequestedTransactionsKeyRef.current === requestKey) return;
-    lastRequestedTransactionsKeyRef.current = requestKey;
     dispatch(
       detailsScope === "organisation"
         ? fetchOrganisationTransactionsList({
             propertyId,
-            page: 1,
-            pageSize: 10,
+            ...transactionsFetchParams,
           })
         : fetchTransactionsList({
             propertyId,
-            page: 1,
-            pageSize: 10,
+            ...transactionsFetchParams,
           }),
     );
-  }, [detailsScope, dispatch, propertyId]);
+  }, [detailsScope, dispatch, propertyId, transactionsFetchParams]);
 
   if (isLoading) {
     return <PropertyDetailsContentSkeleton />;
@@ -540,6 +553,7 @@ const PropertyDetailsContent = ({
               isLoading={propertyTransactionsLoading}
               hidePropertiesColumn
               showFilters={false}
+              showSearch
             />
           </div>
         </div>

@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
+import { TransactionSearchInput } from "./TransactionSearchInput";
+
 const TransactionFilters = () => {
   const t = useTranslations("transactions");
   const tCommon = useTranslations("common");
@@ -67,6 +69,8 @@ const TransactionFilters = () => {
 
   return (
     <div className="flex flex-wrap items-end justify-end gap-3">
+      <TransactionSearchInput inputId="transaction-search-filter" />
+
       <div className="min-w-[220px]">
         <label htmlFor="status-filter" className={LABEL_CLASS}>
           {t("status")}

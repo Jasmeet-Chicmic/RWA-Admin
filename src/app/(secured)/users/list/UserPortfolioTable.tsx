@@ -48,19 +48,19 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
 
   const config: DataTableConfig<UserPortfolioRow> = useMemo(() => {
     const columns: TableColumn<UserPortfolioRow>[] = [
-      {
-        field: "name",
-        title: t("name"),
-        render: (item) => (
-          <CopyToClipboardPill
-            value={item.name}
-            displayValue={truncateWallet(item.name)}
-            title={item.name}
-            onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
-            // className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
-          />
-        ),
-      },
+      // {
+      //   field: "name",
+      //   title: t("name"),
+      //   render: (item) => (
+      //     <CopyToClipboardPill
+      //       value={item.name}
+      //       displayValue={truncateWallet(item.name)}
+      //       title={item.name}
+      //       onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
+      //       // className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
+      //     />
+      //   ),
+      // },
       {
         field: "walletAddress",
         title: t("walletAddress"),
