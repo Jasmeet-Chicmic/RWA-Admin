@@ -3,7 +3,6 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
 
-import { useDebounce } from "@/hooks/useDebounce";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchTransactionsList } from "@/store/transactionsSlice";
 import TransactionsTable from "./TransactionsTable";
@@ -18,6 +17,7 @@ type TransactionsDeps = {
   status: string | null;
   fromDate: string | null;
   toDate: string | null;
+  search: string | null;
 };
 
 function buildTransactionsDeps(
@@ -38,6 +38,7 @@ function buildTransactionsDeps(
     status: params.get("status"),
     fromDate: params.get("fromDate"),
     toDate: params.get("toDate"),
+    search: params.get("search"),
   };
 }
 
@@ -53,29 +54,30 @@ const TransactionsListContainer = () => {
     () => JSON.stringify(buildTransactionsDeps(searchParams)),
     [searchParams],
   );
-  const debouncedDeps = useDebounce(combinedDeps, 300);
 
   const payload = useMemo(() => {
     try {
-      const parsed = JSON.parse(debouncedDeps) as TransactionsDeps;
+      const parsed = JSON.parse(combinedDeps) as TransactionsDeps;
+      const trimmedSearch = parsed.search?.trim() ?? "";
       return {
         page: parsed.page,
         pageSize: parsed.pageSize,
         ...(parsed.status ? { status: Number(parsed.status) } : {}),
         ...(parsed.fromDate ? { fromDate: parsed.fromDate } : {}),
         ...(parsed.toDate ? { toDate: parsed.toDate } : {}),
+        ...(trimmedSearch ? { search: trimmedSearch } : {}),
       };
     } catch {
       return null;
     }
-  }, [debouncedDeps]);
+  }, [combinedDeps]);
 
   useEffect(() => {
     if (!payload) return;
-    if (lastRequestKeyRef.current === debouncedDeps) return;
-    lastRequestKeyRef.current = debouncedDeps;
+    if (lastRequestKeyRef.current === combinedDeps) return;
+    lastRequestKeyRef.current = combinedDeps;
     dispatch(fetchTransactionsList(payload));
-  }, [debouncedDeps, dispatch, payload]);
+  }, [combinedDeps, dispatch, payload]);
 
   return (
     <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">

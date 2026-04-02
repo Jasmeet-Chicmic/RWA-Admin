@@ -18,6 +18,7 @@ import {
 } from "@/shared/styles";
 import { DISPLAY_CURRENCY, fromBaseUnits } from "@/shared/utils/unitUtils";
 import TransactionFilters from "./TransactionFilters";
+import { TransactionSearchInput } from "./TransactionSearchInput";
 import { walletTruncate } from "@/shared/utils";
 
 const PAYMENT_STATUS_BADGE_STYLES: Record<number, string> = {
@@ -38,6 +39,8 @@ interface TransactionsTableProps {
   isLoading?: boolean;
   hidePropertiesColumn?: boolean;
   showFilters?: boolean;
+  /** When true, shows debounced search (URL `search` param). Use when `showFilters` is false. */
+  showSearch?: boolean;
 }
 
 const TransactionsTable = ({
@@ -46,6 +49,7 @@ const TransactionsTable = ({
   isLoading = false,
   hidePropertiesColumn = false,
   showFilters = true,
+  showSearch = false,
 }: TransactionsTableProps) => {
   const t = useTranslations("transactions");
   const tCommon = useTranslations("common");
@@ -208,12 +212,23 @@ const TransactionsTable = ({
               <div className="shrink-0">
                 <TransactionFilters />
               </div>
+            ) : showSearch ? (
+              <div className="shrink-0">
+                <TransactionSearchInput inputId="transaction-search-property" />
+              </div>
             ) : null}
           </div>
         </div>
       ),
     };
-  }, [getStatusLabel, hidePropertiesColumn, showFilters, t, tCommon]);
+  }, [
+    getStatusLabel,
+    hidePropertiesColumn,
+    showFilters,
+    showSearch,
+    t,
+    tCommon,
+  ]);
 
   return (
     <DataTable<AdminTransactionItem>
