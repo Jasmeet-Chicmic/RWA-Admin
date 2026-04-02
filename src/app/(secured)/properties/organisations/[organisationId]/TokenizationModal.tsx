@@ -386,12 +386,12 @@ export const TokenizationModal = ({
 
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
-              <div className="flex flex-wrap gap-x-4 justify-between">
+              <div className="flex flex-wrap gap-x-3 justify-between">
                 <InputField<TokenizationFormValues>
                   name="totalPropertyValue"
                   type="text"
                   label={t("tokenizationForm.totalPropertyValue")}
-                  width="w-full md:w-[48%]"
+                  width="w-full md:w-[48%] !mb-0"
                   disabled={isSubmitting}
                 />
 
@@ -400,7 +400,7 @@ export const TokenizationModal = ({
                   type="number"
                   label={t("tokenizationForm.totalShares")}
                   placeholder={t("tokenizationForm.totalSharesPlaceholder")}
-                  width="w-full md:w-[48%]"
+                  width="w-full md:w-[48%] !mb-0"
                   min={1}
                   max={10000}
                   step={1}
@@ -426,7 +426,7 @@ export const TokenizationModal = ({
                 />
               </div>
 
-              <div className="my-6 rounded-2xl bg-gray-100 p-6 text-textprimary border border-bordergray200 dark:bg-darkbgbase dark:text-sidebartext dark:border-darkbordercolor1">
+              <div className="my-4 rounded-2xl bg-gray-100 p-6 text-textprimary border border-bordergray200 dark:bg-darkbgbase dark:text-sidebartext dark:border-darkbordercolor1">
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 dark:bg-darkbgprimary">
                     <Sparkles className="h-4 w-4" />
@@ -436,10 +436,10 @@ export const TokenizationModal = ({
                       {t("tokenizationForm.autoCalculated")}
                     </div>
 
-                    <div className="mt-3 text-sm">
+                    <div className="mt-1 text-sm">
                       {t("tokenizationForm.pricePerShare")}
                     </div>
-                    <div className="text-4xl font-bold leading-tight">
+                    <div className="text-4xl font-bold leading-tight mt-2">
                       {formatUsdcAmount(pricePerShare)}
                     </div>
                     <div className="mt-1 text-xs text-textparagraph dark:text-textparagraphlight">
@@ -452,8 +452,8 @@ export const TokenizationModal = ({
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                <div className="min-h-[76px] flex-1">
+              <div className="mt-6 flex flex-col gap-4 md:items-end md:justify-between">
+                <div className="min-h-[76px] flex-1 w-full">
                   {isSubmitting || isFlowCompleted ? (
                     <div className="rounded-xl border border-bordergray200 p-3 dark:border-darkbordercolor1">
                       <p className="text-xs font-semibold text-textparagraph dark:text-textparagraphlight mb-2">

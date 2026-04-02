@@ -21,8 +21,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-dm-sans)", "sans-serif"],
-        "dm-sans": ["var(--font-dm-sans)"],
+        sans: ["var(--font-roboto)", "sans-serif"],
+        roboto: ["var(--font-roboto)"],
       },
       colors: {
         primary: {
