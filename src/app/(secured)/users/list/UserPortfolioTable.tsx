@@ -3,15 +3,17 @@
 import { useMemo } from "react";
 // import { Ban,   Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
 
 import { TableColumn } from "@/components/atoms/Table";
+import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 // import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
-import { formatDisplayCurrency } from "@/shared/utils/unitUtils";
+import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 // import { getUsersAction } from "@/api/user";
 
 // 0 - Not Started, 1 - Pending, 2 - Approved, 3 - Rejected
@@ -42,6 +44,7 @@ interface UserPortfolioTableProps {
 
 const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
   const t = useTranslations("users");
+  const tTransactions = useTranslations("transactions");
 
   const config: DataTableConfig<UserPortfolioRow> = useMemo(() => {
     const columns: TableColumn<UserPortfolioRow>[] = [
@@ -49,21 +52,26 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
         field: "name",
         title: t("name"),
         render: (item) => (
-          <div className="flex flex-col">
-            <span className={`${TEXT_PRIMARY} font-medium`}>{item.name}</span>
-          </div>
+          <CopyToClipboardPill
+            value={item.name}
+            displayValue={truncateWallet(item.name)}
+            title={item.name}
+            onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
+            // className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
+          />
         ),
       },
       {
         field: "walletAddress",
         title: t("walletAddress"),
         render: (item) => (
-          <span
-            className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
+          <CopyToClipboardPill
+            value={item.walletAddress}
+            displayValue={truncateWallet(item.walletAddress)}
             title={item.walletAddress}
-          >
-            {truncateWallet(item.walletAddress)}
-          </span>
+            onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
+            // className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
+          />
         ),
       },
       {
@@ -80,7 +88,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
         title: t("totalInvestment"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrency(item.totalInvestment)}
+            {formatCurrency(fromBaseUnits(item.totalInvestment))}
           </span>
         ),
       },
@@ -89,7 +97,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
         title: t("portfolioValue"),
         render: (item) => (
           <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {formatCurrency(item.portfolioValue)}
+            {formatCurrency(fromBaseUnits(item.portfolioValue))}
           </span>
         ),
       },
@@ -178,7 +186,7 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
         </div>
       ),
     };
-  }, [t]);
+  }, [t, tTransactions]);
 
   return <DataTable data={data} totalCount={totalCount} config={config} />;
 };

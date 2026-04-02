@@ -4,17 +4,21 @@ import TableActions, {
   TableActionDisplayMode,
   TableActionItem,
 } from "@/components/atoms/TableActions";
+import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { TableColumn } from "@/components/atoms/Table";
+import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { ROUTES } from "@/shared/routes";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { truncateText } from "@/shared/utils";
+import { toast } from "react-toastify";
 
 export type OrganisationEntityType = "LLC" | "SPV" | "Trust";
 
@@ -36,6 +40,7 @@ const PropertyOrganisationsTable = ({
   totalCount: number;
 }) => {
   const t = useTranslations("properties");
+  const tTransactions = useTranslations("transactions");
   const router = useRouter();
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
@@ -70,9 +75,23 @@ const PropertyOrganisationsTable = ({
         field: "jurisdiction",
         title: t("jurisdiction"),
         render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.jurisdiction}
-          </span>
+          <div className="flex items-center gap-2">
+            <MapPin size={14} className={TEXT_PRIMARY} />
+            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+              {truncateText(item.jurisdiction, 40, "—")}
+            </span>
+            {item.jurisdiction ? (
+              <CopyToClipboardPill
+                value={item.jurisdiction}
+                showText={false}
+                title={tTransactions("copy")}
+                onCopied={() =>
+                  toast.success(tTransactions("copiedToClipboard"))
+                }
+                className="px-2 py-1"
+              />
+            ) : null}
+          </div>
         ),
       },
       {
@@ -149,7 +168,7 @@ const PropertyOrganisationsTable = ({
         </div>
       ),
     };
-  }, [actionsDisplayMode, router, t]);
+  }, [actionsDisplayMode, router, t, tTransactions]);
 
   return <DataTable data={data} totalCount={totalCount} config={config} />;
 };

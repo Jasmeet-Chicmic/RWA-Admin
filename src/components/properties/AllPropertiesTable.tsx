@@ -1,10 +1,11 @@
 "use client";
 
 import { useDebounce } from "@/hooks/useDebounce";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, MapPin, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import ApprovePropertyModal from "@/app/(secured)/properties/modals/ApprovePropertyModal";
 import AssignLLCModal from "@/app/(secured)/properties/modals/AssignLLCModal";
@@ -15,6 +16,8 @@ import TableActions, {
   TableActionDisplayMode,
   TableActionItem,
 } from "@/components/atoms/TableActions";
+import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
+import { truncateText } from "@/shared/utils";
 import {
   DEFAULT_PAGE_SIZE,
   PROPERTY_STATUS,
@@ -66,6 +69,7 @@ const AllPropertiesTable = ({
   hideStatusFilter?: boolean;
 }) => {
   const t = useTranslations("properties");
+  const tTransactions = useTranslations("transactions");
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items, totalCount, isLoading } = useAppSelector(
@@ -180,15 +184,61 @@ const AllPropertiesTable = ({
         title: t("propertyName"),
         field: "name" as keyof PropertyItem,
         render: (item: PropertyItem) => (
-          <span className="font-medium text-bgblack dark:text-white">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/properties/${item.id}`);
+            }}
+            className="font-medium text-bgblack dark:text-white underline hover:opacity-90"
+            title={item.name || item.id}
+          >
             {item.name || "—"}
-          </span>
+          </button>
         ),
       },
       {
         title: t("location"),
         field: "location" as keyof PropertyItem,
-        render: (item: PropertyItem) => <span>{item.location || "—"}</span>,
+        render: (item: PropertyItem) => {
+          const locationValue = item.location ?? "";
+          return (
+            <div className="flex items-center gap-2">
+              <MapPin
+                size={14}
+                className="text-bgblack dark:text-white shrink-0"
+              />
+              <span className="text-[0.875rem] text-bgblack dark:text-white">
+                {truncateText(locationValue, 40, "—")}
+              </span>
+              {locationValue ? (
+                <CopyToClipboardPill
+                  value={locationValue}
+                  showText={false}
+                  title={tTransactions("copy")}
+                  onCopied={() =>
+                    toast.success(tTransactions("copiedToClipboard"))
+                  }
+                  className="px-2 py-1"
+                />
+              ) : null}
+            </div>
+          );
+        },
+      },
+      {
+        title: t("organisationName"),
+        field: "organisation" as keyof PropertyItem,
+        render: (item: PropertyItem) => {
+          const organisationName =
+            item.organization?.name ?? item.organisation?.name ?? "";
+          const display = organisationName || "—";
+          return (
+            <span className="text-[0.875rem] text-bgblack dark:text-white/90">
+              {truncateText(display, 30, "—")}
+            </span>
+          );
+        },
       },
       {
         title: t("statusLabel"),
@@ -275,12 +325,8 @@ const AllPropertiesTable = ({
               className: "text-indigo-600 dark:text-indigo-400",
             });
           } else if (item.status === PROPERTY_STATUS.ACTIVE) {
-            actions.push({
-              id: `disapprove-${item.id}`,
-              label: t("disapprove"),
-              onClick: () => handleReject(item),
-              className: "text-red-600 dark:text-red-400",
-            });
+            // When a property is already Active, only "Property Details" should be available.
+            // No approve/reject/assign/disapprove actions are allowed.
           }
 
           return (
@@ -302,6 +348,7 @@ const AllPropertiesTable = ({
       handleReject,
       router,
       t,
+      tTransactions,
     ],
   );
 

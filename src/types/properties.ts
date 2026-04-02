@@ -13,6 +13,14 @@ export interface PropertyItem {
   location: string;
   status: number;
   propertyType: number;
+  organisation?: {
+    id: string;
+    name: string;
+  };
+  organization?: {
+    id: string;
+    name: string;
+  };
   approvedValuation: number;
   annualYieldPercentage: number | null;
   pricePerShare: number | null;

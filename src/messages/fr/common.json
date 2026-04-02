@@ -116,6 +116,8 @@
   "disapprovedRequests": "Demandes désapprouvées",
   "loading": "Chargement...",
   "copy": "Copier",
+  "Properties": "Propriétés",
   "Organisation": "Organisation",
+  "Organisation Properties": "Propriétés de l'organisation",
   "{entity} {action} successfully": "{entity} {action} avec succès"
 }

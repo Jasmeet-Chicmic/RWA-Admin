@@ -16,6 +16,12 @@ import { buildAssetsUrl } from "@/shared/utils";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchPropertyDetails } from "@/store/propertiesSlice";
+import {
+  fetchOrganisationTransactionsList,
+  fetchTransactionsList,
+} from "@/store/transactionsSlice";
+import TransactionsTable from "@/app/(secured)/transactions/list/TransactionsTable";
+import PropertyDetailsContentSkeleton from "./PropertyDetailsContentSkeleton";
 
 const StatItem = ({
   label,
@@ -54,25 +60,41 @@ const PropertyDetailsContent = ({
     (state) => state.properties.details,
   );
 
+  const {
+    items: propertyTransactions,
+    totalCount: propertyTransactionsTotalCount,
+    isLoading: propertyTransactionsLoading,
+  } = useAppSelector((state) => state.transactions.list);
+
+  const lastRequestedTransactionsKeyRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (lastRequestedPropertyIdRef.current === propertyId) return;
     lastRequestedPropertyIdRef.current = propertyId;
     dispatch(fetchPropertyDetails({ propertyId, scope: detailsScope }));
   }, [detailsScope, dispatch, propertyId]);
 
-  if (isLoading) {
-    return (
-      <div className="w-full !pt-0 py-8 lg:py-12">
-        <div className="w-full max-w-[1260px] min-[1680px]:max-w-[1480px] px-[20px] mx-auto">
-          <div className="rounded-[11.57px] border border-[#292929] bg-[#141414] p-6 text-white">
-            <h1 className="text-xl font-semibold">{t("propertyDetails")}</h1>
-            <p className="mt-2 text-sm text-white/70">
-              {t("loadingPropertyDetails")}
-            </p>
-          </div>
-        </div>
-      </div>
+  useEffect(() => {
+    const requestKey = `${detailsScope}:${propertyId}`;
+    if (lastRequestedTransactionsKeyRef.current === requestKey) return;
+    lastRequestedTransactionsKeyRef.current = requestKey;
+    dispatch(
+      detailsScope === "organisation"
+        ? fetchOrganisationTransactionsList({
+            propertyId,
+            page: 1,
+            pageSize: 10,
+          })
+        : fetchTransactionsList({
+            propertyId,
+            page: 1,
+            pageSize: 10,
+          }),
     );
+  }, [detailsScope, dispatch, propertyId]);
+
+  if (isLoading) {
+    return <PropertyDetailsContentSkeleton />;
   }
 
   if (error || !item) {
@@ -370,6 +392,16 @@ const PropertyDetailsContent = ({
               </div>
             </div>
           )}
+
+          <div className="pt-10">
+            <TransactionsTable
+              data={propertyTransactions}
+              totalCount={propertyTransactionsTotalCount}
+              isLoading={propertyTransactionsLoading}
+              hidePropertiesColumn
+              showFilters={false}
+            />
+          </div>
         </div>
       </div>
     </div>

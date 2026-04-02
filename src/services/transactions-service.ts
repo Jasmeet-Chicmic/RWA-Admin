@@ -5,7 +5,13 @@ import { getRequest } from "./fetcher";
 export type AdminTransactionItem = {
   id: string;
   status: number;
-  propertyId: string;
+  // Backend returns a `property` object now.
+  // Keep `propertyId` optional for backwards compatibility if any endpoint still returns the old shape.
+  property?: {
+    id: string;
+    name: string;
+  };
+  propertyId?: string;
   transactionHash: string;
   buyerAddress: string;
   sellerAddress: string;
@@ -31,6 +37,19 @@ export const transactionsService = {
       TransactionsListResponse,
       GetAdminTransactionsParams
     >(API_END_POINTS.ADMIN_TRANSACTIONS, params);
+
+    const items = payload?.data?.items ?? [];
+    return {
+      transactions: items,
+      totalCount: payload?.data?.totalCount ?? 0,
+    };
+  },
+
+  async getOrganisationTransactions(params: GetAdminTransactionsParams) {
+    const payload = await getRequest<
+      TransactionsListResponse,
+      GetAdminTransactionsParams
+    >(API_END_POINTS.ORGANIZATION_TRANSACTIONS, params);
 
     const items = payload?.data?.items ?? [];
     return {
