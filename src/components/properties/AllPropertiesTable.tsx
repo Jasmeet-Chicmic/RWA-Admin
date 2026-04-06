@@ -43,10 +43,10 @@ const getStatusBadgeClass = (status: number): string =>
 const getPropertyTypeLabel = (type: number): string =>
   PROPERTY_TYPE_LABELS[type as PropertyType] ?? String(type);
 
-const formatPercentage = (value: number | null): string => {
-  if (value === null || value === undefined) return "—";
-  return `${value.toFixed(2)}%`;
-};
+// const formatPercentage = (value: number | null): string => {
+//   if (value === null || value === undefined) return "—";
+//   return `${value.toFixed(2)}%`;
+// };
 
 const formatDate = (dateStr: string): string =>
   new Date(dateStr).toLocaleDateString("en-US", {
@@ -267,13 +267,13 @@ const AllPropertiesTable = ({
           </span>
         ),
       },
-      {
-        title: t("annualYield"),
-        field: "annualYieldPercentage" as keyof PropertyItem,
-        render: (item: PropertyItem) => (
-          <span>{formatPercentage(item.annualYieldPercentage)}</span>
-        ),
-      },
+      // {
+      //   title: t("annualYield"),
+      //   field: "annualYieldPercentage" as keyof PropertyItem,
+      //   render: (item: PropertyItem) => (
+      //     <span>{formatPercentage(item.annualYieldPercentage)}</span>
+      //   ),
+      // },
       {
         title: t("pricePerShare"),
         field: "pricePerShare" as keyof PropertyItem,
