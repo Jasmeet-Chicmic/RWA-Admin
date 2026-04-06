@@ -1,6 +1,9 @@
 {
   "users": "Usuários",
   "searchUser": "Pesquisar usuário",
+  "searchWallet": "Pesquisar por carteira",
+  "searchWalletPlaceholder": "Endereço da carteira",
+  "selectKycStatus": "Todos os status KYC",
   "filters": "Filtros",
   "userFilters": "Filtros de usuário",
   "clearAllFilters": "Limpar todos os filtros",
