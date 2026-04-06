@@ -94,9 +94,6 @@ const OrganisationPropertiesTable = ({
   const [tokenizationModalOpen, setTokenizationModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] =
     useState<AdminProperty | null>(null);
-  const [distributedPropertyIds, setDistributedPropertyIds] = useState<
-    Record<string, boolean>
-  >({});
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
   const openTokenization = (property: PropertyData) => {
@@ -108,17 +105,6 @@ const OrganisationPropertiesTable = ({
     setTokenizationModalOpen(false);
     setSelectedProperty(null);
   };
-
-  const handleDistribute = useCallback(
-    (propertyId: string) => {
-      setDistributedPropertyIds((prev) => ({
-        ...prev,
-        [propertyId]: true,
-      }));
-      toast.success(t("distributedSuccess"));
-    },
-    [t],
-  );
 
   const formatCurrency = (value: number) =>
     formatDisplayCurrency(value, { maximumFractionDigits: 2 });
@@ -271,22 +257,22 @@ const OrganisationPropertiesTable = ({
           );
         },
       },
-      {
-        title: t("annualYield"),
-        field: "",
-        render: (item) => {
-          const yieldVal =
-            (item as PropertyItem).annualYieldPercentage ??
-            (item as AdminProperty).annualYieldPercent;
-          return (
-            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-              {yieldVal !== null && yieldVal !== undefined
-                ? `${yieldVal}%`
-                : "—"}
-            </span>
-          );
-        },
-      },
+      // {
+      //   title: t("annualYield"),
+      //   field: "",
+      //   render: (item) => {
+      //     const yieldVal =
+      //       (item as PropertyItem).annualYieldPercentage ??
+      //       (item as AdminProperty).annualYieldPercent;
+      //     return (
+      //       <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+      //         {yieldVal !== null && yieldVal !== undefined
+      //           ? `${yieldVal}%`
+      //           : "—"}
+      //       </span>
+      //     );
+      //   },
+      // },
       {
         title: t("pricePerShare"),
         field: "",
@@ -317,18 +303,8 @@ const OrganisationPropertiesTable = ({
         title: t("actions"),
         field: "",
         render: (item) => {
-          const isActiveProperty = item.status === PropertyStatus.Active;
           const canTokenize =
             item.status === PropertyStatus.OrganizationAssigned;
-          const isDistributed = !!distributedPropertyIds[item.id];
-          const shouldDisable =
-            isDistributed || (!isActiveProperty && !canTokenize);
-          let primaryActionLabel = t("tokenization");
-          if (isActiveProperty) {
-            primaryActionLabel = isDistributed
-              ? t("distributed")
-              : t("distribute");
-          }
           const actions: TableActionItem[] = [
             {
               id: `property-details-${item.id}`,
@@ -344,13 +320,9 @@ const OrganisationPropertiesTable = ({
           if (!hideActions) {
             actions.push({
               id: `property-action-${item.id}`,
-              label: primaryActionLabel,
-              disabled: shouldDisable,
+              label: t("tokenization"),
+              disabled: !canTokenize,
               onClick: () => {
-                if (isActiveProperty) {
-                  handleDistribute(item.id);
-                  return;
-                }
                 if (canTokenize) openTokenization(item);
               },
             });
@@ -376,16 +348,7 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("noPropertiesFound"),
     };
-  }, [
-    actionsDisplayMode,
-    distributedPropertyIds,
-    fetchMode,
-    handleDistribute,
-    hideActions,
-    router,
-    t,
-    tTransactions,
-  ]);
+  }, [actionsDisplayMode, fetchMode, hideActions, router, t, tTransactions]);
 
   return (
     <>
