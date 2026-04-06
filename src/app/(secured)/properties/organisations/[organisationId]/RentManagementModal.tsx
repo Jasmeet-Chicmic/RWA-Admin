@@ -1,6 +1,13 @@
 "use client";
 
-import { CheckCircle2, Sparkles } from "lucide-react";
+import {
+  CheckCircle2,
+  Sparkles,
+  Pencil,
+  Save,
+  X,
+  HandCoins,
+} from "lucide-react";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -35,6 +42,7 @@ export const RentManagementModal = ({
     null,
   );
 
+  const currencyUnit = "USDC";
   const methods = useForm<RentManagementFormValues>({
     defaultValues: {
       rentAmount: "",
@@ -99,20 +107,40 @@ export const RentManagementModal = ({
                     <InputField<RentManagementFormValues>
                       name="rentAmount"
                       type="number"
-                      label="Rent Amount (₹)"
+                      label={`Rent Amount (${currencyUnit})`}
                       placeholder="e.g. 100000"
                       width="w-full md:w-[48%] !mb-0"
-                      validation={{ required: "Rent amount is required" }}
+                      validation={{
+                        required: "Rent amount is required",
+                        validate: (val) => {
+                          const n = Number(val);
+                          if (!Number.isFinite(n) || n <= 0)
+                            return "Rent amount must be greater than 0";
+                          return true;
+                        },
+                      }}
                     />
 
                     <InputField<RentManagementFormValues>
                       name="maintenanceCharges"
                       type="number"
-                      label="Maintenance Charges (₹)"
+                      label={`Maintenance Charges (${currencyUnit})`}
                       placeholder="e.g. 15000"
                       width="w-full md:w-[48%] !mb-0"
                       validation={{
                         required: "Maintenance charges are required",
+                        validate: (val) => {
+                          const n = Number(val);
+                          const other =
+                            Number(methods.getValues("otherExpenses")) || 0;
+                          const rent =
+                            Number(methods.getValues("rentAmount")) || 0;
+                          if (!Number.isFinite(n) || n < 0)
+                            return "Maintenance charges cannot be negative";
+                          if (n + other > rent)
+                            return "Total Expenses or (Total Expenses + Other Expenses) cannot exceed Rent Amount";
+                          return true;
+                        },
                       }}
                     />
                   </div>
@@ -121,29 +149,57 @@ export const RentManagementModal = ({
                     <InputField<RentManagementFormValues>
                       name="otherExpenses"
                       type="number"
-                      label="Other Expenses (Optional, ₹)"
+                      label={`Other Expenses (${currencyUnit}), Optional`}
                       placeholder="e.g. 5000"
                       width="w-full md:w-[48%] !mb-0"
+                      validation={{
+                        validate: (val) => {
+                          if (!val) return true;
+                          const maintenance =
+                            Number(methods.getValues("maintenanceCharges")) ||
+                            0;
+                          const rent =
+                            Number(methods.getValues("rentAmount")) || 0;
+                          const n = Number(val);
+                          if (!Number.isFinite(n) || n < 0)
+                            return "Other expenses cannot be negative";
+                          if (n + maintenance > rent)
+                            return "Other Expenses or (Total Expenses + Other Expenses) cannot exceed Rent Amount";
+                          return true;
+                        },
+                      }}
                     />
 
                     <InputField<RentManagementFormValues>
                       name="month"
-                      type="text"
+                      type="month"
                       label="Month"
                       placeholder="e.g. April 2026"
                       width="w-full md:w-[48%] !mb-0"
-                      validation={{ required: "Month is required" }}
+                      validation={{
+                        required: "Month is required",
+                      }}
+                      onKeyDown={(e) => e.preventDefault()}
                     />
                   </div>
 
-                  <div className="w-full">
+                  <div className="w-full relative pb-5">
                     <InputField<RentManagementFormValues>
                       name="notes"
                       type="text"
                       label="Notes (Optional)"
                       placeholder="Any additional notes"
                       width="w-full !mb-0"
+                      validation={{
+                        maxLength: {
+                          value: 500,
+                          message: "Notes cannot exceed 500 characters",
+                        },
+                      }}
                     />
+                    <div className="absolute bottom-0 right-0 text-[10px] sm:text-xs text-textparagraph dark:text-textparagraphlight mt-1">
+                      {(methods.watch("notes") || "").length}/500
+                    </div>
                   </div>
                 </div>
 
@@ -152,11 +208,16 @@ export const RentManagementModal = ({
                     type="button"
                     variant="outline"
                     onClick={handleClose}
-                    className="min-w-[110px]"
+                    className="min-w-[110px] flex items-center justify-center gap-2"
                   >
+                    <X className="w-4 h-4" />
                     Cancel
                   </Button>
-                  <Button type="submit" className="min-w-[140px]">
+                  <Button
+                    type="submit"
+                    className="min-w-[140px] flex items-center justify-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
                     Save
                   </Button>
                 </div>
@@ -164,10 +225,10 @@ export const RentManagementModal = ({
             </FormProvider>
           ) : (
             <div className="flex flex-col gap-4">
-              <div className="rounded-2xl bg-gray-100 p-6 text-textprimary border border-bordergray200 dark:bg-darkbgbase dark:text-sidebartext dark:border-darkbordercolor1">
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 dark:bg-darkbgprimary">
-                    <Sparkles className="h-4 w-4" />
+              <div className="rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-6 text-textprimary border border-bordergray200 shadow-sm dark:from-[#151515] dark:to-[#1A1A1A] dark:text-sidebartext dark:border-darkbordercolor1">
+                <div className="flex items-start gap-4">
+                  <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-bordergray200 dark:bg-darkbgprimary dark:border-darkbordercolor1">
+                    <Sparkles className="h-5 w-5 text-emerald-500" />
                   </div>
                   <div className="flex-1">
                     <div className="text-xs font-semibold">
@@ -206,15 +267,17 @@ export const RentManagementModal = ({
                   type="button"
                   variant="outline"
                   onClick={() => setIsSaved(false)}
-                  className="min-w-[110px]"
+                  className="min-w-[110px] flex items-center justify-center gap-2"
                 >
+                  <Pencil className="w-4 h-4" />
                   Edit Data
                 </Button>
                 <Button
                   type="button"
                   onClick={handleDistribute}
-                  className="min-w-[140px]"
+                  className="min-w-[150px] flex items-center justify-center gap-2"
                 >
+                  <HandCoins className="w-4 h-4" />
                   Distribute Rent
                 </Button>
               </div>
@@ -250,15 +313,17 @@ export const RentManagementModal = ({
                   type="button"
                   variant="outline"
                   onClick={() => setIsDistributeModalOpen(false)}
-                  className="min-w-[110px]"
+                  className="min-w-[110px] flex items-center justify-center gap-2"
                 >
+                  <X className="w-4 h-4" />
                   Cancel
                 </Button>
                 <Button
                   type="button"
                   onClick={confirmDistribution}
-                  className="min-w-[170px]"
+                  className="min-w-[180px] flex items-center justify-center gap-2"
                 >
+                  <HandCoins className="w-4 h-4" />
                   Confirm Distribution
                 </Button>
               </div>

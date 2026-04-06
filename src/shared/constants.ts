@@ -87,6 +87,7 @@ export const FORM_FIELDS_TYPES = {
   NUMBER: "number",
   COLOR: "color",
   DATE: "date",
+  MONTH: "month",
 } as const;
 
 export const COUNTRY_NAMES = {

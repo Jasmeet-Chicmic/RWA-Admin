@@ -343,7 +343,7 @@ const OrganisationPropertiesTable = ({
             });
             actions.push({
               id: `property-rent-action-${item.id}`,
-              label: "Rent",
+              label: "Rent Distribution",
               disabled: !isTokenizationCompleted,
               onClick: () => {
                 if (isTokenizationCompleted) openRentManagement(item);
