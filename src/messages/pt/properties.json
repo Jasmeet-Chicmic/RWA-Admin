@@ -95,8 +95,8 @@
     "expectedAnnualYield": "Retorno anual esperado (%)",
     "expectedAnnualYieldPlaceholder": "0.0",
     "expectedAnnualYieldHint": "O valor deve estar entre 0 e 100",
-    "riskScore": "Pontuação de risco (0-1)",
-    "riskScorePlaceholder": "0.0",
+    "riskScore": "Pontuação de risco (1–10)",
+    "riskScorePlaceholder": "1–10",
     "wallet": {
       "title": "Conectar carteira",
       "description": "Conecte sua carteira para continuar a tokenização.",
@@ -124,8 +124,9 @@
       "yieldMin": "O retorno não pode ser negativo",
       "yieldMax": "O retorno não pode exceder 100%",
       "riskRequired": "A pontuação de risco é obrigatória",
-      "riskMin": "A pontuação de risco não pode ser negativa",
-      "riskMax": "A pontuação de risco não pode exceder 1",
+      "riskMin": "A pontuação de risco deve ser pelo menos 1",
+      "riskMax": "A pontuação de risco não pode exceder 10",
+      "riskInteger": "A pontuação de risco deve ser um número inteiro",
       "rentalInvalid": "Informe um valor válido",
       "rentalMin": "A renda de aluguel não pode ser negativa",
       "rentalMax": "A renda de aluguel não pode exceder {max}"

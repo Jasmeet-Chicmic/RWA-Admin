@@ -14,6 +14,12 @@ export const TokenizationModalSkeleton = () => (
         <Skeleton className="h-11 w-full rounded-xl" />
       </div>
     </div>
+    <div className="mt-3 flex flex-wrap gap-x-3 gap-y-4 justify-between">
+      <div className="w-full md:w-[48%] space-y-2">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-11 w-full rounded-xl" />
+      </div>
+    </div>
     <div className="my-4 rounded-2xl border border-bordergray200 bg-gray-100 p-6 dark:border-darkbordercolor1 dark:bg-darkbgbase">
       <div className="flex items-start gap-3">
         <Skeleton className="h-8 w-8 shrink-0 rounded-lg" />

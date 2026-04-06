@@ -95,8 +95,8 @@
     "expectedAnnualYield": "Rendement annuel attendu (%)",
     "expectedAnnualYieldPlaceholder": "0.0",
     "expectedAnnualYieldHint": "La valeur doit être comprise entre 0 et 100",
-    "riskScore": "Score de risque (0-1)",
-    "riskScorePlaceholder": "0.0",
+    "riskScore": "Score de risque (1–10)",
+    "riskScorePlaceholder": "1–10",
     "wallet": {
       "title": "Connecter le portefeuille",
       "description": "Veuillez connecter votre portefeuille pour continuer la tokenisation.",
@@ -124,8 +124,9 @@
       "yieldMin": "Le rendement ne peut pas être négatif",
       "yieldMax": "Le rendement ne peut pas dépasser 100 %",
       "riskRequired": "Le score de risque est requis",
-      "riskMin": "Le score de risque ne peut pas être négatif",
-      "riskMax": "Le score de risque ne peut pas dépasser 1",
+      "riskMin": "Le score de risque doit être au moins 1",
+      "riskMax": "Le score de risque ne peut pas dépasser 10",
+      "riskInteger": "Le score de risque doit être un nombre entier",
       "rentalInvalid": "Saisissez un montant valide",
       "rentalMin": "Le revenu locatif ne peut pas être négatif",
       "rentalMax": "Le revenu locatif ne peut pas dépasser {max}"

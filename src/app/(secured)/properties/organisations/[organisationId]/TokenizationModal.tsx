@@ -40,6 +40,7 @@ type TokenizationFormValues = {
   ownerAddress: string;
   totalPropertyValue: string;
   totalShares: string;
+  riskScore: string;
   image: string;
 };
 
@@ -109,6 +110,16 @@ const pickFirstFiniteNumber = (...candidates: unknown[]): number | null => {
   return null;
 };
 
+const DEFAULT_RISK_SCORE = "5";
+
+const pickRiskScoreForForm = (...candidates: unknown[]): string | null => {
+  const n = pickFirstFiniteNumber(...candidates);
+  if (n === null) return null;
+  const rounded = Math.round(n);
+  if (rounded >= 1 && rounded <= 10) return String(rounded);
+  return null;
+};
+
 const getStatusPrefillValues = (
   status: JobStatusData | null,
   fallback: TokenizationFormValues,
@@ -174,6 +185,12 @@ const getStatusPrefillValues = (
       (requestPayload.ownerAddress as string | undefined)) ??
     fallback.ownerAddress;
 
+  const riskScoreFromStatus = pickRiskScoreForForm(
+    requestPayload.riskScore,
+    status.riskScore,
+    topLevel.riskScore,
+  );
+
   return {
     ...fallback,
     totalShares: normalizedShares,
@@ -182,6 +199,7 @@ const getStatusPrefillValues = (
         ? formatNumberAmount(resolvedTotalPropertyValue)
         : fallback.totalPropertyValue,
     ownerAddress,
+    riskScore: riskScoreFromStatus ?? fallback.riskScore,
   };
 };
 
@@ -236,6 +254,7 @@ export const TokenizationModal = ({
     return {
       totalPropertyValue: formatNumberAmount(fromBaseUnits(totalVal) || 0),
       totalShares: "0",
+      riskScore: DEFAULT_RISK_SCORE,
       ownerAddress: ownerAddr,
       image: img,
     };
@@ -345,6 +364,7 @@ export const TokenizationModal = ({
         totalUnits > BigInt(0) ? totalValue / totalUnits : BigInt(0),
       );
       const ownerAddress = values.ownerAddress as `0x${string}`;
+      const riskScoreNum = Number(values.riskScore);
       const result = await runTokenizationFlow({
         walletClient,
         publicClient,
@@ -358,6 +378,7 @@ export const TokenizationModal = ({
           totalValue,
           initiateMintAmount,
           initiatePricePerShare,
+          riskScore: riskScoreNum,
         },
       });
 
@@ -449,6 +470,41 @@ export const TokenizationModal = ({
                             return t("tokenizationForm.errors.sharesMax");
                           if (!Number.isInteger(n))
                             return t("tokenizationForm.errors.sharesInteger");
+                          return true;
+                        },
+                      }}
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap gap-x-3 justify-between mt-3">
+                    <InputField<TokenizationFormValues>
+                      name="riskScore"
+                      type="number"
+                      label={t("tokenizationForm.riskScore")}
+                      placeholder={t("tokenizationForm.riskScorePlaceholder")}
+                      width="w-full md:w-[48%] !mb-0"
+                      min={1}
+                      max={10}
+                      step={1}
+                      inputMode="numeric"
+                      onKeyDown={preventNegativeAndExponent}
+                      disabled={isSubmitting || isResumeLocked}
+                      validation={{
+                        required: t("tokenizationForm.errors.riskRequired"),
+                        validate: (val) => {
+                          const n = Number(val);
+                          if (!Number.isFinite(n)) {
+                            return t("tokenizationForm.errors.riskRequired");
+                          }
+                          if (!Number.isInteger(n)) {
+                            return t("tokenizationForm.errors.riskInteger");
+                          }
+                          if (n < 1) {
+                            return t("tokenizationForm.errors.riskMin");
+                          }
+                          if (n > 10) {
+                            return t("tokenizationForm.errors.riskMax");
+                          }
                           return true;
                         },
                       }}
