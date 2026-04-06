@@ -34,6 +34,7 @@ import {
 } from "@/store/propertiesSlice";
 import { AdminProperty, PropertyItem } from "@/types/properties";
 import { TokenizationModal } from "./TokenizationModal";
+import { RentManagementModal } from "./RentManagementModal";
 
 type PropertyData = PropertyItem | AdminProperty;
 type OrganisationPropertiesDeps = {
@@ -92,6 +93,7 @@ const OrganisationPropertiesTable = ({
   const lastRequestKeyRef = useRef<string | null>(null);
 
   const [tokenizationModalOpen, setTokenizationModalOpen] = useState(false);
+  const [rentModalOpen, setRentModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] =
     useState<AdminProperty | null>(null);
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
@@ -103,6 +105,16 @@ const OrganisationPropertiesTable = ({
 
   const closeTokenization = () => {
     setTokenizationModalOpen(false);
+    setSelectedProperty(null);
+  };
+
+  const openRentManagement = (property: PropertyData) => {
+    setSelectedProperty(property as AdminProperty);
+    setRentModalOpen(true);
+  };
+
+  const closeRentManagement = () => {
+    setRentModalOpen(false);
     setSelectedProperty(null);
   };
 
@@ -326,6 +338,14 @@ const OrganisationPropertiesTable = ({
                 if (canTokenize) openTokenization(item);
               },
             });
+            actions.push({
+              id: `property-rent-action-${item.id}`,
+              label: "Rent",
+              disabled: !canTokenize,
+              onClick: () => {
+                if (canTokenize) openRentManagement(item);
+              },
+            });
           }
 
           return (
@@ -364,6 +384,11 @@ const OrganisationPropertiesTable = ({
         onSuccess={refetchOrganisationProperties}
         property={selectedProperty}
         organisationId={organisationId}
+      />
+      <RentManagementModal
+        open={rentModalOpen}
+        onClose={closeRentManagement}
+        property={selectedProperty}
       />
     </>
   );
