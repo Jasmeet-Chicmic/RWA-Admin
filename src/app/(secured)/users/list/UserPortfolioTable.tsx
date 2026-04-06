@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { TableColumn } from "@/components/atoms/Table";
 import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { UsersListFilters } from "./UsersListFilters";
 // import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
@@ -40,9 +41,14 @@ const truncateWallet = (address: string) =>
 interface UserPortfolioTableProps {
   data: UserPortfolioRow[];
   totalCount: number;
+  isLoading?: boolean;
 }
 
-const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
+const UserPortfolioTable = ({
+  data,
+  totalCount,
+  isLoading = false,
+}: UserPortfolioTableProps) => {
   const t = useTranslations("users");
   const tTransactions = useTranslations("transactions");
 
@@ -171,8 +177,8 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
       },
       header: (
         <div className="bg-bgwhite dark:bg-darkbgprimary">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <div>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="shrink-0">
               <h2
                 className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
               >
@@ -182,13 +188,23 @@ const UserPortfolioTable = ({ data, totalCount }: UserPortfolioTableProps) => {
                 {t("userPortfolioSubtitle")}
               </p>
             </div>
+            <div className="shrink-0 w-full lg:w-auto lg:max-w-[min(100%,520px)]">
+              <UsersListFilters />
+            </div>
           </div>
         </div>
       ),
     };
   }, [t, tTransactions]);
 
-  return <DataTable data={data} totalCount={totalCount} config={config} />;
+  return (
+    <DataTable
+      data={data}
+      totalCount={totalCount}
+      isLoading={isLoading}
+      config={config}
+    />
+  );
 };
 
 export default UserPortfolioTable;

@@ -1,6 +1,5 @@
 "use client";
 
-import { useDebounce } from "@/hooks/useDebounce";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUsersList } from "@/store/usersSlice";
 import { useSearchParams } from "next/navigation";
@@ -14,6 +13,8 @@ type UsersListDeps = {
   limitRaw: string | null;
   pageSize: number;
   page: number;
+  search: string | null;
+  kycStatus: string | null;
 };
 
 function buildUsersListDeps(
@@ -31,6 +32,8 @@ function buildUsersListDeps(
     limitRaw,
     pageSize,
     page,
+    search: params.get("search"),
+    kycStatus: params.get("kycStatus"),
   };
 }
 
@@ -38,33 +41,41 @@ const UsersListContainer = () => {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const lastRequestKeyRef = useRef<string | null>(null);
-  const { items, totalCount } = useAppSelector((state) => state.users.list);
+  const { items, totalCount, isLoading } = useAppSelector(
+    (state) => state.users.list,
+  );
 
   const combinedDeps = useMemo(
     () => JSON.stringify(buildUsersListDeps(searchParams)),
     [searchParams],
   );
-  const debouncedDeps = useDebounce(combinedDeps, 300);
 
   const payload = useMemo(() => {
     try {
-      const parsed = JSON.parse(debouncedDeps) as UsersListDeps;
+      const parsed = JSON.parse(combinedDeps) as UsersListDeps;
+      const trimmedSearch = parsed.search?.trim() ?? "";
+      const kycRaw = parsed.kycStatus;
+      const kycNum = kycRaw !== null && kycRaw !== "" ? Number(kycRaw) : NaN;
+      const kycValid =
+        Number.isInteger(kycNum) && kycNum >= 0 && kycNum <= 3 ? kycNum : null;
+
       return {
         page: parsed.page,
         pageSize: parsed.pageSize,
-        kycStatus: 2,
+        ...(trimmedSearch ? { search: trimmedSearch } : {}),
+        ...(kycValid !== null ? { kycStatus: kycValid } : {}),
       };
     } catch {
       return null;
     }
-  }, [debouncedDeps]);
+  }, [combinedDeps]);
 
   useEffect(() => {
     if (!payload) return;
-    if (lastRequestKeyRef.current === debouncedDeps) return;
-    lastRequestKeyRef.current = debouncedDeps;
+    if (lastRequestKeyRef.current === combinedDeps) return;
+    lastRequestKeyRef.current = combinedDeps;
     dispatch(fetchUsersList(payload));
-  }, [debouncedDeps, dispatch, payload]);
+  }, [combinedDeps, dispatch, payload]);
 
   return (
     <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase">
@@ -80,6 +91,7 @@ const UsersListContainer = () => {
             kycStatus: u.kycStatus,
           }))}
           totalCount={totalCount}
+          isLoading={isLoading}
         />
       </div>
     </div>
