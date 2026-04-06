@@ -31,6 +31,8 @@ export type RunTokenizationFlowInput = {
   totalValue: bigint;
   initiateMintAmount: number;
   initiatePricePerShare: number;
+  /** 1–10; optional so initiate payload stays unchanged when omitted (legacy callers). */
+  riskScore?: number;
 };
 
 export type GasConfig = {
@@ -73,6 +75,7 @@ export type JobStatusData = {
   propertyId: string;
   status: number;
   statusLabel?: string;
+  riskScore?: number | string | null;
   mintAmount?: number | string | null;
   pricePerShare?: number | string | null;
   totalShares?: number | string | null;

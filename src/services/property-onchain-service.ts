@@ -56,6 +56,8 @@ export type InitiatePropertyOnchainPayload = {
   propertyId: string;
   mintAmount: number;
   pricePerShare: number;
+  /** 1–10; omit when not set so older APIs receive the original shape only. */
+  riskScore?: number;
 };
 
 export const propertyOnchainService = {

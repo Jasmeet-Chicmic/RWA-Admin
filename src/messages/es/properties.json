@@ -95,8 +95,8 @@
     "expectedAnnualYield": "Rendimiento anual esperado (%)",
     "expectedAnnualYieldPlaceholder": "0.0",
     "expectedAnnualYieldHint": "El valor debe estar entre 0 y 100",
-    "riskScore": "Puntuación de riesgo (0-1)",
-    "riskScorePlaceholder": "0.0",
+    "riskScore": "Puntuación de riesgo (1–10)",
+    "riskScorePlaceholder": "1–10",
     "wallet": {
       "title": "Conectar billetera",
       "description": "Conecta tu billetera para continuar con la tokenización.",
@@ -124,8 +124,9 @@
       "yieldMin": "El rendimiento no puede ser negativo",
       "yieldMax": "El rendimiento no puede superar el 100%",
       "riskRequired": "La puntuación de riesgo es obligatoria",
-      "riskMin": "La puntuación de riesgo no puede ser negativa",
-      "riskMax": "La puntuación de riesgo no puede superar 1",
+      "riskMin": "La puntuación de riesgo debe ser al menos 1",
+      "riskMax": "La puntuación de riesgo no puede superar 10",
+      "riskInteger": "La puntuación de riesgo debe ser un número entero",
       "rentalInvalid": "Ingresa un monto válido",
       "rentalMin": "El ingreso por alquiler no puede ser negativo",
       "rentalMax": "El ingreso por alquiler no puede superar {max}"

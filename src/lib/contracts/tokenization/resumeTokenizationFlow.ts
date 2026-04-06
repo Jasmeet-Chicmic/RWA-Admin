@@ -90,21 +90,50 @@ const shouldRunStep = (
   step: Exclude<StartStep, "initiate">,
 ) => START_STEP_ORDER[startFrom] <= START_STEP_ORDER[step];
 
-const initiateTracking = async ({
+const buildInitiatePayload = ({
   propertyId,
   mintAmount,
   pricePerShare,
+  riskScore,
 }: {
   propertyId: string;
   mintAmount: number;
   pricePerShare: number;
+  riskScore?: number;
+}) => {
+  const base = { propertyId, mintAmount, pricePerShare };
+  if (
+    typeof riskScore === "number" &&
+    Number.isFinite(riskScore) &&
+    riskScore >= 1 &&
+    riskScore <= 10 &&
+    Number.isInteger(riskScore)
+  ) {
+    return { ...base, riskScore };
+  }
+  return base;
+};
+
+const initiateTracking = async ({
+  propertyId,
+  mintAmount,
+  pricePerShare,
+  riskScore,
+}: {
+  propertyId: string;
+  mintAmount: number;
+  pricePerShare: number;
+  riskScore?: number;
 }) => {
   console.log("[TokenizationFlow] Initiating onchain tracking job");
-  const payload = await propertyOnchainService.initiate({
-    propertyId,
-    mintAmount,
-    pricePerShare,
-  });
+  const payload = await propertyOnchainService.initiate(
+    buildInitiatePayload({
+      propertyId,
+      mintAmount,
+      pricePerShare,
+      riskScore,
+    }),
+  );
 
   if (!payload?.status || !payload?.data?.jobId) {
     throw new Error(
@@ -199,6 +228,7 @@ export const resumeTokenizationFlow = async ({
       propertyId: input.propertyId,
       mintAmount: input.initiateMintAmount,
       pricePerShare: input.initiatePricePerShare,
+      riskScore: input.riskScore,
     });
     jobId = initiated.jobId;
     apiMessages.initiate = initiated.message;
@@ -207,6 +237,7 @@ export const resumeTokenizationFlow = async ({
       propertyId: input.propertyId,
       mintAmount: input.initiateMintAmount,
       pricePerShare: input.initiatePricePerShare,
+      riskScore: input.riskScore,
     });
     jobId = initiated.jobId;
     apiMessages.initiate = initiated.message;

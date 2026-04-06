@@ -109,8 +109,8 @@
     "expectedAnnualYield": "Expected Annual Yield (%)",
     "expectedAnnualYieldPlaceholder": "0.0",
     "expectedAnnualYieldHint": "Value must be between 0 and 100",
-    "riskScore": "Risk Score (0-1)",
-    "riskScorePlaceholder": "0.0",
+    "riskScore": "Risk Score (1–10)",
+    "riskScorePlaceholder": "1–10",
     "wallet": {
       "title": "Connect Wallet",
       "description": "Please connect your wallet to continue tokenization.",
@@ -138,8 +138,9 @@
       "yieldMin": "Yield cannot be negative",
       "yieldMax": "Yield cannot exceed 100%",
       "riskRequired": "Risk score is required",
-      "riskMin": "Risk score cannot be negative",
-      "riskMax": "Risk score cannot exceed 1",
+      "riskMin": "Risk score must be at least 1",
+      "riskMax": "Risk score cannot exceed 10",
+      "riskInteger": "Risk score must be a whole number",
       "rentalInvalid": "Enter a valid currency amount",
       "rentalMin": "Rental income cannot be negative",
       "rentalMax": "Rental income cannot exceed {max}"
