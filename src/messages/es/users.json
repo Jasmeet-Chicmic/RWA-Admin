@@ -1,6 +1,9 @@
 {
   "users": "Usuarios",
   "searchUser": "Buscar usuario",
+  "searchWallet": "Buscar por billetera",
+  "searchWalletPlaceholder": "Dirección de billetera",
+  "selectKycStatus": "Todos los estados KYC",
   "filters": "Filtros",
   "userFilters": "Filtros de usuario",
   "clearAllFilters": "Borrar todos los filtros",

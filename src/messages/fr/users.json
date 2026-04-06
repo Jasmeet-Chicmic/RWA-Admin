@@ -1,6 +1,9 @@
 {
   "users": "Utilisateurs",
   "searchUser": "Rechercher un utilisateur",
+  "searchWallet": "Rechercher par portefeuille",
+  "searchWalletPlaceholder": "Adresse du portefeuille",
+  "selectKycStatus": "Tous les statuts KYC",
   "filters": "Filtres",
   "userFilters": "Filtres utilisateur",
   "clearAllFilters": "Effacer tous les filtres",

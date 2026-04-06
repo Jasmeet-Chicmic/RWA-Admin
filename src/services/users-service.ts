@@ -31,6 +31,8 @@ type RolesApiResponse = ResponseType & {
 export type GetUsersListParams = {
   page: number;
   pageSize: number;
+  /** Substring match on wallet address */
+  search?: string;
   kycStatus?: number;
 };
 
