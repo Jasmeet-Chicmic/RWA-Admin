@@ -7,6 +7,7 @@ import {
   // FileText,
   LayoutDashboard,
   LucideProps,
+  UserCheck,
   UserCog,
 } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
@@ -105,20 +106,13 @@ export const navItems: NavItem[] = [
   //   activePaths: [ROUTES.TOKEN_REQUESTS_LIST],
   //   allowedRoles: [LOGIN_ROLE.ADMIN],
   // },
-  // Temporarily hidden - KYC
-  // {
-  //   icon: UserCheck,
-  //   label: "KYC",
-  //   activePaths: [ROUTES.KYC_PENDING],
-  //   allowedRoles: [LOGIN_ROLE.ADMIN],
-  //   children: [
-  //     {
-  //       label: "Pending KYC",
-  //       path: ROUTES.KYC_PENDING,
-  //       activePaths: [ROUTES.KYC_PENDING],
-  //     },
-  //   ],
-  // },
+  {
+    icon: UserCheck,
+    label: "common.kycVerification",
+    path: ROUTES.KYC_VERIFICATION,
+    activePaths: [ROUTES.KYC_VERIFICATION, ROUTES.KYC_PENDING],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
+  },
   // {
   //   icon: Video,
   //   label: "Videos",
