@@ -317,6 +317,9 @@ const OrganisationPropertiesTable = ({
         render: (item) => {
           const canTokenize =
             item.status === PropertyStatus.OrganizationAssigned;
+          const isTokenizationCompleted =
+            item.status === PropertyStatus.Active ||
+            item.status === PropertyStatus.SoldOut;
           const actions: TableActionItem[] = [
             {
               id: `property-details-${item.id}`,
@@ -341,9 +344,9 @@ const OrganisationPropertiesTable = ({
             actions.push({
               id: `property-rent-action-${item.id}`,
               label: "Rent",
-              disabled: !canTokenize,
+              disabled: !isTokenizationCompleted,
               onClick: () => {
-                if (canTokenize) openRentManagement(item);
+                if (isTokenizationCompleted) openRentManagement(item);
               },
             });
           }
