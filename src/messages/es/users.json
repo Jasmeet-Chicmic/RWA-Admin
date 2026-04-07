@@ -202,6 +202,7 @@
     "saveSuccess": "Característica actualizada correctamente",
     "saveError": "Error al actualizar la característica"
   },
+  "propertiesCount": "Propiedades creadas",
   "kyc": {
     "approved": "Aprobado",
     "pending": "Pendiente",

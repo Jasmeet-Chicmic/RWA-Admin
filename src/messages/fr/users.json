@@ -202,6 +202,7 @@
     "saveSuccess": "Caractéristique mise à jour avec succès",
     "saveError": "Échec de la mise à jour de la caractéristique"
   },
+  "propertiesCount": "Propriétés créées",
   "kyc": {
     "approved": "Approuvé",
     "pending": "En attente",
