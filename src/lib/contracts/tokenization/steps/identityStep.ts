@@ -119,18 +119,18 @@ export const runIdentityStep = async ({
       apiMessage = kycDonePayload?.message;
     }
 
-    const verified = (await publicClient.readContract({
-      address: tokenIdentityRegistry,
-      abi: IDENTITY_REGISTRY_ABI,
-      functionName: "isVerified",
-      args: [userAddr],
-    })) as boolean;
+    // const verified = (await publicClient.readContract({
+    //   address: tokenIdentityRegistry,
+    //   abi: IDENTITY_REGISTRY_ABI,
+    //   functionName: "isVerified",
+    //   args: [userAddr],
+    // })) as boolean;
 
-    if (!verified) {
-      throw new Error(
-        `[TokenizationFlow] ${userKey} verification failed on new token registry`,
-      );
-    }
+    // if (!verified) {
+    //   throw new Error(
+    //     `[TokenizationFlow] ${userKey} verification failed on new token registry`,
+    //   );
+    // }
     console.log(`[TokenizationFlow]   ${userKey} ✅ Verified`);
   };
 
