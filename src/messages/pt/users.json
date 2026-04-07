@@ -202,10 +202,23 @@
     "saveSuccess": "Recurso atualizado com sucesso",
     "saveError": "Falha ao atualizar o recurso"
   },
+  "propertiesOwned": "Propriedades criadas",
+  "propertiesRegistered": "Propriedades registradas",
   "kyc": {
     "approved": "Aprovado",
     "pending": "Pendente",
     "rejected": "Rejeitado",
     "notStarted": "Não iniciado"
-  }
+  },
+  "registerIdentityAction": "Register identity",
+  "registerIdentityModalTitle": "Register user identity",
+  "registerIdentityModalDescription": "Select one property to register this user in that token identity registry.",
+  "assignableProperty": "Assignable property",
+  "selectAssignableProperty": "Please select a property",
+  "selectAssignablePropertyPlaceholder": "Search and select a property",
+  "missingIdentityOrTokenAddress": "Missing user identity or property token address",
+  "walletNotReady": "Wallet is not connected",
+  "registerIdentitySuccess": "Identity registered successfully",
+  "unnamedProperty": "Propriedade sem nome",
+  "registerIdentityBackendFailed": "Identity was registered on-chain, but backend update failed"
 }

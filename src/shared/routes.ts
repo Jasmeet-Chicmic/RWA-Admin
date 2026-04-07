@@ -83,8 +83,9 @@ export const PRIVATE_ROUTES = {
   // Token Requests
   TOKEN_REQUESTS_LIST: "/tokens/requests",
 
-  // KYC
-  KYC: "/kyc",
+  // KYC — identity claim requests (all statuses)
+  KYC_VERIFICATION: "/kyc/verification",
+  /** Legacy path; redirects to KYC_VERIFICATION */
   KYC_PENDING: "/kyc/pending",
 
   // Roles

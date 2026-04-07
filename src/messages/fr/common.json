@@ -71,6 +71,7 @@
   "bonusSlides": "Diapositives Bonus",
   "kyc": "KYC",
   "pendingKyc": "KYC en attente",
+  "kycVerification": "Vérification KYC",
   "entityActionSuccessfully": "{entity} {action} avec succès",
   "failedToActionEntity": "Échec de {action} {entity}",
   "anErrorOccurredWhileActionEntity": "Une erreur s'est produite lors de {action} {entity}",

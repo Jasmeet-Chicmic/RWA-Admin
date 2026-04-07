@@ -49,7 +49,18 @@
   "noRole": "No Role",
   "view": "View",
   "walletAddress": "Wallet Address",
-  "propertiesCount": "Properties",
+  "propertiesOwned": "Created properties",
+  "propertiesRegistered": "Registered properties",
+  "registerIdentityAction": "Register identity",
+  "registerIdentityModalTitle": "Register user identity",
+  "registerIdentityModalDescription": "Select one property to register this user in that token identity registry.",
+  "assignableProperty": "Assignable property",
+  "selectAssignableProperty": "Please select a property",
+  "selectAssignablePropertyPlaceholder": "Search and select a property",
+  "missingIdentityOrTokenAddress": "Missing user identity or property token address",
+  "walletNotReady": "Wallet is not connected",
+  "registerIdentitySuccess": "Identity registered successfully",
+  "registerIdentityBackendFailed": "Identity was registered on-chain, but backend update failed",
   "totalInvestment": "Total Investment",
   "portfolioValue": "Portfolio Value",
   "kycStatus": "KYC Status",
@@ -221,5 +232,6 @@
     "saveChanges": "Save Changes",
     "saveSuccess": "Feature updated successfully",
     "saveError": "Failed to update feature"
-  }
+  },
+  "unnamedProperty": "Unnamed property"
 }

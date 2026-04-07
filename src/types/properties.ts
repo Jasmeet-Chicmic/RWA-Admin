@@ -72,6 +72,7 @@ export interface GetAllPropertiesParams {
   pageSize: number;
   status?: number | string;
   search?: string;
+  userId?: string;
   sortKey?: string;
   sortDirection?: string;
   organizationId?: string;

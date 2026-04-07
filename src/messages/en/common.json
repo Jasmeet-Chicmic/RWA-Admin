@@ -80,6 +80,7 @@
   "tokenRequests": "Token Requests",
   "kyc": "KYC",
   "pendingKyc": "Pending KYC",
+  "kycVerification": "KYC verification",
   "tokenRequestsTitle": "Token Requests",
   "tokenRequestsSubtitle": "Review and manage token issuance requests",
   "userId": "User ID",

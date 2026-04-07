@@ -71,6 +71,7 @@
   "bonusSlides": "Slides de bônus",
   "kyc": "KYC",
   "pendingKyc": "KYC pendente",
+  "kycVerification": "Verificação KYC",
   "entityActionSuccessfully": "{entity} {action} com sucesso",
   "failedToActionEntity": "Falha ao {action} {entity}",
   "anErrorOccurredWhileActionEntity": "Ocorreu um erro ao {action} {entity}",

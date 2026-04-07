@@ -123,6 +123,7 @@ const AssignLLCModal = ({
               getData={fetchOrganisations}
               onChange={(val) => setSelectedOrganisation(val as OptionType)}
               value={selectedOrganisation}
+              variant="modalDark"
             />
           </div>
         </div>

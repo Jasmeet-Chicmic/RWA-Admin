@@ -34,6 +34,7 @@ interface ReactAsyncSelectProps {
   disabled?: boolean;
   isClearable?: boolean;
   inputId?: string;
+  variant?: "default" | "modalDark";
 }
 
 const AsyncSelect = ({
@@ -47,6 +48,7 @@ const AsyncSelect = ({
   disabled = false,
   isClearable = true,
   inputId,
+  variant = "default",
 }: ReactAsyncSelectProps) => {
   const LIMIT = 20;
 
@@ -86,6 +88,11 @@ const AsyncSelect = ({
   };
 
   const { resolvedTheme } = useTheme();
+  const isDarkSurface =
+    variant === "modalDark" || resolvedTheme === THEME_TYPE.DARK;
+  const surfaceColor = isDarkSurface ? "#171717" : "white";
+  const menuColor = isDarkSurface ? "#1d1d1d" : "white";
+  const focusedOptionColor = isDarkSurface ? "#343434" : "#f3f4f6";
 
   return (
     <div className="light-mode">
@@ -112,13 +119,13 @@ const AsyncSelect = ({
           control: (provided) => ({
             ...provided,
             minHeight: "40px",
-            border: `1px solid ${resolvedTheme === THEME_TYPE.DARK ? "#374151" : "#e5e7eb"}`,
+            border: "none",
+            boxShadow: "none",
             borderRadius: "8px",
             "&:hover": {
-              border: `1px solid ${resolvedTheme === THEME_TYPE.DARK ? "#374151" : "#d1d5db"}`,
+              border: "none",
             },
-            backgroundColor:
-              resolvedTheme === THEME_TYPE.DARK ? "#111827" : "white",
+            backgroundColor: surfaceColor,
           }),
           placeholder: (provided) => ({
             ...provided,
@@ -127,16 +134,42 @@ const AsyncSelect = ({
           indicatorSeparator: () => ({
             display: "none",
           }),
-          option: (provided) => ({
+          option: (provided, state) => ({
             ...provided,
-            backgroundColor:
-              resolvedTheme === THEME_TYPE.DARK ? "#111827" : "white",
-            color: resolvedTheme === THEME_TYPE.DARK ? "#9ca3af" : "black",
+            backgroundColor: state.isSelected
+              ? "#C7FE1E"
+              : state.isFocused
+                ? focusedOptionColor
+                : "transparent",
+            color: state.isSelected
+              ? "#000000"
+              : isDarkSurface
+                ? "#f3f4f6"
+                : "black",
+            ":active": {
+              backgroundColor: state.isSelected
+                ? "#C7FE1E"
+                : focusedOptionColor,
+            },
+          }),
+          singleValue: (provided) => ({
+            ...provided,
+            color: isDarkSurface ? "#f3f4f6" : "#111827",
           }),
           menu: (provided) => ({
             ...provided,
-            backgroundColor:
-              resolvedTheme === THEME_TYPE.DARK ? "#111827" : "white",
+            backgroundColor: menuColor,
+            border: "none",
+            boxShadow: "none",
+          }),
+          menuList: (provided) => ({
+            ...provided,
+            ...(variant === "modalDark"
+              ? {
+                  paddingTop: 6,
+                  paddingBottom: 6,
+                }
+              : {}),
           }),
         }}
       />

@@ -6,7 +6,9 @@ export type UserPortfolioItem = {
   id: string;
   name: string | null;
   walletAddress: string;
-  properties: number;
+  identityContractAddress?: string;
+  propertiesOwned: number;
+  propertiesRegistered: number;
   totalInvestment: number;
   portfolioValue: number;
   kycStatus: 0 | 1 | 2 | 3;

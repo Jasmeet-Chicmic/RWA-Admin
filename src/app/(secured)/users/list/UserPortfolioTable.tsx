@@ -1,13 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import { Eye, ShieldCheck } from "lucide-react";
+import { useMemo, useState } from "react";
 // import { Ban,   Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { TableColumn } from "@/components/atoms/Table";
 import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
+import TableActions, {
+  TableActionDisplayMode,
+} from "@/components/atoms/TableActions";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import RegisterIdentityModal from "./RegisterIdentityModal";
 import { UsersListFilters } from "./UsersListFilters";
 // import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
@@ -24,7 +30,9 @@ interface UserPortfolioRow {
   id: string;
   name: string;
   walletAddress: string;
-  properties: number;
+  identityContractAddress?: string;
+  propertiesOwned: number;
+  propertiesRegistered: number;
   totalInvestment: number;
   portfolioValue: number;
   kycStatus: KycStatus;
@@ -51,6 +59,11 @@ const UserPortfolioTable = ({
 }: UserPortfolioTableProps) => {
   const t = useTranslations("users");
   const tTransactions = useTranslations("transactions");
+  const router = useRouter();
+  const [selectedUser, setSelectedUser] = useState<UserPortfolioRow | null>(
+    null,
+  );
+  const actionsDisplayMode: TableActionDisplayMode = "inline";
 
   const config: DataTableConfig<UserPortfolioRow> = useMemo(() => {
     const columns: TableColumn<UserPortfolioRow>[] = [
@@ -81,11 +94,34 @@ const UserPortfolioTable = ({
         ),
       },
       {
-        field: "properties",
-        title: t("propertiesCount"),
+        field: "propertiesOwned",
+        title: t("propertiesOwned"),
         render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-            {item.properties}
+          <div className="flex items-center justify-center gap-2 w-full">
+            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+              {item.propertiesOwned}
+            </span>
+            <button
+              type="button"
+              disabled={item.propertiesOwned === 0}
+              onClick={() =>
+                router.push(`/properties?userId=${encodeURIComponent(item.id)}`)
+              }
+              className="inline-flex items-center justify-center text-green-600 hover:text-green-700 disabled:text-green-300 disabled:cursor-not-allowed dark:text-green-400 dark:hover:text-green-300 dark:disabled:text-green-700"
+              title={t("view")}
+              aria-label={t("view")}
+            >
+              <Eye className="w-4 h-4" />
+            </button>
+          </div>
+        ),
+      },
+      {
+        field: "propertiesRegistered",
+        title: t("propertiesRegistered"),
+        render: (item) => (
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} block text-center`}>
+            {item.propertiesRegistered}
           </span>
         ),
       },
@@ -139,6 +175,25 @@ const UserPortfolioTable = ({
             </span>
           );
         },
+      },
+      {
+        field: "",
+        title: t("actions"),
+        render: (item) => (
+          <TableActions
+            displayMode={actionsDisplayMode}
+            actions={[
+              {
+                id: "register_identity",
+                label: t("registerIdentityAction"),
+                onClick: () => setSelectedUser(item),
+                className:
+                  "inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-indigo-50 text-indigo-600 hover:opacity-90",
+                icon: <ShieldCheck className="w-4 h-4" />,
+              },
+            ]}
+          />
+        ),
       },
       // {
       //   field: "",
@@ -195,15 +250,26 @@ const UserPortfolioTable = ({
         </div>
       ),
     };
-  }, [t, tTransactions]);
+  }, [router, t, tTransactions]);
 
   return (
-    <DataTable
-      data={data}
-      totalCount={totalCount}
-      isLoading={isLoading}
-      config={config}
-    />
+    <>
+      <DataTable
+        data={data}
+        totalCount={totalCount}
+        isLoading={isLoading}
+        config={config}
+      />
+      <RegisterIdentityModal
+        isOpen={Boolean(selectedUser)}
+        onClose={() => setSelectedUser(null)}
+        userId={selectedUser?.id ?? ""}
+        userWalletAddress={selectedUser?.walletAddress ?? ""}
+        userIdentityContractAddress={
+          selectedUser?.identityContractAddress ?? null
+        }
+      />
+    </>
   );
 };
 
