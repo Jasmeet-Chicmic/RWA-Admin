@@ -119,6 +119,51 @@ export async function getUsersAction(payload: GetParamsType) {
   );
 }
 
+export type AssignablePropertyItem = {
+  id: string;
+  propertyName?: string;
+  name?: string;
+  title?: string;
+  tokenAddress?: string;
+  identityContractAddress?: string;
+  isRegistered?: boolean;
+};
+
+export async function getAssignablePropertiesAction(params: {
+  userId: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  return await getRequest<
+    ResponseType & {
+      data?: {
+        items?: AssignablePropertyItem[];
+        totalCount?: number;
+      };
+    },
+    {
+      userId: string;
+      page?: number;
+      pageSize?: number;
+    }
+  >(API_END_POINTS.ADMIN_IDENTITY_ASSIGNABLE_PROPERTIES, params);
+}
+
+export async function registerIdentityCompletionAction(payload: {
+  propertyId: string;
+  userId: string;
+  transactionHash: string;
+}) {
+  return await postRequest<
+    ResponseType,
+    {
+      propertyId: string;
+      userId: string;
+      transactionHash: string;
+    }
+  >(API_END_POINTS.ADMIN_IDENTITY_REGISTER_IDENTITY, payload);
+}
+
 export async function upgradeUserPlanAction(payload: {
   userId: string;
   subscriptionPlanId: string;

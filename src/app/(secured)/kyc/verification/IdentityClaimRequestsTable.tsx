@@ -12,7 +12,7 @@ import {
   toBytes,
   type Address,
 } from "viem";
-import { useSignMessage } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 
 import {
   approveIdentityClaimRequestAction,
@@ -40,7 +40,7 @@ const CLAIM_REQUEST_STATUS = {
 } as const;
 
 const TOPIC_STRINGS: Record<number, string> = {
-  [CLAIM_TOPIC.KYC_APPROVED]: "KYC_APPROVED",
+  [CLAIM_TOPIC.KYC_APPROVED]: "KYC_CLAIM",
 };
 
 const formatDateTime = (iso: string) => {
@@ -74,6 +74,21 @@ const buildClaimHash = (
     [identityAddress, BigInt(topicHash), data],
   );
   return keccak256(encoded);
+};
+
+const buildClaimSignatureDebug = (
+  identityAddress: Address,
+  topic: number,
+  data: `0x${string}`,
+) => {
+  const topicStr = TOPIC_STRINGS[topic] ?? String(topic);
+  const topicHash = keccak256(toBytes(topicStr));
+  const encodedPayload = encodeAbiParameters(
+    [{ type: "address" }, { type: "uint256" }, { type: "bytes" }],
+    [identityAddress, BigInt(topicHash), data],
+  );
+  const claimHash = keccak256(encodedPayload);
+  return { topicStr, topicHash, encodedPayload, claimHash };
 };
 
 const claimStatusKey = (status: number | undefined) => {
@@ -110,6 +125,7 @@ const IdentityClaimRequestsTable = ({
   const t = useTranslations("kyc");
   const tTransactions = useTranslations("transactions");
   const common = useTranslations("common");
+  const { address: connectedSigner } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const router = useRouter();
   const [loadingState, setLoadingState] = useState<{
@@ -206,13 +222,42 @@ const IdentityClaimRequestsTable = ({
                             item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
                             (item.data as `0x${string}`) ?? "0x",
                           );
-                          console.log("claimHash", claimHash);
+                          const signatureDebug = buildClaimSignatureDebug(
+                            item.identityContractAddress as Address,
+                            item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
+                            (item.data as `0x${string}`) ?? "0x",
+                          );
+                          console.log("[KYC Approve] Signature params", {
+                            requestId: item.id,
+                            signerAddress: connectedSigner,
+                            identityContractAddress:
+                              item.identityContractAddress,
+                            topicEnumValue:
+                              item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
+                            topicString: signatureDebug.topicStr,
+                            topicHash: signatureDebug.topicHash,
+                            claimData: (item.data as `0x${string}`) ?? "0x",
+                            encodedPayload: signatureDebug.encodedPayload,
+                            claimHash,
+                          });
                           const signature = (await signMessageAsync({
                             message: { raw: hexToBytes(claimHash) },
                           })) as `0x${string}`;
+                          console.log("[KYC Approve] Signature generated", {
+                            requestId: item.id,
+                            signature,
+                          });
                           const res = await approveIdentityClaimRequestAction(
                             item.id,
                             signature,
+                          );
+                          console.log(
+                            "[KYC Approve] Approve API payload/response",
+                            {
+                              requestId: item.id,
+                              signature,
+                              response: res,
+                            },
                           );
                           if (!res?.status || (res?.statusCode ?? 500) >= 400) {
                             throw new Error(
@@ -279,7 +324,15 @@ const IdentityClaimRequestsTable = ({
         </div>
       ),
     };
-  }, [common, loadingState, router, signMessageAsync, t, tTransactions]);
+  }, [
+    common,
+    connectedSigner,
+    loadingState,
+    router,
+    signMessageAsync,
+    t,
+    tTransactions,
+  ]);
 
   return (
     <>

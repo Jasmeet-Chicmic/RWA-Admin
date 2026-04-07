@@ -3,7 +3,7 @@
 import { useDebounce } from "@/hooks/useDebounce";
 import { ChevronDown, MapPin, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -71,10 +71,12 @@ const AllPropertiesTable = ({
   const t = useTranslations("properties");
   const tTransactions = useTranslations("transactions");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { items, totalCount, isLoading } = useAppSelector(
     (state) => state.properties.all,
   );
+  const ownerUserIdFilter = searchParams.get("userId")?.trim() ?? "";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -104,8 +106,9 @@ const AllPropertiesTable = ({
         pageSize,
         status: statusFilterNumber ?? null,
         search: searchText || null,
+        userId: ownerUserIdFilter || null,
       }),
-    [currentPage, pageSize, statusFilterNumber, searchText],
+    [currentPage, pageSize, statusFilterNumber, searchText, ownerUserIdFilter],
   );
 
   const debouncedDeps = useDebounce(combinedDeps, 300);
@@ -117,6 +120,7 @@ const AllPropertiesTable = ({
         pageSize: number;
         status: number | null;
         search: string | null;
+        userId: string | null;
       };
       return {
         page: parsed.page,
@@ -125,6 +129,7 @@ const AllPropertiesTable = ({
           ? { status: parsed.status }
           : {}),
         ...(parsed.search ? { search: parsed.search } : {}),
+        ...(parsed.userId ? { userId: parsed.userId } : {}),
       };
     } catch {
       return null;

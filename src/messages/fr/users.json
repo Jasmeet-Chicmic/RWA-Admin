@@ -202,11 +202,23 @@
     "saveSuccess": "Caractéristique mise à jour avec succès",
     "saveError": "Échec de la mise à jour de la caractéristique"
   },
-  "propertiesCount": "Propriétés créées",
+  "propertiesOwned": "Propriétés créées",
+  "propertiesRegistered": "Propriétés enregistrées",
   "kyc": {
     "approved": "Approuvé",
     "pending": "En attente",
     "rejected": "Rejeté",
     "notStarted": "Non commencé"
-  }
+  },
+  "registerIdentityAction": "Register identity",
+  "registerIdentityModalTitle": "Register user identity",
+  "registerIdentityModalDescription": "Select one property to register this user in that token identity registry.",
+  "assignableProperty": "Assignable property",
+  "selectAssignableProperty": "Please select a property",
+  "selectAssignablePropertyPlaceholder": "Search and select a property",
+  "missingIdentityOrTokenAddress": "Missing user identity or property token address",
+  "walletNotReady": "Wallet is not connected",
+  "registerIdentitySuccess": "Identity registered successfully",
+  "unnamedProperty": "Propriété sans nom",
+  "registerIdentityBackendFailed": "Identity was registered on-chain, but backend update failed"
 }
