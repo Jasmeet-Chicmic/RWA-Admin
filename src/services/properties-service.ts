@@ -158,6 +158,7 @@ export const propertiesService = {
     propertyId: string;
     page: number;
     pageSize: number;
+    search?: string;
   }): Promise<BaseResponse<InvestorUsersResponse>> {
     return await getRequest<BaseResponse<InvestorUsersResponse>>(
       API_END_POINTS.PROPERTIES_INVESTOR_USERS,

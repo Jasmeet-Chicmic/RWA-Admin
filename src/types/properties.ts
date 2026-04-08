@@ -143,6 +143,7 @@ export interface BasePropertyUser {
 
 export interface InvestorUser extends BasePropertyUser {
   sharesBought: number;
+  sharesHeld?: number | string;
 }
 
 export interface InvestorUsersResponse {

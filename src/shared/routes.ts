@@ -13,6 +13,7 @@ export const PRIVATE_ROUTES = {
   PROPERTIES_ORGANISATIONS: "/properties/organisations",
   ORGANISATIONS: "/organisations",
   ORGANISATIONS_PROPERTIES: "/organisations/properties",
+  RENT_MANAGEMENT: "/rent-management",
   PODCASTS: "/podcasts",
   PODCASTS_LIST: "/podcasts/list",
   USERS: "/users",

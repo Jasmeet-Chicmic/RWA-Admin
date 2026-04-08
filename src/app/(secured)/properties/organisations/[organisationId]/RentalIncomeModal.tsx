@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -10,8 +10,8 @@ import CustomModal from "@/components/molecules/CustomModal/CustomModal";
 import DateField from "@/components/molecules/FormBuilder/fields/DateField";
 import { InputField } from "@/components/molecules/FormBuilder/fields/InputField";
 import { rentalIncomeService } from "@/services/rental-income-service";
-import { toBaseUnitsBigInt } from "@/shared/utils/unitUtils";
-import { AdminProperty, PropertyItem } from "@/types/properties";
+import { fromBaseUnits, toBaseUnitsBigInt } from "@/shared/utils/unitUtils";
+import { RentalIncomeListItem } from "@/types/rental-income";
 
 type RentalIncomeFormValues = {
   fromDate: string;
@@ -21,18 +21,20 @@ type RentalIncomeFormValues = {
   otherCharges: string;
 };
 
-type PropertyData = PropertyItem | AdminProperty;
-
 export const RentalIncomeModal = ({
   open,
   onClose,
   onSuccess,
   property,
+  mode = "create",
+  rentalIncome,
 }: {
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  property: PropertyData | null;
+  property: { id: string } | null;
+  mode?: "create" | "edit";
+  rentalIncome?: RentalIncomeListItem | null;
 }) => {
   const t = useTranslations("properties");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,29 +50,77 @@ export const RentalIncomeModal = ({
     mode: "onChange",
   });
 
+  useEffect(() => {
+    if (!open) return;
+    if (mode !== "edit" || !rentalIncome) {
+      methods.reset({
+        fromDate: "",
+        toDate: "",
+        amountReceived: "",
+        maintenanceCharges: "0",
+        otherCharges: "0",
+      });
+      return;
+    }
+
+    methods.reset({
+      fromDate: rentalIncome.fromDate ? rentalIncome.fromDate.slice(0, 10) : "",
+      toDate: rentalIncome.toDate ? rentalIncome.toDate.slice(0, 10) : "",
+      amountReceived: String(fromBaseUnits(rentalIncome.amountReceived ?? 0)),
+      maintenanceCharges: String(
+        fromBaseUnits(rentalIncome.maintenanceCharges ?? 0),
+      ),
+      otherCharges: String(fromBaseUnits(rentalIncome.otherCharges ?? 0)),
+    });
+  }, [methods, mode, open, rentalIncome]);
+
   const onSubmit: SubmitHandler<RentalIncomeFormValues> = async (values) => {
     if (!property) return;
 
     setIsSubmitting(true);
     try {
-      await rentalIncomeService.submitRentalIncome({
-        propertyId: property.id,
-        fromDate: new Date(values.fromDate).toISOString(),
-        toDate: new Date(values.toDate).toISOString(),
-        amountReceived: toBaseUnitsBigInt(values.amountReceived).toString(),
-        maintenanceCharges: toBaseUnitsBigInt(
-          values.maintenanceCharges,
-        ).toString(),
-        otherCharges: toBaseUnitsBigInt(values.otherCharges).toString(),
-      });
+      if (mode === "edit") {
+        if (!rentalIncome?.id) {
+          throw new Error(t("rentManagement.editMissingFields"));
+        }
+        await rentalIncomeService.updateRentalIncome({
+          rentalIncomeId: rentalIncome.id,
+          fromDate: new Date(values.fromDate).toISOString(),
+          toDate: new Date(values.toDate).toISOString(),
+          amountReceived: toBaseUnitsBigInt(values.amountReceived).toString(),
+          maintenanceCharges: toBaseUnitsBigInt(
+            values.maintenanceCharges,
+          ).toString(),
+          otherCharges: toBaseUnitsBigInt(values.otherCharges).toString(),
+        });
+      } else {
+        await rentalIncomeService.submitRentalIncome({
+          propertyId: property.id,
+          fromDate: new Date(values.fromDate).toISOString(),
+          toDate: new Date(values.toDate).toISOString(),
+          amountReceived: toBaseUnitsBigInt(values.amountReceived).toString(),
+          maintenanceCharges: toBaseUnitsBigInt(
+            values.maintenanceCharges,
+          ).toString(),
+          otherCharges: toBaseUnitsBigInt(values.otherCharges).toString(),
+        });
+      }
 
-      toast.success(t("rentalIncome.form.success"));
+      toast.success(
+        mode === "edit"
+          ? t("rentManagement.editSuccess")
+          : t("rentalIncome.form.success"),
+      );
       onSuccess?.();
       onClose();
       methods.reset();
     } catch (error) {
       console.error("[RentalIncomeModal] Submission failed", error);
-      toast.error(t("rentalIncome.form.error"));
+      toast.error(
+        mode === "edit"
+          ? t("rentManagement.editError")
+          : t("rentalIncome.form.error"),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -95,7 +145,11 @@ export const RentalIncomeModal = ({
     <CustomModal
       isOpen={open}
       onClose={onClose}
-      title={t("rentalIncome.form.title")}
+      title={
+        mode === "edit"
+          ? t("rentManagement.editTitle")
+          : t("rentalIncome.form.title")
+      }
       size="2xl"
     >
       <div className="relative">
@@ -207,7 +261,9 @@ export const RentalIncomeModal = ({
                 isLoading={isSubmitting}
                 disabled={isSubmitting}
               >
-                {t("rentalIncome.form.submit")}
+                {mode === "edit"
+                  ? t("rentManagement.editButton")
+                  : t("rentalIncome.form.submit")}
               </Button>
             </div>
           </form>

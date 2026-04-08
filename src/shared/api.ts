@@ -203,6 +203,8 @@ export const API_END_POINTS = {
   PROPERTIES_INVESTOR_USERS: `/properties/investor-users`,
   PROPERTIES_WHITELISTED_USERS: `/properties/whitelisted-users`,
   RENTAL_INCOME: "/v1/rental-income",
+  RENTAL_INCOME_DETAIL: "/v1/rental-income/detail",
+  RENTAL_INCOME_DISTRIBUTE: "/v1/rental-income/distribute",
 };
 
 export const INTERNAL_API_PATHS = {

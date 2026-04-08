@@ -63,6 +63,13 @@ export const navItems: NavItem[] = [
     allowedRoles: [LOGIN_ROLE.ORGANISATION],
   },
   {
+    icon: ClipboardList,
+    label: "common.rentManagement",
+    path: ROUTES.RENT_MANAGEMENT,
+    activePaths: [ROUTES.RENT_MANAGEMENT],
+    allowedRoles: [LOGIN_ROLE.ORGANISATION, LOGIN_ROLE.ADMIN],
+  },
+  {
     icon: Building2,
     label: "common.organisation",
     path: ROUTES.ORGANISATIONS,
