@@ -202,6 +202,7 @@ export const API_END_POINTS = {
   MARKETING_SUBSCRIPTION: `/security/api/admin/marketing-subscription`,
   PROPERTIES_INVESTOR_USERS: `/properties/investor-users`,
   PROPERTIES_WHITELISTED_USERS: `/properties/whitelisted-users`,
+  RENTAL_INCOME: "/v1/rental-income",
 };
 
 export const INTERNAL_API_PATHS = {

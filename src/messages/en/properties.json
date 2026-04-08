@@ -208,5 +208,30 @@
   "whitelistedAt": "Whitelisted At",
   "noWhitelistedUsersFound": "No whitelisted users found",
   "allWhitelistedUsersForThisProperty": "All whitelisted users for this property",
-  "whitelisted": "Whitelisted"
+  "whitelisted": "Whitelisted",
+  "rentalIncome": {
+    "submitButton": "Submit Rental Income",
+    "form": {
+      "title": "Submit Rental Income",
+      "subtitle": "Record rental income for this property",
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "amountReceived": "Amount Received (USDC)",
+      "maintenanceCharges": "Maintenance Charges (USDC)",
+      "otherCharges": "Other Charges (USDC)",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "success": "Rental income submitted successfully",
+      "error": "Failed to submit rental income",
+      "validation": {
+        "fromDateRequired": "From date is required",
+        "toDateRequired": "To date is required",
+        "amountRequired": "Amount received is required",
+        "amountMin": "Amount must be greater than 0",
+        "maintenanceRequired": "Maintenance charges are required (can be 0)",
+        "otherRequired": "Other charges are required (can be 0)",
+        "dateRangeInvalid": "To date cannot be before from date"
+      }
+    }
+  }
 }
