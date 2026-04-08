@@ -6,7 +6,9 @@ import {
   AllPropertiesResponse,
   BaseResponse,
   GetAllPropertiesParams,
+  InvestorUsersResponse,
   PropertyDetailsItem,
+  WhitelistedUsersResponse,
 } from "@/types/properties";
 
 const EMPTY_ALL_PROPERTIES_RESPONSE: AllPropertiesResponse = {
@@ -150,5 +152,27 @@ export const propertiesService = {
     } catch {
       return EMPTY_ADMIN_DASHBOARD_SUMMARY;
     }
+  },
+
+  async getInvestorUsers(params: {
+    propertyId: string;
+    page: number;
+    pageSize: number;
+  }): Promise<BaseResponse<InvestorUsersResponse>> {
+    return await getRequest<BaseResponse<InvestorUsersResponse>>(
+      API_END_POINTS.PROPERTIES_INVESTOR_USERS,
+      params,
+    );
+  },
+
+  async getWhitelistedUsers(params: {
+    propertyId: string;
+    page: number;
+    pageSize: number;
+  }): Promise<BaseResponse<WhitelistedUsersResponse>> {
+    return await getRequest<BaseResponse<WhitelistedUsersResponse>>(
+      API_END_POINTS.PROPERTIES_WHITELISTED_USERS,
+      params,
+    );
   },
 };

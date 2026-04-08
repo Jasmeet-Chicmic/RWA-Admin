@@ -198,5 +198,15 @@
   "deleteOrganisation": "Delete Organisation",
   "areYouSureYouWantToDeleteThisOrganisation": "Are you sure you want to delete this organisation?",
   "editOrganisation": "Edit Organisation",
-  "organisationDetails": "Organisation Details"
+  "organisationDetails": "Organisation Details",
+  "investors": "Investors",
+  "investorUsers": "Investor Users",
+  "noInvestorsFound": "No investors found",
+  "allInvestorsForThisProperty": "All investors for this property",
+  "sharesBought": "Shares Bought",
+  "whitelistedUsers": "Whitelisted Users",
+  "whitelistedAt": "Whitelisted At",
+  "noWhitelistedUsersFound": "No whitelisted users found",
+  "allWhitelistedUsersForThisProperty": "All whitelisted users for this property",
+  "whitelisted": "Whitelisted"
 }

@@ -25,12 +25,18 @@ import { PRIVATE_ROUTES } from "@/shared/routes";
 import { buildAssetsUrl } from "@/shared/utils";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchPropertyDetails } from "@/store/propertiesSlice";
+import {
+  fetchInvestorUsersList,
+  fetchPropertyDetails,
+  fetchWhitelistedUsersList,
+} from "@/store/propertiesSlice";
 import {
   fetchOrganisationTransactionsList,
   fetchTransactionsList,
 } from "@/store/transactionsSlice";
 import TransactionsTable from "@/app/(secured)/transactions/list/TransactionsTable";
+import InvestorUsersTable from "../components/InvestorUsersTable";
+import WhitelistedUsersTable from "../components/WhitelistedUsersTable";
 import PropertyDetailsContentSkeleton from "./PropertyDetailsContentSkeleton";
 
 interface StatAnalyticsProps {
@@ -123,6 +129,18 @@ const PropertyDetailsContent = ({
     isLoading: propertyTransactionsLoading,
   } = useAppSelector((state) => state.transactions.list);
 
+  const {
+    items: investorUsers,
+    totalCount: investorUsersTotalCount,
+    isLoading: investorUsersLoading,
+  } = useAppSelector((state) => state.properties.investorUsers);
+
+  const {
+    items: whitelistedUsers,
+    totalCount: whitelistedUsersTotalCount,
+    isLoading: whitelistedUsersLoading,
+  } = useAppSelector((state) => state.properties.whitelistedUsers);
+
   const searchParams = useSearchParams();
   const transactionsQueryKey = searchParams.toString();
 
@@ -139,6 +157,34 @@ const PropertyDetailsContent = ({
       page,
       pageSize,
       ...(search ? { search } : {}),
+    };
+  }, [transactionsQueryKey]);
+
+  const investorUsersFetchParams = useMemo(() => {
+    const params = new URLSearchParams(transactionsQueryKey);
+    const skipRaw = params.get("investor_skip");
+    const limitRaw = params.get("investor_limit");
+    const rawLimit = limitRaw ? Number(limitRaw) : 10;
+    const pageSize = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10;
+    const skip = skipRaw ? Number(skipRaw) : 0;
+    const page = Math.floor(skip / pageSize) + 1;
+    return {
+      page,
+      pageSize,
+    };
+  }, [transactionsQueryKey]);
+
+  const whitelistedUsersFetchParams = useMemo(() => {
+    const params = new URLSearchParams(transactionsQueryKey);
+    const skipRaw = params.get("whitelisted_skip");
+    const limitRaw = params.get("whitelisted_limit");
+    const rawLimit = limitRaw ? Number(limitRaw) : 10;
+    const pageSize = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10;
+    const skip = skipRaw ? Number(skipRaw) : 0;
+    const page = Math.floor(skip / pageSize) + 1;
+    return {
+      page,
+      pageSize,
     };
   }, [transactionsQueryKey]);
 
@@ -161,6 +207,24 @@ const PropertyDetailsContent = ({
           }),
     );
   }, [detailsScope, dispatch, propertyId, transactionsFetchParams]);
+
+  useEffect(() => {
+    dispatch(
+      fetchInvestorUsersList({
+        propertyId,
+        ...investorUsersFetchParams,
+      }),
+    );
+  }, [dispatch, investorUsersFetchParams, propertyId]);
+
+  useEffect(() => {
+    dispatch(
+      fetchWhitelistedUsersList({
+        propertyId,
+        ...whitelistedUsersFetchParams,
+      }),
+    );
+  }, [dispatch, whitelistedUsersFetchParams, propertyId]);
 
   if (isLoading) {
     return <PropertyDetailsContentSkeleton />;
@@ -546,7 +610,21 @@ const PropertyDetailsContent = ({
             </div>
           )}
 
-          <div className="pt-10">
+          <div className="pt-10 flex flex-col">
+            <div className="pb-10">
+              <InvestorUsersTable
+                data={investorUsers}
+                totalCount={investorUsersTotalCount}
+                isLoading={investorUsersLoading}
+              />
+            </div>
+            <div className="pb-10">
+              <WhitelistedUsersTable
+                data={whitelistedUsers}
+                totalCount={whitelistedUsersTotalCount}
+                isLoading={whitelistedUsersLoading}
+              />
+            </div>
             <TransactionsTable
               data={propertyTransactions}
               totalCount={propertyTransactionsTotalCount}

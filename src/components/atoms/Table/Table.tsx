@@ -11,6 +11,7 @@ export interface TableColumn<T> {
   sortable?: boolean;
   sortKey?: string;
   fixed?: boolean | "left" | "right";
+  align?: "left" | "center" | "right";
 }
 
 interface TableProps<T> {
@@ -157,13 +158,25 @@ export function Table<T>({
                         : {}
                   }
                   className={`py-[12px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap ${
-                    index === columns.length - 1 ? "text-right" : "text-left"
+                    column.align === "center"
+                      ? "text-center"
+                      : column.align === "right" ||
+                          (!column.align && index === columns.length - 1)
+                        ? "text-right"
+                        : "text-left"
                   } text-[0.8125rem] sm:text-[0.875rem] font-semibold uppercase text-[#4b5563] dark:text-white/90 tracking-[0.06em] ${
                     column.width ? column.width : ""
                   } ${column.sortable ? "cursor-pointer select-none hover:text-darkbgprimary transition-colors" : ""} ${stickyClass}`}
                 >
                   <div
-                    className={`flex ${index === columns.length - 1 ? "justify-end" : "justify-start"} items-center gap-2`}
+                    className={`flex ${
+                      column.align === "center"
+                        ? "justify-center"
+                        : column.align === "right" ||
+                            (!column.align && index === columns.length - 1)
+                          ? "justify-end"
+                          : "justify-start"
+                    } items-center gap-2`}
                   >
                     {typeof column.title === "string"
                       ? column.title
@@ -216,9 +229,12 @@ export function Table<T>({
                             : {}
                       }
                       className={`py-[11px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap ${
-                        index === columns.length - 1
-                          ? "text-right"
-                          : "text-left"
+                        column.align === "center"
+                          ? "text-center"
+                          : column.align === "right" ||
+                              (!column.align && index === columns.length - 1)
+                            ? "text-right"
+                            : "text-left"
                       } ${stickyClass}`}
                     >
                       <div className="h-4 w-full max-w-[160px] rounded bg-gray-200 dark:bg-labelprimary/60" />
@@ -318,9 +334,12 @@ export function Table<T>({
                             : {}
                       }
                       className={`py-[11px] px-[15px] lg:px-6 lg:py-4 whitespace-nowrap text-[0.9375rem] leading-[1.45]  text-textprimary dark:text-sidebartext ${
-                        index === columns.length - 1
-                          ? "text-right"
-                          : "text-left"
+                        column.align === "center"
+                          ? "text-center"
+                          : column.align === "right" ||
+                              (!column.align && index === columns.length - 1)
+                            ? "text-right"
+                            : "text-left"
                       } ${stickyClass}`}
                     >
                       {column.render

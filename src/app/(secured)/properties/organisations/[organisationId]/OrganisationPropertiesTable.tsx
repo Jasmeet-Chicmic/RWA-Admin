@@ -288,6 +288,26 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
+        title: t("whitelistedUsers"),
+        field: "whitelistedUsers",
+        align: "center",
+        render: (item) => (
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
+            {item.whitelistedUsers ?? 0}
+          </span>
+        ),
+      },
+      {
+        title: t("investors"),
+        field: "investorUsers",
+        align: "center",
+        render: (item) => (
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
+            {item.investorUsers ?? 0}
+          </span>
+        ),
+      },
+      {
         title: t("createdAt"),
         field: "",
         render: (item) => (

@@ -28,6 +28,8 @@ export interface PropertyItem {
     id?: string;
     walletAddress?: string;
   } | null;
+  whitelistedUsers: number;
+  investorUsers: number;
   createdAt: string;
 }
 
@@ -112,6 +114,8 @@ export interface AdminProperty {
   canDelete: boolean;
   image: string;
   ownerWalletAddress: string;
+  whitelistedUsers: number;
+  investorUsers: number;
 }
 
 export interface PropertiesListResponse {
@@ -128,4 +132,33 @@ export interface GetPropertiesParams {
   status?: number;
   search?: string;
   location?: string;
+}
+
+export interface BasePropertyUser {
+  id: string;
+  name: string;
+  walletAddress: string;
+  createdAt: string;
+}
+
+export interface InvestorUser extends BasePropertyUser {
+  sharesBought: number;
+}
+
+export interface InvestorUsersResponse {
+  totalCount: number;
+  limit: number;
+  skip: number;
+  items: InvestorUser[];
+}
+
+export interface WhitelistedUser extends BasePropertyUser {
+  whitelistedAt: string;
+}
+
+export interface WhitelistedUsersResponse {
+  totalCount: number;
+  limit: number;
+  skip: number;
+  items: WhitelistedUser[];
 }

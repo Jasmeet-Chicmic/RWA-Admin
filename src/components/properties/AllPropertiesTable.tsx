@@ -289,6 +289,26 @@ const AllPropertiesTable = ({
         ),
       },
       {
+        title: t("whitelistedUsers"),
+        field: "whitelistedUsers" as keyof PropertyItem,
+        align: "center",
+        render: (item: PropertyItem) => (
+          <span className="font-medium text-bgblack dark:text-white">
+            {item.whitelistedUsers ?? 0}
+          </span>
+        ),
+      },
+      {
+        title: t("investors"),
+        field: "investorUsers" as keyof PropertyItem,
+        align: "center",
+        render: (item: PropertyItem) => (
+          <span className="font-medium text-bgblack dark:text-white">
+            {item.investorUsers ?? 0}
+          </span>
+        ),
+      },
+      {
         title: t("createdAt"),
         field: "createdAt" as keyof PropertyItem,
         render: (item: PropertyItem) => (

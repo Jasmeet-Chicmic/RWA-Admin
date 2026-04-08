@@ -200,6 +200,8 @@ export const API_END_POINTS = {
   BROADCAST_MESSAGES: `/messaging/api/admin/get-messages`,
   BROADCAST_SEND_MESSAGE: `/messaging/api/admin/send-message`,
   MARKETING_SUBSCRIPTION: `/security/api/admin/marketing-subscription`,
+  PROPERTIES_INVESTOR_USERS: `/properties/investor-users`,
+  PROPERTIES_WHITELISTED_USERS: `/properties/whitelisted-users`,
 };
 
 export const INTERNAL_API_PATHS = {
