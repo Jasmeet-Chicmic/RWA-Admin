@@ -30,5 +30,7 @@
   "reasonOptionalLabel": "Reason (optional)",
   "reasonPlaceholder": "Enter a reason (optional)",
   "cancel": "Cancel",
-  "confirmDisapprove": "Disapprove"
+  "confirmDisapprove": "Disapprove",
+  "rejectionReason": "Rejection Reason",
+  "searchPlaceholder": "Search by username or wallet address..."
 }
