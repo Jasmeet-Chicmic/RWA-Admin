@@ -45,7 +45,7 @@ const Tooltip = ({
         place={place}
         delayShow={delayShow}
         delayHide={delayHide}
-        className="!rounded-lg !px-3 !py-1.5 !text-xs !font-medium !shadow-lg !z-[9999] !max-w-[300px] !break-words !bg-gray-900 !text-white dark:!bg-gray-100 dark:!text-gray-900"
+        className="!rounded-lg !px-3 !py-1.5 !text-xs !font-medium !shadow-lg !z-[9999] !max-w-[500px] !break-words !whitespace-pre-wrap !bg-gray-900 !text-white dark:!bg-gray-100 dark:!text-gray-900"
       />
     </>
   );

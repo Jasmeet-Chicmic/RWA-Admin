@@ -8,6 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/atoms/SearchInput/SearchInput";
+// import Tooltip from "@/components/atoms/Tooltip/Tooltip";
+import TruncatedText from "@/components/atoms/TruncatedText/TruncatedText";
 import {
   encodeAbiParameters,
   hexToBytes,
@@ -229,12 +231,12 @@ const IdentityClaimRequestsTable = ({
         field: "rejectionReason",
         title: t("rejectionReason"),
         render: (item) => (
-          <span
-            className={`max-w-[200px] truncate block ${TEXT_PRIMARY}`}
-            title={item.rejectionReason ?? ""}
-          >
-            {item.rejectionReason || "-"}
-          </span>
+          <TruncatedText
+            text={item.rejectionReason}
+            maxLength={30}
+            className={TEXT_PRIMARY}
+            tooltipId={`rejection-reason-${item.id}`}
+          />
         ),
       },
       {
@@ -495,12 +497,18 @@ const IdentityClaimRequestsTable = ({
             <label className="mb-1 block text-xs font-medium text-labelprimary dark:text-darklabelprimary">
               {t("reasonOptionalLabel")}
             </label>
-            <textarea
-              className="mb-4 h-24 w-full resize-none rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary focus:outline-none focus:ring-1 focus:ring-primarycolor dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white"
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              placeholder={t("reasonPlaceholder")}
-            />
+            <div className="relative mb-4">
+              <textarea
+                className="h-24 w-full resize-none rounded-lg border border-bordergray200 bg-bgwhite px-3 py-2 text-sm text-textprimary focus:outline-none focus:ring-1 focus:ring-primarycolor dark:border-darkbordercolor1 dark:bg-darkbgbase dark:text-white"
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                placeholder={t("reasonPlaceholder")}
+                maxLength={100}
+              />
+              <div className="absolute bottom-2 right-3 text-[10px] font-medium text-textparagraph dark:text-textparagraphlight opacity-60">
+                {rejectReason.length}/100
+              </div>
+            </div>
 
             <div className="flex justify-end gap-2">
               <button
