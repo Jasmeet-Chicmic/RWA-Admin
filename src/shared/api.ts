@@ -200,6 +200,11 @@ export const API_END_POINTS = {
   BROADCAST_MESSAGES: `/messaging/api/admin/get-messages`,
   BROADCAST_SEND_MESSAGE: `/messaging/api/admin/send-message`,
   MARKETING_SUBSCRIPTION: `/security/api/admin/marketing-subscription`,
+  PROPERTIES_INVESTOR_USERS: `/properties/investor-users`,
+  PROPERTIES_WHITELISTED_USERS: `/properties/whitelisted-users`,
+  RENTAL_INCOME: "/v1/rental-income",
+  RENTAL_INCOME_DETAIL: "/v1/rental-income/detail",
+  RENTAL_INCOME_DISTRIBUTE: "/v1/rental-income/distribute",
 };
 
 export const INTERNAL_API_PATHS = {

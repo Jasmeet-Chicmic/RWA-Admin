@@ -3,9 +3,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { propertiesService } from "@/services/properties-service";
 import {
   AllPropertiesResponse,
+  // BaseResponse,
   GetAllPropertiesParams,
+  InvestorUser,
+  InvestorUsersResponse,
   PropertyDetailsItem,
   PropertyItem,
+  WhitelistedUser,
+  WhitelistedUsersResponse,
 } from "@/types/properties";
 
 type PropertyListState = {
@@ -38,11 +43,27 @@ type PropertyDetailsState = {
   error: string | null;
 };
 
+type InvestorUsersListState = {
+  items: InvestorUser[];
+  totalCount: number;
+  isLoading: boolean;
+  error: string | null;
+};
+
+type WhitelistedUsersListState = {
+  items: WhitelistedUser[];
+  totalCount: number;
+  isLoading: boolean;
+  error: string | null;
+};
+
 type PropertiesState = {
   all: PropertyListState;
   organisation: PropertyListState;
   propertyOrganisations: PropertyOrganisationListState;
   details: PropertyDetailsState;
+  investorUsers: InvestorUsersListState;
+  whitelistedUsers: WhitelistedUsersListState;
 };
 
 const initialListState: PropertyListState = {
@@ -63,6 +84,18 @@ const initialState: PropertiesState = {
   },
   details: {
     item: null,
+    isLoading: false,
+    error: null,
+  },
+  investorUsers: {
+    items: [],
+    totalCount: 0,
+    isLoading: false,
+    error: null,
+  },
+  whitelistedUsers: {
+    items: [],
+    totalCount: 0,
     isLoading: false,
     error: null,
   },
@@ -163,6 +196,44 @@ export const fetchPropertyDetails = createAsyncThunk<
   }
 });
 
+export const fetchInvestorUsersList = createAsyncThunk<
+  InvestorUsersResponse,
+  { propertyId: string; page: number; pageSize: number },
+  { rejectValue: string }
+>("properties/fetchInvestorUsers", async (params, { rejectWithValue }) => {
+  try {
+    const response = await propertiesService.getInvestorUsers(params);
+    if (!response.status || !response.data) {
+      throw new Error(response.message || "Failed to fetch investor users");
+    }
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Failed to fetch investor users",
+    );
+  }
+});
+
+export const fetchWhitelistedUsersList = createAsyncThunk<
+  WhitelistedUsersResponse,
+  { propertyId: string; page: number; pageSize: number },
+  { rejectValue: string }
+>("properties/fetchWhitelistedUsers", async (params, { rejectWithValue }) => {
+  try {
+    const response = await propertiesService.getWhitelistedUsers(params);
+    if (!response.status || !response.data) {
+      throw new Error(response.message || "Failed to fetch whitelisted users");
+    }
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch whitelisted users",
+    );
+  }
+});
+
 const propertiesSlice = createSlice({
   name: "properties",
   initialState,
@@ -242,6 +313,34 @@ const propertiesSlice = createSlice({
         state.details.isLoading = false;
         state.details.error =
           action.payload ?? "Failed to fetch property details";
+      })
+      .addCase(fetchInvestorUsersList.pending, (state) => {
+        state.investorUsers.isLoading = true;
+        state.investorUsers.error = null;
+      })
+      .addCase(fetchInvestorUsersList.fulfilled, (state, action) => {
+        state.investorUsers.isLoading = false;
+        state.investorUsers.items = action.payload.items;
+        state.investorUsers.totalCount = action.payload.totalCount;
+      })
+      .addCase(fetchInvestorUsersList.rejected, (state, action) => {
+        state.investorUsers.isLoading = false;
+        state.investorUsers.error =
+          action.payload ?? "Failed to fetch investor users";
+      })
+      .addCase(fetchWhitelistedUsersList.pending, (state) => {
+        state.whitelistedUsers.isLoading = true;
+        state.whitelistedUsers.error = null;
+      })
+      .addCase(fetchWhitelistedUsersList.fulfilled, (state, action) => {
+        state.whitelistedUsers.isLoading = false;
+        state.whitelistedUsers.items = action.payload.items;
+        state.whitelistedUsers.totalCount = action.payload.totalCount;
+      })
+      .addCase(fetchWhitelistedUsersList.rejected, (state, action) => {
+        state.whitelistedUsers.isLoading = false;
+        state.whitelistedUsers.error =
+          action.payload ?? "Failed to fetch whitelisted users";
       });
   },
 });

@@ -34,6 +34,7 @@ import {
 } from "@/store/propertiesSlice";
 import { AdminProperty, PropertyItem } from "@/types/properties";
 import { TokenizationModal } from "./TokenizationModal";
+import { RentalIncomeModal } from "./RentalIncomeModal";
 
 type PropertyData = PropertyItem | AdminProperty;
 type OrganisationPropertiesDeps = {
@@ -92,6 +93,7 @@ const OrganisationPropertiesTable = ({
   const lastRequestKeyRef = useRef<string | null>(null);
 
   const [tokenizationModalOpen, setTokenizationModalOpen] = useState(false);
+  const [rentalIncomeModalOpen, setRentalIncomeModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] =
     useState<AdminProperty | null>(null);
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
@@ -103,6 +105,16 @@ const OrganisationPropertiesTable = ({
 
   const closeTokenization = () => {
     setTokenizationModalOpen(false);
+    setSelectedProperty(null);
+  };
+
+  const openRentalIncome = (property: PropertyData) => {
+    setSelectedProperty(property as AdminProperty);
+    setRentalIncomeModalOpen(true);
+  };
+
+  const closeRentalIncome = () => {
+    setRentalIncomeModalOpen(false);
     setSelectedProperty(null);
   };
 
@@ -288,6 +300,26 @@ const OrganisationPropertiesTable = ({
         },
       },
       {
+        title: t("whitelistedUsers"),
+        field: "whitelistedUsers",
+        align: "center",
+        render: (item) => (
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
+            {item.whitelistedUsers ?? 0}
+          </span>
+        ),
+      },
+      {
+        title: t("investors"),
+        field: "investorUsers",
+        align: "center",
+        render: (item) => (
+          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
+            {item.investorUsers ?? 0}
+          </span>
+        ),
+      },
+      {
         title: t("createdAt"),
         field: "",
         render: (item) => (
@@ -324,6 +356,19 @@ const OrganisationPropertiesTable = ({
               disabled: !canTokenize,
               onClick: () => {
                 if (canTokenize) openTokenization(item);
+              },
+            });
+
+            const canSubmitRentalIncome =
+              item.status === PropertyStatus.Active ||
+              item.status === PropertyStatus.SoldOut;
+
+            actions.push({
+              id: `property-rental-income-${item.id}`,
+              label: t("rentalIncome.submitButton"),
+              disabled: !canSubmitRentalIncome,
+              onClick: () => {
+                if (canSubmitRentalIncome) openRentalIncome(item);
               },
             });
           }
@@ -364,6 +409,12 @@ const OrganisationPropertiesTable = ({
         onSuccess={refetchOrganisationProperties}
         property={selectedProperty}
         organisationId={organisationId}
+      />
+      <RentalIncomeModal
+        open={rentalIncomeModalOpen}
+        onClose={closeRentalIncome}
+        onSuccess={refetchOrganisationProperties}
+        property={selectedProperty}
       />
     </>
   );

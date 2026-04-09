@@ -104,6 +104,7 @@
   },
   "logout": "Cerrar sesión",
   "organisation": "Organización",
+  "rentManagement": "Gestión de rentas",
   "connectWallet": "Conectar billetera",
   "verifyWalletSignature": "Verificar firma de billetera",
   "backToLogin": "Volver al inicio de sesión",
