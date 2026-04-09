@@ -1,6 +1,11 @@
 "use client";
 
+import { CalendarDays } from "lucide-react";
 import SelectFilter from "@/components/atoms/SelectFilter";
+import {
+  TableFilterField,
+  TableFiltersLayout,
+} from "@/components/organisms/TableFilters/TableFiltersLayout";
 import { TRANSACTION_STATUS } from "@/constants/transaction";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,7 +13,15 @@ import { useMemo } from "react";
 
 import { TransactionSearchInput } from "./TransactionSearchInput";
 
-const TransactionFilters = () => {
+type TransactionFiltersProps = {
+  variant?: "inline" | "sidebar";
+  includeSearch?: boolean;
+};
+
+const TransactionFilters = ({
+  variant = "inline",
+  includeSearch = true,
+}: TransactionFiltersProps) => {
   const t = useTranslations("transactions");
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -31,9 +44,6 @@ const TransactionFilters = () => {
     ],
     [t],
   );
-
-  const LABEL_CLASS =
-    "block text-sm font-medium text-labelprimary dark:text-darklabelprimary mb-2";
 
   const fromDateParam = searchParams.get("fromDate");
   const toDateParam = searchParams.get("toDate");
@@ -68,50 +78,68 @@ const TransactionFilters = () => {
   };
 
   return (
-    <div className="flex flex-wrap items-end justify-end gap-3">
-      <TransactionSearchInput inputId="transaction-search-filter" />
+    <TableFiltersLayout variant={variant}>
+      {includeSearch ? (
+        <TransactionSearchInput inputId="transaction-search-filter" />
+      ) : null}
 
-      <div className="min-w-[220px]">
-        <label htmlFor="status-filter" className={LABEL_CLASS}>
-          {t("status")}
-        </label>
+      <TableFilterField
+        label={t("status")}
+        htmlFor="status-filter"
+        className="min-w-[220px]"
+      >
         <SelectFilter
           id="status-filter"
           paramName="status"
           options={statusOptions}
           placeholder={t("selectStatus")}
+          className="[&_.react-select__control]:!min-h-[42px] [&_.react-select__control]:!rounded-xl [&_.react-select__control]:!border-bordergray200 dark:[&_.react-select__control]:!border-darkbordercolor1"
         />
-      </div>
+      </TableFilterField>
 
-      <div className="min-w-[180px]">
-        <label htmlFor="transaction-from-date-filter" className={LABEL_CLASS}>
-          {tCommon("fromDate")}
-        </label>
-        <input
-          id="transaction-from-date-filter"
-          type="date"
-          value={fromDateValue}
-          onChange={(e) => handleFromDateChange(e.target.value)}
-          max={today}
-          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext"
-        />
-      </div>
+      <TableFilterField
+        label={tCommon("fromDate")}
+        htmlFor="transaction-from-date-filter"
+        className="min-w-[180px]"
+      >
+        <div className="relative">
+          <CalendarDays
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-textparagraph dark:text-textparagraphlight"
+          />
+          <input
+            id="transaction-from-date-filter"
+            type="date"
+            value={fromDateValue}
+            onChange={(e) => handleFromDateChange(e.target.value)}
+            max={today}
+            className="w-full rounded-xl border border-bordergray200 bg-bgwhite py-2.5 pl-9 pr-3 text-sm text-textprimary transition-all duration-200 focus:border-primarycolor focus:outline-none dark:border-darkbordercolor1 dark:bg-darkbgprimary dark:text-sidebartext"
+          />
+        </div>
+      </TableFilterField>
 
-      <div className="min-w-[180px]">
-        <label htmlFor="transaction-to-date-filter" className={LABEL_CLASS}>
-          {tCommon("toDate")}
-        </label>
-        <input
-          id="transaction-to-date-filter"
-          type="date"
-          value={toDateValue}
-          onChange={(e) => handleToDateChange(e.target.value)}
-          min={fromDateValue || undefined}
-          max={today}
-          className="w-full px-3 py-2.5 border-2 border-primarycolor rounded-lg focus:ring-0 transition-all duration-200 dark:bg-darkbgprimary dark:border-darkbordercolor1 dark:text-sidebartext"
-        />
-      </div>
-    </div>
+      <TableFilterField
+        label={tCommon("toDate")}
+        htmlFor="transaction-to-date-filter"
+        className="min-w-[180px]"
+      >
+        <div className="relative">
+          <CalendarDays
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-textparagraph dark:text-textparagraphlight"
+          />
+          <input
+            id="transaction-to-date-filter"
+            type="date"
+            value={toDateValue}
+            onChange={(e) => handleToDateChange(e.target.value)}
+            min={fromDateValue || undefined}
+            max={today}
+            className="w-full rounded-xl border border-bordergray200 bg-bgwhite py-2.5 pl-9 pr-3 text-sm text-textprimary transition-all duration-200 focus:border-primarycolor focus:outline-none dark:border-darkbordercolor1 dark:bg-darkbgprimary dark:text-sidebartext"
+          />
+        </div>
+      </TableFilterField>
+    </TableFiltersLayout>
   );
 };
 

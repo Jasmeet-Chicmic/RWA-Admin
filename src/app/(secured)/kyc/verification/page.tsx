@@ -11,17 +11,23 @@ const KycVerificationPage = async ({
   searchParams: Promise<{
     skip?: number;
     limit?: number;
+    topic?: string;
+    status?: string;
   }>;
 }) => {
   try {
-    const { skip, limit } = await searchParams;
+    const { skip, limit, topic, status } = await searchParams;
     const pageSize = limit ? Number(limit) : DEFAULT_PAGE_SIZE;
     const skipNum = skip ? Number(skip) : 0;
     const pageNumber = Math.floor(skipNum / pageSize) + 1;
+    const topicNum = topic ? Number(topic) : undefined;
+    const statusNum = status ? Number(status) : undefined;
 
     const res = await getAdminIdentityClaimRequestsAction({
       page: pageNumber,
       pageSize,
+      ...(Number.isFinite(topicNum) ? { topic: topicNum } : {}),
+      ...(Number.isFinite(statusNum) ? { status: statusNum } : {}),
     });
 
     const items = res?.items ?? [];

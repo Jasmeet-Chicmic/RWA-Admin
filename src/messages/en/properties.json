@@ -6,6 +6,8 @@
   "createdAt": "Created At",
   "pricePerShare": "Price Per Share",
   "searchProperties": "Search Properties",
+  "filters": "Filters",
+  "clearAllFilters": "Clear All Filters",
   "propertyName": "Property Name",
   "id": "ID",
   "location": "Location",

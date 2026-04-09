@@ -2,6 +2,8 @@
   "properties": "Propri\u00e9t\u00e9s",
   "manageAndViewAllProperties": "G\u00e9rer et consulter toutes les propri\u00e9t\u00e9s",
   "searchProperties": "Rechercher des propri\u00e9t\u00e9s",
+  "filters": "Filtres",
+  "clearAllFilters": "Effacer tous les filtres",
   "propertyName": "Nom de la propri\u00e9t\u00e9",
   "id": "ID",
   "location": "Emplacement",

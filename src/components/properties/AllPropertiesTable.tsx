@@ -1,9 +1,9 @@
 "use client";
 
 import { useDebounce } from "@/hooks/useDebounce";
-import { ChevronDown, MapPin, Search } from "lucide-react";
+import { ChevronDown, MapPin, Menu, RotateCcw, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -17,6 +17,7 @@ import TableActions, {
   TableActionItem,
 } from "@/components/atoms/TableActions";
 import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
+import FilterSidebar from "@/components/molecules/FilterSidebar/FilterSidebar";
 import { truncateText } from "@/shared/utils";
 import {
   DEFAULT_PAGE_SIZE,
@@ -71,6 +72,7 @@ const AllPropertiesTable = ({
   const t = useTranslations("properties");
   const tTransactions = useTranslations("transactions");
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { items, totalCount, isLoading } = useAppSelector(
@@ -96,6 +98,7 @@ const AllPropertiesTable = ({
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [isAssignLLCModalOpen, setIsAssignLLCModalOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const lastRequestKeyRef = useRef<string | null>(null);
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
@@ -166,6 +169,14 @@ const AllPropertiesTable = ({
     const parsed = parseStatusParam(value || null);
     setStatusFilterNumber(parsed);
     setCurrentPage(1);
+  };
+
+  const handleClearFilters = () => {
+    if (fixedStatus !== undefined) return;
+    setStatusFilterNumber(undefined);
+    setCurrentPage(1);
+    setIsFilterOpen(false);
+    router.push(pathname);
   };
 
   const handleApprove = useCallback((item: PropertyItem) => {
@@ -391,33 +402,6 @@ const AllPropertiesTable = ({
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-            {!hideStatusFilter && (
-              <div className="relative">
-                <select
-                  value={
-                    statusFilterNumber === undefined
-                      ? ""
-                      : String(statusFilterNumber)
-                  }
-                  onChange={(e) => handleStatusFilterChange(e.target.value)}
-                  className="appearance-none pr-8 pl-4 py-3 w-full sm:w-[180px] dark:border-white/50 border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer"
-                >
-                  {PROPERTY_STATUS_FILTER_OPTIONS.map((option) => (
-                    <option
-                      key={String(option.value)}
-                      value={String(option.value)}
-                    >
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-textprimary dark:text-secondary pointer-events-none"
-                  size={16}
-                />
-              </div>
-            )}
-
             {/* Search Input */}
             <div className="relative">
               <Search
@@ -432,6 +416,16 @@ const AllPropertiesTable = ({
                 className="pr-10 px-4 py-3 w-full sm:w-[260px] dark:border-white/50 border border-bordergray200 placeholder:text-[#8F9BBA] bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white"
               />
             </div>
+            {!hideStatusFilter && (
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(true)}
+                className="inline-flex h-[46px] items-center gap-2 rounded-[10px] border border-primarycolor px-4 py-2 font-semibold text-black transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-0 dark:border-secondarycolor dark:bg-secondarycolor dark:text-black dark:hover:opacity-90 bg-primarycolor"
+              >
+                <Menu size={16} strokeWidth={2.25} />
+                <span>{t("filters")}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -454,6 +448,58 @@ const AllPropertiesTable = ({
         onPageSizeChange={handlePageSizeChange}
         title={t("properties")}
       />
+
+      {!hideStatusFilter && (
+        <FilterSidebar
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          title={t("filters")}
+          footer={
+            <button
+              type="button"
+              onClick={handleClearFilters}
+              className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
+            >
+              <RotateCcw size={18} />
+              <span>{t("clearAllFilters")}</span>
+            </button>
+          }
+        >
+          <div>
+            <label
+              htmlFor="property-status-filter-sidebar"
+              className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.08em] text-textparagraph dark:text-textparagraphlight"
+            >
+              {t("statusLabel")}
+            </label>
+            <div className="relative">
+              <select
+                id="property-status-filter-sidebar"
+                value={
+                  statusFilterNumber === undefined
+                    ? ""
+                    : String(statusFilterNumber)
+                }
+                onChange={(e) => handleStatusFilterChange(e.target.value)}
+                className="appearance-none pr-8 pl-4 py-3 w-full dark:border-white/50 border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer"
+              >
+                {PROPERTY_STATUS_FILTER_OPTIONS.map((option) => (
+                  <option
+                    key={String(option.value)}
+                    value={String(option.value)}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-textprimary dark:text-secondary pointer-events-none"
+                size={16}
+              />
+            </div>
+          </div>
+        </FilterSidebar>
+      )}
 
       {/* Modals */}
       {selectedProperty && (

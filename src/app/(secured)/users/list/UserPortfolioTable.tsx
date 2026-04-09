@@ -1,10 +1,10 @@
 "use client";
 
-import { Eye, ShieldCheck } from "lucide-react";
+import { Eye, Menu, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 // import { Ban,   Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { TableColumn } from "@/components/atoms/Table";
@@ -13,8 +13,10 @@ import TableActions, {
   TableActionDisplayMode,
 } from "@/components/atoms/TableActions";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import FilterSidebar from "@/components/molecules/FilterSidebar";
 import RegisterIdentityModal from "./RegisterIdentityModal";
 import { UsersListFilters } from "./UsersListFilters";
+import { UsersListSearchInput } from "./UsersListSearchInput";
 // import DropdownMenu from "@/components/atoms/DropdownMenu/DropdownMenu";
 import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
@@ -60,6 +62,8 @@ const UserPortfolioTable = ({
   const t = useTranslations("users");
   const tTransactions = useTranslations("transactions");
   const router = useRouter();
+  const pathname = usePathname();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserPortfolioRow | null>(
     null,
   );
@@ -243,8 +247,15 @@ const UserPortfolioTable = ({
                 {t("userPortfolioSubtitle")}
               </p>
             </div>
-            <div className="shrink-0 w-full lg:w-auto lg:max-w-[min(100%,520px)]">
-              <UsersListFilters />
+            <div className="shrink-0 flex items-end gap-3">
+              <UsersListSearchInput />
+              <button
+                onClick={() => setIsFilterOpen(true)}
+                className="inline-flex h-[42px] items-center gap-2 rounded-xl border border-primarycolor px-4 py-2 font-semibold text-black transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-0 dark:border-secondarycolor dark:bg-secondarycolor dark:text-black dark:hover:opacity-90 bg-primarycolor"
+              >
+                <Menu size={16} strokeWidth={2.25} />
+                <span>{t("filters")}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -260,6 +271,24 @@ const UserPortfolioTable = ({
         isLoading={isLoading}
         config={config}
       />
+      <FilterSidebar
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        title={t("filters")}
+        footer={
+          <button
+            onClick={() => {
+              router.push(pathname);
+              setIsFilterOpen(false);
+            }}
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
+          >
+            <span>{t("clearAllFilters")}</span>
+          </button>
+        }
+      >
+        <UsersListFilters variant="sidebar" />
+      </FilterSidebar>
       <RegisterIdentityModal
         isOpen={Boolean(selectedUser)}
         onClose={() => setSelectedUser(null)}

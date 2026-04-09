@@ -1,8 +1,9 @@
 "use client";
 
-import { Check, Loader2, X } from "lucide-react";
+import FilterSidebar from "@/components/molecules/FilterSidebar/FilterSidebar";
+import { Check, ChevronDown, Loader2, Menu, RotateCcw, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -125,13 +126,35 @@ const IdentityClaimRequestsTable = ({
   const { address: connectedSigner } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [loadingState, setLoadingState] = useState<{
     id: string;
     action: LoadingAction;
   } | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectRowId, setRejectRowId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+
+  const statusFilterValue = searchParams.get("status") ?? "";
+  const topicFilterValue = searchParams.get("topic") ?? "";
+
+  const updateFilterParam = (paramName: "status" | "topic", value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("skip");
+    if (value) {
+      params.set(paramName, value);
+    } else {
+      params.delete(paramName);
+    }
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
+  const clearFilters = () => {
+    setIsFilterOpen(false);
+    router.push(pathname);
+  };
 
   const config: DataTableConfig<Row> = useMemo(() => {
     const columns: TableColumn<Row>[] = [
@@ -310,6 +333,14 @@ const IdentityClaimRequestsTable = ({
                 {t("claimRequestsSubtitle")}
               </p>
             </div>
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(true)}
+              className="inline-flex h-[42px] items-center gap-2 rounded-xl border border-primarycolor px-4 py-2 font-semibold text-black transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-0 dark:border-secondarycolor dark:bg-secondarycolor dark:text-black dark:hover:opacity-90 bg-primarycolor"
+            >
+              <Menu size={16} strokeWidth={2.25} />
+              <span>{t("filters")}</span>
+            </button>
           </div>
         </div>
       ),
@@ -327,6 +358,85 @@ const IdentityClaimRequestsTable = ({
   return (
     <>
       <DataTable data={data} totalCount={totalCount} config={config} />
+
+      <FilterSidebar
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        title={t("filters")}
+        footer={
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
+          >
+            <RotateCcw size={18} />
+            <span>{t("clearAllFilters")}</span>
+          </button>
+        }
+      >
+        <div className="space-y-5">
+          <div>
+            <label
+              htmlFor="kyc-topic-filter"
+              className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.08em] text-textparagraph dark:text-textparagraphlight"
+            >
+              {t("topic")}
+            </label>
+            <div className="relative">
+              <select
+                id="kyc-topic-filter"
+                value={topicFilterValue}
+                onChange={(e) => updateFilterParam("topic", e.target.value)}
+                className="appearance-none pr-8 pl-4 py-3 w-full border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer dark:border-darkbordercolor1"
+              >
+                <option value="">{t("allTopics")}</option>
+                <option value={String(CLAIM_TOPIC.KYC_APPROVED)}>
+                  {t("topicKycApproved")}
+                </option>
+              </select>
+              <ChevronDown
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-textprimary dark:text-secondary pointer-events-none"
+                size={16}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="kyc-status-filter"
+              className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.08em] text-textparagraph dark:text-textparagraphlight"
+            >
+              {t("claimStatus")}
+            </label>
+            <div className="relative">
+              <select
+                id="kyc-status-filter"
+                value={statusFilterValue}
+                onChange={(e) => updateFilterParam("status", e.target.value)}
+                className="appearance-none pr-8 pl-4 py-3 w-full border border-bordergray200 bg-bgwhite dark:bg-darkbgprimary rounded-[10px] focus:outline-none transition-all duration-200 text-bgblack dark:text-white text-sm cursor-pointer dark:border-darkbordercolor1"
+              >
+                <option value="">{t("allStatuses")}</option>
+                <option value={String(CLAIM_REQUEST_STATUS.PENDING)}>
+                  {t("claimStatusPending")}
+                </option>
+                <option value={String(CLAIM_REQUEST_STATUS.APPROVED)}>
+                  {t("claimStatusApproved")}
+                </option>
+                <option value={String(CLAIM_REQUEST_STATUS.REJECTED)}>
+                  {t("claimStatusRejected")}
+                </option>
+                <option value={String(CLAIM_REQUEST_STATUS.COMPLETED)}>
+                  {t("claimStatusCompleted")}
+                </option>
+              </select>
+              <ChevronDown
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-textprimary dark:text-secondary pointer-events-none"
+                size={16}
+              />
+            </div>
+          </div>
+        </div>
+      </FilterSidebar>
 
       {rejectModalOpen && rejectRowId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

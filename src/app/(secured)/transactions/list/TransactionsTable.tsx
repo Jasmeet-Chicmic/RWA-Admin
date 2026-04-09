@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useCallback, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, RotateCcw } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import FormattedDate from "@/components/atoms/FormattedDate";
@@ -10,6 +12,7 @@ import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToCl
 import StatusChip from "@/components/atoms/StatusChip";
 import { TableColumn } from "@/components/atoms/Table";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import FilterSidebar from "@/components/molecules/FilterSidebar";
 import { TRANSACTION_STATUS } from "@/constants/transaction";
 import { AdminTransactionItem } from "@/services/transactions-service";
 import {
@@ -51,6 +54,9 @@ const TransactionsTable = ({
   showFilters = true,
   showSearch = false,
 }: TransactionsTableProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const t = useTranslations("transactions");
   const tCommon = useTranslations("common");
 
@@ -209,8 +215,15 @@ const TransactionsTable = ({
               </p>
             </div>
             {showFilters ? (
-              <div className="shrink-0">
-                <TransactionFilters />
+              <div className="shrink-0 flex items-end gap-3">
+                <TransactionSearchInput inputId="transaction-search-header" />
+                <button
+                  onClick={() => setIsFilterOpen(true)}
+                  className="inline-flex h-[42px] items-center gap-2 rounded-xl border border-primarycolor px-4 py-2 font-semibold text-black transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-0 dark:border-secondarycolor dark:bg-secondarycolor dark:text-black dark:hover:opacity-90 bg-primarycolor"
+                >
+                  <Menu size={16} strokeWidth={2.25} />
+                  <span>{t("filters")}</span>
+                </button>
               </div>
             ) : showSearch ? (
               <div className="shrink-0">
@@ -231,12 +244,35 @@ const TransactionsTable = ({
   ]);
 
   return (
-    <DataTable<AdminTransactionItem>
-      data={data}
-      totalCount={totalCount}
-      isLoading={isLoading}
-      config={config}
-    />
+    <>
+      <DataTable<AdminTransactionItem>
+        data={data}
+        totalCount={totalCount}
+        isLoading={isLoading}
+        config={config}
+      />
+      {showFilters && (
+        <FilterSidebar
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          title={t("filters")}
+          footer={
+            <button
+              onClick={() => {
+                router.push(pathname);
+                setIsFilterOpen(false);
+              }}
+              className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-100 dark:bg-darkbgprimary text-labelprimary dark:text-darklabelprimary rounded-xl hover:bg-gray-200 dark:hover:bg-labelprimary transition-all border bordergray200 dark:border-labelprimary font-medium"
+            >
+              <RotateCcw size={18} />
+              <span>{t("clearAllFilters")}</span>
+            </button>
+          }
+        >
+          <TransactionFilters variant="sidebar" includeSearch={false} />
+        </FilterSidebar>
+      )}
+    </>
   );
 };
 
