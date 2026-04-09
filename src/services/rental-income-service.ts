@@ -8,6 +8,8 @@ import { API_END_POINTS } from "@/shared/api";
 import {
   DistributeRentalIncomeRequest,
   DeleteRentalIncomeRequest,
+  RentalIncomeDistributionsRequest,
+  RentalIncomeDistributionsResponse,
   RentalIncomeDetailRequest,
   RentalIncomeDetailResponse,
   RentalIncomeListRequest,
@@ -41,6 +43,14 @@ export const rentalIncomeService = {
       RentalIncomeDetailResponse,
       RentalIncomeDetailRequest
     >(API_END_POINTS.RENTAL_INCOME_DETAIL, params);
+  },
+  getRentalIncomeDistributions: async (
+    params: RentalIncomeDistributionsRequest,
+  ): Promise<RentalIncomeDistributionsResponse> => {
+    return await getRequest<
+      RentalIncomeDistributionsResponse,
+      RentalIncomeDistributionsRequest
+    >(API_END_POINTS.RENTAL_INCOME_DISTRIBUTIONS, params);
   },
   deleteRentalIncome: async (
     payload: DeleteRentalIncomeRequest,

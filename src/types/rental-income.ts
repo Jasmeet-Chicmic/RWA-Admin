@@ -88,3 +88,35 @@ export interface UpdateRentalIncomeRequest {
 export interface DistributeRentalIncomeRequest {
   rentalIncomeId: string;
 }
+
+export interface RentalIncomeDistributionsRequest {
+  rentalIncomeId: string;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface RentalIncomeDistributionItem {
+  id: string;
+  userShare: number | string;
+  sharesHeld: number | string;
+  mintAmount: number | string;
+  sellingPercentage: number | string;
+  distributableIncome: number | string;
+  distributedAt: string | null;
+  user: {
+    id: string;
+    name: string | null;
+    walletAddress: string;
+  } | null;
+}
+
+export interface RentalIncomeDistributionsData {
+  items: RentalIncomeDistributionItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export type RentalIncomeDistributionsResponse =
+  BaseResponse<RentalIncomeDistributionsData>;

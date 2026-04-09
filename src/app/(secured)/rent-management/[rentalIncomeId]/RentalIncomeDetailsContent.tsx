@@ -29,7 +29,10 @@ import {
   fromBaseUnits,
 } from "@/shared/utils/unitUtils";
 import { InvestorUser } from "@/types/properties";
-import { RentalIncomeDetailData } from "@/types/rental-income";
+import {
+  RentalIncomeDetailData,
+  RentalIncomeDistributionItem,
+} from "@/types/rental-income";
 import { useAppSelector } from "@/store/hooks";
 
 import { RENTAL_INCOME_STATUS } from "../RentManagementTable";
@@ -60,6 +63,13 @@ const toBigIntSafe = (value: number | string | bigint | null | undefined) => {
   return BigInt(trimmed);
 };
 
+type DistributionPreviewRow = {
+  id: string;
+  walletAddress: string;
+  sharesHeldRaw: number | string | bigint;
+  userShareRaw: number | string | bigint;
+};
+
 const RentalIncomeDetailsContent = ({
   rentalIncomeId,
 }: {
@@ -75,6 +85,10 @@ const RentalIncomeDetailsContent = ({
   const [item, setItem] = useState<RentalIncomeDetailData | null>(null);
   const [investors, setInvestors] = useState<InvestorUser[]>([]);
   const [investorsTotalCount, setInvestorsTotalCount] = useState(0);
+  const [distributionItems, setDistributionItems] = useState<
+    RentalIncomeDistributionItem[]
+  >([]);
+  const [distributionTotalCount, setDistributionTotalCount] = useState(0);
   const [investorsLoading, setInvestorsLoading] = useState(false);
   const [distributeModalOpen, setDistributeModalOpen] = useState(false);
   const [distributing, setDistributing] = useState(false);
@@ -114,90 +128,112 @@ const RentalIncomeDetailsContent = ({
     };
   }, [fetchDetails]);
 
-  const investorTableConfig: DataTableConfig<InvestorUser> = useMemo(() => {
-    const columns: TableColumn<InvestorUser>[] = [
-      {
-        title: t("walletAddress"),
-        field: "walletAddress",
-        render: (investor) => (
-          <CopyToClipboardPill
-            value={investor.walletAddress}
-            displayValue={walletTruncate(investor.walletAddress)}
-            title={t("walletAddress")}
-            className="max-w-[180px]"
-          />
-        ),
-      },
-      {
-        title: t("sharesBought"),
-        field: "sharesBought",
-        align: "center",
-        render: (investor) => {
-          const sharesRaw = toBigIntSafe(
-            investor.sharesHeld ?? investor.sharesBought ?? 0,
-          );
-          const sharesDisplay = Number(
-            fromBaseUnits(sharesRaw, DEFAULT_TOKEN_DECIMALS),
-          );
-          return (
-            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
-              {sharesDisplay.toLocaleString()}
-            </span>
-          );
-        },
-      },
-      {
-        title: t("rentManagement.userShare"),
-        field: "",
-        align: "right",
-        render: (investor) => {
-          const distributableIncomeRaw = toBigIntSafe(
-            item?.distributableIncome ?? 0,
-          );
-          const mintAmountRaw = toBigIntSafe(item?.mintAmount ?? 0);
-          const sharesHeldRaw = toBigIntSafe(
-            investor.sharesHeld ?? investor.sharesBought ?? 0,
-          );
-          const userShareRaw =
-            mintAmountRaw > BigInt(0)
-              ? (distributableIncomeRaw * sharesHeldRaw) / mintAmountRaw
-              : BigInt(0);
-          return (
-            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
-              {formatDisplayCurrency(fromBaseUnits(userShareRaw), {
-                maximumFractionDigits: 10,
-              })}
-            </span>
-          );
-        },
-      },
-    ];
+  const isDistributedRecord = item?.status === RENTAL_INCOME_STATUS.DISTRIBUTED;
 
-    return {
-      columns,
-      keyExtractor: (investor) => investor.id,
-      paginationTitle: t("investors").toLowerCase(),
-      hideSelectCol: true,
-      emptyMessage: t("noInvestorsFound"),
-      searchPlaceholder: t("rentManagement.searchInvestorsPlaceholder"),
-      header: (
-        <div className="bg-bgwhite dark:bg-darkbgprimary">
-          <div className="flex items-end justify-between gap-4">
-            <div className="shrink-0">
-              <h2
-                className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
-              >
-                {t("rentManagement.investorDistributionTitle")}
-              </h2>
-              <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
-                {t("rentManagement.investorDistributionSubtitle")}
-              </p>
+  const distributionPreviewRows: DistributionPreviewRow[] = useMemo(() => {
+    if (isDistributedRecord) {
+      return distributionItems.map((distribution) => ({
+        id: distribution.id,
+        walletAddress: distribution.user?.walletAddress ?? "",
+        sharesHeldRaw: distribution.sharesHeld ?? 0,
+        userShareRaw: distribution.userShare ?? 0,
+      }));
+    }
+
+    return investors.map((investor) => {
+      const distributableIncomeRaw = toBigIntSafe(
+        item?.distributableIncome ?? 0,
+      );
+      const mintAmountRaw = toBigIntSafe(item?.mintAmount ?? 0);
+      const sharesHeldRaw = toBigIntSafe(
+        investor.sharesHeld ?? investor.sharesBought ?? 0,
+      );
+      const userShareRaw =
+        mintAmountRaw > BigInt(0)
+          ? (distributableIncomeRaw * sharesHeldRaw) / mintAmountRaw
+          : BigInt(0);
+      return {
+        id: investor.id,
+        walletAddress: investor.walletAddress,
+        sharesHeldRaw,
+        userShareRaw,
+      };
+    });
+  }, [distributionItems, investors, isDistributedRecord, item]);
+
+  const investorTableConfig: DataTableConfig<DistributionPreviewRow> =
+    useMemo(() => {
+      const columns: TableColumn<DistributionPreviewRow>[] = [
+        {
+          title: t("walletAddress"),
+          field: "walletAddress",
+          render: (row) => (
+            <CopyToClipboardPill
+              value={row.walletAddress}
+              displayValue={walletTruncate(row.walletAddress)}
+              title={t("walletAddress")}
+              className="max-w-[180px]"
+            />
+          ),
+        },
+        {
+          title: t("sharesBought"),
+          field: "sharesHeldRaw",
+          align: "center",
+          render: (row) => {
+            const sharesRaw = toBigIntSafe(row.sharesHeldRaw);
+            const sharesDisplay = Number(
+              fromBaseUnits(sharesRaw, DEFAULT_TOKEN_DECIMALS),
+            );
+            return (
+              <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+                {sharesDisplay.toLocaleString()}
+              </span>
+            );
+          },
+        },
+        {
+          title: t("rentManagement.userShare"),
+          field: "",
+          align: "right",
+          render: (row) => {
+            const userShareRaw = toBigIntSafe(row.userShareRaw);
+            return (
+              <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} font-medium`}>
+                {formatDisplayCurrency(fromBaseUnits(userShareRaw), {
+                  maximumFractionDigits: 10,
+                })}
+              </span>
+            );
+          },
+        },
+      ];
+
+      return {
+        columns,
+        keyExtractor: (row) => row.id,
+        paginationTitle: t("investors").toLowerCase(),
+        hideSelectCol: true,
+        emptyMessage: t("noInvestorsFound"),
+        searchPlaceholder: t("rentManagement.searchInvestorsPlaceholder"),
+        header: (
+          <div className="bg-bgwhite dark:bg-darkbgprimary">
+            <div className="flex items-end justify-between gap-4">
+              <div className="shrink-0">
+                <h2
+                  className={`text-[1.25rem] lg:text-[1.5rem] font-bold ${TEXT_PRIMARY}`}
+                >
+                  {t("rentManagement.investorDistributionTitle")}
+                </h2>
+                <p className="text-[14px] font-medium text-textparagraph dark:text-textparagraphlight">
+                  {t("rentManagement.investorDistributionSubtitle")}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      ),
-    };
-  }, [item, t]);
+        ),
+      };
+    }, [t]);
 
   const investorFetchParams = useMemo(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -217,13 +253,34 @@ const RentalIncomeDetailsContent = ({
   }, [searchParams]);
 
   useEffect(() => {
-    if (!item?.property?.id) return;
+    if (!item) return;
     setInvestorsLoading(true);
 
-    const loadInvestors = async () => {
+    const loadDistributionPreview = async () => {
       try {
+        if (item.status === RENTAL_INCOME_STATUS.DISTRIBUTED) {
+          const res = await rentalIncomeService.getRentalIncomeDistributions({
+            rentalIncomeId: item.id,
+            page: investorFetchParams.page,
+            pageSize: investorFetchParams.pageSize,
+            ...(investorFetchParams.search
+              ? { search: investorFetchParams.search }
+              : {}),
+          });
+          if (!res?.data) {
+            setDistributionItems([]);
+            setDistributionTotalCount(0);
+            return;
+          }
+          setDistributionItems(res.data.items ?? []);
+          setDistributionTotalCount(res.data.total ?? 0);
+          setInvestors([]);
+          setInvestorsTotalCount(0);
+          return;
+        }
+
         const res = await propertiesService.getInvestorUsers({
-          propertyId: item.property.id,
+          propertyId: item.property?.id ?? "",
           page: investorFetchParams.page,
           pageSize: investorFetchParams.pageSize,
           ...(investorFetchParams.search
@@ -233,20 +290,26 @@ const RentalIncomeDetailsContent = ({
         if (!res?.data) {
           setInvestors([]);
           setInvestorsTotalCount(0);
+          setDistributionItems([]);
+          setDistributionTotalCount(0);
           return;
         }
         setInvestors(res.data.items ?? []);
         setInvestorsTotalCount(res.data.totalCount ?? 0);
+        setDistributionItems([]);
+        setDistributionTotalCount(0);
       } catch {
         setInvestors([]);
         setInvestorsTotalCount(0);
+        setDistributionItems([]);
+        setDistributionTotalCount(0);
       } finally {
         setInvestorsLoading(false);
       }
     };
 
-    void loadInvestors();
-  }, [investorFetchParams, item?.property?.id]);
+    void loadDistributionPreview();
+  }, [investorFetchParams, item]);
 
   const breadcrumbItems: BreadcrumbItem[] = useMemo(
     () => [
@@ -461,9 +524,11 @@ const RentalIncomeDetailsContent = ({
           </div>
         </div>
 
-        <DataTable<InvestorUser>
-          data={investors}
-          totalCount={investorsTotalCount}
+        <DataTable<DistributionPreviewRow>
+          data={distributionPreviewRows}
+          totalCount={
+            isDistributedRecord ? distributionTotalCount : investorsTotalCount
+          }
           isLoading={investorsLoading}
           config={investorTableConfig}
         />

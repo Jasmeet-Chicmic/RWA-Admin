@@ -211,6 +211,35 @@ const isStatusResumeLocked = (status: JobStatusData | null): boolean => {
   );
 };
 
+const getProgressStepFromStatus = (
+  status: JobStatusData | null,
+): TokenizationFlowStep | undefined => {
+  if (!status) return undefined;
+
+  if (
+    status.status >= PROPERTY_REGISTRATION_JOB_STATUS.REGISTERING &&
+    status.status < PROPERTY_REGISTRATION_JOB_STATUS.COMPLETED
+  ) {
+    return TOKENIZATION_FLOW_STEPS.registerProperty;
+  }
+
+  if (
+    status.status >= PROPERTY_REGISTRATION_JOB_STATUS.VAULT_DEPLOYING &&
+    status.status < PROPERTY_REGISTRATION_JOB_STATUS.REGISTERING
+  ) {
+    return TOKENIZATION_FLOW_STEPS.deployVault;
+  }
+
+  if (
+    status.status >= PROPERTY_REGISTRATION_JOB_STATUS.PENDING_TREX &&
+    status.status < PROPERTY_REGISTRATION_JOB_STATUS.VAULT_DEPLOYING
+  ) {
+    return TOKENIZATION_FLOW_STEPS.deployTrexSuite;
+  }
+
+  return undefined;
+};
+
 export const TokenizationModal = ({
   open,
   onClose,
@@ -230,6 +259,7 @@ export const TokenizationModal = ({
   const [currentStep, setCurrentStep] = useState<TokenizationFlowStep>();
   const [isFlowCompleted, setIsFlowCompleted] = useState(false);
   const [isResumeLocked, setIsResumeLocked] = useState(false);
+  const [resumeStep, setResumeStep] = useState<TokenizationFlowStep>();
   const [isJobStatusLoading, setIsJobStatusLoading] = useState(false);
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false);
   const { isConnected } = useWalletState();
@@ -276,12 +306,20 @@ export const TokenizationModal = ({
       setShowWalletConnectModal(false);
       setIsFlowCompleted(false);
       setIsResumeLocked(false);
+      setCurrentStep(undefined);
+      setResumeStep(undefined);
 
       try {
         const status = await fetchJobStatus(property.id);
         if (isCancelled) return;
         const prefillValues = getStatusPrefillValues(status, defaultValues);
+        const derivedResumeStep = getProgressStepFromStatus(status);
         methods.reset(prefillValues);
+        setCurrentStep(derivedResumeStep);
+        setResumeStep(derivedResumeStep);
+        setIsFlowCompleted(
+          status?.status === PROPERTY_REGISTRATION_JOB_STATUS.COMPLETED,
+        );
         setIsResumeLocked(isStatusResumeLocked(status));
       } finally {
         if (!isCancelled) {
@@ -348,7 +386,8 @@ export const TokenizationModal = ({
       return;
     }
     setIsSubmitting(true);
-    setCurrentStep(TOKENIZATION_FLOW_STEPS.deployTrexSuite);
+    setIsFlowCompleted(false);
+    setCurrentStep(resumeStep ?? TOKENIZATION_FLOW_STEPS.deployTrexSuite);
     try {
       const totalUnits = BigInt(values.totalShares);
       const totalValue = toBaseUnitsBigInt(
