@@ -154,5 +154,7 @@
       "connected": "Connecte",
       "notConnected": "Non connecte"
     }
-  }
+  },
+  "walletAddressCopied": "Adresse du wallet copiee dans le presse-papiers",
+  "copyFailed": "Echec de la copie. Veuillez reessayer."
 }

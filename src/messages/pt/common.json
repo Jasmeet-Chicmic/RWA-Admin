@@ -154,5 +154,7 @@
       "connected": "Conectada",
       "notConnected": "Nao conectada"
     }
-  }
+  },
+  "walletAddressCopied": "Endereco da wallet copiado para a area de transferencia",
+  "copyFailed": "Falha ao copiar. Tente novamente."
 }

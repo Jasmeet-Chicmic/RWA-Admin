@@ -27,7 +27,7 @@ export const PageLabel = ({
     className={`w-8 h-8 p-0 min-w-0 flex items-center justify-center transition-all ${
       page === currentPage
         ? "shadow-sm shadow-bgpurple1/20 dark:text-black"
-        : "text-black bg-primarycolor/5 dark:text-black dark:bg-secondarycolor/5 dark:text-bgwhite/50 hover:bg-primarycolor/10 dark:hover:bg-secondarycolor/10"
+        : "text-textprimary bg-primarycolor/5 dark:text-white/85 dark:bg-secondarycolor/10 hover:bg-primarycolor/10 dark:hover:bg-secondarycolor/20"
     }`}
   >
     {page}
@@ -125,7 +125,7 @@ const Pagination: React.FC<PaginationProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-9 h-9 p-0 min-w-0 text-textprimary dark:text-white bg-bgwhite dark:bg-darkbgprimary border border-bordergray100 dark:border-[#5f5f5f] hover:border-[#5f5f5f] dark:hover:border-white/60 hover:bg-gray-50 dark:hover:bg-labelprimary transition-all"
+                className="w-9 h-9 p-0 min-w-0 !text-textprimary dark:!text-white bg-bgwhite dark:bg-darkbgprimary border border-bordergray100 dark:border-[#5f5f5f] hover:border-[#5f5f5f] dark:hover:border-white/60 hover:bg-gray-50 dark:hover:bg-labelprimary transition-all"
               >
                 <ChevronLeft className="w-5 h-5" />
               </Button>
@@ -134,7 +134,7 @@ const Pagination: React.FC<PaginationProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-9 h-9 p-0 min-w-0 text-textprimary dark:text-white bg-bgwhite dark:bg-darkbgprimary border border-bordergray100 dark:border-[#5f5f5f] hover:border-[#5f5f5f] dark:hover:border-white/60 hover:bg-gray-50 dark:hover:bg-labelprimary transition-all"
+                className="w-9 h-9 p-0 min-w-0 !text-textprimary dark:!text-white bg-bgwhite dark:bg-darkbgprimary border border-bordergray100 dark:border-[#5f5f5f] hover:border-[#5f5f5f] dark:hover:border-white/60 hover:bg-gray-50 dark:hover:bg-labelprimary transition-all"
               >
                 <ChevronRight className="w-5 h-5" />
               </Button>

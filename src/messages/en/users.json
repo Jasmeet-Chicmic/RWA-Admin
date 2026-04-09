@@ -233,5 +233,6 @@
     "saveSuccess": "Feature updated successfully",
     "saveError": "Failed to update feature"
   },
-  "unnamedProperty": "Unnamed property"
+  "unnamedProperty": "Unnamed property",
+  "kycPendingIdentityRequired": "KYC is pending for this user. Complete KYC to generate identity before registering."
 }

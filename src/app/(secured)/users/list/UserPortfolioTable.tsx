@@ -188,7 +188,7 @@ const UserPortfolioTable = ({
                 label: t("registerIdentityAction"),
                 onClick: () => setSelectedUser(item),
                 className:
-                  "inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-indigo-50 text-indigo-600 hover:opacity-90",
+                  "inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-md border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-900 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors",
                 icon: <ShieldCheck className="w-4 h-4" />,
               },
             ]}

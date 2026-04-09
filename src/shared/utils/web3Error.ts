@@ -11,7 +11,7 @@ type ErrorLike = {
 
 const FALLBACK_MESSAGE = "Transaction failed. Please try again.";
 const NETWORK_MESSAGE = "Network issue. Please check your connection.";
-const USER_CANCELLED_MESSAGE = "Transaction cancelled by user";
+const USER_CANCELLED_MESSAGE = "User rejected the request";
 
 const DEFAULT_INVALID_WALLET_SIGNATURE_MESSAGE =
   "This wallet doesn't match your account. Connect the wallet linked to your profile, then sign in again.";
@@ -119,6 +119,12 @@ export const handleWeb3Error = (
     if (!trimmed) return generic;
     if (isInvalidWalletSignatureMessage(trimmed)) {
       return wrongWallet;
+    }
+    if (/user denied|user rejected|rejected the request/i.test(trimmed)) {
+      return USER_CANCELLED_MESSAGE;
+    }
+    if (includesNetworkError(trimmed)) {
+      return NETWORK_MESSAGE;
     }
     return trimmed;
   }

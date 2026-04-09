@@ -1,10 +1,10 @@
 "use client";
 
-import { Languages, LogOut, Search } from "lucide-react";
+import { Check, Copy, Languages, LogOut, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useDisconnect } from "wagmi";
 
@@ -44,6 +44,7 @@ const Header = () => {
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [language, setLanguage] = useState<string>();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isWalletCopied, setIsWalletCopied] = useState(false);
   const { isConnected, address } = useWalletState();
   const { disconnect } = useDisconnect();
   const t = useTranslations("common");
@@ -133,6 +134,18 @@ const Header = () => {
   const walletAddressLabel = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : "";
+  const handleCopyWalletAddress = useCallback(async () => {
+    if (!address) return;
+    try {
+      await navigator.clipboard.writeText(address);
+      setIsWalletCopied(true);
+      // toast.success(t("walletAddressCopied"));
+      window.setTimeout(() => setIsWalletCopied(false), 1200);
+    } catch (error) {
+      console.error("Failed to copy wallet address:", error);
+      toast.error(t("copyFailed"));
+    }
+  }, [address, t]);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -170,8 +183,17 @@ const Header = () => {
             isReownConfigured &&
             isConnected &&
             walletAddressLabel && (
-              <div className="px-4 py-2.5 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1">
-                {walletAddressLabel}
+              <div className="pl-4 pr-2 py-2 rounded-lg border border-bordergray200 text-sm font-semibold text-textprimary dark:text-white dark:border-darkbordercolor1 inline-flex items-center gap-2">
+                <span>{walletAddressLabel}</span>
+                <button
+                  type="button"
+                  onClick={() => void handleCopyWalletAddress()}
+                  className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
+                  aria-label={t("copy")}
+                  title={t("copy")}
+                >
+                  {isWalletCopied ? <Check size={14} /> : <Copy size={14} />}
+                </button>
               </div>
             )}
           {/* Language Selector */}

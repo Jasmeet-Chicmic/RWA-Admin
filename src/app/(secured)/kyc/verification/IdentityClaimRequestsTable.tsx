@@ -21,9 +21,6 @@ import {
 import { IdentityClaimRequestItem } from "@/api/adminKyc.types";
 import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import { TableColumn } from "@/components/atoms/Table";
-import TableActions, {
-  TableActionDisplayMode,
-} from "@/components/atoms/TableActions";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
 import { CLAIM_TOPIC } from "@/constants/claimTopic";
 import { TEXT_PRIMARY_DARK as TEXT_PRIMARY } from "@/shared/styles";
@@ -135,7 +132,6 @@ const IdentityClaimRequestsTable = ({
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectRowId, setRejectRowId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
-  const actionsDisplayMode: TableActionDisplayMode = "inline";
 
   const config: DataTableConfig<Row> = useMemo(() => {
     const columns: TableColumn<Row>[] = [
@@ -188,114 +184,108 @@ const IdentityClaimRequestsTable = ({
         title: common("actions"),
         render: (item) => {
           const canAct = item.status === CLAIM_REQUEST_STATUS.PENDING;
-          return (
-            <TableActions
-              displayMode={actionsDisplayMode}
-              actions={(() => {
-                const isApproving =
-                  loadingState?.id === item.id &&
-                  loadingState.action === "approve";
-                const isRejectSubmitting =
-                  loadingState?.id === item.id &&
-                  loadingState.action === "reject_confirm";
-                const isAnyActionLoading = isApproving || isRejectSubmitting;
+          const isApproving =
+            loadingState?.id === item.id && loadingState.action === "approve";
+          const isRejectSubmitting =
+            loadingState?.id === item.id &&
+            loadingState.action === "reject_confirm";
+          const isAnyActionLoading = isApproving || isRejectSubmitting;
 
-                return [
-                  {
-                    id: "approve",
-                    label: common("approve"),
-                    disabled: isAnyActionLoading || !canAct,
-                    className:
-                      "inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-emerald-50 text-emerald-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed",
-                    icon: isApproving ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Check className="w-4 h-4" />
-                    ),
-                    onClick: () => {
-                      if (isAnyActionLoading || !item.id || !canAct) return;
-                      void (async () => {
-                        try {
-                          setLoadingState({ id: item.id, action: "approve" });
-                          const claimHash = buildClaimHash(
-                            item.identityContractAddress as Address,
-                            item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
-                            (item.data as `0x${string}`) ?? "0x",
-                          );
-                          const signatureDebug = buildClaimSignatureDebug(
-                            item.identityContractAddress as Address,
-                            item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
-                            (item.data as `0x${string}`) ?? "0x",
-                          );
-                          console.log("[KYC Approve] Signature params", {
-                            requestId: item.id,
-                            signerAddress: connectedSigner,
-                            identityContractAddress:
-                              item.identityContractAddress,
-                            topicEnumValue:
-                              item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
-                            topicString: signatureDebug.topicStr,
-                            topicHash: signatureDebug.topicHash,
-                            claimData: (item.data as `0x${string}`) ?? "0x",
-                            encodedPayload: signatureDebug.encodedPayload,
-                            claimHash,
-                          });
-                          const signature = (await signMessageAsync({
-                            message: { raw: hexToBytes(claimHash) },
-                          })) as `0x${string}`;
-                          console.log("[KYC Approve] Signature generated", {
-                            requestId: item.id,
-                            signature,
-                          });
-                          const res = await approveIdentityClaimRequestAction(
-                            item.id,
-                            signature,
-                          );
-                          console.log(
-                            "[KYC Approve] Approve API payload/response",
-                            {
-                              requestId: item.id,
-                              signature,
-                              response: res,
-                            },
-                          );
-                          if (!res?.status || (res?.statusCode ?? 500) >= 400) {
-                            throw new Error(
-                              res?.message ||
-                                "Failed to approve claim request.",
-                            );
-                          }
-                          toast.success(common("approve"));
-                          router.refresh();
-                        } catch (error) {
-                          toast.error(handleWeb3Error(error));
-                        } finally {
-                          setLoadingState(null);
-                        }
-                      })();
-                    },
-                  },
-                  {
-                    id: "reject",
-                    label: t("disapprove"),
-                    disabled: isAnyActionLoading || !canAct,
-                    className:
-                      "inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded bg-red-50 text-red-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed",
-                    icon: isRejectSubmitting ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <X className="w-4 h-4" />
-                    ),
-                    onClick: () => {
-                      if (isAnyActionLoading || !item.id || !canAct) return;
-                      setRejectRowId(item.id);
-                      setRejectReason("");
-                      setRejectModalOpen(true);
-                    },
-                  },
-                ];
-              })()}
-            />
+          return (
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                title={common("approve")}
+                aria-label={common("approve")}
+                disabled={isAnyActionLoading || !canAct}
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/45 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                onClick={() => {
+                  if (isAnyActionLoading || !item.id || !canAct) return;
+                  void (async () => {
+                    try {
+                      setLoadingState({ id: item.id, action: "approve" });
+                      const claimHash = buildClaimHash(
+                        item.identityContractAddress as Address,
+                        item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
+                        (item.data as `0x${string}`) ?? "0x",
+                      );
+                      const signatureDebug = buildClaimSignatureDebug(
+                        item.identityContractAddress as Address,
+                        item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
+                        (item.data as `0x${string}`) ?? "0x",
+                      );
+                      console.log("[KYC Approve] Signature params", {
+                        requestId: item.id,
+                        signerAddress: connectedSigner,
+                        identityContractAddress: item.identityContractAddress,
+                        topicEnumValue: item.topic ?? CLAIM_TOPIC.KYC_APPROVED,
+                        topicString: signatureDebug.topicStr,
+                        topicHash: signatureDebug.topicHash,
+                        claimData: (item.data as `0x${string}`) ?? "0x",
+                        encodedPayload: signatureDebug.encodedPayload,
+                        claimHash,
+                      });
+                      const signature = (await signMessageAsync({
+                        message: { raw: hexToBytes(claimHash) },
+                      })) as `0x${string}`;
+                      console.log("[KYC Approve] Signature generated", {
+                        requestId: item.id,
+                        signature,
+                      });
+                      const res = await approveIdentityClaimRequestAction(
+                        item.id,
+                        signature,
+                      );
+                      console.log(
+                        "[KYC Approve] Approve API payload/response",
+                        {
+                          requestId: item.id,
+                          signature,
+                          response: res,
+                        },
+                      );
+                      if (!res?.status || (res?.statusCode ?? 500) >= 400) {
+                        throw new Error(
+                          res?.message || "Failed to approve claim request.",
+                        );
+                      }
+                      toast.success(common("approve"));
+                      router.refresh();
+                    } catch (error) {
+                      toast.error(handleWeb3Error(error));
+                    } finally {
+                      setLoadingState(null);
+                    }
+                  })();
+                }}
+              >
+                {isApproving ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Check className="w-4 h-4" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                title={t("disapprove")}
+                aria-label={t("disapprove")}
+                disabled={isAnyActionLoading || !canAct}
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/45 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                onClick={() => {
+                  if (isAnyActionLoading || !item.id || !canAct) return;
+                  setRejectRowId(item.id);
+                  setRejectReason("");
+                  setRejectModalOpen(true);
+                }}
+              >
+                {isRejectSubmitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <X className="w-4 h-4" />
+                )}
+              </button>
+            </div>
           );
         },
       },

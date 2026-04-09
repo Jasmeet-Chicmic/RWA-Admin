@@ -1,9 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 
 import { RayptoLogo, RayptoLogoDark } from "@/assets";
@@ -58,7 +56,6 @@ const blobBottomLeft: React.CSSProperties = {
 
 const Login = () => {
   const tCommon = useTranslations("common");
-  const searchParams = useSearchParams();
   const [nonce, setNonce] = useState<string>();
   const [tempToken, setTempToken] = useState<string>();
   const [selectedRole, setSelectedRole] = useState<LOGIN_ROLE>(
@@ -70,12 +67,7 @@ const Login = () => {
 
   useEffect(() => {
     setMounted(true);
-    if (searchParams.get("unauthorized") === "true") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      toast.error(tCommon("login.sessionExpired"));
-    }
-  }, [searchParams, tCommon]);
+  }, []);
 
   const logoSrc =
     mounted && resolvedTheme === THEME_TYPE.LIGHT

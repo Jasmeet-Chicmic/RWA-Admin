@@ -6,6 +6,7 @@ import {
   analyticsService,
 } from "@/services/analytics-service";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { TableColumn } from "@/components/atoms/Table";
@@ -15,6 +16,7 @@ import {
   TEXT_PRIMARY_DARK as TEXT_PRIMARY,
   TEXT_SIZE_SM,
 } from "@/shared/styles";
+import { PRIVATE_ROUTES } from "@/shared/routes";
 import { formatDisplayCurrency, fromBaseUnits } from "@/shared/utils/unitUtils";
 type TopPropertyRow = InDemandPropertyItem;
 
@@ -23,6 +25,7 @@ const formatCurrencyCompact = (value: number) =>
 
 const TopPropertiesTable = () => {
   const t = useTranslations("properties");
+  const router = useRouter();
   const [rows, setRows] = useState<TopPropertyRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,8 +62,8 @@ const TopPropertiesTable = () => {
         title: t("propertyName"),
         field: "name",
         render: (item) => (
-          <div className="flex flex-col">
-            <span className={`font-medium ${TEXT_PRIMARY}`} title={item.name}>
+          <div className="flex flex-col" title={item.name}>
+            <span className={`font-medium ${TEXT_PRIMARY}`}>
               <TruncatedText text={item.name} maxLength={40} />
             </span>
             <span className={`${TEXT_SIZE_SM} text-textparagraph`}>
@@ -133,6 +136,9 @@ const TopPropertiesTable = () => {
         isLoading={isLoading}
         columns={columns}
         keyExtractor={(item) => item.propertyId}
+        onRowClick={(item) =>
+          router.push(`${PRIVATE_ROUTES.PROPERTIES}/${item.propertyId}`)
+        }
         emptyMessage={t("noPropertiesFound")}
       />
     </div>

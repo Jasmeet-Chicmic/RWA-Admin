@@ -128,8 +128,12 @@ export default function RegisterIdentityModal({
       getIdentityAddressFromOption(selectedProperty) ||
       userIdentityContractAddress;
 
-    if (!tokenAddress || !identityAddress || !propertyId) {
+    if (!propertyId || !tokenAddress) {
       toast.error(t("missingIdentityOrTokenAddress"));
+      return;
+    }
+    if (!identityAddress) {
+      toast.error(t("kycPendingIdentityRequired"));
       return;
     }
 

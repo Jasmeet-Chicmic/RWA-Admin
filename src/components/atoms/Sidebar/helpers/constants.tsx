@@ -33,15 +33,16 @@ export const navItems: NavItem[] = [
     label: "common.dashboards",
     // path: ROUTES.DASHBOARD,
     activePaths: [ROUTES.DASHBOARD_ANALYTICS],
-    badge: "5",
+    // badge: "5",
     allowedRoles: [LOGIN_ROLE.ADMIN],
-    children: [
-      {
-        label: "common.analytics",
-        path: ROUTES.DASHBOARD_ANALYTICS,
-        activePaths: [ROUTES.DASHBOARD_ANALYTICS],
-      },
-    ],
+    path: ROUTES.DASHBOARD_ANALYTICS,
+    // children: [
+    //   {
+    //     label: "common.analytics",
+    //     path: ROUTES.DASHBOARD_ANALYTICS,
+    //     activePaths: [ROUTES.DASHBOARD_ANALYTICS],
+    //   },
+    // ],
   },
   {
     icon: ClipboardList,
@@ -87,23 +88,7 @@ export const navItems: NavItem[] = [
       ROUTES.USERS_SPOTLIGHTED,
     ],
     allowedRoles: [LOGIN_ROLE.ADMIN],
-    children: [
-      {
-        label: "common.list",
-        path: ROUTES.USERS_LIST,
-        activePaths: [ROUTES.USERS_LIST],
-      },
-      // {
-      //   label: "Reported Users",
-      //   path: ROUTES.USERS_REPORTED,
-      //   activePaths: [ROUTES.USERS_REPORTED],
-      // },
-      // {
-      //   label: "Spotlighted Users",
-      //   path: ROUTES.USERS_SPOTLIGHTED,
-      //   activePaths: [ROUTES.USERS_SPOTLIGHTED],
-      // },
-    ],
+    path: ROUTES.USERS_LIST,
   },
   // Temporarily hidden - Token Requests
   // {

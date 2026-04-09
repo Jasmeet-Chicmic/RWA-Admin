@@ -173,5 +173,7 @@
       "connected": "Connected",
       "notConnected": "Not connected"
     }
-  }
+  },
+  "walletAddressCopied": "Wallet address copied to clipboard",
+  "copyFailed": "Failed to copy. Please try again."
 }
