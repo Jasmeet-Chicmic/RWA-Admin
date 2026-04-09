@@ -5,16 +5,19 @@ import { useEffect } from "react";
 
 import Loader from "@/components/atoms/Loader/Loader";
 import { useACL } from "@/hooks/useAcl";
+import { LOGIN_ROLE } from "@/shared/constants";
 import { fallbackRouteByRole } from "@/shared/routeConfig";
 
 type RouteGuardProps = {
   children: React.ReactNode;
+  /** From secured layout (server session); avoids client round-trip before first paint */
+  initialRole?: LOGIN_ROLE | null;
 };
 
-const RouteGuard = ({ children }: RouteGuardProps) => {
+const RouteGuard = ({ children, initialRole }: RouteGuardProps) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { isResolved, role, hasAccess } = useACL();
+  const { isResolved, role, hasAccess } = useACL(initialRole);
 
   useEffect(() => {
     if (!isResolved || !role) return;

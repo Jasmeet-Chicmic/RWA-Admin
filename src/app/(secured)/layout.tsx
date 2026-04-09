@@ -14,16 +14,20 @@ type LayoutProps = {
 const SecuredLayout: React.FC<LayoutProps> = async ({ children }) => {
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
-  const role = session?.role as LOGIN_ROLE;
+  const rawRole = session?.role;
+  const serverRole: LOGIN_ROLE | undefined =
+    rawRole != null && Object.values(LOGIN_ROLE).includes(rawRole as LOGIN_ROLE)
+      ? (rawRole as LOGIN_ROLE)
+      : undefined;
 
   return (
     <div className="min-h-screen bg-lightbgbase dark:bg-darkbgbase">
-      <Sidebar initialRole={role} />
+      <Sidebar initialRole={serverRole} />
       <div className="flex-1 flex flex-col lg:ml-72 py-6 pl-0">
         <div className="custom-container w-full">
           <Header />
           <main className="flex-1 mt-[20px] lg:mt-8">
-            <RouteGuard>{children}</RouteGuard>
+            <RouteGuard initialRole={serverRole}>{children}</RouteGuard>
           </main>
         </div>
       </div>

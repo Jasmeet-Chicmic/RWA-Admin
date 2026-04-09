@@ -121,5 +121,9 @@
   "Properties": "Propiedades",
   "Organisation": "Organización",
   "Organisation Properties": "Propiedades de la organización",
-  "{entity} {action} successfully": "{entity} {action} exitosamente"
+  "{entity} {action} successfully": "{entity} {action} exitosamente",
+  "walletVerify": {
+    "wrongWallet": "Esta billetera no coincide con tu cuenta. Conecta la billetera vinculada a tu perfil e intenta iniciar sesión de nuevo.",
+    "genericFailure": "No pudimos verificar tu billetera. Inténtalo de nuevo."
+  }
 }

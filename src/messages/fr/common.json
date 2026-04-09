@@ -121,5 +121,9 @@
   "Properties": "Propriétés",
   "Organisation": "Organisation",
   "Organisation Properties": "Propriétés de l'organisation",
-  "{entity} {action} successfully": "{entity} {action} avec succès"
+  "{entity} {action} successfully": "{entity} {action} avec succès",
+  "walletVerify": {
+    "wrongWallet": "Ce portefeuille ne correspond pas à votre compte. Connectez le portefeuille lié à votre profil, puis reconnectez-vous.",
+    "genericFailure": "Nous n'avons pas pu vérifier votre portefeuille. Veuillez réessayer."
+  }
 }

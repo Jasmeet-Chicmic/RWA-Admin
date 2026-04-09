@@ -121,5 +121,9 @@
   "Properties": "Propriedades",
   "Organisation": "Organização",
   "Organisation Properties": "Propriedades da Organização",
-  "{entity} {action} successfully": "{entity} {action} com sucesso"
+  "{entity} {action} successfully": "{entity} {action} com sucesso",
+  "walletVerify": {
+    "wrongWallet": "Esta carteira não corresponde à sua conta. Conecte a carteira vinculada ao seu perfil e tente entrar novamente.",
+    "genericFailure": "Não foi possível verificar sua carteira. Tente novamente."
+  }
 }

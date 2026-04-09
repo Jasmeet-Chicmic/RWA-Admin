@@ -3,7 +3,7 @@
 import { useAppKit } from "@reown/appkit/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useDisconnect, useSignMessage } from "wagmi";
 
@@ -12,7 +12,10 @@ import { useWalletState } from "@/components/providers/WalletStateProvider";
 import { LOGIN_ROLE } from "@/shared/constants";
 import { PRIVATE_ROUTES } from "@/shared/routes";
 import { createSessionClient } from "@/shared/utils";
-import { handleWeb3Error } from "@/shared/utils/web3Error";
+import {
+  handleWeb3Error,
+  isInvalidWalletSignatureError,
+} from "@/shared/utils/web3Error";
 import { verifyWalletThunk } from "@/store/authSlice";
 import { useAppDispatch } from "@/store/hooks";
 
@@ -64,12 +67,39 @@ const WalletConnectStep = ({
   const [isVerifyingWallet, setIsVerifyingWallet] = useState(false);
   const [walletVerifyTriggered, setWalletVerifyTriggered] = useState(false);
 
+  const walletVerifyErrorOptions = useMemo(
+    () => ({
+      invalidWalletSignatureMessage: tCommon("walletVerify.wrongWallet"),
+      genericFailureMessage: tCommon("walletVerify.genericFailure"),
+    }),
+    [tCommon],
+  );
+
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
   }, []);
+
+  const handleWalletDisconnect = useCallback(async () => {
+    isDisconnectingWalletRef.current = true;
+    try {
+      await disconnectAsync();
+      setWalletVerifyTriggered(false);
+    } catch (error) {
+      const errorCode =
+        error && typeof error === "object" && "code" in error
+          ? (error as { code?: unknown }).code
+          : undefined;
+      if (errorCode === 4100 || errorCode === "4100") {
+        return;
+      }
+      console.error("Wallet disconnect error:", error);
+    } finally {
+      isDisconnectingWalletRef.current = false;
+    }
+  }, [disconnectAsync]);
 
   const handleWalletVerify = useCallback(async () => {
     if (!nonce || !tempToken) return;
@@ -127,15 +157,17 @@ const WalletConnectStep = ({
         return;
       }
 
-      toast.error(res.message || "Wallet verification failed.");
+      toast.error(handleWeb3Error(res.message ?? "", walletVerifyErrorOptions));
+      if (isInvalidWalletSignatureError(res.message ?? "")) {
+        await handleWalletDisconnect();
+      }
     } catch (error) {
       if (isDisconnectingWalletRef.current) return;
       console.error("🔥 Wallet verify error:", error);
-      if (typeof error === "string" && error.trim()) {
-        toast.error(error);
-        return;
+      toast.error(handleWeb3Error(error, walletVerifyErrorOptions));
+      if (isInvalidWalletSignatureError(error)) {
+        await handleWalletDisconnect();
       }
-      toast.error(handleWeb3Error(error));
     } finally {
       if (isMountedRef.current) {
         setIsVerifyingWallet(false);
@@ -152,26 +184,9 @@ const WalletConnectStep = ({
     chainId,
     role,
     dispatch,
+    walletVerifyErrorOptions,
+    handleWalletDisconnect,
   ]);
-
-  const handleWalletDisconnect = useCallback(async () => {
-    isDisconnectingWalletRef.current = true;
-    try {
-      await disconnectAsync();
-      setWalletVerifyTriggered(false);
-    } catch (error) {
-      const errorCode =
-        error && typeof error === "object" && "code" in error
-          ? (error as { code?: unknown }).code
-          : undefined;
-      if (errorCode === 4100 || errorCode === "4100") {
-        return;
-      }
-      console.error("Wallet disconnect error:", error);
-    } finally {
-      isDisconnectingWalletRef.current = false;
-    }
-  }, [disconnectAsync]);
 
   const handleBackToLogin = useCallback(async () => {
     setWalletVerifyTriggered(false);

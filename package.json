@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start:dev": "next dev --turbopack",
-    
+    "start:staging": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "next lint --fix --max-warnings=3",

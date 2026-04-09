@@ -13,6 +13,16 @@ const FALLBACK_MESSAGE = "Transaction failed. Please try again.";
 const NETWORK_MESSAGE = "Network issue. Please check your connection.";
 const USER_CANCELLED_MESSAGE = "Transaction cancelled by user";
 
+const DEFAULT_INVALID_WALLET_SIGNATURE_MESSAGE =
+  "This wallet doesn't match your account. Connect the wallet linked to your profile, then sign in again.";
+
+export type HandleWeb3ErrorOptions = {
+  /** Shown when the API reports an invalid wallet signature (wrong wallet for this account). */
+  invalidWalletSignatureMessage?: string;
+  /** Shown when there is no usable error message (e.g. empty API message). */
+  genericFailureMessage?: string;
+};
+
 const toErrorLike = (value: unknown): ErrorLike | null => {
   if (!value || typeof value !== "object") return null;
   return value as ErrorLike;
@@ -38,6 +48,30 @@ const includesNetworkError = (message: string): boolean => {
   );
 };
 
+const isInvalidWalletSignatureMessage = (message: string): boolean => {
+  const normalized = message.trim().toLowerCase().replace(/\.+$/, "");
+  return (
+    normalized === "invalid wallet signature" ||
+    normalized.includes("invalid wallet signature") ||
+    normalized.includes("signature does not match") ||
+    normalized.includes("signature mismatch")
+  );
+};
+
+const extractPlainMessage = (error: unknown): string | null => {
+  if (typeof error === "string") return error;
+  if (error instanceof Error) return error.message;
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof (error as { message: unknown }).message === "string"
+  ) {
+    return (error as { message: string }).message;
+  }
+  return null;
+};
+
 const extractMessageCandidates = (errorLike: ErrorLike): string[] => {
   const candidates: Array<string | undefined> = [
     errorLike.shortMessage,
@@ -54,9 +88,43 @@ const extractMessageCandidates = (errorLike: ErrorLike): string[] => {
   return candidates.filter((msg): msg is string => Boolean(msg && msg.trim()));
 };
 
-export const handleWeb3Error = (error: unknown): string => {
+/** True when the error indicates the signed message did not verify for this account (wrong wallet / bad signature). */
+export const isInvalidWalletSignatureError = (error: unknown): boolean => {
+  const plain = extractPlainMessage(error);
+  if (plain !== null) {
+    const trimmed = plain.trim();
+    if (trimmed && isInvalidWalletSignatureMessage(trimmed)) {
+      return true;
+    }
+  }
+
   const errorLike = toErrorLike(error);
-  if (!errorLike) return FALLBACK_MESSAGE;
+  if (!errorLike) return false;
+  const messages = extractMessageCandidates(errorLike);
+  return messages.some((msg) => isInvalidWalletSignatureMessage(msg));
+};
+
+export const handleWeb3Error = (
+  error: unknown,
+  options?: HandleWeb3ErrorOptions,
+): string => {
+  const generic = options?.genericFailureMessage ?? FALLBACK_MESSAGE;
+  const wrongWallet =
+    options?.invalidWalletSignatureMessage ??
+    DEFAULT_INVALID_WALLET_SIGNATURE_MESSAGE;
+
+  const plain = extractPlainMessage(error);
+  if (plain !== null) {
+    const trimmed = plain.trim();
+    if (!trimmed) return generic;
+    if (isInvalidWalletSignatureMessage(trimmed)) {
+      return wrongWallet;
+    }
+    return trimmed;
+  }
+
+  const errorLike = toErrorLike(error);
+  if (!errorLike) return generic;
 
   // EIP-1193 user rejection (MetaMask, WalletConnect, etc.)
   if (errorLike.code === 4001 || errorLike.code === "4001") {
@@ -64,6 +132,13 @@ export const handleWeb3Error = (error: unknown): string => {
   }
 
   const messages = extractMessageCandidates(errorLike);
+  const invalidSig = messages.find((msg) =>
+    isInvalidWalletSignatureMessage(msg),
+  );
+  if (invalidSig) {
+    return wrongWallet;
+  }
+
   const rejectionMessage = messages.find((msg) =>
     /user denied|user rejected|rejected the request/i.test(msg),
   );
@@ -80,8 +155,8 @@ export const handleWeb3Error = (error: unknown): string => {
   const preferredMessage = messages[0];
   if (preferredMessage) {
     const cleaned = cleanRevertMessage(preferredMessage);
-    return cleaned || FALLBACK_MESSAGE;
+    return cleaned || generic;
   }
 
-  return FALLBACK_MESSAGE;
+  return generic;
 };

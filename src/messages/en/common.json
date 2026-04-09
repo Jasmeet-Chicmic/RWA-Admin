@@ -128,6 +128,10 @@
   "logout": "Log out",
   "connectWallet": "Connect Wallet",
   "verifyWalletSignature": "Verify Wallet Signature",
+  "walletVerify": {
+    "wrongWallet": "This wallet doesn't match your account. Connect the wallet linked to your profile, then sign in again.",
+    "genericFailure": "We couldn't verify your wallet. Please try again."
+  },
   "backToLogin": "Back to Login",
   "disconnectWallet": "Disconnect Wallet",
   "loggingOut": "Logging out...",

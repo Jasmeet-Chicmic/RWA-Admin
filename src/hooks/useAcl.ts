@@ -9,11 +9,30 @@ import { allowedRoutes } from "@/shared/routeConfig";
 
 type AclAction = "read" | "write" | "manage";
 
-export function useACL() {
-  const [role, setRole] = useState<LOGIN_ROLE | null>(null);
-  const [isResolved, setIsResolved] = useState(false);
+function isValidLoginRole(value: unknown): value is LOGIN_ROLE {
+  return (
+    typeof value === "string" &&
+    Object.values(LOGIN_ROLE).includes(value as LOGIN_ROLE)
+  );
+}
+
+/**
+ * @param initialRoleFromServer Role from the server layout (decrypted session).
+ * When set, ACL resolves immediately so RouteGuard does not wait on GET /api/session.
+ */
+export function useACL(initialRoleFromServer?: LOGIN_ROLE | null) {
+  const hasServerRole = isValidLoginRole(initialRoleFromServer);
+
+  const [role, setRole] = useState<LOGIN_ROLE | null>(() =>
+    hasServerRole ? initialRoleFromServer : null,
+  );
+  const [isResolved, setIsResolved] = useState(() => hasServerRole);
 
   useEffect(() => {
+    if (isValidLoginRole(initialRoleFromServer)) {
+      return;
+    }
+
     const fetchSessionRole = async () => {
       try {
         const data = await sessionService.getSession();
@@ -28,7 +47,7 @@ export function useACL() {
     };
 
     void fetchSessionRole();
-  }, []);
+  }, [initialRoleFromServer]);
 
   const resolvedRole = role;
 
