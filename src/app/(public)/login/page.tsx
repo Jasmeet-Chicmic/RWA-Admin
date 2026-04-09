@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -14,8 +15,8 @@ import LoginFormStep from "./LoginFormStep";
 import WalletConnectStep from "./WalletConnectStep";
 
 const LOGIN_ROLE_OPTIONS = [
-  { value: LOGIN_ROLE.ADMIN, label: "Admin" },
-  { value: LOGIN_ROLE.ORGANISATION, label: "Organisation" },
+  { value: LOGIN_ROLE.ADMIN, labelKey: "login.roles.admin" },
+  { value: LOGIN_ROLE.ORGANISATION, labelKey: "login.roles.organisation" },
 ] as const;
 
 const blobBase: React.CSSProperties = {
@@ -56,6 +57,7 @@ const blobBottomLeft: React.CSSProperties = {
 };
 
 const Login = () => {
+  const tCommon = useTranslations("common");
   const searchParams = useSearchParams();
   const [nonce, setNonce] = useState<string>();
   const [tempToken, setTempToken] = useState<string>();
@@ -71,9 +73,9 @@ const Login = () => {
     if (searchParams.get("unauthorized") === "true") {
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
-      toast.error("Session expired. Please login again.");
+      toast.error(tCommon("login.sessionExpired"));
     }
-  }, [searchParams]);
+  }, [searchParams, tCommon]);
 
   const logoSrc =
     mounted && resolvedTheme === THEME_TYPE.LIGHT
@@ -119,15 +121,23 @@ const Login = () => {
           />
         </div>
         <FormLayout layout={FormLayoutType.Default}>
-          <h4 className="mb-1 text-[20px] leading-tight sm:text-[24px] sm:leading-[32px] ">
-            Welcome back to Townly
-          </h4>
+          <div className="mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primarycolor mb-2">
+              {tCommon("login.stepSignInLabel")}
+            </p>
+            <h4 className="text-[22px] leading-tight sm:text-[28px] sm:leading-[34px] font-semibold">
+              {tCommon("login.welcomeTitle")}
+            </h4>
+            <p className="mt-2 text-sm text-white/70">
+              {tCommon("login.welcomeSubtitle")}
+            </p>
+          </div>
 
           {/* Role Toggle */}
           {(!nonce || !tempToken) && (
-            <div className="flex items-center justify-center mb-6 mt-2">
-              <div className="relative flex rounded-lg bg-gray-800/50 p-1 w-full max-w-full">
-                {LOGIN_ROLE_OPTIONS.map(({ value, label }) => (
+            <div className="flex items-center justify-center mb-6 mt-4">
+              <div className="relative flex rounded-xl bg-white/5 ring-1 ring-white/10 p-1.5 w-full max-w-full">
+                {LOGIN_ROLE_OPTIONS.map(({ value, labelKey }) => (
                   <button
                     key={value}
                     type="button"
@@ -135,10 +145,10 @@ const Login = () => {
                     className={`relative z-10 flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-300 ${
                       selectedRole === value
                         ? "bg-primarycolor text-black shadow-md"
-                        : "text-gray-400 hover:text-white"
+                        : "text-gray-300 hover:text-white"
                     }`}
                   >
-                    {label}
+                    {tCommon(labelKey)}
                   </button>
                 ))}
               </div>

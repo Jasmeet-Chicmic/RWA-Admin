@@ -1,12 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
 import FormBuilder from "@/components/molecules/FormBuilder";
 import { getRequiredFieldMessage } from "@/components/molecules/FormBuilder/helpers/utils";
 import { FormConfig } from "@/components/molecules/FormBuilder/types";
 import { LOGIN_ROLE } from "@/shared/constants";
-import { FIELD_NAMES, REGEX, STRING } from "@/shared/strings";
+import { FIELD_NAMES, REGEX } from "@/shared/strings";
 import { handleWeb3Error } from "@/shared/utils/web3Error";
 import { requestLoginNonceThunk } from "@/store/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -15,33 +16,6 @@ export interface LoginFormValues {
   email: string;
   password: string;
 }
-
-const config: FormConfig<LoginFormValues> = [
-  {
-    name: FIELD_NAMES.EMAIL,
-    label: STRING.EMAIL,
-    type: FIELD_NAMES.EMAIL,
-    placeholder: "john.doe@example.com",
-    validation: {
-      required: getRequiredFieldMessage(STRING.EMAIL),
-      pattern: {
-        value: REGEX.EMAIL,
-        message: "Invalid email format",
-      },
-    },
-  },
-  {
-    name: FIELD_NAMES.PASSWORD,
-    label: STRING.PASSWORD,
-    type: FIELD_NAMES.PASSWORD,
-    placeholder: "••••••••",
-  },
-];
-
-const LOGIN_SUBTITLE_MAP = {
-  [LOGIN_ROLE.ADMIN]: "Please sign in to your Admin account",
-  [LOGIN_ROLE.ORGANISATION]: "Please sign in to your Organisation account",
-} as const;
 
 type LoginFormStepProps = {
   onNonceToken: (payload: {
@@ -53,8 +27,30 @@ type LoginFormStepProps = {
 };
 
 const LoginFormStep = ({ onNonceToken, role }: LoginFormStepProps) => {
+  const tCommon = useTranslations("common");
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.authFlow.loginNonceLoading);
+  const formConfig: FormConfig<LoginFormValues> = [
+    {
+      name: FIELD_NAMES.EMAIL,
+      label: tCommon("login.form.emailLabel"),
+      type: FIELD_NAMES.EMAIL,
+      placeholder: tCommon("login.form.emailPlaceholder"),
+      validation: {
+        required: getRequiredFieldMessage(tCommon("login.form.emailLabel")),
+        pattern: {
+          value: REGEX.EMAIL,
+          message: tCommon("login.form.invalidEmail"),
+        },
+      },
+    },
+    {
+      name: FIELD_NAMES.PASSWORD,
+      label: tCommon("login.form.passwordLabel"),
+      type: FIELD_NAMES.PASSWORD,
+      placeholder: tCommon("login.form.passwordPlaceholder"),
+    },
+  ];
 
   const handleSubmit = async (data: LoginFormValues) => {
     try {
@@ -81,9 +77,7 @@ const LoginFormStep = ({ onNonceToken, role }: LoginFormStepProps) => {
         });
         // toast.success(res.message || "Nonce generated successfully.");
       } else {
-        toast.error(
-          res.message || "Login failed. Please check your credentials.",
-        );
+        toast.error(res.message || tCommon("login.form.loginFailed"));
       }
     } catch (error) {
       console.error("🔥 Login API error:", error);
@@ -97,11 +91,18 @@ const LoginFormStep = ({ onNonceToken, role }: LoginFormStepProps) => {
 
   return (
     <>
-      <p className="mb-6">{LOGIN_SUBTITLE_MAP[role]}</p>
+      <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-white/60">
+        {tCommon("login.stepCredentialsLabel")}
+      </p>
+      <p className="mb-6 text-white/85">
+        {role === LOGIN_ROLE.ADMIN
+          ? tCommon("login.form.adminSubtitle")
+          : tCommon("login.form.organisationSubtitle")}
+      </p>
       <FormBuilder<LoginFormValues>
-        formConfig={config}
+        formConfig={formConfig}
         onSubmit={handleSubmit}
-        submitText="Login"
+        submitText={tCommon("login.form.submit")}
         isLoading={isLoading}
         className="mb-0"
         isLoginVariant={true}

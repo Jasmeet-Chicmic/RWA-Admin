@@ -213,36 +213,62 @@ const WalletConnectStep = ({
   ]);
 
   return (
-    <div className="flex gap-3 items-center mt-4">
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => {
-          void handleBackToLogin();
-        }}
-        disabled={isVerifyingWallet}
-        className="w-full hover:opacity-[0.6] !hover:-translate-y-px !transition-all !duration-150"
-      >
-        {tCommon("backToLogin")}
-      </Button>
+    <div className="mt-4">
+      <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-white/60">
+        {tCommon("login.stepWalletLabel")}
+      </p>
+      <p className="mb-4 text-white/85">{tCommon("login.wallet.subtitle")}</p>
 
-      <Button
-        type="button"
-        onClick={() => {
-          if (isConnected) {
-            void handleWalletDisconnect();
-            return;
-          }
-          void open();
-        }}
-        isLoading={isVerifyingWallet}
-        disabled={isVerifyingWallet}
-        className="w-full text-black !hover:-translate-y-px !transition-all !duration-150"
-      >
-        {isConnected && address
-          ? tCommon("disconnectWallet")
-          : tCommon("connectWallet")}
-      </Button>
+      <div className="mb-5 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-xs text-white/70">
+            {tCommon("login.wallet.connectionStatus")}
+          </span>
+          <span
+            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+              isConnected
+                ? "bg-emerald-500/15 text-emerald-400"
+                : "bg-amber-500/15 text-amber-300"
+            }`}
+          >
+            {isConnected
+              ? tCommon("login.wallet.connected")
+              : tCommon("login.wallet.notConnected")}
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            void handleBackToLogin();
+          }}
+          disabled={isVerifyingWallet}
+          className="w-full hover:opacity-[0.6] !hover:-translate-y-px !transition-all !duration-150"
+        >
+          {tCommon("backToLogin")}
+        </Button>
+
+        <Button
+          type="button"
+          onClick={() => {
+            if (isConnected) {
+              void handleWalletDisconnect();
+              return;
+            }
+            void open();
+          }}
+          isLoading={isVerifyingWallet}
+          disabled={isVerifyingWallet}
+          className="w-full text-black !hover:-translate-y-px !transition-all !duration-150"
+        >
+          {isConnected && address
+            ? tCommon("disconnectWallet")
+            : tCommon("connectWallet")}
+        </Button>
+      </div>
     </div>
   );
 };

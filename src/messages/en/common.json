@@ -144,5 +144,34 @@
   "loading": "Loading...",
   "copy": "Copy",
   "Organisation": "Organisation",
-  "{entity} {action} successfully": "{entity} {action} successfully"
+  "{entity} {action} successfully": "{entity} {action} successfully",
+  "login": {
+    "welcomeTitle": "Welcome back to Townly",
+    "welcomeSubtitle": "Securely access your dashboard in two quick steps.",
+    "stepSignInLabel": "Step 1 of 2",
+    "stepCredentialsLabel": "Credentials",
+    "stepWalletLabel": "Step 2 of 2",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "roles": {
+      "admin": "Admin",
+      "organisation": "Organisation"
+    },
+    "form": {
+      "adminSubtitle": "Please sign in to your Admin account.",
+      "organisationSubtitle": "Please sign in to your Organisation account.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "emailPlaceholder": "john.doe@example.com",
+      "passwordPlaceholder": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+      "invalidEmail": "Invalid email format",
+      "submit": "Login",
+      "loginFailed": "Login failed. Please check your credentials."
+    },
+    "wallet": {
+      "subtitle": "Connect the wallet linked to your account and approve the signature request.",
+      "connectionStatus": "Wallet connection",
+      "connected": "Connected",
+      "notConnected": "Not connected"
+    }
+  }
 }
