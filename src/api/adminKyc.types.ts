@@ -39,6 +39,7 @@ export type IdentityClaimRequestItem = {
   } | null;
   approvedAt: string | null;
   transactionHash: string | null;
+  rejectionReason: string | null;
   createdAt: string;
 };
 
@@ -64,4 +65,5 @@ export type GetIdentityClaimRequestsParams = {
   pageSize: number;
   topic?: number;
   status?: number;
+  search?: string;
 };

@@ -13,10 +13,11 @@ const KycVerificationPage = async ({
     limit?: number;
     topic?: string;
     status?: string;
+    searchText?: string;
   }>;
 }) => {
   try {
-    const { skip, limit, topic, status } = await searchParams;
+    const { skip, limit, topic, status, searchText } = await searchParams;
     const pageSize = limit ? Number(limit) : DEFAULT_PAGE_SIZE;
     const skipNum = skip ? Number(skip) : 0;
     const pageNumber = Math.floor(skipNum / pageSize) + 1;
@@ -28,6 +29,7 @@ const KycVerificationPage = async ({
       pageSize,
       ...(Number.isFinite(topicNum) ? { topic: topicNum } : {}),
       ...(Number.isFinite(statusNum) ? { status: statusNum } : {}),
+      ...(searchText ? { search: searchText } : {}),
     });
 
     const items = res?.items ?? [];

@@ -4,8 +4,10 @@ import FilterSidebar from "@/components/molecules/FilterSidebar/FilterSidebar";
 import { Check, ChevronDown, Loader2, Menu, RotateCcw, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "react-toastify";
+import SearchInput from "@/components/atoms/SearchInput/SearchInput";
 import {
   encodeAbiParameters,
   hexToBytes,
@@ -128,6 +130,11 @@ const IdentityClaimRequestsTable = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const initialSearch = searchParams.get("searchText") ?? "";
+  const [searchValue, setSearchValue] = useState(initialSearch);
+  const debouncedSearch = useDebounce(searchValue, 500);
+
   const [loadingState, setLoadingState] = useState<{
     id: string;
     action: LoadingAction;
@@ -139,6 +146,22 @@ const IdentityClaimRequestsTable = ({
 
   const statusFilterValue = searchParams.get("status") ?? "";
   const topicFilterValue = searchParams.get("topic") ?? "";
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currentSearch = params.get("searchText") || "";
+    const newSearch = debouncedSearch || "";
+
+    if (newSearch !== currentSearch) {
+      if (newSearch) {
+        params.set("searchText", newSearch);
+      } else {
+        params.delete("searchText");
+      }
+      params.delete("skip");
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [debouncedSearch, router, searchParams]);
 
   const updateFilterParam = (paramName: "status" | "topic", value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -199,6 +222,18 @@ const IdentityClaimRequestsTable = ({
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
             {t(claimStatusKey(item.status))}
+          </span>
+        ),
+      },
+      {
+        field: "rejectionReason",
+        title: t("rejectionReason"),
+        render: (item) => (
+          <span
+            className={`max-w-[200px] truncate block ${TEXT_PRIMARY}`}
+            title={item.rejectionReason ?? ""}
+          >
+            {item.rejectionReason || "-"}
           </span>
         ),
       },
@@ -333,14 +368,22 @@ const IdentityClaimRequestsTable = ({
                 {t("claimRequestsSubtitle")}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsFilterOpen(true)}
-              className="inline-flex h-[42px] items-center gap-2 rounded-xl border border-primarycolor px-4 py-2 font-semibold text-black transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-0 dark:border-secondarycolor dark:bg-secondarycolor dark:text-black dark:hover:opacity-90 bg-primarycolor"
-            >
-              <Menu size={16} strokeWidth={2.25} />
-              <span>{t("filters")}</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <SearchInput
+                value={searchValue}
+                onChange={setSearchValue}
+                placeholder={t("searchPlaceholder")}
+                className="w-full sm:w-[250px] md:w-[320px]"
+              />
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(true)}
+                className="inline-flex h-[42px] items-center gap-2 rounded-xl border border-primarycolor px-4 py-2 font-semibold text-black transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-0 dark:border-secondarycolor dark:bg-secondarycolor dark:text-black dark:hover:opacity-90 bg-primarycolor"
+              >
+                <Menu size={16} strokeWidth={2.25} />
+                <span>{t("filters")}</span>
+              </button>
+            </div>
           </div>
         </div>
       ),
@@ -353,6 +396,7 @@ const IdentityClaimRequestsTable = ({
     signMessageAsync,
     t,
     tTransactions,
+    searchValue,
   ]);
 
   return (
