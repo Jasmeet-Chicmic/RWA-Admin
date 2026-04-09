@@ -73,6 +73,7 @@ const Login = () => {
     mounted && resolvedTheme === THEME_TYPE.LIGHT
       ? RayptoLogo.src
       : RayptoLogoDark.src;
+  const isWalletStep = Boolean(nonce && tempToken);
 
   const handleNonceToken = ({
     nonce: nextNonce,
@@ -115,7 +116,9 @@ const Login = () => {
         <FormLayout layout={FormLayoutType.Default}>
           <div className="mb-4">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primarycolor mb-2">
-              {tCommon("login.stepSignInLabel")}
+              {isWalletStep
+                ? tCommon("login.stepWalletLabel")
+                : tCommon("login.stepSignInLabel")}
             </p>
             <h4 className="text-[22px] leading-tight sm:text-[28px] sm:leading-[34px] font-semibold">
               {tCommon("login.welcomeTitle")}
