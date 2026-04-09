@@ -6,6 +6,7 @@ import axios, {
 } from "axios";
 
 import { getAuthToken } from "@/lib/authToken";
+import { loadingManager } from "@/lib/loadingManager";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -44,9 +45,13 @@ axiosInstance.interceptors.request.use(
       console.groupEnd();
     }
 
+    loadingManager.start();
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => {
+    loadingManager.end();
+    return Promise.reject(error);
+  },
 );
 
 axiosInstance.interceptors.response.use(
@@ -59,6 +64,7 @@ axiosInstance.interceptors.response.use(
       console.log("Data:", response.data);
       console.groupEnd();
     }
+    loadingManager.end();
     return response;
   },
   (error: AxiosError) => {
@@ -72,6 +78,7 @@ axiosInstance.interceptors.response.use(
       );
     }
 
+    loadingManager.end();
     return Promise.reject(error);
   },
 );

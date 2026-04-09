@@ -461,12 +461,14 @@ const RentalIncomeDetailsContent = ({
           </div>
         </div>
 
-        <DataTable<InvestorUser>
-          data={investors}
-          totalCount={investorsTotalCount}
-          isLoading={investorsLoading}
-          config={investorTableConfig}
-        />
+        <div className="mt-6">
+          <DataTable<InvestorUser>
+            data={investors}
+            totalCount={investorsTotalCount}
+            isLoading={investorsLoading}
+            config={investorTableConfig}
+          />
+        </div>
 
         {!isReadOnlyAdmin && (
           <ConfirmationModal
