@@ -86,6 +86,7 @@ export const PRIVATE_ROUTES = {
 
   // KYC — identity claim requests (all statuses)
   KYC_VERIFICATION: "/kyc/verification",
+  KYC_REGISTER_PROPERTY_REQUESTS: "/kyc/register-property-requests",
   /** Legacy path; redirects to KYC_VERIFICATION */
   KYC_PENDING: "/kyc/pending",
 

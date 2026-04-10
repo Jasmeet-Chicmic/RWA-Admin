@@ -72,6 +72,7 @@
   "kyc": "KYC",
   "pendingKyc": "KYC pendiente",
   "kycVerification": "Verificaci\u00f3n KYC",
+  "registerPropertyRequests": "Solicitudes de registro de propiedad",
   "entityActionSuccessfully": "{entity} {action} exitosamente",
   "failedToActionEntity": "Error al {action} {entity}",
   "anErrorOccurredWhileActionEntity": "Ocurri\u00f3 un error al {action} {entity}",

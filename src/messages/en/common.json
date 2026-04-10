@@ -82,6 +82,7 @@
   "kyc": "KYC",
   "pendingKyc": "Pending KYC",
   "kycVerification": "KYC verification",
+  "registerPropertyRequests": "Register Property Requests",
   "tokenRequestsTitle": "Token Requests",
   "tokenRequestsSubtitle": "Review and manage token issuance requests",
   "userId": "User ID",

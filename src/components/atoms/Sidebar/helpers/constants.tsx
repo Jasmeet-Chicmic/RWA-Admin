@@ -105,6 +105,13 @@ export const navItems: NavItem[] = [
     activePaths: [ROUTES.KYC_VERIFICATION, ROUTES.KYC_PENDING],
     allowedRoles: [LOGIN_ROLE.ADMIN],
   },
+  {
+    icon: ClipboardList,
+    label: "common.registerPropertyRequests",
+    path: ROUTES.KYC_REGISTER_PROPERTY_REQUESTS,
+    activePaths: [ROUTES.KYC_REGISTER_PROPERTY_REQUESTS],
+    allowedRoles: [LOGIN_ROLE.ADMIN],
+  },
   // {
   //   icon: Video,
   //   label: "Videos",

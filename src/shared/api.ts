@@ -173,6 +173,7 @@ export const API_END_POINTS = {
   // KYC
   ADMIN_KYC_PENDING: `/api/admin/kyc`,
   ADMIN_IDENTITY_CLAIM_REQUESTS: `/v1/admin/identity/claim-requests`,
+  ADMIN_IDENTITY_WHITELIST_REQUESTS: `/v1/admin/identity/whitelist-request`,
   ADMIN_IDENTITY_ASSIGNABLE_PROPERTIES: `/v1/admin/identity/assignable-properties`,
   ADMIN_IDENTITY_REGISTER_IDENTITY: `/v1/admin/identity/register-identity`,
 

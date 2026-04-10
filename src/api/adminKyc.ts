@@ -5,6 +5,9 @@ import { getRequest, postRequest } from "@/shared/fetcher";
 import { ResponseType } from "@/shared/types";
 import {
   GetIdentityClaimRequestsParams,
+  GetAdminWhitelistRequestsParams,
+  AdminWhitelistRequestsEnvelope,
+  AdminWhitelistRequestsResponse,
   GetPendingKycParams,
   IdentityClaimRequestListEnvelope,
   IdentityClaimRequestListResponse,
@@ -42,6 +45,36 @@ function unwrapIdentityClaimRequestList(
   };
 }
 
+function unwrapWhitelistRequests(
+  raw: unknown,
+  params: GetAdminWhitelistRequestsParams,
+): AdminWhitelistRequestsResponse {
+  if (
+    raw &&
+    typeof raw === "object" &&
+    "data" in raw &&
+    (raw as AdminWhitelistRequestsEnvelope).data &&
+    typeof (raw as AdminWhitelistRequestsEnvelope).data === "object" &&
+    Array.isArray((raw as AdminWhitelistRequestsEnvelope).data.items)
+  ) {
+    return (raw as AdminWhitelistRequestsEnvelope).data;
+  }
+  if (
+    raw &&
+    typeof raw === "object" &&
+    "items" in raw &&
+    Array.isArray((raw as AdminWhitelistRequestsResponse).items)
+  ) {
+    return raw as AdminWhitelistRequestsResponse;
+  }
+  return {
+    skip: params.skip,
+    limit: params.limit,
+    totalCount: 0,
+    items: [],
+  };
+}
+
 export async function getAdminPendingKycAction(params: GetPendingKycParams) {
   return await getRequest<PendingKycListResponse, GetPendingKycParams>(
     API_END_POINTS.ADMIN_KYC_PENDING,
@@ -57,6 +90,16 @@ export async function getAdminIdentityClaimRequestsAction(
     GetIdentityClaimRequestsParams
   >(API_END_POINTS.ADMIN_IDENTITY_CLAIM_REQUESTS, params);
   return unwrapIdentityClaimRequestList(raw, params);
+}
+
+export async function getAdminWhitelistRequestsAction(
+  params: GetAdminWhitelistRequestsParams,
+): Promise<AdminWhitelistRequestsResponse> {
+  const raw = await getRequest<
+    AdminWhitelistRequestsEnvelope | AdminWhitelistRequestsResponse,
+    GetAdminWhitelistRequestsParams
+  >(API_END_POINTS.ADMIN_IDENTITY_WHITELIST_REQUESTS, params);
+  return unwrapWhitelistRequests(raw, params);
 }
 
 export async function approveAdminKycAction(kycId: string) {
@@ -91,4 +134,17 @@ export async function rejectIdentityClaimRequestAction(
     `${API_END_POINTS.ADMIN_IDENTITY_CLAIM_REQUESTS}/${identityRequestId}/reject`,
     { reason },
   );
+}
+
+export async function rejectWhitelistRequestAction(payload: {
+  whitelistRequestId: string;
+  reason: string;
+}) {
+  return await postRequest<
+    ResponseType,
+    {
+      whitelistRequestId: string;
+      reason: string;
+    }
+  >(`${API_END_POINTS.ADMIN_IDENTITY_WHITELIST_REQUESTS}/reject`, payload);
 }
