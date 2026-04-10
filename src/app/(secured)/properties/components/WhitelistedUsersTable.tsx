@@ -19,12 +19,16 @@ interface WhitelistedUsersTableProps {
   data: WhitelistedUser[];
   totalCount: number;
   isLoading?: boolean;
+  searchText?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 const WhitelistedUsersTable = ({
   data,
   totalCount,
   isLoading = false,
+  searchText = "",
+  onSearchChange,
 }: WhitelistedUsersTableProps) => {
   const t = useTranslations("properties");
   const tCommon = useTranslations("common");
@@ -89,6 +93,9 @@ const WhitelistedUsersTable = ({
       emptyMessage={t("noWhitelistedUsersFound")}
       title={t("whitelistedUsers")}
       description={t("allWhitelistedUsersForThisProperty")}
+      searchPlaceholder={t("searchWhitelistedUsersPlaceholder")}
+      searchValue={searchText}
+      onSearchChange={onSearchChange}
     />
   );
 };

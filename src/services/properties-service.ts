@@ -170,6 +170,7 @@ export const propertiesService = {
     propertyId: string;
     page: number;
     pageSize: number;
+    search?: string;
   }): Promise<BaseResponse<WhitelistedUsersResponse>> {
     return await getRequest<BaseResponse<WhitelistedUsersResponse>>(
       API_END_POINTS.PROPERTIES_WHITELISTED_USERS,

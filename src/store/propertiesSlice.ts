@@ -198,7 +198,7 @@ export const fetchPropertyDetails = createAsyncThunk<
 
 export const fetchInvestorUsersList = createAsyncThunk<
   InvestorUsersResponse,
-  { propertyId: string; page: number; pageSize: number },
+  { propertyId: string; page: number; pageSize: number; search?: string },
   { rejectValue: string }
 >("properties/fetchInvestorUsers", async (params, { rejectWithValue }) => {
   try {
@@ -216,7 +216,7 @@ export const fetchInvestorUsersList = createAsyncThunk<
 
 export const fetchWhitelistedUsersList = createAsyncThunk<
   WhitelistedUsersResponse,
-  { propertyId: string; page: number; pageSize: number },
+  { propertyId: string; page: number; pageSize: number; search?: string },
   { rejectValue: string }
 >("properties/fetchWhitelistedUsers", async (params, { rejectWithValue }) => {
   try {

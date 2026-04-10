@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import Breadcrumbs, { BreadcrumbItem } from "@/components/atoms/Breadcrumbs";
@@ -118,6 +118,8 @@ const PropertyDetailsContent = ({
   const [isDocumentsExpanded, setIsDocumentsExpanded] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const pathname = usePathname();
   const lastRequestedPropertyIdRef = useRef<string | null>(null);
   const { item, isLoading, error } = useAppSelector(
     (state) => state.properties.details,
@@ -142,51 +144,87 @@ const PropertyDetailsContent = ({
   } = useAppSelector((state) => state.properties.whitelistedUsers);
 
   const searchParams = useSearchParams();
-  const transactionsQueryKey = searchParams.toString();
+  const transactionsSkipRaw = searchParams.get("skip");
+  const transactionsLimitRaw = searchParams.get("limit");
+  const transactionsSearchRaw = searchParams.get("search");
+  const investorSkipRaw = searchParams.get("investor_skip");
+  const investorLimitRaw = searchParams.get("investor_limit");
+  const investorSearchRaw = searchParams.get("investor_search");
+  const whitelistedSkipRaw = searchParams.get("whitelisted_skip");
+  const whitelistedLimitRaw = searchParams.get("whitelisted_limit");
+  const whitelistedSearchRaw = searchParams.get("whitelisted_search");
 
   const transactionsFetchParams = useMemo(() => {
-    const params = new URLSearchParams(transactionsQueryKey);
-    const skipRaw = params.get("skip");
-    const limitRaw = params.get("limit");
-    const rawLimit = limitRaw ? Number(limitRaw) : 10;
+    const rawLimit = transactionsLimitRaw ? Number(transactionsLimitRaw) : 10;
     const pageSize = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10;
-    const skip = skipRaw ? Number(skipRaw) : 0;
+    const skip = transactionsSkipRaw ? Number(transactionsSkipRaw) : 0;
     const page = Math.floor(skip / pageSize) + 1;
-    const search = (params.get("search") ?? "").trim();
+    const search = (transactionsSearchRaw ?? "").trim();
     return {
       page,
       pageSize,
       ...(search ? { search } : {}),
     };
-  }, [transactionsQueryKey]);
+  }, [transactionsLimitRaw, transactionsSearchRaw, transactionsSkipRaw]);
 
   const investorUsersFetchParams = useMemo(() => {
-    const params = new URLSearchParams(transactionsQueryKey);
-    const skipRaw = params.get("investor_skip");
-    const limitRaw = params.get("investor_limit");
-    const rawLimit = limitRaw ? Number(limitRaw) : 10;
+    const rawLimit = investorLimitRaw ? Number(investorLimitRaw) : 10;
     const pageSize = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10;
-    const skip = skipRaw ? Number(skipRaw) : 0;
+    const skip = investorSkipRaw ? Number(investorSkipRaw) : 0;
     const page = Math.floor(skip / pageSize) + 1;
+    const search = (investorSearchRaw ?? "").trim();
     return {
       page,
       pageSize,
+      ...(search ? { search } : {}),
     };
-  }, [transactionsQueryKey]);
+  }, [investorLimitRaw, investorSearchRaw, investorSkipRaw]);
 
   const whitelistedUsersFetchParams = useMemo(() => {
-    const params = new URLSearchParams(transactionsQueryKey);
-    const skipRaw = params.get("whitelisted_skip");
-    const limitRaw = params.get("whitelisted_limit");
-    const rawLimit = limitRaw ? Number(limitRaw) : 10;
+    const rawLimit = whitelistedLimitRaw ? Number(whitelistedLimitRaw) : 10;
     const pageSize = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10;
-    const skip = skipRaw ? Number(skipRaw) : 0;
+    const skip = whitelistedSkipRaw ? Number(whitelistedSkipRaw) : 0;
     const page = Math.floor(skip / pageSize) + 1;
+    const search = (whitelistedSearchRaw ?? "").trim();
     return {
       page,
       pageSize,
+      ...(search ? { search } : {}),
     };
-  }, [transactionsQueryKey]);
+  }, [whitelistedLimitRaw, whitelistedSearchRaw, whitelistedSkipRaw]);
+
+  const investorSearchText = useMemo(
+    () => (investorSearchRaw ?? "").trim(),
+    [investorSearchRaw],
+  );
+  const whitelistedSearchText = useMemo(
+    () => (whitelistedSearchRaw ?? "").trim(),
+    [whitelistedSearchRaw],
+  );
+
+  const handleInvestorSearchChange = (value: string) => {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    const trimmedValue = value.trim();
+    if (trimmedValue) {
+      nextParams.set("investor_search", trimmedValue);
+    } else {
+      nextParams.delete("investor_search");
+    }
+    nextParams.delete("investor_skip");
+    router.replace(`${pathname}?${nextParams.toString()}`, { scroll: false });
+  };
+
+  const handleWhitelistedSearchChange = (value: string) => {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    const trimmedValue = value.trim();
+    if (trimmedValue) {
+      nextParams.set("whitelisted_search", trimmedValue);
+    } else {
+      nextParams.delete("whitelisted_search");
+    }
+    nextParams.delete("whitelisted_skip");
+    router.replace(`${pathname}?${nextParams.toString()}`, { scroll: false });
+  };
 
   useEffect(() => {
     if (lastRequestedPropertyIdRef.current === propertyId) return;
@@ -616,6 +654,8 @@ const PropertyDetailsContent = ({
                 data={investorUsers}
                 totalCount={investorUsersTotalCount}
                 isLoading={investorUsersLoading}
+                searchText={investorSearchText}
+                onSearchChange={handleInvestorSearchChange}
               />
             </div>
             <div className="pb-10">
@@ -623,6 +663,8 @@ const PropertyDetailsContent = ({
                 data={whitelistedUsers}
                 totalCount={whitelistedUsersTotalCount}
                 isLoading={whitelistedUsersLoading}
+                searchText={whitelistedSearchText}
+                onSearchChange={handleWhitelistedSearchChange}
               />
             </div>
             <TransactionsTable

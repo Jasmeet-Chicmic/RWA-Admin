@@ -207,11 +207,13 @@
   "investorUsers": "Investor Users",
   "noInvestorsFound": "No investors found",
   "allInvestorsForThisProperty": "All investors for this property",
+  "searchInvestorsPlaceholder": "Search investors by wallet address",
   "sharesBought": "Shares Bought",
   "whitelistedUsers": "Whitelisted Users",
   "whitelistedAt": "Whitelisted At",
   "noWhitelistedUsersFound": "No whitelisted users found",
   "allWhitelistedUsersForThisProperty": "All whitelisted users for this property",
+  "searchWhitelistedUsersPlaceholder": "Search whitelisted users by wallet address",
   "whitelisted": "Whitelisted",
   "rentalIncome": {
     "submitButton": "Submit Rental Income",

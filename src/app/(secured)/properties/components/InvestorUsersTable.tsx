@@ -20,12 +20,16 @@ interface InvestorUsersTableProps {
   data: InvestorUser[];
   totalCount: number;
   isLoading?: boolean;
+  searchText?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 const InvestorUsersTable = ({
   data,
   totalCount,
   isLoading = false,
+  searchText = "",
+  onSearchChange,
 }: InvestorUsersTableProps) => {
   const t = useTranslations("properties");
   const tCommon = useTranslations("common");
@@ -86,6 +90,9 @@ const InvestorUsersTable = ({
       emptyMessage={t("noInvestorsFound")}
       title={t("investors")}
       description={t("allInvestorsForThisProperty")}
+      searchPlaceholder={t("searchInvestorsPlaceholder")}
+      searchValue={searchText}
+      onSearchChange={onSearchChange}
     />
   );
 };

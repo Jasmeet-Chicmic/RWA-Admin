@@ -1,10 +1,12 @@
 "use client";
 
 // import { useTranslations } from "next-intl";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
+import SearchInput from "@/components/atoms/SearchInput/SearchInput";
 import { TableColumn } from "@/components/atoms/Table";
 import { DataTable, DataTableConfig } from "@/components/organisms/DataTable";
+import { useDebounce } from "@/hooks/useDebounce";
 import { BasePropertyUser } from "@/types/properties";
 import { TEXT_PRIMARY_DARK as TEXT_PRIMARY } from "@/shared/styles";
 
@@ -18,6 +20,9 @@ interface PropertyUsersTableBaseProps<T extends BasePropertyUser> {
   title: string;
   description: string;
   actionButtons?: ReactNode;
+  searchPlaceholder?: string;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 const PropertyUsersTableBase = <T extends BasePropertyUser>({
@@ -30,7 +35,23 @@ const PropertyUsersTableBase = <T extends BasePropertyUser>({
   title,
   description,
   actionButtons,
+  searchPlaceholder,
+  searchValue = "",
+  onSearchChange,
 }: PropertyUsersTableBaseProps<T>) => {
+  const [localSearchValue, setLocalSearchValue] = useState(searchValue);
+  const debouncedSearchValue = useDebounce(localSearchValue, 400);
+
+  useEffect(() => {
+    setLocalSearchValue(searchValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (!onSearchChange) return;
+    if (debouncedSearchValue === searchValue) return;
+    onSearchChange(debouncedSearchValue);
+  }, [debouncedSearchValue, onSearchChange, searchValue]);
+
   const config: DataTableConfig<T> = {
     columns,
     keyExtractor: (item) => item.id,
@@ -50,7 +71,18 @@ const PropertyUsersTableBase = <T extends BasePropertyUser>({
               {description}
             </p>
           </div>
-          {actionButtons && <div className="flex gap-2">{actionButtons}</div>}
+          <div className="flex gap-2 items-center">
+            {onSearchChange && searchPlaceholder ? (
+              <div className="w-[220px]">
+                <SearchInput
+                  value={localSearchValue}
+                  onChange={setLocalSearchValue}
+                  placeholder={searchPlaceholder}
+                />
+              </div>
+            ) : null}
+            {actionButtons}
+          </div>
         </div>
       </div>
     ),
