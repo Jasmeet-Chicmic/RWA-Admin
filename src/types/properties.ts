@@ -27,6 +27,7 @@ export interface PropertyItem {
   owner?: {
     id?: string;
     walletAddress?: string;
+    identityContractAddress?: string;
   } | null;
   whitelistedUsers: number;
   investorUsers: number;

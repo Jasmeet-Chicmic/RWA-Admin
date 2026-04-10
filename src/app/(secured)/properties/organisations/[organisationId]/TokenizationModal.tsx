@@ -403,6 +403,14 @@ export const TokenizationModal = ({
         totalUnits > BigInt(0) ? totalValue / totalUnits : BigInt(0),
       );
       const ownerAddress = values.ownerAddress as `0x${string}`;
+      const ownerIdentityContractAddress = ((property as PropertyItem)?.owner
+        ?.identityContractAddress ??
+        (property as { owner?: { identityContractAddress?: string } })?.owner
+          ?.identityContractAddress) as `0x${string}` | undefined;
+      if (!ownerIdentityContractAddress) {
+        toast.error(t("tokenizationForm.success.failed"));
+        return;
+      }
       const riskScoreNum = Number(values.riskScore);
       const result = await runTokenizationFlow({
         walletClient,
@@ -412,6 +420,7 @@ export const TokenizationModal = ({
           propertyId: property.id,
           propertyName: property.name,
           ownerAddress,
+          ownerIdentityContractAddress,
           ipfsUri: values.image,
           totalUnits,
           totalValue,

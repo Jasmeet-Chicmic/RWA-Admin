@@ -147,7 +147,7 @@ export const runIdentityStep = async ({
   await ensureVerified({
     userKey: "Alice",
     userAddr: input.input.ownerAddress,
-    idAddr: TOKENIZATION_CONTRACTS.aliceIdentity,
+    idAddr: input.input.ownerIdentityContractAddress,
   });
 
   return { txHashes, apiMessage };

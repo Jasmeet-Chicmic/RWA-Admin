@@ -26,6 +26,7 @@ export type RunTokenizationFlowInput = {
   propertyId: string;
   propertyName: string;
   ownerAddress: `0x${string}`;
+  ownerIdentityContractAddress: `0x${string}`;
   ipfsUri: string;
   totalUnits: bigint;
   totalValue: bigint;
