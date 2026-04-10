@@ -106,6 +106,7 @@
     },
     "success": {
       "deployed": "Contratos implantados com sucesso.",
+      "listed": "A propriedade foi listada com sucesso.",
       "failed": "Falha ao implantar contratos."
     },
     "progress": {

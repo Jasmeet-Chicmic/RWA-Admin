@@ -120,6 +120,7 @@
     },
     "success": {
       "deployed": "Contracts deployed successfully.",
+      "listed": "Property is listed successfully.",
       "failed": "Contract deployment failed."
     },
     "progress": {

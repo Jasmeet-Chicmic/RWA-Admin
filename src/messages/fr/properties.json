@@ -106,6 +106,7 @@
     },
     "success": {
       "deployed": "Contrats d\u00e9ploy\u00e9s avec succ\u00e8s.",
+      "listed": "La propri\u00e9t\u00e9 a \u00e9t\u00e9 list\u00e9e avec succ\u00e8s.",
       "failed": "\u00c9chec du d\u00e9ploiement des contrats."
     },
     "progress": {

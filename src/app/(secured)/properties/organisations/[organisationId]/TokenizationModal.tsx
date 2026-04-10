@@ -422,11 +422,7 @@ export const TokenizationModal = ({
       });
 
       console.log("[TokenizationModal] Tokenization flow result", result);
-      toast.success(
-        result?.apiMessages?.trexDeployed ||
-          result?.apiMessages?.initiate ||
-          t("tokenizationForm.success.deployed"),
-      );
+      toast.success(t("tokenizationForm.success.listed"));
       setIsFlowCompleted(true);
       await new Promise((resolve) => setTimeout(resolve, 900));
       onSuccess?.();

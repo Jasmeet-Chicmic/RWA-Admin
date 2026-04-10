@@ -106,6 +106,7 @@
     },
     "success": {
       "deployed": "Contratos desplegados correctamente.",
+      "listed": "La propiedad se ha listado correctamente.",
       "failed": "Error al desplegar contratos."
     },
     "progress": {
