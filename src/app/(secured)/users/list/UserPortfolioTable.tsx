@@ -124,11 +124,28 @@ const UserPortfolioTable = ({
         field: "propertiesRegistered",
         title: t("propertiesRegistered"),
         render: (item) => (
-          <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY} block text-center`}>
-            {item.propertiesRegistered}
-          </span>
+          <div className="flex items-center justify-center gap-2 w-full">
+            <span className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}>
+              {item.propertiesRegistered}
+            </span>
+            <button
+              type="button"
+              disabled={item.propertiesRegistered === 0}
+              onClick={() =>
+                router.push(
+                  `/properties?whitelistedUserId=${encodeURIComponent(item.id)}`,
+                )
+              }
+              className="inline-flex items-center justify-center text-green-600 hover:text-green-700 disabled:text-green-300 disabled:cursor-not-allowed dark:text-green-400 dark:hover:text-green-300 dark:disabled:text-green-700"
+              title={t("view")}
+              aria-label={t("view")}
+            >
+              <Eye className="w-4 h-4" />
+            </button>
+          </div>
         ),
       },
+
       {
         field: "totalInvestment",
         title: t("totalInvestment"),

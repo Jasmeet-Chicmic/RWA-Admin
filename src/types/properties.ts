@@ -75,6 +75,7 @@ export interface GetAllPropertiesParams {
   status?: number | string;
   search?: string;
   userId?: string;
+  whitelistedUserId?: string;
   sortKey?: string;
   sortDirection?: string;
   organizationId?: string;
