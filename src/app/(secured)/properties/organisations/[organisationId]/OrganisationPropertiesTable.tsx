@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { ExternalLink, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -196,6 +196,9 @@ const OrganisationPropertiesTable = ({
         field: "location",
         render: (item) => {
           const locationValue = item.location ?? "";
+          const mapsUrl = locationValue
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationValue)}`
+            : "";
           return (
             <div className="flex items-center gap-2">
               <MapPin size={14} className={TEXT_PRIMARY} />
@@ -203,15 +206,28 @@ const OrganisationPropertiesTable = ({
                 {truncateText(locationValue, 40, "—")}
               </span>
               {locationValue ? (
-                <CopyToClipboardPill
-                  value={locationValue}
-                  showText={false}
-                  title={tTransactions("copy")}
-                  onCopied={() =>
-                    toast.success(tTransactions("copiedToClipboard"))
-                  }
-                  className="px-2 py-1"
-                />
+                <>
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center justify-center rounded-md border border-bordergray200 dark:border-darkbordercolor1 px-2 py-1 text-textprimary dark:text-secondary hover:text-bgblack dark:hover:text-white transition-colors"
+                    title={t("openInGoogleMaps")}
+                    aria-label={t("openInGoogleMaps")}
+                  >
+                    <ExternalLink size={14} />
+                  </a>
+                  <CopyToClipboardPill
+                    value={locationValue}
+                    showText={false}
+                    title={tTransactions("copy")}
+                    onCopied={() =>
+                      toast.success(tTransactions("copiedToClipboard"))
+                    }
+                    className="px-2 py-1"
+                  />
+                </>
               ) : null}
             </div>
           );

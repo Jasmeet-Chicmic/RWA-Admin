@@ -7,6 +7,7 @@
   "propertyName": "Nom de la propri\u00e9t\u00e9",
   "id": "ID",
   "location": "Emplacement",
+  "openInGoogleMaps": "Ouvrir dans Google Maps",
   "propertyType": "Type de propri\u00e9t\u00e9",
   "status": {
     "label": "Statut",

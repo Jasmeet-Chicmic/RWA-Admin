@@ -11,6 +11,7 @@
   "propertyName": "Property Name",
   "id": "ID",
   "location": "Location",
+  "openInGoogleMaps": "Open in Google Maps",
   "propertyType": "Property Type",
   "statusLabel": "Status",
   "status": {
