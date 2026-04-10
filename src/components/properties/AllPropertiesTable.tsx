@@ -86,6 +86,8 @@ const AllPropertiesTable = ({
     (state) => state.properties.all,
   );
   const ownerUserIdFilter = searchParams.get("userId")?.trim() ?? "";
+  const whitelistedUserIdFilter =
+    searchParams.get("whitelistedUserId")?.trim() ?? "";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -117,8 +119,16 @@ const AllPropertiesTable = ({
         status: statusFilterNumber ?? null,
         search: searchText || null,
         userId: ownerUserIdFilter || null,
+        whitelistedUserId: whitelistedUserIdFilter || null,
       }),
-    [currentPage, pageSize, statusFilterNumber, searchText, ownerUserIdFilter],
+    [
+      currentPage,
+      pageSize,
+      statusFilterNumber,
+      searchText,
+      ownerUserIdFilter,
+      whitelistedUserIdFilter,
+    ],
   );
 
   const debouncedDeps = useDebounce(combinedDeps, 300);
@@ -131,7 +141,9 @@ const AllPropertiesTable = ({
         status: number | null;
         search: string | null;
         userId: string | null;
+        whitelistedUserId: string | null;
       };
+
       return {
         page: parsed.page,
         pageSize: parsed.pageSize,
@@ -140,6 +152,9 @@ const AllPropertiesTable = ({
           : {}),
         ...(parsed.search ? { search: parsed.search } : {}),
         ...(parsed.userId ? { userId: parsed.userId } : {}),
+        ...(parsed.whitelistedUserId
+          ? { whitelistedUserId: parsed.whitelistedUserId }
+          : {}),
       };
     } catch {
       return null;
