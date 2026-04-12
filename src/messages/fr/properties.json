@@ -66,7 +66,9 @@
   "entityType": "Type d\u2019entit\u00e9",
   "registrationNumber": "Num\u00e9ro d\u2019enregistrement",
   "jurisdiction": "Juridiction",
+  "jurisdictionTextOnly": "N\u2019incluez pas de chiffres (0\u20139).",
   "incorporationDate": "Date de constitution",
+  "incorporationDateNotFuture": "La date de constitution ne peut pas \u00eatre dans le futur",
   "organisationStatus": {
     "active": "Actif",
     "flagged": "Signale\u0301",

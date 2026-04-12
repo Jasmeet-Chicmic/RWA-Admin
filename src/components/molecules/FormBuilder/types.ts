@@ -1,3 +1,4 @@
+import type { KeyboardEventHandler } from "react";
 import {
   FieldValues,
   Path,
@@ -38,6 +39,7 @@ export type FieldConfig<T extends FieldValues = FieldValues> = {
   min?: string | number;
   max?: string | number;
   returnISOFormat?: boolean;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 };
 
 export type DefaultValuesType = {

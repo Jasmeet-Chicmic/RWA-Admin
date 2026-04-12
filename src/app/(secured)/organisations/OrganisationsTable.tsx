@@ -297,11 +297,16 @@ const OrganisationsTable = ({
   return (
     <>
       <DataTable data={data} totalCount={totalCount} config={config} />
-      <AddOrganisationModal open={isAddModalOpen} setOpen={setIsAddModalOpen} />
+      <AddOrganisationModal
+        open={isAddModalOpen}
+        setOpen={setIsAddModalOpen}
+        onSuccess={onRefresh}
+      />
       <EditOrganisationModal
         open={isEditModalOpen}
         setOpen={setIsEditModalOpen}
         organisationId={selectedOrganisationId}
+        onSuccess={onRefresh}
       />
       <ViewOrganisationModal
         open={isViewModalOpen}
@@ -315,6 +320,7 @@ const OrganisationsTable = ({
         title={t("deleteOrganisation")}
         message={t("areYouSureYouWantToDeleteThisOrganisation")}
         isLoading={isPending}
+        variant="danger"
       />
     </>
   );

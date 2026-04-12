@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
@@ -15,7 +14,12 @@ import {
 import CustomModal from "@/components/molecules/CustomModal";
 import FormBuilder from "@/components/molecules/FormBuilder";
 import { FormConfig } from "@/components/molecules/FormBuilder/types";
-import { getRequiredFieldMessage } from "@/components/molecules/FormBuilder/helpers/utils";
+import {
+  getLocalDateYYYYMMDD,
+  getRequiredFieldMessage,
+  preventDigitKeyDown,
+  stripAsciiDigits,
+} from "@/components/molecules/FormBuilder/helpers/utils";
 import {
   FORM_FIELDS_TYPES,
   ORGANIZATION_ENTITY_TYPE,
@@ -37,17 +41,18 @@ const EditOrganisationModal = ({
   open,
   setOpen,
   organisationId,
+  onSuccess,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   organisationId: string | null;
+  onSuccess?: () => void;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [isFetching, setIsFetching] = useState(false);
   const [organisation, setOrganisation] = useState<AdminOrganisation | null>(
     null,
   );
-  const router = useRouter();
   const t = useTranslations("properties");
   const tCommon = useTranslations("common");
 
@@ -141,8 +146,14 @@ const EditOrganisationModal = ({
         name: "jurisdiction" as const,
         label: t("jurisdiction"),
         type: FORM_FIELDS_TYPES.TEXT,
+        interceptor: stripAsciiDigits,
+        onKeyDown: preventDigitKeyDown,
         validation: {
           required: getRequiredFieldMessage(t("jurisdiction"), tCommon),
+          pattern: {
+            value: /^[^0-9]+$/,
+            message: t("jurisdictionTextOnly"),
+          },
         },
       },
       {
@@ -150,8 +161,17 @@ const EditOrganisationModal = ({
         label: t("incorporationDate"),
         type: FORM_FIELDS_TYPES.DATE,
         returnISOFormat: true,
+        max: getLocalDateYYYYMMDD(),
         validation: {
           required: getRequiredFieldMessage(t("incorporationDate"), tCommon),
+          validate: (value: string | number | undefined) => {
+            if (value == null || value === "") return true;
+            const datePart = String(value).slice(0, 10);
+            if (datePart.length === 10 && datePart > getLocalDateYYYYMMDD()) {
+              return t("incorporationDateNotFuture");
+            }
+            return true;
+          },
         },
       },
     ];
@@ -180,7 +200,7 @@ const EditOrganisationModal = ({
           }),
         );
         setOpen(false);
-        router.refresh();
+        onSuccess?.();
       } else {
         toast.error(
           (res as { message?: string }).message ||

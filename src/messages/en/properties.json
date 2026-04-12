@@ -71,7 +71,9 @@
   "entityType": "Entity Type",
   "registrationNumber": "Registration Number",
   "jurisdiction": "Jurisdiction",
+  "jurisdictionTextOnly": "Do not include numbers (digits 0-9).",
   "incorporationDate": "Incorporation Date",
+  "incorporationDateNotFuture": "Incorporation date cannot be in the future",
   "organisationStatus": {
     "active": "Active",
     "flagged": "Flagged",

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
@@ -9,7 +8,12 @@ import { createOrganisationAction } from "@/api/adminOrganisations";
 import CustomModal from "@/components/molecules/CustomModal";
 import FormBuilder from "@/components/molecules/FormBuilder";
 import { FormConfig } from "@/components/molecules/FormBuilder/types";
-import { getRequiredFieldMessage } from "@/components/molecules/FormBuilder/helpers/utils";
+import {
+  getLocalDateYYYYMMDD,
+  getRequiredFieldMessage,
+  preventDigitKeyDown,
+  stripAsciiDigits,
+} from "@/components/molecules/FormBuilder/helpers/utils";
 import {
   FORM_FIELDS_TYPES,
   ORGANIZATION_ENTITY_TYPE,
@@ -32,12 +36,13 @@ const INITIAL_ENTITY_TYPE = ORGANIZATION_ENTITY_TYPE.LLC;
 const AddOrganisationModal = ({
   open,
   setOpen,
+  onSuccess,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
+  onSuccess?: () => void;
 }) => {
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
   const t = useTranslations("properties");
   const tCommon = useTranslations("common");
 
@@ -104,8 +109,14 @@ const AddOrganisationModal = ({
         name: "jurisdiction" as const,
         label: t("jurisdiction"),
         type: FORM_FIELDS_TYPES.TEXT,
+        interceptor: stripAsciiDigits,
+        onKeyDown: preventDigitKeyDown,
         validation: {
           required: getRequiredFieldMessage(t("jurisdiction"), tCommon),
+          pattern: {
+            value: /^[^0-9]+$/,
+            message: t("jurisdictionTextOnly"),
+          },
         },
       },
       {
@@ -113,8 +124,17 @@ const AddOrganisationModal = ({
         label: t("incorporationDate"),
         type: FORM_FIELDS_TYPES.DATE,
         returnISOFormat: true,
+        max: getLocalDateYYYYMMDD(),
         validation: {
           required: getRequiredFieldMessage(t("incorporationDate"), tCommon),
+          validate: (value: string | number | undefined) => {
+            if (value == null || value === "") return true;
+            const datePart = String(value).slice(0, 10);
+            if (datePart.length === 10 && datePart > getLocalDateYYYYMMDD()) {
+              return t("incorporationDateNotFuture");
+            }
+            return true;
+          },
         },
       },
     ];
@@ -137,7 +157,7 @@ const AddOrganisationModal = ({
           }),
         );
         setOpen(false);
-        router.refresh();
+        onSuccess?.();
       } else {
         toast.error(
           (res as { message?: string }).message ||

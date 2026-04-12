@@ -54,7 +54,14 @@ export function InputField<T extends FieldValues>({
   const fieldError = errors[name];
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setValue(name, interceptor(value), { shouldDirty: true });
+    const next = String(interceptor(value));
+    if (next !== value) {
+      e.target.value = next;
+    }
+    setValue(name, next as never, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   return (

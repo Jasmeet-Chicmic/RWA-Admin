@@ -66,7 +66,9 @@
   "entityType": "Tipo de entidad",
   "registrationNumber": "N\u00famero de registro",
   "jurisdiction": "Jurisdicci\u00f3n",
+  "jurisdictionTextOnly": "No incluya n\u00fameros (d\u00edgitos del 0 al 9).",
   "incorporationDate": "Fecha de constituci\u00f3n",
+  "incorporationDateNotFuture": "La fecha de constituci\u00f3n no puede ser futura",
   "organisationStatus": {
     "active": "Activo",
     "flagged": "Marcado",
