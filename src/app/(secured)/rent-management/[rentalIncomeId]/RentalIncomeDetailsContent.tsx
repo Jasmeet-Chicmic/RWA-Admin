@@ -173,6 +173,7 @@ const RentalIncomeDetailsContent = ({
               displayValue={walletTruncate(row.walletAddress)}
               title={t("walletAddress")}
               className="max-w-[180px]"
+              onCopied={() => toast.success(common("copiedToClipboard"))}
             />
           ),
         },
@@ -233,7 +234,7 @@ const RentalIncomeDetailsContent = ({
           </div>
         ),
       };
-    }, [t]);
+    }, [common, t]);
 
   const investorFetchParams = useMemo(() => {
     const params = new URLSearchParams(searchParams.toString());

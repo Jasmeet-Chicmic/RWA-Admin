@@ -45,7 +45,7 @@ const OrganisationsContainer = () => {
   const searchParams = useSearchParams();
   const lastRequestKeyRef = useRef<string | null>(null);
   const didLoadSessionRef = useRef(false);
-  const { role, profile, list } = useAppSelector(
+  const { role, profile, list, sessionLoading } = useAppSelector(
     (state) => state.organisations,
   );
 
@@ -110,12 +110,19 @@ const OrganisationsContainer = () => {
     propertyHolds: org.propertyHolds,
   }));
 
+  const isOrganisationsTableLoading =
+    sessionLoading ||
+    role === null ||
+    (role === LOGIN_ROLE.ADMIN &&
+      (list.isLoading || !list.hasInitiallyFetched));
+
   return (
     <div className="space-y-0 mt-[20px] bg-white dark:bg-darkbgbase p-6 rounded-xl">
       <div className="overflow-x-auto">
         <OrganisationsTable
           data={organisations}
           totalCount={list.totalCount}
+          isLoading={isOrganisationsTableLoading}
           onRefresh={() => {
             lastRequestKeyRef.current = null;
             const deps = buildOrganisationsListDeps(searchParams);

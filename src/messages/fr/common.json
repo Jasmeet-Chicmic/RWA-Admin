@@ -156,6 +156,6 @@
       "notConnected": "Non connecte"
     }
   },
-  "walletAddressCopied": "Adresse du wallet copiee dans le presse-papiers",
+  "copiedToClipboard": "Copie dans le presse-papiers",
   "copyFailed": "Echec de la copie. Veuillez reessayer."
 }

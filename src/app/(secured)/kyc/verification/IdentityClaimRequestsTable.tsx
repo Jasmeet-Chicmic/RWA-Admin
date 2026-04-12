@@ -123,7 +123,6 @@ const IdentityClaimRequestsTable = ({
   totalCount: number;
 }) => {
   const t = useTranslations("kyc");
-  const tTransactions = useTranslations("transactions");
   const common = useTranslations("common");
   const { address: connectedSigner } = useAccount();
   const { signMessageAsync } = useSignMessage();
@@ -194,7 +193,7 @@ const IdentityClaimRequestsTable = ({
               value={addr}
               displayValue={truncateWallet(addr)}
               title={addr}
-              onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
+              onCopied={() => toast.success(common("copiedToClipboard"))}
             />
           );
         },
@@ -395,7 +394,6 @@ const IdentityClaimRequestsTable = ({
     router,
     signMessageAsync,
     t,
-    tTransactions,
     searchValue,
   ]);
 

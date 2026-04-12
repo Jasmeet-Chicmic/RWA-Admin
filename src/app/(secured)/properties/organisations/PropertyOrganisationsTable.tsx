@@ -40,7 +40,7 @@ const PropertyOrganisationsTable = ({
   totalCount: number;
 }) => {
   const t = useTranslations("properties");
-  const tTransactions = useTranslations("transactions");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const actionsDisplayMode: TableActionDisplayMode = "dropdown";
 
@@ -84,10 +84,8 @@ const PropertyOrganisationsTable = ({
               <CopyToClipboardPill
                 value={item.jurisdiction}
                 showText={false}
-                title={tTransactions("copy")}
-                onCopied={() =>
-                  toast.success(tTransactions("copiedToClipboard"))
-                }
+                title={tCommon("copy")}
+                onCopied={() => toast.success(tCommon("copiedToClipboard"))}
                 className="px-2 py-1"
               />
             ) : null}
@@ -168,7 +166,7 @@ const PropertyOrganisationsTable = ({
         </div>
       ),
     };
-  }, [actionsDisplayMode, router, t, tTransactions]);
+  }, [actionsDisplayMode, router, t, tCommon]);
 
   return <DataTable data={data} totalCount={totalCount} config={config} />;
 };

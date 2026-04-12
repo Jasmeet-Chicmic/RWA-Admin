@@ -60,7 +60,7 @@ const UserPortfolioTable = ({
   isLoading = false,
 }: UserPortfolioTableProps) => {
   const t = useTranslations("users");
-  const tTransactions = useTranslations("transactions");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const pathname = usePathname();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -79,7 +79,7 @@ const UserPortfolioTable = ({
       //       value={item.name}
       //       displayValue={truncateWallet(item.name)}
       //       title={item.name}
-      //       onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
+      //       onCopied={() => toast.success(tCommon("copiedToClipboard"))}
       //       // className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
       //     />
       //   ),
@@ -92,7 +92,7 @@ const UserPortfolioTable = ({
             value={item.walletAddress}
             displayValue={truncateWallet(item.walletAddress)}
             title={item.walletAddress}
-            onCopied={() => toast.success(tTransactions("copiedToClipboard"))}
+            onCopied={() => toast.success(tCommon("copiedToClipboard"))}
             // className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
           />
         ),
@@ -278,7 +278,7 @@ const UserPortfolioTable = ({
         </div>
       ),
     };
-  }, [router, t, tTransactions]);
+  }, [router, t, tCommon]);
 
   return (
     <>

@@ -156,6 +156,6 @@
       "notConnected": "No conectada"
     }
   },
-  "walletAddressCopied": "Direccion de wallet copiada al portapapeles",
+  "copiedToClipboard": "Copiado al portapapeles",
   "copyFailed": "No se pudo copiar. Intentalo de nuevo."
 }

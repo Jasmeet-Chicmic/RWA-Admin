@@ -80,7 +80,7 @@ const OrganisationPropertiesTable = ({
   fetchMode?: "organisation" | "adminSpecificOrganisation";
 }) => {
   const t = useTranslations("properties");
-  const tTransactions = useTranslations("transactions");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
@@ -221,10 +221,8 @@ const OrganisationPropertiesTable = ({
                   <CopyToClipboardPill
                     value={locationValue}
                     showText={false}
-                    title={tTransactions("copy")}
-                    onCopied={() =>
-                      toast.success(tTransactions("copiedToClipboard"))
-                    }
+                    title={tCommon("copy")}
+                    onCopied={() => toast.success(tCommon("copiedToClipboard"))}
                     className="px-2 py-1"
                   />
                 </>
@@ -409,7 +407,7 @@ const OrganisationPropertiesTable = ({
       hideSelectCol: true,
       emptyMessage: t("noPropertiesFound"),
     };
-  }, [actionsDisplayMode, fetchMode, hideActions, router, t, tTransactions]);
+  }, [actionsDisplayMode, fetchMode, hideActions, router, t, tCommon]);
 
   return (
     <>

@@ -77,7 +77,7 @@ const AllPropertiesTable = ({
   hideStatusFilter?: boolean;
 }) => {
   const t = useTranslations("properties");
-  const tTransactions = useTranslations("transactions");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -268,10 +268,8 @@ const AllPropertiesTable = ({
                   <CopyToClipboardPill
                     value={locationValue}
                     showText={false}
-                    title={tTransactions("copy")}
-                    onCopied={() =>
-                      toast.success(tTransactions("copiedToClipboard"))
-                    }
+                    title={tCommon("copy")}
+                    onCopied={() => toast.success(tCommon("copiedToClipboard"))}
                     className="px-2 py-1"
                   />
                 </>
@@ -422,7 +420,7 @@ const AllPropertiesTable = ({
       handleReject,
       router,
       t,
-      tTransactions,
+      tCommon,
     ],
   );
 

@@ -139,7 +139,6 @@ const Header = () => {
     try {
       await navigator.clipboard.writeText(address);
       setIsWalletCopied(true);
-      // toast.success(t("walletAddressCopied"));
       window.setTimeout(() => setIsWalletCopied(false), 1200);
     } catch (error) {
       console.error("Failed to copy wallet address:", error);

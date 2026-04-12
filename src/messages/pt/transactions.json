@@ -15,7 +15,6 @@
   "sellerAddress": "Endereco do vendedor",
   "transactionHash": "Hash da transacao",
   "copy": "Copiar",
-  "copiedToClipboard": "Copiado para a area de transferencia",
   "remarks": "Observações",
   "status": "Status",
   "paymentStatus": "Status do pagamento",

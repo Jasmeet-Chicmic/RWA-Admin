@@ -14,6 +14,8 @@ type OrganisationsState = {
     items: AdminOrganisation[];
     totalCount: number;
     isLoading: boolean;
+    /** False until first admin list request finishes (success or error). */
+    hasInitiallyFetched: boolean;
     error: string | null;
   };
   sessionLoading: boolean;
@@ -27,6 +29,7 @@ const initialState: OrganisationsState = {
     items: [],
     totalCount: 0,
     isLoading: false,
+    hasInitiallyFetched: false,
     error: null,
   },
   sessionLoading: false,
@@ -107,11 +110,13 @@ const organisationsSlice = createSlice({
       })
       .addCase(fetchAdminOrganisations.fulfilled, (state, action) => {
         state.list.isLoading = false;
+        state.list.hasInitiallyFetched = true;
         state.list.items = action.payload.items;
         state.list.totalCount = action.payload.totalCount;
       })
       .addCase(fetchAdminOrganisations.rejected, (state, action) => {
         state.list.isLoading = false;
+        state.list.hasInitiallyFetched = true;
         state.list.error = action.payload ?? "Failed to fetch organisations";
       });
   },

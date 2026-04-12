@@ -77,7 +77,7 @@ const ViewOrganisationModal = ({
           <button
             onClick={() => {
               navigator.clipboard.writeText(value);
-              toast.success(tCommon("{entity} copied", { entity: label }));
+              toast.success(tCommon("copiedToClipboard"));
             }}
             className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors text-gray-500"
             title={tCommon("copy")}

@@ -15,7 +15,6 @@
   "sellerAddress": "Dirección del vendedor",
   "transactionHash": "Hash de transacción",
   "copy": "Copiar",
-  "copiedToClipboard": "Copiado al portapapeles",
   "remarks": "Observaciones",
   "status": "Estado",
   "paymentStatus": "Estado del pago",

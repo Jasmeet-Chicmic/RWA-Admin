@@ -132,8 +132,8 @@ const TransactionsTable = ({
           <CopyToClipboardPill
             value={item.buyerAddress}
             displayValue={walletTruncate(item.buyerAddress)}
-            title={t("copy")}
-            onCopied={() => toast.success(t("copiedToClipboard"))}
+            title={tCommon("copy")}
+            onCopied={() => toast.success(tCommon("copiedToClipboard"))}
           />
         ),
       },
@@ -144,8 +144,8 @@ const TransactionsTable = ({
           <CopyToClipboardPill
             value={item.sellerAddress}
             displayValue={walletTruncate(item.sellerAddress)}
-            title={t("copy")}
-            onCopied={() => toast.success(t("copiedToClipboard"))}
+            title={tCommon("copy")}
+            onCopied={() => toast.success(tCommon("copiedToClipboard"))}
           />
         ),
       },
@@ -156,8 +156,8 @@ const TransactionsTable = ({
           <CopyToClipboardPill
             value={item.transactionHash}
             displayValue={item.transactionHash}
-            title={t("copy")}
-            onCopied={() => toast.success(t("copiedToClipboard"))}
+            title={tCommon("copy")}
+            onCopied={() => toast.success(tCommon("copiedToClipboard"))}
           />
         ),
       },

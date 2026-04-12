@@ -15,7 +15,6 @@
   "sellerAddress": "Seller Address",
   "transactionHash": "Transaction Hash",
   "copy": "Copy",
-  "copiedToClipboard": "Copied to clipboard",
   "remarks": "Remarks",
   "status": "Status",
   "paymentStatus": "Payment Status",

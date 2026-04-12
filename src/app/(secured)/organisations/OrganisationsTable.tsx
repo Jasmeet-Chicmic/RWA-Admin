@@ -1,11 +1,12 @@
 "use client";
 
-import { Building2, Copy, Edit, Eye, Plus, Trash2 } from "lucide-react";
+import { Building2, Edit, Eye, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "react-toastify";
 
+import CopyToClipboardPill from "@/components/atoms/CopyToClipboardPill/CopyToClipboardPill";
 import { TableColumn } from "@/components/atoms/Table";
 import TableActions, {
   TABLE_ACTION_DISPLAY_MODES,
@@ -43,10 +44,12 @@ export type OrganisationRow = {
 const OrganisationsTable = ({
   data,
   totalCount,
+  isLoading = false,
   onRefresh,
 }: {
   data: OrganisationRow[];
   totalCount: number;
+  isLoading?: boolean;
   onRefresh?: () => void;
 }) => {
   const t = useTranslations("properties");
@@ -136,25 +139,17 @@ const OrganisationsTable = ({
         field: "walletAddress",
         title: t("walletAddress"),
         render: (item) => (
-          <div className="flex items-center gap-1.5">
-            <span
-              className={`${TEXT_SIZE_SM} ${TEXT_PRIMARY}`}
-              title={item.walletAddress}
-            >
-              {walletTruncate(item.walletAddress)}
-            </span>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigator.clipboard.writeText(item.walletAddress);
-                toast.success(t("walletAddressCopied"));
-              }}
-              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-labelprimary transition-colors"
+          <div
+            className="flex justify-start"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CopyToClipboardPill
+              value={item.walletAddress}
+              displayValue={walletTruncate(item.walletAddress)}
               title={t("copyWalletAddress")}
-            >
-              <Copy size={14} className="text-gray-500 dark:bordercolor1" />
-            </button>
+              onCopied={() => toast.success(tCommon("copiedToClipboard"))}
+              className="max-w-[min(100%,220px)]"
+            />
           </div>
         ),
       },
@@ -292,11 +287,16 @@ const OrganisationsTable = ({
         </div>
       ),
     };
-  }, [router, t]);
+  }, [router, t, tCommon]);
 
   return (
     <>
-      <DataTable data={data} totalCount={totalCount} config={config} />
+      <DataTable
+        data={data}
+        totalCount={totalCount}
+        isLoading={isLoading}
+        config={config}
+      />
       <AddOrganisationModal
         open={isAddModalOpen}
         setOpen={setIsAddModalOpen}
