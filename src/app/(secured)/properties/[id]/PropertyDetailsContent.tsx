@@ -264,7 +264,11 @@ const PropertyDetailsContent = ({
     );
   }, [dispatch, whitelistedUsersFetchParams, propertyId]);
 
-  if (isLoading) {
+  // Before the first fetch runs, Redux has item=null and isLoading=false, so we must
+  // not treat that as an error (otherwise a "failed to fetch" message flashes once).
+  const showDetailsSkeleton = isLoading || (!item && !error);
+
+  if (showDetailsSkeleton) {
     return <PropertyDetailsContentSkeleton />;
   }
 
