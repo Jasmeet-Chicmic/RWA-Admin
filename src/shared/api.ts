@@ -207,6 +207,9 @@ export const API_END_POINTS = {
   RENTAL_INCOME_DETAIL: "/v1/rental-income/detail",
   RENTAL_INCOME_DISTRIBUTIONS: "/v1/rental-income/distributions",
   RENTAL_INCOME_DISTRIBUTE: "/v1/rental-income/distribute",
+  NOTIFICATIONS: "/v1/notifications",
+  NOTIFICATIONS_STATS: "/v1/notifications/stats",
+  NOTIFICATIONS_READ: "/v1/notifications/read",
 };
 
 export const INTERNAL_API_PATHS = {
