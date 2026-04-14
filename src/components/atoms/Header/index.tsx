@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, Languages, LogOut, Search } from "lucide-react";
+import { Bell, Check, Copy, Languages, LogOut, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,9 @@ import {
   setAuthProfileLoading,
 } from "@/store/authProfileSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useQuery } from "@tanstack/react-query";
+import { getNotificationStatsAction } from "@/api/notifications";
+import NotificationPopover from "./NotificationPopover";
 import CheckClickOutside from "../CheckClickOutside";
 import CommandPalette from "../CommandPalette";
 import { getFilteredNavItems } from "../Sidebar/helpers/constants";
@@ -38,10 +41,9 @@ const Header = () => {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // const [notificationCount] = useState(3);
-  // const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [language, setLanguage] = useState<string>();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isWalletCopied, setIsWalletCopied] = useState(false);
@@ -127,10 +129,18 @@ const Header = () => {
   useEffect(() => {
     (async () => {
       const savedLanguage = await getLocale();
-      console.log(savedLanguage, " savedLanguage");
       setLanguage(savedLanguage || "en");
     })();
   }, [setLanguage]);
+
+  const { data: statsData } = useQuery({
+    queryKey: ["notification-stats"],
+    queryFn: () => getNotificationStatsAction(),
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+
+  const notificationCount = statsData?.data?.unread ?? 0;
+
   const walletAddressLabel = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : "";
@@ -245,7 +255,7 @@ const Header = () => {
           </button> */}
 
           {/* Notifications */}
-          {/* <CheckClickOutside onClick={() => setShowNotifications(false)}>
+          <CheckClickOutside onClick={() => setShowNotifications(false)}>
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -253,63 +263,18 @@ const Header = () => {
               >
                 <Bell size={18} />
                 {notificationCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-bgblue text-bgwhite text-[0.875] font-bold flex items-center justify-center">
-                    {notificationCount}
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-bgblue text-bgwhite text-[10px] font-bold flex items-center justify-center">
+                    {notificationCount > 99 ? "99+" : notificationCount}
                   </span>
                 )}
               </button>
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-bgwhite rounded-lg shadow-lg border bordergray200 z-50 dark:bg-darkbgprimary dark:border-labelprimary">
-                  <div className="p-4 border-b borderborder-b border-bordergray200">
-                    <h3 className="font-semibold text-gray-900 dark:bordercolor1 dark:text-bgwhite">
-                      Notifications ({notificationCount})
-                    </h3>
-                  </div>
-                  <div className="max-h-64 overflow-y-auto">
-                    <div className="p-4 hover:bg-gray-50 dark:hover:bg-labelprimary cursor-pointer">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:bordercolor1 dark:text-bgwhite">
-                            New user registered
-                          </p>
-                          <p className="text-[0.875rem] text-sidebartext mt-1 dark:text-bgwhite">
-                            2 minutes ago
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 hover:bg-gray-50 dark:hover:bg-labelprimary cursor-pointer">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:bordercolor1 dark:text-bgwhite">
-                            Order completed
-                          </p>
-                          <p className="text-[0.875rem] text-sidebartext mt-1 dark:text-bgwhite">
-                            5 minutes ago
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 hover:bg-gray-50 dark:hover:bg-labelprimary cursor-pointer">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:bordercolor1  dark:text-bgwhite">
-                            System update available
-                          </p>
-                          <p className="text-[0.875rem] text-sidebartext mt-1 dark:text-bgwhite">
-                            1 hour ago
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <NotificationPopover
+                  onClose={() => setShowNotifications(false)}
+                />
               )}
             </div>
-          </CheckClickOutside> */}
+          </CheckClickOutside>
           {/* User Menu */}
           <CheckClickOutside onClick={() => setShowUserMenu(false)}>
             <div className="relative">

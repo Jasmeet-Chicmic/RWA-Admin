@@ -100,6 +100,7 @@ export const PRIVATE_ROUTES = {
   BONUS_SLIDES_LIST: "/bonus-slides/list",
   BONUS_SLIDES_ADD: "/bonus-slides/add",
   BONUS_SLIDES_EDIT: "/bonus-slides/edit",
+  NOTIFICATIONS: "/notifications",
 };
 export const ROUTES = {
   ...PUBLIC_ROUTES,
