@@ -1,4 +1,5 @@
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "next-themes";
 import { Roboto } from "next/font/google";
 import FcmProvider from "./FcmProvider";

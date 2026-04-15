@@ -25,6 +25,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { getNotificationStatsAction } from "@/api/notifications";
+import { getNotificationsAction } from "@/api/notifications";
 import NotificationPopover from "./NotificationPopover";
 import CheckClickOutside from "../CheckClickOutside";
 import CommandPalette from "../CommandPalette";
@@ -136,10 +137,62 @@ const Header = () => {
   const { data: statsData } = useQuery({
     queryKey: ["notification-stats"],
     queryFn: () => getNotificationStatsAction(),
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 10000, // Refetch every 10 seconds
   });
 
   const notificationCount = statsData?.data?.unread ?? 0;
+
+  useEffect(() => {
+    let cancelled = false;
+    const previousUnread = (window as unknown as { __rwa_prevUnread?: number })
+      .__rwa_prevUnread;
+    const lastToastedId = (
+      window as unknown as { __rwa_lastToastedNotifId?: string }
+    ).__rwa_lastToastedNotifId;
+
+    if (typeof previousUnread === "number") {
+      if (notificationCount > previousUnread) {
+        void (async () => {
+          try {
+            const res = await getNotificationsAction({ page: 1, pageSize: 1 });
+            const latest = res.data?.items?.[0];
+            if (cancelled || !latest) return;
+            if (latest.id && latest.id === lastToastedId) return;
+
+            const title = latest.title?.trim();
+            const description = latest.description?.trim();
+            const content =
+              title && description
+                ? `${title} — ${description}`
+                : (title ?? description);
+            if (!content) return;
+
+            (
+              window as unknown as { __rwa_lastToastedNotifId?: string }
+            ).__rwa_lastToastedNotifId = latest.id;
+
+            toast.info(content, {
+              onClick: () => {
+                if (latest.redirectUrl) router.push(latest.redirectUrl);
+              },
+            });
+          } catch (error) {
+            console.error(
+              "[Header] Failed to fetch latest notification:",
+              error,
+            );
+          }
+        })();
+      }
+    }
+
+    (window as unknown as { __rwa_prevUnread?: number }).__rwa_prevUnread =
+      notificationCount;
+
+    return () => {
+      cancelled = true;
+    };
+  }, [notificationCount, router]);
 
   const walletAddressLabel = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`

@@ -22,8 +22,16 @@ export const getFCMToken = async (): Promise<string | null> => {
   if (!messaging) return null;
 
   try {
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+    const swPath = `${basePath}/firebase-messaging-sw.js`;
+
+    const registration = await navigator.serviceWorker.register(swPath, {
+      scope: `${basePath}/firebase-cloud-messaging-push-scope`,
+    });
+
     const currentToken = await getToken(messaging, {
       vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: registration,
     });
 
     if (currentToken) {

@@ -39,13 +39,14 @@ import { toast } from "react-toastify";
 import { Address } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
+import { format } from "date-fns";
 
 type Row = AdminWhitelistRequestItem;
 
 const formatDateTime = (iso?: string | null) => {
   if (!iso) return "-";
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString();
+  return Number.isNaN(d.getTime()) ? "-" : format(d, "dd/MM/yyyy, HH:mm:ss");
 };
 
 const truncateWallet = (address: string) =>
