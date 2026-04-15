@@ -4,7 +4,7 @@ import { Bell, Check, Copy, Languages, LogOut, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useDisconnect } from "wagmi";
 
@@ -141,14 +141,27 @@ const Header = () => {
   });
 
   const notificationCount = statsData?.data?.unread ?? 0;
+  const hasInitializedUnreadRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
+    if (!statsData) return;
+
     const previousUnread = (window as unknown as { __rwa_prevUnread?: number })
       .__rwa_prevUnread;
-    const lastToastedId = (
-      window as unknown as { __rwa_lastToastedNotifId?: string }
-    ).__rwa_lastToastedNotifId;
+    const lastToastedId =
+      sessionStorage.getItem("rwa_lastToastedNotifId") ||
+      (window as unknown as { __rwa_lastToastedNotifId?: string })
+        .__rwa_lastToastedNotifId;
+
+    // On a full page refresh, the query usually resolves from 0 -> N.
+    // Skip toasting for that initial hydration and only react to later increases.
+    if (!hasInitializedUnreadRef.current) {
+      (window as unknown as { __rwa_prevUnread?: number }).__rwa_prevUnread =
+        notificationCount;
+      hasInitializedUnreadRef.current = true;
+      return;
+    }
 
     if (typeof previousUnread === "number") {
       if (notificationCount > previousUnread) {
@@ -170,6 +183,7 @@ const Header = () => {
             (
               window as unknown as { __rwa_lastToastedNotifId?: string }
             ).__rwa_lastToastedNotifId = latest.id;
+            sessionStorage.setItem("rwa_lastToastedNotifId", latest.id);
 
             toast.info(content, {
               onClick: () => {
@@ -192,7 +206,7 @@ const Header = () => {
     return () => {
       cancelled = true;
     };
-  }, [notificationCount, router]);
+  }, [notificationCount, router, statsData]);
 
   const walletAddressLabel = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
