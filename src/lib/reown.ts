@@ -39,5 +39,8 @@ if (isReownConfigured && wagmiAdapter) {
       socials: false,
       email: false,
     },
+    excludeWalletIds: [
+      "a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393", // Phantom
+    ],
   });
 }
