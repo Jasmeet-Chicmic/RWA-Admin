@@ -4,7 +4,7 @@ import { Bell, Check, Copy, Languages, LogOut, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useDisconnect } from "wagmi";
 
@@ -141,63 +141,57 @@ const Header = () => {
   });
 
   const notificationCount = statsData?.data?.unread ?? 0;
-  const hasInitializedUnreadRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
-    if (!statsData) return;
+    // Avoid replaying "new notification" toast on hard refresh.
+    // On first load, notificationCount starts at 0 until statsData arrives.
+    // We only want to toast on genuine increases after the first stats load.
+    if (!statsData) return () => {};
 
     const previousUnread = (window as unknown as { __rwa_prevUnread?: number })
       .__rwa_prevUnread;
-    const lastToastedId =
-      sessionStorage.getItem("rwa_lastToastedNotifId") ||
-      (window as unknown as { __rwa_lastToastedNotifId?: string })
-        .__rwa_lastToastedNotifId;
+    const lastToastedId = (
+      window as unknown as { __rwa_lastToastedNotifId?: string }
+    ).__rwa_lastToastedNotifId;
 
-    // On a full page refresh, the query usually resolves from 0 -> N.
-    // Skip toasting for that initial hydration and only react to later increases.
-    if (!hasInitializedUnreadRef.current) {
+    if (typeof previousUnread !== "number") {
       (window as unknown as { __rwa_prevUnread?: number }).__rwa_prevUnread =
         notificationCount;
-      hasInitializedUnreadRef.current = true;
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
 
-    if (typeof previousUnread === "number") {
-      if (notificationCount > previousUnread) {
-        void (async () => {
-          try {
-            const res = await getNotificationsAction({ page: 1, pageSize: 1 });
-            const latest = res.data?.items?.[0];
-            if (cancelled || !latest) return;
-            if (latest.id && latest.id === lastToastedId) return;
+    if (notificationCount > previousUnread) {
+      void (async () => {
+        try {
+          const res = await getNotificationsAction({ page: 1, pageSize: 1 });
+          const latest = res.data?.items?.[0];
+          if (cancelled || !latest) return;
+          if (latest.id && latest.id === lastToastedId) return;
 
-            const title = latest.title?.trim();
-            const description = latest.description?.trim();
-            const content =
-              title && description
-                ? `${title} — ${description}`
-                : (title ?? description);
-            if (!content) return;
+          const title = latest.title?.trim();
+          const description = latest.description?.trim();
+          const content =
+            title && description
+              ? `${title} — ${description}`
+              : (title ?? description);
+          if (!content) return;
 
-            (
-              window as unknown as { __rwa_lastToastedNotifId?: string }
-            ).__rwa_lastToastedNotifId = latest.id;
-            sessionStorage.setItem("rwa_lastToastedNotifId", latest.id);
+          (
+            window as unknown as { __rwa_lastToastedNotifId?: string }
+          ).__rwa_lastToastedNotifId = latest.id;
 
-            toast.info(content, {
-              onClick: () => {
-                if (latest.redirectUrl) router.push(latest.redirectUrl);
-              },
-            });
-          } catch (error) {
-            console.error(
-              "[Header] Failed to fetch latest notification:",
-              error,
-            );
-          }
-        })();
-      }
+          toast.info(content, {
+            onClick: () => {
+              if (latest.redirectUrl) router.push(latest.redirectUrl);
+            },
+          });
+        } catch (error) {
+          console.error("[Header] Failed to fetch latest notification:", error);
+        }
+      })();
     }
 
     (window as unknown as { __rwa_prevUnread?: number }).__rwa_prevUnread =
