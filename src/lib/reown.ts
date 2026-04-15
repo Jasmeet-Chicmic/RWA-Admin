@@ -10,6 +10,8 @@ export const queryClient = new QueryClient();
 
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+const PHANTOM_WALLET_ID =
+  "a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393";
 
 const metadata = {
   name: "Townly Admin Panel",
@@ -39,5 +41,6 @@ if (isReownConfigured && wagmiAdapter) {
       socials: false,
       email: false,
     },
+    excludeWalletIds: [PHANTOM_WALLET_ID],
   });
 }
