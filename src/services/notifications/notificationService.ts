@@ -35,6 +35,18 @@ export const handleNotificationClick = (payload: NotificationPayload) => {
   }
 };
 
+const renderToastContent = (payload: NotificationPayload) => {
+  const title = payload.title?.trim();
+  const description = payload.body?.trim();
+
+  if (!title && !description) return null;
+
+  // `react-toastify` supports string content; keep services free of JSX/React.
+  return title && description
+    ? `${title}\n${description}`
+    : (title ?? description);
+};
+
 /**
  * Global handler map for foreground notifications
  * This allows adding new notification types easily.
@@ -44,19 +56,19 @@ const handlerMap: Record<
   (payload: NotificationPayload) => void
 > = {
   TRANSACTION: (payload) => {
-    toast.info(`Transaction Update: ${payload.body}`, {
-      onClick: () => handleNotificationClick(payload),
-    });
+    const content = renderToastContent(payload);
+    if (!content) return;
+    toast.info(content, { onClick: () => handleNotificationClick(payload) });
   },
   KYC: (payload) => {
-    toast.warning(`KYC Alert: ${payload.body}`, {
-      onClick: () => handleNotificationClick(payload),
-    });
+    const content = renderToastContent(payload);
+    if (!content) return;
+    toast.warning(content, { onClick: () => handleNotificationClick(payload) });
   },
   PROPERTY: (payload) => {
-    toast.success(`Property Update: ${payload.body}`, {
-      onClick: () => handleNotificationClick(payload),
-    });
+    const content = renderToastContent(payload);
+    if (!content) return;
+    toast.success(content, { onClick: () => handleNotificationClick(payload) });
   },
 };
 
@@ -76,12 +88,19 @@ export const initializeForegroundListener = () => {
       data: payload.data as Record<string, string>,
     };
 
-    const handler = handlerMap[notificationPayload.type];
+    const handlerKey: NotificationType =
+      typeof notificationPayload.type === "string"
+        ? notificationPayload.type
+        : "PROPERTY";
+
+    const handler = handlerMap[handlerKey];
     if (handler) {
       handler(notificationPayload);
     } else {
       // Default fallback toast
-      toast.info(`${notificationPayload.title}: ${notificationPayload.body}`, {
+      const content = renderToastContent(notificationPayload);
+      if (!content) return;
+      toast.info(content, {
         onClick: () => handleNotificationClick(notificationPayload),
       });
     }

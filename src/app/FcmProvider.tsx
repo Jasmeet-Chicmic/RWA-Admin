@@ -8,16 +8,23 @@ import { initializeForegroundListener } from "@/services/notifications/notificat
 
 const FcmProvider = () => {
   useEffect(() => {
-    const setupFCM = async () => {
-      const hasPermission = await requestNotificationPermission();
-      if (hasPermission) {
-        await getFCMToken();
-        const unsubscribe = initializeForegroundListener();
-        return () => unsubscribe();
-      }
-    };
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
 
-    setupFCM();
+    (async () => {
+      const hasPermission = await requestNotificationPermission();
+      if (!hasPermission || cancelled) return;
+
+      await getFCMToken();
+      if (cancelled) return;
+
+      unsubscribe = initializeForegroundListener();
+    })();
+
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, []);
 
   return null;
