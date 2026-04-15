@@ -144,46 +144,54 @@ const Header = () => {
 
   useEffect(() => {
     let cancelled = false;
+    // Avoid replaying "new notification" toast on hard refresh.
+    // On first load, notificationCount starts at 0 until statsData arrives.
+    // We only want to toast on genuine increases after the first stats load.
+    if (!statsData) return () => {};
+
     const previousUnread = (window as unknown as { __rwa_prevUnread?: number })
       .__rwa_prevUnread;
     const lastToastedId = (
       window as unknown as { __rwa_lastToastedNotifId?: string }
     ).__rwa_lastToastedNotifId;
 
-    if (typeof previousUnread === "number") {
-      if (notificationCount > previousUnread) {
-        void (async () => {
-          try {
-            const res = await getNotificationsAction({ page: 1, pageSize: 1 });
-            const latest = res.data?.items?.[0];
-            if (cancelled || !latest) return;
-            if (latest.id && latest.id === lastToastedId) return;
+    if (typeof previousUnread !== "number") {
+      (window as unknown as { __rwa_prevUnread?: number }).__rwa_prevUnread =
+        notificationCount;
+      return () => {
+        cancelled = true;
+      };
+    }
 
-            const title = latest.title?.trim();
-            const description = latest.description?.trim();
-            const content =
-              title && description
-                ? `${title} — ${description}`
-                : (title ?? description);
-            if (!content) return;
+    if (notificationCount > previousUnread) {
+      void (async () => {
+        try {
+          const res = await getNotificationsAction({ page: 1, pageSize: 1 });
+          const latest = res.data?.items?.[0];
+          if (cancelled || !latest) return;
+          if (latest.id && latest.id === lastToastedId) return;
 
-            (
-              window as unknown as { __rwa_lastToastedNotifId?: string }
-            ).__rwa_lastToastedNotifId = latest.id;
+          const title = latest.title?.trim();
+          const description = latest.description?.trim();
+          const content =
+            title && description
+              ? `${title} — ${description}`
+              : (title ?? description);
+          if (!content) return;
 
-            toast.info(content, {
-              onClick: () => {
-                if (latest.redirectUrl) router.push(latest.redirectUrl);
-              },
-            });
-          } catch (error) {
-            console.error(
-              "[Header] Failed to fetch latest notification:",
-              error,
-            );
-          }
-        })();
-      }
+          (
+            window as unknown as { __rwa_lastToastedNotifId?: string }
+          ).__rwa_lastToastedNotifId = latest.id;
+
+          toast.info(content, {
+            onClick: () => {
+              if (latest.redirectUrl) router.push(latest.redirectUrl);
+            },
+          });
+        } catch (error) {
+          console.error("[Header] Failed to fetch latest notification:", error);
+        }
+      })();
     }
 
     (window as unknown as { __rwa_prevUnread?: number }).__rwa_prevUnread =
@@ -192,7 +200,7 @@ const Header = () => {
     return () => {
       cancelled = true;
     };
-  }, [notificationCount, router]);
+  }, [notificationCount, router, statsData]);
 
   const walletAddressLabel = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
