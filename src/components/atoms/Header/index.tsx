@@ -146,8 +146,9 @@ const Header = () => {
     let cancelled = false;
     const previousUnread = (window as unknown as { __rwa_prevUnread?: number })
       .__rwa_prevUnread;
-    const lastToastedId = (window as unknown as { __rwa_lastToastedNotifId?: string })
-      .__rwa_lastToastedNotifId;
+    const lastToastedId = (
+      window as unknown as { __rwa_lastToastedNotifId?: string }
+    ).__rwa_lastToastedNotifId;
 
     if (typeof previousUnread === "number") {
       if (notificationCount > previousUnread) {
@@ -166,8 +167,9 @@ const Header = () => {
                 : (title ?? description);
             if (!content) return;
 
-            (window as unknown as { __rwa_lastToastedNotifId?: string })
-              .__rwa_lastToastedNotifId = latest.id;
+            (
+              window as unknown as { __rwa_lastToastedNotifId?: string }
+            ).__rwa_lastToastedNotifId = latest.id;
 
             toast.info(content, {
               onClick: () => {
@@ -175,7 +177,10 @@ const Header = () => {
               },
             });
           } catch (error) {
-            console.error("[Header] Failed to fetch latest notification:", error);
+            console.error(
+              "[Header] Failed to fetch latest notification:",
+              error,
+            );
           }
         })();
       }
