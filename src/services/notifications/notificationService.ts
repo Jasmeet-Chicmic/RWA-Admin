@@ -72,6 +72,10 @@ const handlerMap: Record<
   },
 };
 
+const isNotificationType = (value: unknown): value is NotificationType => {
+  return typeof value === "string" && value in handlerMap;
+};
+
 /**
  * Initialize the foreground notification listener
  */
@@ -88,12 +92,9 @@ export const initializeForegroundListener = () => {
       data: payload.data as Record<string, string>,
     };
 
-    const handlerKey: NotificationType =
-      typeof notificationPayload.type === "string"
-        ? notificationPayload.type
-        : "PROPERTY";
-
-    const handler = handlerMap[handlerKey];
+    const handler = isNotificationType(notificationPayload.type)
+      ? handlerMap[notificationPayload.type]
+      : undefined;
     if (handler) {
       handler(notificationPayload);
     } else {
