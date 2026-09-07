@@ -85,7 +85,6 @@ export const PRIVATE_ROUTES = {
 
   // KYC
   KYC: "/kyc",
-  KYC_PENDING: "/kyc/pending",
 
   // Roles
   ROLES: "/roles",

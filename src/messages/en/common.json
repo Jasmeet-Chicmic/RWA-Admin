@@ -90,6 +90,8 @@
   "actions": "Actions",
   "approve": "Approve",
   "reject": "Reject",
+  "email": "Email",
+  "notApplicable": "N/A",
   "noTokenRequests": "No token requests found",
   "entityActionSuccessfully": "{entity} {action} successfully",
   "failedToActionEntity": "Failed to {action} {entity}",

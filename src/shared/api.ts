@@ -165,8 +165,10 @@ export const API_END_POINTS = {
   ORGANIZATION_PROPERTY_BY_ID: (propertyId: string) =>
     `/organizations/properties/${propertyId}`,
 
-  // KYC
-  ADMIN_KYC_PENDING: `/api/admin/kyc`,
+  // KYC Review
+  ADMIN_KYC_REVIEW_LIST: `/v1/kyc-review`,
+  ADMIN_KYC_REVIEW_DETAIL: `/v1/kyc-review/detail`,
+  ADMIN_KYC_REVIEW_DECIDE: `/v1/kyc-review/decide`,
 
   // Organisations
   ADMIN_ORGANISATIONS: `/admin/organizations`,
